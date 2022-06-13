@@ -1,0 +1,392 @@
+{
+    "division": [
+        {
+            "id": "2fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Software Development",
+            "status": true
+        },
+        {
+            "id": "4fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Finance",
+            "status": true
+        },
+        {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Research and Development",
+            "status": true
+        },
+        {
+            "id": "9fa95f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Data Analysis",
+            "status": true
+        },
+        {
+            "id": "5fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Data Entry",
+            "status": true
+        },
+        {
+            "id": "7fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Customer Support",
+            "status": true
+        }
+    ],
+    "department": [
+        {
+            "id": "2fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Software Development",
+            "status": true
+        },
+        {
+            "id": "4fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Finance",
+            "status": true
+        },
+        {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Research and Development",
+            "status": true
+        },
+        {
+            "id": "9fa95f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Data Analysis",
+            "status": true
+        },
+        {
+            "id": "5fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Data Entry",
+            "status": true
+        },
+        {
+            "id": "7fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Customer Support",
+            "status": true
+        }
+    ],
+    "location": [
+        {
+            "id": 1,
+            "name": "Accra, Tema",
+            "status": 1
+        },
+        {
+            "id": 2,
+            "name": "Osu",
+            "status": 1
+        },
+        {
+            "id": 3,
+            "name": "Bolgatanga",
+            "status": 1
+        },
+        {
+            "id": 4,
+            "name": "Cape Coast",
+            "status": 1
+        },
+        {
+            "id": 5,
+            "name": "Koforidua",
+            "status": 1
+        },
+        {
+            "id": 6,
+            "name": "Tamale",
+            "status": 1
+        }
+    ],
+    "section": [
+        {
+            "id": "2fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Software Development",
+            "status": true
+        },
+        {
+            "id": "4fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Finance",
+            "status": true
+        },
+        {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Research and Development",
+            "status": true
+        },
+        {
+            "id": "9fa95f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Data Analysis",
+            "status": true
+        },
+        {
+            "id": "5fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Data Entry",
+            "status": true
+        },
+        {
+            "id": "7fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Customer Support",
+            "status": true
+        }
+    ],
+    "unit": [
+        {
+            "id": "2fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Software Development",
+            "status": true
+        },
+        {
+            "id": "4fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Finance",
+            "status": true
+        },
+        {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Research and Development",
+            "status": true
+        },
+        {
+            "id": "9fa95f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Data Analysis",
+            "status": true
+        },
+        {
+            "id": "5fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Data Entry",
+            "status": true
+        },
+        {
+            "id": "7fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Customer Support",
+            "status": true
+        }
+    ],
+    "position": [
+        {
+            "id": "2fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Software Developer",
+            "status": true
+        },
+        {
+            "id": "4fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Finance Manager",
+            "status": true
+        },
+        {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Data Analyst",
+            "status": true
+        },
+        {
+            "id": "9fa95f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Business Analyst",
+            "status": true
+        },
+        {
+            "id": "5fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Systems Integration Expert",
+            "status": true
+        },
+        {
+            "id": "7fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Customer Support",
+            "status": true
+        }
+    ],
+    "currency": [
+        {
+            "id": "2fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Ghanaian Cedis",
+            "status": true
+        },
+        {
+            "id": "4fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "US Dollars",
+            "status": true
+        }
+    ],
+    "employeetype": [
+        {
+            "id": "2fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Contract",
+            "status": true
+        },
+        {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "General Staff",
+            "status": true
+        },
+        {
+            "id": "4fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Intern",
+            "status": true
+        }
+    ],
+    "salary grade": [
+        {
+            "id": "2fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Grade One",
+            "status": true
+        },
+        {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Grade Two",
+            "status": true
+        },
+        {
+            "id": "4fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Grade Three",
+            "status": true
+        }
+    ],
+    "GenericPagesData": {
+        "fallback": {
+            "name": "Unknown Page",
+            "addLabel": "Add Unknown",
+            "searchPlaceholder": "Search for Unknown by name",
+            "successCreate": "Unknown created successfully!",
+            "successUpdate": "Unknown updated successfully!",
+            "code": "",
+            "link":  {"name": "Division", "id": "cmbDivision", "code": "TL05", "type": "DIV"}
+        },
+        "department": {
+            "en": {
+                "name": "Department",
+                "addLabel": "Add Department",
+                "searchPlaceholder": "Search for Department by name",
+                "successCreate": "Department created successfully!",
+                "successUpdate": "Department updated successfully!",
+                "type": "DEP",
+                "link": {"name": "Division", "id": "cmbDivision", "code": "TL05", "type": "DIV"}
+            },
+            "fr": {
+                "name": "Département",
+                "addLabel": "Ajouter Un Département",
+                "searchPlaceholder": "Rechercher un Département par nom",
+                "successCreate": "Département créé avec succès!",
+                "successUpdate": "Département mis à jour avec succès!",
+                "type": "DEP",
+                "link":  {"name": "Division", "id": "cmbDivision", "code": "TL05", "type": "DIV"}
+            }
+        },
+        "division": {
+            "en": {
+                "name": "Division",
+                "addLabel": "Add Division",
+                "searchPlaceholder": "Search for Division by name",
+                "successCreate": "Division created successfully!",
+                "successUpdate": "Division updated successfully!",
+                "type": "DIV",
+                "link": {"name": "Location", "id": "cmbLocation", "code": "TL07", "type": "LOC"}
+            },
+            "fr": {
+                "name": "Division",
+                "addLabel": "Ajouter Une Division",
+                "searchPlaceholder": "Rechercher une Division par nom",
+                "successCreate": "Division créée avec succès!",
+                "successUpdate": "Division mise à jour avec succès!",
+                "type": "DIV",
+                "link": {"name": "Location", "id": "cmbLocation", "code": "TL07", "type": "LOC"}
+            }
+        },
+        "employeetype": {
+            "en": {
+                "name": "Employee Type",
+                "addLabel": "Add Employee Type",
+                "searchPlaceholder": "Search for Employee Type by name",
+                "successCreate": "Employee Type created successfully!",
+                "successUpdate": "Employee Type updated successfully!",
+                "type": "EMT",
+                "link": {"name": "Section", "id": "cmdSection", "code": "TL07"}
+            },
+            "fr": {
+                "name": "Type d'employé",
+                "addLabel": "Ajouter un type d'employé",
+                "searchPlaceholder": "Rechercher le type d'employé par nom",
+                "successCreate": "Type d'employé créé avec succès!",
+                "successUpdate": "Type d'employé mis à jour avec succès!",
+                "type": "EMT",
+                "link": {"name": "Section", "id": "cmdSection", "code": "TL07"}
+            }
+        },
+        "location": {
+            "en": {
+                "name": "Location",
+                "addLabel": "Add Location",
+                "searchPlaceholder": "Search for Location by name or code",
+                "successCreate": "Location created successfully!",
+                "successUpdate": "Location updated successfully!",
+                "type": "LOC",
+                "link": {"name": "Section", "id": "cmdSection"}
+            },
+            "fr": {
+                "name": "Lieu",
+                "addLabel": "Ajouter un Emplacement",
+                "searchPlaceholder": "Rechercher un emplacement par nom ou code",
+                "successCreate": "Emplacement créé avec succès!",
+                "successUpdate": "Emplacement mis à jour avec succès!",
+                "type": "LOC",
+                "link": {"name": "Section", "id": "cmdSection"}
+            }
+        },
+        "position": {
+            "en": {
+                "name": "Position",
+                "addLabel": "Add Position",
+                "searchPlaceholder": "Search for Position by name",
+                "successCreate": "Position created successfully!",
+                "successUpdate": "Position updated successfully!",
+                "type": "POS",
+                "link": {"name": "Salary Grade", "id": "cmbSalaryGrade", "code": "TL93"}
+            },
+            "fr": {
+                "name": "Position",
+                "addLabel": "Ajouter un Poste",
+                "searchPlaceholder": "Rechercher un Poste par nom",
+                "successCreate": "Poste créé avec succès!",
+                "successUpdate": "Position mise à jour avec succès!",
+                "type": "POS",
+                "link": {"name": "Salary Grade", "id": "cmbSalaryGrade", "code": "TL93"}
+            }
+        },
+        "section": {
+            "en": {
+                "name": "Section",
+                "addLabel": "Add Section",
+                "searchPlaceholder": "Search for Section by name",
+                "successCreate": "Section created successfully!",
+                "successUpdate": "Section updated successfully!",
+                "type": "SEC",
+                "link": {"name": "Department", "id": "cmbDepartment", "code": "TL79", "type": "DEP"}
+            },
+            "fr": {
+                "name": "Département",
+                "addLabel": "Ajouter une Section",
+                "searchPlaceholder": "Rechercher une Section par nom",
+                "successCreate": "Section créée avec succès!",
+                "successUpdate": "Section mise à jour avec succès!",
+                "type": "SEC",
+                "link": {"name": "Department", "id": "cmbDepartment", "code": "TL79", "type": "DEP"}
+            }
+        },
+        "unit": {
+            "en": {
+                "name": "Unit",
+                "addLabel": "Add Unit",
+                "searchPlaceholder": "Search for Unit by name",
+                "successCreate": "Unit created successfully!",
+                "successUpdate": "Unit updated successfully!",
+                "type": "UNT",
+                "link": {"name": "Section", "id": "cmbSection", "code": "TL80", "type": "UNT"}
+            },
+            "fr": {
+                "name": "Unité",
+                "addLabel": "Ajouter une Unité",
+                "searchPlaceholder": "Rechercher l'unité par nom",
+                "successCreate": "Unité créée avec succès!",
+                "successUpdate": "Unité mise à jour avec succès!",
+                "type": "UNT",
+                "link": {"name": "Section", "id": "cmbSection", "code": "TL80", "type": "UNT"}
+            }
+        }
+    }
+}
+

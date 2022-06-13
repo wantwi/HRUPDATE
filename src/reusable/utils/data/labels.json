@@ -1,0 +1,560 @@
+{
+    "TL01": {
+        "en": "Details",
+        "fr": "Détails",
+        "sp": "",
+        "gr": ""
+    },
+    "TL02": {
+        "en": "General Ledger",
+        "fr": "Compte Général",
+        "sp": "",
+        "gr": ""
+    },
+    "TL03": {
+        "en": "Code",
+        "fr": "Code",
+        "sp": "",
+        "gr": ""
+    },
+    "TL04": {
+        "en": "Name",
+        "fr": "Nom",
+        "sp": "",
+        "gr": ""
+    },
+    "TL05": {
+        "en": "Division",
+        "fr": "Division",
+        "sp": "",
+        "gr": ""
+    },
+    "TL06": {
+        "en": "Description",
+        "fr": "La Description",
+        "sp": "",
+        "gr": ""
+    },
+    "TL07": {
+        "en": "Location",
+        "fr": "Emplacement",
+        "sp": "",
+        "gr": ""
+    },
+    "TL08": {
+        "en": "Used In",
+        "fr": "Utilisé Dans",
+        "sp": "",
+        "gr": ""
+    },
+    "TL09": {
+        "en": "Select all Location",
+        "fr": "Sélectionnez tous les emplacement",
+        "sp": "",
+        "gr": ""
+    },
+    "TL10": {
+        "en": "Unselect all Location",
+        "fr": "Désélectionner tous les emplacement",
+        "sp": "",
+        "gr": ""
+    },
+    "TL11": {
+        "en": "Save",
+        "fr": "Sauver",
+        "sp": "",
+        "gr": ""
+    },
+    "TL12": {
+        "en": "Reset",
+        "fr": "Réinitialiser",
+        "sp": "",
+        "gr": ""
+    },
+    "TL13": {
+        "en": "Add Group",
+        "fr": "Ajouter un Groupe",
+        "sp": "",
+        "gr": ""
+    },
+    "TL14": {
+        "en": "Add User",
+        "fr": "Ajouter un Utilisateur",
+        "sp": "",
+        "gr": ""
+    },
+    "TL15": {
+        "en": "First Name",
+        "fr": "Nom d'utilisateur",
+        "sp": "",
+        "gr": ""
+    },
+    "TL16": {
+        "en": "Username",
+        "fr": "Prénom",
+        "sp": "",
+        "gr": ""
+    },
+    "TL17": {
+        "en": "Last Name",
+        "fr": "Nom de famille",
+        "sp": "",
+        "gr": ""
+    },
+    "TL18": {
+        "en": "Email",
+        "fr": "E-mail",
+        "sp": "",
+        "gr": ""
+    },
+    "TL19": {
+        "en": "Phone",
+        "fr": "Téléphoner",
+        "sp": "",
+        "gr": ""
+    },
+    "TL20": {
+        "en": "User Details",
+        "fr": "Détails de l'utilisateur",
+        "sp": "",
+        "gr": ""
+    },
+    "TL21": {
+        "en": "Groups",
+        "fr": "Groupes",
+        "sp": "",
+        "gr": ""
+    },
+    "TL22": {
+        "en": "Create New User",
+        "fr": "Créer un nouvel utilisateur",
+        "sp": "",
+        "gr": ""
+    },
+    "TL23": {
+        "en": "Update User",
+        "fr": "Mettre à jour l'utilisateur",
+        "sp": "",
+        "gr": ""
+    },
+    "TL24": {
+        "en": "Search for company bank by name",
+        "fr": "",
+        "sp": "",
+        "gr": ""
+    },
+    "TL25": {
+        "en": "Add Company Bank",
+        "fr": "",
+        "sp": "",
+        "gr": ""
+    },
+    "TL26": {
+        "en": "Account Description",
+        "fr": "",
+        "sp": "",
+        "gr": ""
+    },
+    "TL27": {
+        "en": "Account Number",
+        "fr": "",
+        "sp": "",
+        "gr": ""
+    },
+    "TL28": {
+        "en": "Bank Routing",
+        "fr": "",
+        "sp": "",
+        "gr": ""
+    },
+    "TL29": {
+        "en": "Currency",
+        "fr": "",
+        "sp": "",
+        "gr": ""
+    },
+    "TL30": {
+        "en": "Branch",
+        "fr": "",
+        "sp": "",
+        "gr": ""
+    },
+    "TL31": {
+        "en": "Note",
+        "fr": "",
+        "sp": "",
+        "gr": ""
+    },
+    "TL32": {
+        "en": "Search for employee bank by name",
+        "fr": "",
+        "sp": "",
+        "gr": ""
+    },
+    "TL33": {
+        "en": "Add Employee Bank",
+        "fr": "",
+        "sp": "",
+        "gr": ""
+    },
+    "TL34": {
+        "en": "Inter-Bank ID",
+        "fr": "",
+        "sp": "",
+        "gr": ""
+    },
+    "TL35": {
+        "en": "Company Bank",
+        "fr": "",
+        "sp": "",
+        "gr": ""
+    },
+    "TL36": {
+        "en": "Bank Type",
+        "fr": "",
+        "sp": "",
+        "gr": ""
+    },
+    "TL37": {
+        "en": "Salutation Note",
+        "fr": "",
+        "sp": "",
+        "gr": ""
+    },
+    "TL38": {
+        "en": "Footer Note",
+        "fr": "",
+        "sp": "",
+        "gr": ""
+    },
+    "TL39": {
+        "en": "Search for bank branch by name",
+        "fr": "",
+        "sp": "",
+        "gr": ""
+    },
+    "TL40": {
+        "en": "Add Branch",
+        "fr": "",
+        "sp": "",
+        "gr": ""
+    },
+    "TL41": {
+        "en": "Group Manager",
+        "fr": "Dirigeant de groupe, chef de groupe",
+        "sp": "",
+        "gr": ""
+    },
+    "TL42": {
+        "en": "Configuration",
+        "fr": "Configuration",
+        "sp": "",
+        "gr": ""
+    },
+    "TL43": {
+        "en": "Search for group by name",
+        "fr": "Rechercher un groupe par nom",
+        "sp": "",
+        "gr": ""
+    },
+    "TL44": {
+        "en": "Group Name",
+        "fr": "Nom de Groupe",
+        "sp": "",
+        "gr": ""
+    },
+    "TL45": {
+        "en": "Create New Group",
+        "fr": "Créer un Nouveau Groupe",
+        "sp": "",
+        "gr": ""
+    },
+    "TL46": {
+        "en": "Update Group",
+        "fr": "Mettre à jour le Groupe",
+        "sp": "",
+        "gr": ""
+    },
+    "TL47": {
+        "en": "Employee Request",
+        "fr": "Demande d'employé",
+        "sp": "",
+        "gr": ""
+    },
+    "TL48": {
+        "en": "Search for Employee by name",
+        "fr": "Rechercher un employé par nom",
+        "sp": "",
+        "gr": ""
+    },
+    "TL49": {
+        "en": "Add Employee Request",
+        "fr": "Ajouter une demande d'employé",
+        "sp": "",
+        "gr": ""
+    },
+    "TL50": {
+        "en": "Close",
+        "fr": "Fermer",
+        "sp": "",
+        "gr": ""
+    },
+    "TL51": {
+        "en": "Action",
+        "fr": "Action",
+        "sp": "",
+        "gr": ""
+    },
+    "TL52": {
+        "en": "Companies",
+        "fr": "Entreprises",
+        "sp": "",
+        "gr": ""
+    },
+    "TL53": {
+        "en": "Status",
+        "fr": "Statut",
+        "sp": "",
+        "gr": ""
+    },
+    "TL54": {
+        "en": "ID",
+        "fr": "Identifiant",
+        "sp": "",
+        "gr": ""
+    },
+    "TL55": {
+        "en": "User Manager",
+        "fr": "Gestionnaire des utilisateurs",
+        "sp": "",
+        "gr": ""
+    },
+    "TL56": {
+        "en": "Search for user by name",
+        "fr": "Rechercher un utilisateur par nom",
+        "sp": "",
+        "gr": ""
+    },
+    "TL57": {
+        "en": "User Manager",
+        "fr": "Gestionnaire des utilisateurs",
+        "sp": "",
+        "gr": ""
+    },
+    "TL58": {
+        "en": "User Image",
+        "fr": "Image de l'utilisateur",
+        "sp": "",
+        "gr": ""
+    },
+    "TL59": {
+        "en": "Change Photo",
+        "fr": "Changer la Photo",
+        "sp": "",
+        "gr": ""
+    },
+    "TL60": {
+        "en": "Remove Photo",
+        "fr": "Retirer Photo",
+        "sp": "",
+        "gr": ""
+    },
+    "TL61": {
+        "en": "Employee Details",
+        "fr": "Détails de l'employé",
+        "sp": "",
+        "gr": ""
+    },
+    "TL62": {
+        "en": "Add Employee",
+        "fr": "Ajouter un employé",
+        "sp": "",
+        "gr": ""
+    },
+    "TL63": {
+        "en": "Personal",
+        "fr": "Personnel",
+        "sp": "",
+        "gr": ""
+    },
+    "TL64": {
+        "en": "Organizational",
+        "fr": "Organisationnel",
+        "sp": "",
+        "gr": ""
+    },
+    "TL65": {
+        "en": "Payment Method",
+        "fr": "Mode de paiement",
+        "sp": "",
+        "gr": ""
+    },
+    "TL66": {
+        "en": "Files Upload",
+        "fr": "Téléchargement de fichiers",
+        "sp": "",
+        "gr": ""
+    },
+    "TL67": {
+        "en": "Title",
+        "fr": "Titre",
+        "sp": "",
+        "gr": ""
+    },
+    "TL68": {
+        "en": "Other Names",
+        "fr": "Autres Noms",
+        "sp": "",
+        "gr": ""
+    },
+    "TL69": {
+        "en": "Nationality",
+        "fr": "Nationalité",
+        "sp": "",
+        "gr": ""
+    },
+    "TL70": {
+        "en": "Gender",
+        "fr": "Le genre",
+        "sp": "",
+        "gr": ""
+    },
+    "TL71": {
+        "en": "Date Of Birth",
+        "fr": "Date de naissance",
+        "sp": "",
+        "gr": ""
+    },
+    "TL72": {
+        "en": "Age",
+        "fr": "Âge",
+        "sp": "",
+        "gr": ""
+    },
+    "TL73": {
+        "en": "Marital Status",
+        "fr": "État civil",
+        "sp": "",
+        "gr": ""
+    },
+    "TL74": {
+        "en": "Digital Address",
+        "fr": "Adresse numérique",
+        "sp": "",
+        "gr": ""
+    },
+    "TL75": {
+        "en": "Employee ID",
+        "fr": "Identifiant de l'employé",
+        "sp": "",
+        "gr": ""
+    },
+    "TL76": {
+        "en": "Hire Date",
+        "fr": "Date d'embauche",
+        "sp": "",
+        "gr": ""
+    },
+    "TL77": {
+        "en": "Employee Type",
+        "fr": "Type d'employé",
+        "sp": "",
+        "gr": ""
+    },
+    "TL78": {
+        "en": "Position",
+        "fr": "Position",
+        "sp": "",
+        "gr": ""
+    },
+    "TL79": {
+        "en": "Department",
+        "fr": "Département",
+        "sp": "",
+        "gr": ""
+    },
+    "TL80": {
+        "en": "Section",
+        "fr": "Section",
+        "sp": "",
+        "gr": ""
+    },
+    "TL81": {
+        "en": "Unit",
+        "fr": "Unité",
+        "sp": "",
+        "gr": ""
+    },
+    "TL82": {
+        "en": "TIN",
+        "fr": "TIN",
+        "sp": "",
+        "gr": ""
+    },
+    "TL83": {
+        "en": "Salary Info",
+        "fr": "Informations sur le salaire",
+        "sp": "",
+        "gr": ""
+    },
+    "TL84": {
+        "en": "Grade",
+        "fr": "Noter",
+        "sp": "",
+        "gr": ""
+    },
+    "TL85": {
+        "en": "Type",
+        "fr": "Taper",
+        "sp": "",
+        "gr": ""
+    },
+    "TL86": {
+        "en": "Rate",
+        "fr": "Taux",
+        "sp": "",
+        "gr": ""
+    },
+    "TL87": {
+        "en": "Hire Applicant",
+        "fr": "Embaucher un candidat",
+        "sp": "",
+        "gr": ""
+    },
+    "TL88": {
+        "en": "Search for applicant by name",
+        "fr": "Rechercher un candidat par nom",
+        "sp": "",
+        "gr": ""
+    },
+    "TL89": {
+        "en": "Add Applicant",
+        "fr": "Ajouter un candidat",
+        "sp": "",
+        "gr": ""
+    },
+    "TL90": {
+        "en": "Employee Check List",
+        "fr": "Liste de contrôle des employés",
+        "sp": "",
+        "gr": ""
+    },
+    "TL91": {
+        "en": "Search for check list by name",
+        "fr": "Rechercher une liste de contrôle par nom",
+        "sp": "",
+        "gr": ""
+    },
+    "TL92": {
+        "en": "Add Check List",
+        "fr": "Ajouter une liste de contrôle",
+        "sp": "",
+        "gr": ""
+    },
+    "TL93": {
+        "en": "Salary Grade",
+        "fr": "Niveau de salaire",
+        "sp": "",
+        "gr": ""
+    }
+}

@@ -1,0 +1,490 @@
+{
+  "en": [
+    {
+      "_tag": "CSidebarNavItem",
+      "name": "Dashboard",
+      "to": "/dashboard",
+      "icon": "cil-speedometer"
+    },
+    {
+      "_tag": "CSidebarNavDropdown",
+      "name": "Employee Manager",
+      "route": "/base",
+      "icon": "cil-cursor",
+      "_children": [
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Detail",
+          "to": "/employeemanager/employeedetail"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Request",
+          "to": "/employeemanager/employeerequest"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Hire Applicant",
+          "to": "/employeemanager/hireapplicant"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Check List",
+          "to": "/employeemanager/employeechecklist"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Job History",
+          "to": "/employeemanager/employeejobhistory"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Prior Employment",
+          "to": "/employeemanager/employeeprioremployment"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Note",
+          "to": "/employeemanager/employeenote"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Appraisal",
+          "to": "/employeemanager/employeeappraisal"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Supervisor Appraisal",
+          "to": "/employeemanager/supervisorappraisal"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Training Information",
+          "to": "/employeemanager/employeetraininginformation"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Health And Safety Info.",
+          "to": "/employeemanager/employeehealthandsafetyinfo"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Disciplinary Information",
+          "to": "/employeemanager/employeedisciplinaryinformation"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Education Information",
+          "to": "/employeemanager/employeeeducationinformation"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Career Plan",
+          "to": "/employeemanager/employeecareerplan"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Update Employee ID",
+          "to": "/employeemanager/changeemployeeid"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Update Employee Status",
+          "to": "/employeemanager/updateemployeestatus"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Leave Types",
+          "to": "/employeemanager/leavetypes"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Medical Transaction",
+          "to": "/employeemanager/medicaltransaction"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Accident Transaction",
+          "to": "/employeemanager/accidenttransaction"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Dependant",
+          "to": "/employeemanager/dependant"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Beneficiary",
+          "to": "/employeemanager/beneficiary"
+        }
+      ]
+    },
+    {
+      "_tag": "CSidebarNavDropdown",
+      "name": "Position Manager",
+      "route": "/base",
+      "icon": "cil-cursor",
+      "_children": [
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Termination Information",
+          "to": "/positionmanager/employeeterminationinformation"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Retirement Information",
+          "to": "/positionmanager/employeeretirementinformation"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Movement",
+          "to": "/positionmanager/employeemovement"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Position Budgeting",
+          "to": "/positionmanager/positionbudgeting"
+        }
+      ]
+    }
+  ],
+  "fr": [
+    {
+      "_tag": "CSidebarNavItem",
+      "name": "Tableau De Bord",
+      "to": "/dashboard",
+      "icon": "cil-speedometer"
+    },
+    {
+      "_tag": "CSidebarNavDropdown",
+      "name": "Autorisation",
+      "route": "/base",
+      "icon": "cil-cursor",
+      "_children": [
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Configuration",
+          "to": "/authorization/configuration"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Gérer Le Groupe",
+          "to": "/authorization/groupmanager"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Gérer L'utilisateur",
+          "to": "/authorization/usermanager"
+        }
+      ]
+    },
+    {
+      "_tag": "CSidebarNavDropdown",
+      "name": "Information Bancaire",
+      "route": "/base",
+      "icon": "cil-cursor",
+      "_children": [
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Company Banks",
+          "to": "/bankinformation/companybanks"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Banks",
+          "to": "/bankinformation/employeebanks"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Branch",
+          "to": "/bankinformation/branch"
+        }
+      ]
+    },
+    {
+      "_tag": "CSidebarNavDropdown",
+      "name": "Gestionnaire des employés",
+      "route": "/base",
+      "icon": "cil-cursor",
+      "_children": [
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Detail",
+          "to": "/employeemanager/employeedetail"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Request",
+          "to": "/employeemanager/employeerequest"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Hire Applicant",
+          "to": "/employeemanager/hireapplicant"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Check List",
+          "to": "/employeemanager/employeechecklist"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Job History",
+          "to": "/employeemanager/employeejobhistory"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Prior Employment",
+          "to": "/employeemanager/employeeprioremployment"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Note",
+          "to": "/employeemanager/employeenote"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Appraisal",
+          "to": "/employeemanager/employeeappraisal"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Supervisor Appraisal",
+          "to": "/employeemanager/supervisorappraisal"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Training Information",
+          "to": "/employeemanager/employeetraininginformation"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Health And Safety Info.",
+          "to": "/employeemanager/employeehealthandsafetyinfo"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Disciplinary Information",
+          "to": "/employeemanager/employeedisciplinaryinformation"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Education Information",
+          "to": "/employeemanager/employeeeducationinformation"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Career Plan",
+          "to": "/employeemanager/employeecareerplan"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Leave Types",
+          "to": "/employeemanager/leavetypes"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Medical Transaction",
+          "to": "/employeemanager/medicaltransaction"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Accident Transaction",
+          "to": "/employeemanager/accidenttransaction"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Dependant",
+          "to": "/employeemanager/dependanttransaction"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Beneficiary",
+          "to": "/employeemanager/beneficiary"
+        }
+      ]
+    },
+    {
+      "_tag": "CSidebarNavDropdown",
+      "name": "Paramètres Génériques",
+      "route": "/icons",
+      "icon": "cil-layers",
+      "_children": [
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Audit Trail",
+          "to": ""
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Currency",
+          "to": ""
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Exchange Rate",
+          "to": "/generalsettings/exchangerate"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Earning",
+          "to": ""
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Deduction",
+          "to": ""
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Saving Scheme",
+          "to": ""
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Loan",
+          "to": ""
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Salary Grade",
+          "to": ""
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Gl Account",
+          "to": ""
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Unit",
+          "to": ""
+        }
+      ]
+    },
+    {
+      "_tag": "CSidebarNavDropdown",
+      "name": "Réglages Généraux",
+      "route": "/icons",
+      "icon": "cil-layers",
+      "_children": [
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Audit Trail",
+          "to": "/generalsettings/audittrail"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Currency",
+          "to": "/generalsettings/currency"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Current User",
+          "to": "/generalsettings/currentuser"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Change Employee ID",
+          "to": "/generalsettings/changeemployeeid"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Earning",
+          "to": "/generalsettings/earning"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Gl Account",
+          "to": "/generalsettings/glaccount"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Deduction",
+          "to": "/generalsettings/deduction"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Saving Scheme",
+          "to": "/generalsettings/savingscheme"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Loan",
+          "to": "/generalsettings/loan"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Salary Grade",
+          "to": "/generalsettings/salarygrade"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Update Employee Status",
+          "to": "/employeemanager/updateemployeestatus"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Update Master Data",
+          "to": "/generalsettings/updatemasterdata"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Pay Period Setup",
+          "to": "/generalsettings/payperiodsetup"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Login List",
+          "to": ""
+        }
+      ]
+    },
+    {
+      "_tag": "CSidebarNavDropdown",
+      "name": "Gestionnaire Fiscal",
+      "route": "/base",
+      "icon": "cil-cursor",
+      "_children": [
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Tax Table",
+          "to": "/taxmanager/taxtable"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Tax Relief",
+          "to": "/taxmanager/taxrelief"
+        }
+      ]
+    },
+    {
+      "_tag": "CSidebarNavDropdown",
+      "name": "Gestionnaire de poste",
+      "route": "/base",
+      "icon": "cil-cursor",
+      "_children": [
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Termination Information",
+          "to": "/positionmanager/employeeterminationinformation"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Retirement Information",
+          "to": "/positionmanager/employeeretirementinformation"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Movement",
+          "to": "/positionmanager/employeemovement"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Position Budgeting",
+          "to": "/positionmanager/positionbudgeting"
+        }
+      ]
+    }
+  ]
+}
