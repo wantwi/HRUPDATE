@@ -50,7 +50,6 @@ import "../../../../node_modules/@syncfusion/ej2-react-grids/styles/material.css
 import { GetLabelByName } from "src/reusable/configs/config";
 import { CSLab } from "../../../reusable/components";
 import { CardBodyHeight } from "src/reusable/utils/helper";
-import { CSCheckbox, CSLineLabel } from "../../../reusable/components";
 
 const editOptions = {
   allowEditing: false,
@@ -77,7 +76,7 @@ const commandOptions = [
   },
 ];
 
-const Dependant = (props) => {
+const Beneficiaries = () => {
   const lan = useSelector((state) => state.language);
   const [show, setShow] = useState(true);
   const [visible, setVisible] = useState(false);
@@ -88,7 +87,7 @@ const Dependant = (props) => {
       <CRow>
         <CCol xs="12">
           <h5>
-            <CSLab code="Dependant" />
+            <CSLab code="Beneficiary" />
           </h5>
         </CCol>
       </CRow>
@@ -131,7 +130,7 @@ const Dependant = (props) => {
                 color="primary"
               >
                 {" "}
-                <AiOutlinePlus /> <CSLab code="Dependant" />
+                <AiOutlinePlus /> <CSLab code="Beneficiary" />
               </CButton>
               <CForm action="" method="post">
                 <>
@@ -150,7 +149,17 @@ const Dependant = (props) => {
                       />
                       <ColumnDirective
                         field={""}
-                        headerText={"Name"}
+                        headerText={"First Name"}
+                        width="100"
+                      />
+                      <ColumnDirective
+                        field={""}
+                        headerText={"Last Name"}
+                        width="100"
+                      />
+                      <ColumnDirective
+                        field={""}
+                        headerText={"Address"}
                         width="100"
                       />
                       <ColumnDirective
@@ -160,13 +169,8 @@ const Dependant = (props) => {
                       />
                       <ColumnDirective
                         field={""}
-                        headerText={"Date of Birth"}
-                        width="100"
-                      />
-                      <ColumnDirective
-                        field={""}
-                        headerText={"Nationalty"}
-                        width="100"
+                        headerText={"percentage"}
+                        width="50"
                       />
                       <ColumnDirective
                         commands={commandOptions}
@@ -199,28 +203,32 @@ const Dependant = (props) => {
         onClose={() => setVisible(false)}
         closeOnBackdrop={false}
       >
-        <CModalHeader style={{ position: "right" }}>
+        <CModalHeader>
           <CModalTitle>
             {" "}
-            <CSLab code="Add Dependant" />{" "}
+            <CSLab code="Add Beneficiary Details" />{" "}
           </CModalTitle>
         </CModalHeader>
         <CModalBody>
           <CRow className={"bottom-spacing"}>
             <>
-              <CCol md="4">
+              <CCol md="6">
                 <CLabel htmlFor="FirstName">
                   <CSLab code="First Name" />
                 </CLabel>
-                <CInput type="text" id="FirstName" />
+                <CInput className="" id="FirstName" type="text" />
               </CCol>
-              <CCol md="4">
+              <CCol md="6">
                 <CLabel htmlFor="LastName">
                   <CSLab code="Last Name" />
                 </CLabel>
-                <CInput id="LastName" type="text"></CInput>
+                <CInput className="" id="LastName" type="text" />
               </CCol>
-              <CCol md="4">
+            </>
+          </CRow>
+          <CRow className={"bottom-spacing"}>
+            <>
+              <CCol md="6">
                 <CLabel htmlFor="relation">
                   <CSLab code="Relation" />
                 </CLabel>
@@ -243,39 +251,16 @@ const Dependant = (props) => {
                   ))}
                 </CSelect>
               </CCol>
-            </>
-          </CRow>
-          <CRow className={"bottom-spacing"}>
-            <>
               <CCol md="4">
-                <CLabel htmlFor="DateofBirth">
-                  <CSLab code="Date of Birth" />
+                <CLabel htmlFor="Percentage">
+                  <CSLab code="Percentage" />
                 </CLabel>
-                <CInput className="" id="DateofBirth" type="date" />
-              </CCol>
-              <CCol md="4">
-                <CLabel htmlFor="Nationality">
-                  <CSLab code="Nationality" />
-                </CLabel>
-                <CSelect>
-                  {[
-                    "Select Nationality",
-                    "Afghan",
-                    "British",
-                    "Canadian",
-                    "Danish",
-                    "Ghanaian",
-                  ].map((x, i) => (
-                    <option key={i} value={x}>
-                      {x}
-                    </option>
-                  ))}
-                </CSelect>
+                <CInput className="" id="Percentage" type="text" />
               </CCol>
             </>
           </CRow>
           <CRow>
-            <CCol md="8">
+            <CCol md="12">
               <CLabel>
                 <CSLab code="Address" />
               </CLabel>
@@ -285,46 +270,22 @@ const Dependant = (props) => {
               ></CTextarea>
             </CCol>
           </CRow>
-          <CCol md="12">
-            <CCol md="12">
-              <CSLineLabel name="ID Details" />{" "}
-              <CRow>
-                <CCol md="4">
-                  <CLabel htmlFor="idtype">
-                    <CSLab code="ID Type" />
-                  </CLabel>
-                  <CSelect>
-                    {[
-                      "Select ID Type",
-                      "Passport",
-                      "National ID",
-                      "Driver's License",
-                      "SNNIT ID",
-                    ].map((x, i) => (
-                      <option key={i} value={x}>
-                        {x}
-                      </option>
-                    ))}
-                  </CSelect>
-                </CCol>
-                <CCol md="4">
-                  <CLabel htmlFor="idnumber">
-                    <CSLab code="ID Number" />
-                  </CLabel>
-                  <CInput id="idnumber" type="text" />
-                </CCol>
-                <CCol md="4">
-                  <CLabel htmlFor="dateofexpiry">
-                    <CSLab code="Date of Expiry" />
-                  </CLabel>
-                  <CInput type="date" />
-                </CCol>
-              </CRow>
-            </CCol>
-
-            <CRow></CRow>
-            <CRow></CRow>
-          </CCol>
+          {/* <CRow className={"bottom-spacing"}>
+            <>
+              <CCol md="4">
+                <CLabel htmlFor="startdate">
+                  <CSLab code="Start Date" />
+                </CLabel>
+                <CInput className="" id="startdate" type="date" />
+              </CCol>
+              <CCol md="4">
+                <CLabel htmlFor="enddate">
+                  <CSLab code="End Date" />
+                </CLabel>
+                <CInput className="" id="enddate" type="date" />
+              </CCol>
+            </>
+          </CRow> */}
         </CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setVisible(false)}>
@@ -339,4 +300,4 @@ const Dependant = (props) => {
   );
 };
 
-export default Dependant;
+export default Beneficiaries;

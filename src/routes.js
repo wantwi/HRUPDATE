@@ -4,6 +4,8 @@ import React from "react";
 import AccidentTransaction from "./views/EmployeeManager/AccidentTransaction/AccidentTransaction";
 import MedicalTransaction from "./views/EmployeeManager/MedicalTransaction/MedicalTransaction";
 import Beneficiaries from "./views/EmployeeManager/Beneficiary/Beneficiary";
+//import EmergencyContact from "./views/EmployeeRelationships/EmergencyContact/EmergencyContact";
+//import NextofKin from "./views/EmployeeManager/NextofKin/NextofKin";
 
 const Dashboard = React.lazy(() => import("./templates/dashboard/Dashboard"));
 
@@ -74,8 +76,12 @@ const SupervisorAppraisal = React.lazy(() =>
 const LeaveTypes = React.lazy(() =>
   import("./views/EmployeeManager/LeaveTypes/LeaveTypes")
 );
-const Dependant = React.lazy(() =>
-  import("./views/EmployeeManager/Dependant/Dependant")
+
+const EmployeeHobby = React.lazy(() =>
+  import("./views/EmployeeManager/EmployeeHobby/EmployeeHobby")
+);
+const EmployeeSkill = React.lazy(() =>
+  import("./views/EmployeeManager/EmployeeSkill/EmployeeSkill")
 );
 
 // Position Manager
@@ -175,8 +181,22 @@ const MedicalTransactions = React.lazy(() =>
 const AccidentTransactions = React.lazy(() =>
   import("./views/EmployeeManager/AccidentTransaction/AccidentTransaction")
 );
+
+//Employee Relationships
 const Beneficiary = React.lazy(() =>
-  import("./views/EmployeeManager/Beneficiary/Beneficiary")
+  import("./views/EmployeeRelationships/Beneficiary/Beneficiary")
+);
+const Dependant = React.lazy(() =>
+  import("./views/EmployeeRelationships/Dependant/Dependant")
+);
+const EmergencyContact = React.lazy(() =>
+  import("./views/EmployeeRelationships/EmergencyContact/EmergencyContact")
+);
+const Guarantor = React.lazy(() =>
+  import("./views/EmployeeRelationships/Guarantor/Guarantor")
+);
+const NextofKin = React.lazy(() =>
+  import("./views/EmployeeRelationships/NextofKin/NextofKin")
 );
 
 const routes = [
@@ -331,16 +351,18 @@ const routes = [
     name: "Accident Transaction",
     component: AccidentTransaction,
   },
+
   {
-    path: "/employeemanager/beneficiary",
-    name: "Accident Transaction",
-    component: Beneficiary,
+    path: "/employeemanager/employeehobby",
+    name: "Employee Hobby",
+    component: EmployeeHobby,
   },
   {
-    path: "/employeemanager/dependant",
-    name: "Dependent",
-    component: Dependant,
+    path: "/employeemanager/employeeskill",
+    name: "Employee Skill",
+    component: EmployeeSkill,
   },
+
   // Bank Information
   {
     path: "/bankinformation/companybanks",
@@ -436,6 +458,32 @@ const routes = [
     path: "/generalsettings/exchangerate",
     name: "Exchange Rate",
     component: ExchangeRate,
+  },
+  //Employee Relationships
+  {
+    path: "/employeerelationships/beneficiary",
+    name: "Beneficiary",
+    component: Beneficiary,
+  },
+  {
+    path: "/employeerelationships/dependant",
+    name: "Dependent",
+    component: Dependant,
+  },
+  {
+    path: "/employeerelationships/emergencycontact",
+    name: "Emergency Contact",
+    component: EmergencyContact,
+  },
+  {
+    path: "/employeerelationships/nextofkin",
+    name: "Next of Kin",
+    component: NextofKin,
+  },
+  {
+    path: "/employeerelationships/guarantor",
+    name: "Guarantor",
+    component: Guarantor,
   },
 
   //Tax Manager

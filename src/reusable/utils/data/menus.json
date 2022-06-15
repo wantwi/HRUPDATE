@@ -107,15 +107,50 @@
           "name": "Accident Transaction",
           "to": "/employeemanager/accidenttransaction"
         },
+
+       
         {
           "_tag": "CSidebarNavItem",
-          "name": "Dependant",
-          "to": "/employeemanager/dependant"
+          "name": "Employee Hobby",
+          "to": "/employeemanager/employeehobby"
         },
         {
           "_tag": "CSidebarNavItem",
+          "name": "Employee Skill",
+          "to": "/employeemanager/employeeskill"
+        }
+      ]
+    },
+    {
+      "_tag": "CSidebarNavDropdown",
+      "name": "Employee Relationships",
+      "route": "/base",
+      "icon": "cil-cursor",
+      "_children": [
+        {
+          "_tag": "CSidebarNavItem",
           "name": "Beneficiary",
-          "to": "/employeemanager/beneficiary"
+          "to": "/employeerelationships/beneficiary"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Dependant",
+          "to": "/employeerelationships/dependant"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Emergency Contact",
+          "to": "/employeerelationships/employeecontact"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Guarantor",
+          "to": "/employeerelationships/guarantor"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Next of Kin",
+          "to": "/employeerelationships/nextofkin"
         }
       ]
     },
@@ -301,6 +336,16 @@
           "_tag": "CSidebarNavItem",
           "name": "Beneficiary",
           "to": "/employeemanager/beneficiary"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Next of Kin",
+          "to": "/employeemanager/nextofkin"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Guarantor",
+          "to": "/employeemanager/guarantor"
         }
       ]
     },
@@ -458,6 +503,41 @@
         }
       ]
     },
+
+    {
+      "_tag": "CSidebarNavDropdown",
+      "name": "Employee Relationships",
+      "route": "/base",
+      "icon": "cil-cursor",
+      "_children": [
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Beneficiary",
+          "to": "/employeerelationships/beneficiary"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Dependant",
+          "to": "/employeerelationships/dependant"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Emergency Contact",
+          "to": "/employeerelationships/employeecontact"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Guarantor",
+          "to": "/employeerelationships/guarantor"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Next of Kin",
+          "to": "/employeerelationships/nextofkin"
+        }
+      ]
+    },
+
     {
       "_tag": "CSidebarNavDropdown",
       "name": "Gestionnaire de poste",

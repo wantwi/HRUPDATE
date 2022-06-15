@@ -77,10 +77,15 @@ const commandOptions = [
   },
 ];
 
-const Dependant = (props) => {
+const EmergencyContact = (props) => {
   const lan = useSelector((state) => state.language);
   const [show, setShow] = useState(true);
   const [visible, setVisible] = useState(false);
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+  const [email, setEmail] = useState("");
+  const canSave = [name, email, phone, address].every(Boolean);
 
   const TransLabelByCode = (name) => GetLabelByName(name, lan);
   return (
@@ -88,7 +93,7 @@ const Dependant = (props) => {
       <CRow>
         <CCol xs="12">
           <h5>
-            <CSLab code="Dependant" />
+            <CSLab code="Emergency Contact" />
           </h5>
         </CCol>
       </CRow>
@@ -131,7 +136,7 @@ const Dependant = (props) => {
                 color="primary"
               >
                 {" "}
-                <AiOutlinePlus /> <CSLab code="Dependant" />
+                <AiOutlinePlus /> <CSLab code="EmergencyContact" />
               </CButton>
               <CForm action="" method="post">
                 <>
@@ -160,12 +165,17 @@ const Dependant = (props) => {
                       />
                       <ColumnDirective
                         field={""}
-                        headerText={"Date of Birth"}
+                        headerText={"Phone Number"}
                         width="100"
                       />
                       <ColumnDirective
                         field={""}
-                        headerText={"Nationalty"}
+                        headerText={"Email"}
+                        width="100"
+                      />
+                      <ColumnDirective
+                        field={""}
+                        headerText={"Address"}
                         width="100"
                       />
                       <ColumnDirective
@@ -202,29 +212,29 @@ const Dependant = (props) => {
         <CModalHeader style={{ position: "right" }}>
           <CModalTitle>
             {" "}
-            <CSLab code="Add Dependant" />{" "}
+            <CSLab code="Add Emergency Contact" />{" "}
           </CModalTitle>
         </CModalHeader>
         <CModalBody>
           <CRow className={"bottom-spacing"}>
             <>
               <CCol md="4">
-                <CLabel htmlFor="FirstName">
-                  <CSLab code="First Name" />
+                <CLabel htmlFor="Name">
+                  <CSLab code="Name" />
                 </CLabel>
-                <CInput type="text" id="FirstName" />
+                <CInput
+                  type="text"
+                  id="Name"
+                  name="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
               </CCol>
-              <CCol md="4">
-                <CLabel htmlFor="LastName">
-                  <CSLab code="Last Name" />
-                </CLabel>
-                <CInput id="LastName" type="text"></CInput>
-              </CCol>
-              <CCol md="4">
+              {/* <CCol md="4">
                 <CLabel htmlFor="relation">
                   <CSLab code="Relation" />
                 </CLabel>
-                <CSelect>
+                <CSelect name="relation" >
                   {[
                     "Select Relation",
                     "Father",
@@ -242,17 +252,36 @@ const Dependant = (props) => {
                     </option>
                   ))}
                 </CSelect>
+              </CCol> */}
+              <CCol md="4">
+                <CLabel htmlFor="email">
+                  <CSLab code="Email" />
+                </CLabel>
+                <CInput
+                  id="email"
+                  input="text"
+                  name="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </CCol>
+              <CCol md="4">
+                <CLabel htmlFor="phonenumber">
+                  <CSLab code="Phone Number" />
+                </CLabel>
+                <CInput
+                  id="phonenumber"
+                  input="text"
+                  name="phone"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                />
               </CCol>
             </>
           </CRow>
-          <CRow className={"bottom-spacing"}>
+
+          {/* <CRow className={"bottom-spacing"}>
             <>
-              <CCol md="4">
-                <CLabel htmlFor="DateofBirth">
-                  <CSLab code="Date of Birth" />
-                </CLabel>
-                <CInput className="" id="DateofBirth" type="date" />
-              </CCol>
               <CCol md="4">
                 <CLabel htmlFor="Nationality">
                   <CSLab code="Nationality" />
@@ -273,64 +302,31 @@ const Dependant = (props) => {
                 </CSelect>
               </CCol>
             </>
-          </CRow>
-          <CRow>
+          </CRow> */}
+          <CRow className={"bottom-spacing"}>
             <CCol md="8">
               <CLabel>
                 <CSLab code="Address" />
               </CLabel>
               <CTextarea
-                name="Address"
+                name="address"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
                 style={{ height: "60px", resize: "none" }}
               ></CTextarea>
             </CCol>
           </CRow>
-          <CCol md="12">
-            <CCol md="12">
-              <CSLineLabel name="ID Details" />{" "}
-              <CRow>
-                <CCol md="4">
-                  <CLabel htmlFor="idtype">
-                    <CSLab code="ID Type" />
-                  </CLabel>
-                  <CSelect>
-                    {[
-                      "Select ID Type",
-                      "Passport",
-                      "National ID",
-                      "Driver's License",
-                      "SNNIT ID",
-                    ].map((x, i) => (
-                      <option key={i} value={x}>
-                        {x}
-                      </option>
-                    ))}
-                  </CSelect>
-                </CCol>
-                <CCol md="4">
-                  <CLabel htmlFor="idnumber">
-                    <CSLab code="ID Number" />
-                  </CLabel>
-                  <CInput id="idnumber" type="text" />
-                </CCol>
-                <CCol md="4">
-                  <CLabel htmlFor="dateofexpiry">
-                    <CSLab code="Date of Expiry" />
-                  </CLabel>
-                  <CInput type="date" />
-                </CCol>
-              </CRow>
-            </CCol>
-
-            <CRow></CRow>
-            <CRow></CRow>
-          </CCol>
         </CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setVisible(false)}>
             <CSLab code="TL50" />
           </CButton>
-          <CButton color="primary">
+          <CButton
+            style={{ cursor: !canSave ? "not-allowed" : "pointer" }}
+            disabled={!canSave}
+            onClick={() => setVisible(false)}
+            color="primary"
+          >
             <CSLab code="TL11" />
           </CButton>
         </CModalFooter>
@@ -339,4 +335,4 @@ const Dependant = (props) => {
   );
 };
 
-export default Dependant;
+export default EmergencyContact;
