@@ -239,7 +239,7 @@ const AccidentTransaction = () => {
                 <CLabel htmlFor="DateInformed">
                   <CSLab code="Cost" />
                 </CLabel>
-                <CInput className="" id="DateInformed" type="date" />
+                <CInput className="" id="DateInformed" type="text" />
               </CCol>
             </>
           </CRow>

@@ -108,7 +108,6 @@
           "to": "/employeemanager/accidenttransaction"
         },
 
-       
         {
           "_tag": "CSidebarNavItem",
           "name": "Employee Hobby",
@@ -118,6 +117,11 @@
           "_tag": "CSidebarNavItem",
           "name": "Employee Skill",
           "to": "/employeemanager/employeeskill"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Relatioships",
+          "to": "/employeemanager/relationships"
         }
       ]
     },
@@ -140,7 +144,7 @@
         {
           "_tag": "CSidebarNavItem",
           "name": "Emergency Contact",
-          "to": "/employeerelationships/employeecontact"
+          "to": "/employeerelationships/emergencycontact"
         },
         {
           "_tag": "CSidebarNavItem",

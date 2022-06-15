@@ -2,7 +2,7 @@ import React from "react";
 
 //import Dependant from "./views/EmployeeManager/Dependant/Dependant";
 import AccidentTransaction from "./views/EmployeeManager/AccidentTransaction/AccidentTransaction";
-import MedicalTransaction from "./views/EmployeeManager/MedicalTransaction/MedicalTransaction";
+//import MedicalTransaction from "./views/EmployeeManager/MedicalTransaction/MedicalTransaction";
 import Beneficiaries from "./views/EmployeeManager/Beneficiary/Beneficiary";
 //import EmergencyContact from "./views/EmployeeRelationships/EmergencyContact/EmergencyContact";
 //import NextofKin from "./views/EmployeeManager/NextofKin/NextofKin";
@@ -192,11 +192,17 @@ const Dependant = React.lazy(() =>
 const EmergencyContact = React.lazy(() =>
   import("./views/EmployeeRelationships/EmergencyContact/EmergencyContact")
 );
+const EmergencyContacts = React.lazy(() =>
+  import("./views/EmployeeRelationships/EmergencyContact/EmergencyContact")
+);
 const Guarantor = React.lazy(() =>
   import("./views/EmployeeRelationships/Guarantor/Guarantor")
 );
 const NextofKin = React.lazy(() =>
   import("./views/EmployeeRelationships/NextofKin/NextofKin")
+);
+const Relationships = React.lazy(() =>
+  import("./views/EmployeeManager/Relationships/Relationships")
 );
 
 const routes = [
@@ -343,7 +349,7 @@ const routes = [
   {
     path: "/employeemanager/medicaltransaction",
     name: "Medical Transaction",
-    component: MedicalTransaction,
+    component: MedicalTransactions,
   },
   ,
   {
@@ -484,6 +490,11 @@ const routes = [
     path: "/employeerelationships/guarantor",
     name: "Guarantor",
     component: Guarantor,
+  },
+  {
+    path: "/employeemanager/relationships",
+    name: "Relationships",
+    component: Relationships,
   },
 
   //Tax Manager

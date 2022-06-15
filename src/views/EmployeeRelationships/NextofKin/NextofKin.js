@@ -261,6 +261,18 @@ const NextofKin = (props) => {
                   ))}
                 </CSelect>
               </CCol>
+              <CCol md="4">
+                <CLabel htmlFor="phonenumber">
+                  <CSLab code="Phone Number" />
+                </CLabel>
+                <CInput
+                  id="phonenumber"
+                  input="text"
+                  name="phone"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                />
+              </CCol>
             </>
           </CRow>
           <CRow className={"bottom-spacing"}>
@@ -276,18 +288,7 @@ const NextofKin = (props) => {
                 input="text"
               />
             </CCol>
-            <CCol md="4">
-              <CLabel htmlFor="phonenumber">
-                <CSLab code="Phone Number" />
-              </CLabel>
-              <CInput
-                id="phonenumber"
-                input="text"
-                name="phone"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-              />
-            </CCol>
+
             <CCol md="4">
               <CLabel htmlFor="otherphone">
                 <CSLab code="Other Phone" />
