@@ -48,7 +48,7 @@ import "../../../../node_modules/@syncfusion/ej2-splitbuttons/styles/material.cs
 import "../../../../node_modules/@syncfusion/ej2-react-grids/styles/material.css";
 import { CardBodyHeight } from "src/reusable/utils/helper";
 // import { isEqual, differenceWith } from 'react-lodash'
-  
+
 const commandOptions = [
   {
     type: "Edit",
@@ -112,7 +112,7 @@ const earnings = {
     query: new Query(),
   },
 };
-
+console.log("trials", earnings.params.fields )
 function refreshPage() {
   window.location.reload(false);
 }
@@ -143,6 +143,16 @@ const EmployeeDetail = (props) => {
     allowDeleting: false,
     allowEditOnDblClick: false,
   });
+  const [fname, setfname] = useState("");
+  const [lname, setlname] = useState("");
+  const [email, setEmail] = useState("");
+  const [relation, setRelation] = useState("");
+  const [phone, setPhone] = useState("");
+  const [otherPhone, setOtherPhone] = useState("");
+  const [address, setAddress] = useState("");
+
+  console.log(fname);
+  const canSave = [fname, lname, relation, phone, address].every(Boolean);
 
   const firstGrid = useRef(null);
 
@@ -208,7 +218,7 @@ const EmployeeDetail = (props) => {
     <>
       <CRow>
         <CCol xs="12">
-          <h5>Employee Transactions</h5>
+          <h5>Employee Relationships</h5>
         </CCol>
       </CRow>
       <CRow>
@@ -257,7 +267,7 @@ const EmployeeDetail = (props) => {
                       active={activeKey === 1}
                       onClick={() => setActiveKey(1)}
                     >
-                      Recurring Earnings
+                      Beneficiary
                     </CNavLink>
                   </CNavItem>
                   <CNavItem>
@@ -266,7 +276,7 @@ const EmployeeDetail = (props) => {
                       active={activeKey === 2}
                       onClick={() => setActiveKey(2)}
                     >
-                      Non Recurring Earnings
+                      Dependant
                     </CNavLink>
                   </CNavItem>
                   <CNavItem>
@@ -275,7 +285,7 @@ const EmployeeDetail = (props) => {
                       active={activeKey === 6}
                       onClick={() => setActiveKey(6)}
                     >
-                      Timesheet
+                      Emergency Contact
                     </CNavLink>
                   </CNavItem>
                   <CNavItem>
@@ -284,7 +294,7 @@ const EmployeeDetail = (props) => {
                       active={activeKey === 3}
                       onClick={() => setActiveKey(3)}
                     >
-                      Recurring Deductions
+                      Guarantor
                     </CNavLink>
                   </CNavItem>
                   <CNavItem>
@@ -293,36 +303,7 @@ const EmployeeDetail = (props) => {
                       active={activeKey === 4}
                       onClick={() => setActiveKey(4)}
                     >
-                      Non Recurring Deductions
-                    </CNavLink>
-                  </CNavItem>
-                  <CNavItem>
-                    <CNavLink
-                      href="#"
-                      active={activeKey === 5}
-                      onClick={() => setActiveKey(5)}
-                    >
-                      Loans
-                    </CNavLink>
-                  </CNavItem>
-                  <CNavItem>
-                    <CNavLink
-                      href="#"
-                      active={activeKey === 7}
-                      onClick={() => setActiveKey(7)}
-                    >
-                      {" "}
-                      Savings Scheme{" "}
-                    </CNavLink>
-                  </CNavItem>
-                  <CNavItem>
-                    <CNavLink
-                      href="#"
-                      active={activeKey === 8}
-                      onClick={() => setActiveKey(8)}
-                    >
-                      {" "}
-                      Reliefs{" "}
+                      Next of Kin
                     </CNavLink>
                   </CNavItem>
                 </CNav>
@@ -347,31 +328,48 @@ const EmployeeDetail = (props) => {
                           isPrimaryKey={true}
                         />
                         <ColumnDirective
-                          field="name"
-                          editType="dropdownedit"
-                          headerText={"Item"}
-                          width="70"
+                          field={"firstname"}
+                          editType="text"
+                          headerText={"First Name"}
+                          width="100"
                           edit={earnings}
+                          value={"fname"}
+                          //onChange={(e) => setfname(e.target.value)}
                         />
                         <ColumnDirective
-                          field="ruleValue"
-                          headerText={"Value"}
-                          editType="numericedit"
+                          field="lastname"
+                          headerText={"Last Name"}
+                          editType="text"
                           width="100"
                           textAlign="Center"
+                          // name="lname"
+                          // value={lname}
+                          // onChange={(e) => setlname(e.target.value)}
                         />
                         <ColumnDirective
-                          field="unit"
-                          headerText="Unit"
-                          editType="numericedit"
+                          field="address"
+                          headerText={"Address"}
+                          editType="text"
                           width="100"
                           textAlign="Center"
+                          name="address"
+                          // value={address}
+                          // onChange={(e) => setAddress(e.target.value)}
                         />
                         <ColumnDirective
-                          field="date"
-                          headerText="Expiry Date"
-                          editType="datetimeedit"
-                          editTemplate={editTemplate}
+                          field="relation"
+                          headerText={"Relation"}
+                          editType="text"
+                          width="100"
+                          textAlign="Center"
+                          // name="relation"
+                          // value={relation}
+                          // onChange ={(e)=>setRelation(e.target.value)}
+                        />
+                        <ColumnDirective
+                          field="percentage"
+                          headerText={"Percentage"}
+                          editType="text"
                           width="100"
                           textAlign="Center"
                         />
@@ -414,23 +412,31 @@ const EmployeeDetail = (props) => {
                           isPrimaryKey={true}
                         />
                         <ColumnDirective
-                          field={"payPeriod"}
-                          editType="dropdownedit"
-                          headerText={"Item"}
+                          field={"name"}
+                          editType="text"
+                          headerText={"Name"}
                           width="70"
-                          edit={earnings}
+                          //edit={earnings}
                         />
                         <ColumnDirective
-                          field={"ruleValue"}
-                          headerText={"Value"}
-                          editType="numericedit"
+                          field={"relation"}
+                          headerText={"Relation"}
+                          editType="text"
                           width="100"
                           textAlign="Center"
                         />
                         <ColumnDirective
-                          field="unit"
-                          headerText="Unit"
-                          editType="numericedit"
+                          field="dateofbirth"
+                          headerText={"Date of Birth"}
+                          editType="datetimeedit"
+                          editTemplate={editTemplate}
+                          width="100"
+                          textAlign="Center"
+                        />
+                        <ColumnDirective
+                          field="nationality"
+                          headerText={"Nationality"}
+                          editType="dropdownedit"
                           width="100"
                           textAlign="Center"
                         />
@@ -473,31 +479,31 @@ const EmployeeDetail = (props) => {
                           isPrimaryKey={true}
                         />
                         <ColumnDirective
-                          field={"payPeriod"}
-                          editType="dropdownedit"
-                          headerText={"Item"}
+                          field={"name"}
+                          editType="text"
+                          headerText={"Name"}
                           width="70"
-                          edit={earnings}
+                          //edit={earnings}
                         />
                         <ColumnDirective
-                          field={"ruleValue"}
-                          headerText={"Value"}
+                          field={"relation"}
+                          headerText={"Relation"}
+                          editType="text"
+                          width="100"
+                          textAlign="Center"
+                        />
+                        <ColumnDirective
+                          field="phonenumber"
+                          headerText="Phone Number"
                           editType="numericedit"
                           width="100"
                           textAlign="Center"
                         />
                         <ColumnDirective
-                          field="unit"
-                          headerText="Unit"
-                          editType="numericedit"
-                          width="100"
-                          textAlign="Center"
-                        />
-                        <ColumnDirective
-                          field="date"
-                          headerText="Expiry Date"
-                          editType="datetimeedit"
-                          editTemplate={editTemplate}
+                          field="address"
+                          headerText="Address"
+                          editType="text"
+                          // editTemplate={editTemplate}
                           width="100"
                           textAlign="Center"
                         />
@@ -540,23 +546,37 @@ const EmployeeDetail = (props) => {
                           isPrimaryKey={true}
                         />
                         <ColumnDirective
-                          field={"payPeriod"}
-                          editType="dropdownedit"
-                          headerText={"Item"}
+                          field={"name"}
+                          editType="text"
+                          headerText={"Name"}
                           width="70"
-                          edit={earnings}
+                          // edit={earnings}
                         />
                         <ColumnDirective
-                          field={"ruleValue"}
-                          headerText={"Value"}
+                          field={"relation"}
+                          headerText={"Relation"}
+                          editType="text"
+                          width="100"
+                          textAlign="Center"
+                        />
+                        <ColumnDirective
+                          field={"email"}
+                          headerText={"Email"}
+                          editType="text"
+                          width="100"
+                          textAlign="Center"
+                        />
+                        <ColumnDirective
+                          field="phonenumber"
+                          headerText="Phone Number"
                           editType="numericedit"
                           width="100"
                           textAlign="Center"
                         />
                         <ColumnDirective
-                          field="unit"
-                          headerText="Unit"
-                          editType="numericedit"
+                          field={"address"}
+                          headerText={"Address"}
+                          editType="text"
                           width="100"
                           textAlign="Center"
                         />
@@ -599,30 +619,37 @@ const EmployeeDetail = (props) => {
                           isPrimaryKey={true}
                         />
                         <ColumnDirective
-                          field={"payPeriod"}
-                          editType="dropdownedit"
-                          headerText={"Loan"}
+                          field={"name"}
+                          editType="text"
+                          headerText={"Name"}
                           width="70"
                           edit={earnings}
                         />
                         <ColumnDirective
-                          field={"ruleValue"}
-                          headerText={"Amount"}
+                          field={"relation"}
+                          headerText={"Relation"}
+                          editType="text"
+                          width="100"
+                          textAlign="Center"
+                        />
+                        <ColumnDirective
+                          field="phonenumber"
+                          headerText="Phone Number"
                           editType="numericedit"
                           width="100"
                           textAlign="Center"
                         />
                         <ColumnDirective
-                          field="unit"
-                          headerText="term"
-                          editType="numericedit"
+                          field="email"
+                          headerText="Email"
+                          editType="text"
                           width="100"
                           textAlign="Center"
                         />
                         <ColumnDirective
-                          field="unit"
-                          headerText="Grace Period"
-                          editType="numericedit"
+                          field="address"
+                          headerText="Address"
+                          editType="text"
                           width="100"
                           textAlign="Center"
                         />
