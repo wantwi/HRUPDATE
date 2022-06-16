@@ -3,6 +3,11 @@ import { useSelector } from "react-redux";
 
 import CIcon from "@coreui/icons-react";
 import {
+  CSDivider,
+  CSRequiredIndicator,
+} from "src/reusable/components";
+
+import {
   CInputGroupAppend,
   CInputGroup,
   CInput,
@@ -46,12 +51,35 @@ import {
 
 const HireApplicant = (props) => {
   const lan = useSelector((state) => state.language);
-
+  const [visible, setVisible] = useState(false);
   const [show, setShow] = useState(true);
   const [activeKey, setActiveKey] = useState(1);
   const [, setSaveContinueLabel] = useState("Continue");
   const [searchInput, setSearchInput] = useState("");
   const [mode, setMode] = useState("");
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [dateofbirth, setDateofbirth] = useState("");
+  const [email, setEmail] = useState("");
+  const [digitalAddress, setDigitalAddress] = useState("");
+  const [homeAddress, setHomeAddress] = useState("");
+  
+  const [ssfnumber, setSsfnumber] = useState("");
+  const [status, setStatus] = useState("");
+  const [phone, setPhone] = useState("");
+
+  const canSave = [
+    firstname,
+    lastname,
+    dateofbirth,
+    email,
+    digitalAddress,
+    homeAddress,
+    
+    ssfnumber,
+    status,
+    phone,
+  ].every(Boolean);
 
   const TransLabelByCode = (name) => GetLabelByName(name, lan);
   const searchReset = () => {
@@ -185,21 +213,36 @@ const HireApplicant = (props) => {
                               <CLabel htmlFor="firstname">
                                 {" "}
                                 <CSLab code="TL15" />{" "}
+                                <CSRequiredIndicator />
                               </CLabel>
-                              <CInput className="" id="firstname" />
+                              <CInput
+                                className=""
+                                id="firstname"
+                                name="firstname"
+                                value={firstname}
+                                onChange={(e) => setFirstname(e.target.value)}
+                              />
                             </CCol>
                             <CCol md="4">
                               <CLabel htmlFor="lastname">
                                 {" "}
                                 <CSLab code="TL17" />{" "}
+                                <CSRequiredIndicator />
                               </CLabel>
-                              <CInput className="" id="lastname" />
+                              <CInput
+                                className=""
+                                id="lastname"
+                                name="lastname"
+                                value={lastname}
+                                onChange={(e) => setLastname(e.target.value)}
+                              />
                             </CCol>
                           </CRow>
                           <CRow>
                             <CCol md="3">
                               <CLabel htmlFor="Nationality">
                                 <CSLab code="TL69" />
+                                <CSRequiredIndicator />
                               </CLabel>
                               <SingleSelectComponent
                                 multiData={{ Divisions }}
@@ -216,8 +259,16 @@ const HireApplicant = (props) => {
                             <CCol md="4">
                               <CLabel>
                                 <CSLab code="TL71" />
+                                <CSRequiredIndicator />
                               </CLabel>
-                              <CInput className="" id="dateofbirth" />
+                              <CInput
+                                className=""
+                                id="dateofbirth"
+                                name="dateofbirth"
+                                value={dateofbirth}
+                                onChange={(e) => setDateofbirth(e.target.value)}
+                                type="date"
+                              />
                             </CCol>
                             <CCol md="2">
                               <CLabel>
@@ -265,20 +316,41 @@ const HireApplicant = (props) => {
                             <CCol md="5">
                               <CLabel htmlFor="email">
                                 <CSLab code="TL18" />
+                                <CSRequiredIndicator />
                               </CLabel>
-                              <CInput className="" id="email" />
+                              <CInput
+                                className=""
+                                id="email"
+                                name="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                              />
                             </CCol>
                             <CCol md="4">
                               <CLabel>
                                 <CSLab code="TL19" />
+                                <CSRequiredIndicator />
                               </CLabel>
-                              <PhoneInput />
+                              <PhoneInput
+                                value={phone}
+                                name="phone"
+                                onChange={(e) => setPhone(e.target.value)}
+                              />
                             </CCol>
                             <CCol md="3">
                               <CLabel htmlFor="code">
                                 <CSLab code="TL74" />
+                                <CSRequiredIndicator />
                               </CLabel>
-                              <CInput className="" id="digital-address" />
+                              <CInput
+                                className=""
+                                id="digital-address"
+                                name="digitalAddress"
+                                value={digitalAddress}
+                                onChange={(e) =>
+                                  setDigitalAddress(e.target.value)
+                                }
+                              />
                             </CCol>
                             <CCol md="12">
                               <CLabel>
@@ -380,8 +452,13 @@ const HireApplicant = (props) => {
                             <CCol md="3">
                               <CLabel htmlFor="status">
                                 <CSLab code="Status" />
+                                <CSRequiredIndicator />
                               </CLabel>
-                              <CSelect>
+                              <CSelect
+                                name="status"
+                                value={status}
+                                onChange={(e) => setStatus(e.target.value)}
+                              >
                                 {["Select Status", "Active", "Inactive"].map(
                                   (x, i) => (
                                     <option value={x} key={i}>
@@ -587,10 +664,18 @@ const HireApplicant = (props) => {
                 </CButton>
               ) : null}
               <CButton
-                style={{ marginRight: 5, float: "right" }}
-                type="button"
-                size="sm"
-                color="success"
+                style={{
+                  marginRight: 5,
+                  float: "right",
+                  cursor: !canSave ? "not-allowed" : "pointer",
+                }}
+                // type="button"
+                // size="sm"
+                // color="success"
+                // style={{ cursor: !canSave ? "not-allowed" : "pointer" }}
+                disabled={!canSave}
+                onClick={() => setVisible(false)}
+                color="primary"
               >
                 <AiFillSave size={20} /> <CSLab code="TL11" />{" "}
               </CButton>

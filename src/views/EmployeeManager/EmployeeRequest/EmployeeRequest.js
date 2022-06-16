@@ -1,3 +1,9 @@
+
+import {
+  CSDivider,
+  CSLineLabel,
+  CSRequiredIndicator,
+} from "src/reusable/components";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { AiOutlinePlus } from "react-icons/ai";
@@ -57,6 +63,10 @@ const EmployeeRequest = (props) => {
   const [show, setShow] = useState(true);
   const [visible, setVisible] = useState(false);
   const TransLabelByCode = (name) => GetLabelByName(name, lan);
+  const [effectivedate, setEffectivedate] = useState("");
+  const [expirationdate, setExpirationdate] = useState("");
+  const [type, setType] = useState("");
+  const canSave = [effectivedate, expirationdate, type].every(Boolean);
 
   return (
     <>
@@ -170,8 +180,14 @@ const EmployeeRequest = (props) => {
               <CCol md="4">
                 <CLabel htmlFor="type">
                   <CSLab code="Request Type" />
+                  <CSRequiredIndicator />
                 </CLabel>
-                <CSelect id="type">
+                <CSelect
+                  id="type"
+                  name="type"
+                  value={type}
+                  onChange={(e) => setType(e.target.value)}
+                >
                   {["Select Type", "Type 1", "Type 2", "Type 3"].map((x, i) => (
                     <option key={i} value={x}>
                       {x}
@@ -182,14 +198,30 @@ const EmployeeRequest = (props) => {
               <CCol md="4">
                 <CLabel htmlFor="effectivedate">
                   <CSLab code="Effective Date" />
+                  <CSRequiredIndicator />
                 </CLabel>
-                <CInput className="" id="effectivedate" type="date" />
+                <CInput
+                  className=""
+                  id="effectivedate"
+                  type="date"
+                  name="effectivedate"
+                  value={effectivedate}
+                  onChange={(e) => setEffectivedate(e.target.value)}
+                />
               </CCol>
               <CCol md="4">
                 <CLabel htmlFor="expirationdate">
                   <CSLab code="Expiration Date" />
+                  <CSRequiredIndicator />
                 </CLabel>
-                <CInput className="" id="expirationdate" type="date" />
+                <CInput
+                  className=""
+                  id="expirationdate"
+                  type="date"
+                  name="expirationdate"
+                  value={expirationdate}
+                  onChange={(e) => setExpirationdate(e.target.value)}
+                />
               </CCol>
             </>
           </CRow>
@@ -212,7 +244,12 @@ const EmployeeRequest = (props) => {
           <CButton color="secondary" onClick={() => setVisible(false)}>
             <CSLab code="TL50" />
           </CButton>
-          <CButton color="primary">
+          <CButton
+            style={{ cursor: !canSave ? "not-allowed" : "pointer" }}
+            disabled={!canSave}
+            onClick={() => setVisible(false)}
+            color="primary"
+          >
             <CSLab code="TL11" />
           </CButton>
         </CModalFooter>

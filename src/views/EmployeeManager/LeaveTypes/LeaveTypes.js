@@ -319,7 +319,7 @@ const LeaveTypes = (props) => {
                             {" "}
                             <CSLab code="Maximum Number of Days" />{" "}
                           </CLabel>
-                          <CInput style={{ width: "91px" }} />
+                          <CInput style={{ width: "152px" }} />
                         </CCol>
                       )}
                     </CRow>

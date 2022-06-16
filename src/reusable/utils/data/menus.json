@@ -125,39 +125,7 @@
         }
       ]
     },
-    {
-      "_tag": "CSidebarNavDropdown",
-      "name": "Employee Relationships",
-      "route": "/base",
-      "icon": "cil-cursor",
-      "_children": [
-        {
-          "_tag": "CSidebarNavItem",
-          "name": "Beneficiary",
-          "to": "/employeerelationships/beneficiary"
-        },
-        {
-          "_tag": "CSidebarNavItem",
-          "name": "Dependant",
-          "to": "/employeerelationships/dependant"
-        },
-        {
-          "_tag": "CSidebarNavItem",
-          "name": "Emergency Contact",
-          "to": "/employeerelationships/emergencycontact"
-        },
-        {
-          "_tag": "CSidebarNavItem",
-          "name": "Guarantor",
-          "to": "/employeerelationships/guarantor"
-        },
-        {
-          "_tag": "CSidebarNavItem",
-          "name": "Next of Kin",
-          "to": "/employeerelationships/nextofkin"
-        }
-      ]
-    },
+
     {
       "_tag": "CSidebarNavDropdown",
       "name": "Position Manager",

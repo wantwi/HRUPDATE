@@ -112,7 +112,7 @@ const earnings = {
     query: new Query(),
   },
 };
-console.log("trials", earnings.params.fields )
+console.log("trials", earnings.params.fields);
 function refreshPage() {
   window.location.reload(false);
 }
@@ -151,7 +151,7 @@ const EmployeeDetail = (props) => {
   const [otherPhone, setOtherPhone] = useState("");
   const [address, setAddress] = useState("");
 
-  console.log(fname);
+ 
   const canSave = [fname, lname, relation, phone, address].every(Boolean);
 
   const firstGrid = useRef(null);
@@ -209,6 +209,7 @@ const EmployeeDetail = (props) => {
       //setRecEarnings(newdata)
     }
   };
+  var values = ColumnDirective.getValue;
 
   const onCommandClick = (args) => {
     onCompleteAction(args);

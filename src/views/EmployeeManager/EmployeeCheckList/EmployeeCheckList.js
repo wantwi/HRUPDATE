@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import {
+  CSDivider,
+  CSLineLabel,
+  CSRequiredIndicator,
+} from "src/reusable/components";
+import {
   CInputGroupAppend,
   CInputGroup,
   CInput,
@@ -34,11 +39,15 @@ const EmployeeCheckList = () => {
     setShow(true);
     setSearchInput("");
   };
-
+  const [visible, setVisible] = useState(false);
   const [show, setShow] = useState(true);
   const [mode, setMode] = useState("");
   const [searchInput, setSearchInput] = useState("");
   const [searchResult, setsearchResult] = useState(null);
+  const [name, setName] = useState("");
+  const [status, setStatus] = useState("");
+  const canSave = [name, status].every(Boolean);
+
   return (
     <>
       <CRow>
@@ -100,16 +109,28 @@ const EmployeeCheckList = () => {
                     <CCol md="8">
                       <CLabel htmlFor="name">
                         <CSLab code={"TL04"} />
+                        <CSRequiredIndicator />
                       </CLabel>
-                      <CInput className="" id="name" />
+                      <CInput
+                        className=""
+                        id="name"
+                        name="name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                      />
                     </CCol>
                   </CRow>
                   <CRow>
                     <CCol md="4">
                       <CLabel htmlFor="status">
                         <CSLab code={"TL53"} />
+                        <CSRequiredIndicator />
                       </CLabel>
-                      <CSelect>
+                      <CSelect
+                        name="status"
+                        value={status}
+                        onChange={(e) => setStatus(e.target.value)}
+                      >
                         {["Select Status", "Active", "Inactive"].map((x, i) => (
                           <option value={x} key={i}>
                             {x}
@@ -148,10 +169,14 @@ const EmployeeCheckList = () => {
                 </CButton>
               ) : null}
               <CButton
-                style={{ marginRight: 5, float: "right" }}
-                type="button"
-                size="sm"
-                color="success"
+                style={{
+                  marginRight: 5,
+                  float: "right",
+                  cursor: !canSave ? "not-allowed" : "pointer",
+                }}
+                disabled={!canSave}
+                onClick={() => setVisible(false)}
+                color="primary"
               >
                 <AiFillSave size={20} /> <CSLab code="TL11" />{" "}
               </CButton>
