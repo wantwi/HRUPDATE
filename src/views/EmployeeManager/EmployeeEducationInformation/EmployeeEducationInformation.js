@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import CIcon from "@coreui/icons-react";
 import {
@@ -20,6 +20,7 @@ import {
   CLabel,
   CTextarea,
   CSelect,
+  CCardHeader
 } from "@coreui/react";
 import {
   ColumnDirective,
@@ -33,10 +34,13 @@ import {
   Edit,
   //CommandColumn
 } from "@syncfusion/ej2-react-grids";
-import { CardBodyHeight } from "src/reusable/utils/helper";
+import { CardBodyHeight, GetRequest } from "src/reusable/utils/helper";
 import { GetLabelByName } from "src/reusable/configs/config";
-import { CSLab } from "../../../reusable/components";
+import { CSLab, CSAutoComplete } from "../../../reusable/components";
 import { AiOutlinePlus } from "react-icons/ai";
+import { SearchEmployees } from "src/reusable/API/EmployeeEndpoints";
+// import { SearchEmployees } from 'src/reusable/API/CurrencyEndpoints';
+
 
 const commandOptions = [
   {
@@ -66,10 +70,67 @@ const editOptions = {
 
 const EmployeeEducationInformation = (props) => {
   const lan = useSelector((state) => state.language);
-
+  const dispatch = useDispatch();
+  const [searchInput, setSearchInput] = useState("");
+  const [pageNumber, setPageNumber] = useState(1);
+  const [numberOfItems, setNumberOfItems] = useState(10);
+  const [orderBy, setOrderBy] = useState('');
+  const [submitData, setSubmitData] = useState({});
+  const [sortOrder, setSortOrder] = useState('');
+  const [large, setLarge] = useState(false);
   const [show, setShow] = useState(true);
+  const [mode, setMode] = useState('');
   const [visible, setVisible] = useState(false);
+  const [searchResult, setSearchResult] = useState(null);
   const TransLabelByCode = (name) => GetLabelByName(name, lan);
+
+
+  const handleSearchResultSelect = (results) => {
+    //console.log(results);
+
+    setMode('Add');
+    setShow(false);
+    dispatch({ type: 'set', data: { ...results,  } });
+    setSubmitData({ ...results,  });
+    if (results?.code) {
+      setSearchResult(results);
+      //console.log(results);
+      // const toastId = toast.loading("Retrieving Details");
+
+      // let currencyCode = results?.code
+      // GetRequest(GetCompanyCurrency(CompanyReference, currencyCode))
+      GetRequest()
+        .then((response) => {
+          // toast.dismiss(toastId);
+          if (response.ok) {
+            response.json().then(response => {
+              // console.log({response});
+              if (response && Object.keys(response).length > 0) {
+                dispatch({ type: 'set', data: { ...response } });
+                setSubmitData({ ...response });
+                // setDuplicateData({ ...response })
+
+                let rates = response?.rates;
+                // console.log(rates);
+                // setExchangeRate(rates);
+                setShow(false);
+                setMode('Update');
+              } else {
+                setMode('Add');
+                setShow(false);
+                // dispatch({ type: 'set', data: { ...results, isHomeCurrency } });
+                // setSubmitData({ ...results, isHomeCurrency });
+              }
+            });
+          }
+
+        }).catch(err => {
+          console.log(err);
+          // toaster(toastId, "Failed to retrieve details", 'error', 4000);
+        }
+        );
+    }
+  }
 
   return (
     <>
@@ -82,105 +143,121 @@ const EmployeeEducationInformation = (props) => {
       </CRow>
       <CRow>
         <CCol md="4">
-          <CFormGroup>
-            <CInputGroup>
-              <CInput
-                className="border-left-curve"
-                type="text"
-                id="username3"
-                name="username3"
-                autoComplete="name"
-                placeholder={TransLabelByCode("Search for Employee by name")}
-              />
-              <CInputGroupAppend>
-                <CButton
-                  className="border-right-curve"
-                  onClick={() => setShow(!show)}
-                  color="primary"
-                >
-                  <CIcon name="cil-magnifying-glass" />
-                </CButton>
-              </CInputGroupAppend>
-            </CInputGroup>
-          </CFormGroup>
+          <CSAutoComplete
+            filterUrl={SearchEmployees(searchInput, pageNumber, numberOfItems, orderBy, sortOrder)}
+            //filterUrl=''            //filterUrl={SearchInternalCurrencies(searchInput)}
+            placeholder={'Search for currency by name or code'}
+            handleSelect={handleSearchResultSelect}
+            displayTextKey={'name'}
+            setInput={setSearchInput}
+           input={searchInput}
+            emptySearchFieldMessage={`Please input 3 or more characters to search`}
+            searchName={'Employee'}
+
+            isPaginated={true}
+            pageNumber={pageNumber}
+            setPageNumber={setPageNumber}
+            numberOfItems={numberOfItems}
+            setNumberOfItems={setNumberOfItems}
+            orderBy={orderBy}
+            setOrderBy={setOrderBy}
+            sortOrder={sortOrder}
+            setSortOrder={setSortOrder}
+
+            mode={mode}
+            setMode={setMode}
+            // reset={handleReset}
+          />
         </CCol>
         <CCol md="8" className="text-right"></CCol>
         <CCol xs="12" hidden={show}>
           <CCard>
-            <CCardBody style={{ height: CardBodyHeight, overflowY: "auto" }}>
-              <CRow>
-                <CCol md="12" style={{ marginBottom: "5px" }}>
-                  <CButton
-                    type="button"
-                    size="sm"
-                    color="primary"
-                    onClick={() => setVisible(true)}
-                  >
+            <CCardHeader hidden={show} className={""}>
+              <CFormGroup row>
+                <CCol md="4">
+                  <b>Employee:</b>{" "}
+                  <span
+                    style={{ textDecoration: "underline dotted", cursor: "pointer", }} type="button" onClick={() => setLarge(!large)} size="md" color="primary">
+                    Michael Ameyaw
+                  </span>
+                </CCol>
+                <CCol md="4">
+                  {/* <CTooltip content={`Click here to view Employees`} >
+                <CButton color="outline-primary"> <MdPeople /> 120 </CButton>
+                </CTooltip> */}
+                </CCol>
+                <CCol md="4">
+                  <CButton color="primary" style={{ float: "right" }} onClick={() => setVisible(true)}>
                     <AiOutlinePlus />
                     <CSLab code="Add Employee Education Information" />{" "}
                   </CButton>
                 </CCol>
-                <CCol md="12">
-                  <GridComponent
-                    dataSource={{}}
-                    allowPaging={true}
-                    pageSettings={{ pageSize: 6 }}
-                    editSettings={editOptions}
-                  >
-                    <ColumnsDirective>
-                      <ColumnDirective
-                        field={"id"}
-                        headerText={"ID"}
-                        width="100"
-                        visible={false}
-                      />
-                      <ColumnDirective
-                        field={"startDate"}
-                        headerText="Start Date"
-                        width="100"
-                      />
-                      <ColumnDirective
-                        field={"endDate"}
-                        headerText="End Date"
-                        width="100"
-                      />
-                      <ColumnDirective
-                        field={"qualification"}
-                        headerText="Qualification"
-                        width="100"
-                      />
-                      <ColumnDirective
-                        field={"coreArea"}
-                        headerText="Core Area"
-                        width="100"
-                      />
-                      <ColumnDirective
-                        field={"professionalTitle"}
-                        headerText="Professional Title"
-                        width="100"
-                      />
-                      <ColumnDirective
-                        field={"grade"}
-                        headerText="Grade"
-                        width="100"
-                      />
-                      <ColumnDirective
-                        field={"comment"}
-                        headerText="Comment"
-                        width="100"
-                      />
-                      <ColumnDirective
-                        commands={commandOptions}
-                        headerText={"Action"}
-                        width="100"
-                        textAlign="Center"
-                      />
-                    </ColumnsDirective>
-                    <Inject services={[Page, Sort, Filter, Group, Edit]} />
-                  </GridComponent>
-                </CCol>
-              </CRow>
-            </CCardBody>
+              </CFormGroup >
+            </CCardHeader>
+
+            <CRow style={{ height: CardBodyHeight, overflowY: "auto" }}>
+              <CCol md="12">
+                <GridComponent
+                  height={500}
+                  dataSource={{}}
+                  allowPaging={true}
+                  pageSettings={{ pageSize: 6 }}
+                  editSettings={editOptions}
+                >
+                  <ColumnsDirective>
+                    <ColumnDirective
+                      field={"id"}
+                      headerText={"ID"}
+                      width="100"
+                      visible={false}
+                    />
+                    <ColumnDirective
+                      field={"startDate"}
+                      headerText="Start Date"
+                      width="100"
+                    />
+                    <ColumnDirective
+                      field={"endDate"}
+                      headerText="End Date"
+                      width="100"
+                    />
+                    <ColumnDirective
+                      field={"qualification"}
+                      headerText="Qualification"
+                      width="100"
+                    />
+                    <ColumnDirective
+                      field={"coreArea"}
+                      headerText="Core Area"
+                      width="100"
+                    />
+                    <ColumnDirective
+                      field={"professionalTitle"}
+                      headerText="Professional Title"
+                      width="100"
+                    />
+                    <ColumnDirective
+                      field={"grade"}
+                      headerText="Grade"
+                      width="100"
+                    />
+                    <ColumnDirective
+                      field={"comment"}
+                      headerText="Comment"
+                      width="100"
+                    />
+                    <ColumnDirective
+                      commands={commandOptions}
+                      headerText={"Action"}
+                      width="100"
+                      textAlign="Center"
+                    />
+                  </ColumnsDirective>
+                  <Inject services={[Page, Sort, Filter, Group, Edit]} />
+                </GridComponent>
+              </CCol>
+            </CRow>
+
           </CCard>
         </CCol>
       </CRow>

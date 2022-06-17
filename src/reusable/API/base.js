@@ -10,3 +10,5 @@ export const DeductionBaseAPIURL = 'http://192.168.0.48:5080/'
 
 export const EmployeeDetailsBaseAPIURL = 'http://192.168.0.48:5070/';
 export const SavingSchemeBaseAPIURL = 'http://192.168.0.48:5100/';
+
+export const BaseURL = 'http://192.168.0.48:5100/'
