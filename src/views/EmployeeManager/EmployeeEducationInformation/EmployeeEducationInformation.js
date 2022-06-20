@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import CIcon from "@coreui/icons-react";
@@ -20,7 +20,7 @@ import {
   CLabel,
   CTextarea,
   CSelect,
-  CCardHeader
+  CCardHeader,
 } from "@coreui/react";
 import {
   ColumnDirective,
@@ -39,8 +39,8 @@ import { GetLabelByName } from "src/reusable/configs/config";
 import { CSLab, CSAutoComplete } from "../../../reusable/components";
 import { AiOutlinePlus } from "react-icons/ai";
 import { SearchEmployees } from "src/reusable/API/EmployeeEndpoints";
+import { CustomAxios } from "src/reusable/API/CustomAxios";
 // import { SearchEmployees } from 'src/reusable/API/CurrencyEndpoints';
-
 
 const commandOptions = [
   {
@@ -74,63 +74,84 @@ const EmployeeEducationInformation = (props) => {
   const [searchInput, setSearchInput] = useState("");
   const [pageNumber, setPageNumber] = useState(1);
   const [numberOfItems, setNumberOfItems] = useState(10);
-  const [orderBy, setOrderBy] = useState('');
+  const [orderBy, setOrderBy] = useState("");
   const [submitData, setSubmitData] = useState({});
-  const [sortOrder, setSortOrder] = useState('');
+  const [sortOrder, setSortOrder] = useState("");
   const [large, setLarge] = useState(false);
   const [show, setShow] = useState(true);
-  const [mode, setMode] = useState('');
+  const [mode, setMode] = useState("");
   const [visible, setVisible] = useState(false);
   const [searchResult, setSearchResult] = useState(null);
+  const [viewinfo, setViewInfo] = useState([]);
   const TransLabelByCode = (name) => GetLabelByName(name, lan);
 
-
   const handleSearchResultSelect = (results) => {
-    //console.log(results);
+    //console.log("show results", results);
 
-    setMode('Add');
+    // testApi();
+    // return;
+    setMode("Add");
     setShow(false);
-    dispatch({ type: 'set', data: { ...results,  } });
-    setSubmitData({ ...results,  });
+    dispatch({ type: "set", data: { ...results } });
+    setSubmitData({ ...results });
+
     if (results?.code) {
       setSearchResult(results);
-      //console.log(results);
-      // const toastId = toast.loading("Retrieving Details");
 
-      // let currencyCode = results?.code
-      // GetRequest(GetCompanyCurrency(CompanyReference, currencyCode))
       GetRequest()
         .then((response) => {
           // toast.dismiss(toastId);
           if (response.ok) {
-            response.json().then(response => {
+            response.json().then((response) => {
               // console.log({response});
               if (response && Object.keys(response).length > 0) {
-                dispatch({ type: 'set', data: { ...response } });
+                dispatch({ type: "set", data: { ...response } });
                 setSubmitData({ ...response });
                 // setDuplicateData({ ...response })
 
                 let rates = response?.rates;
-                // console.log(rates);
+
                 // setExchangeRate(rates);
                 setShow(false);
-                setMode('Update');
+                setMode("Update");
               } else {
-                setMode('Add');
+                setMode("Add");
                 setShow(false);
                 // dispatch({ type: 'set', data: { ...results, isHomeCurrency } });
                 // setSubmitData({ ...results, isHomeCurrency });
               }
             });
           }
-
-        }).catch(err => {
+        })
+        .catch((err) => {
           console.log(err);
           // toaster(toastId, "Failed to retrieve details", 'error', 4000);
-        }
-        );
+        });
     }
-  }
+  };
+
+  console.log({ baseurl: process.env.REACT_APP_BASE_URL });
+  const testApi = async () => {
+    try {
+      const request = await CustomAxios.get(
+        `${process.env.REACT_APP_BASE_URL}/Employees?companyReference=00001_A01`
+      );
+      const res = request.data.items;
+      setViewInfo(res);
+      console.log({ viewinfo });
+
+      //console.log(`${process.env.REACT_APP_BASE_URL}/Employees?companyReference=00001_A01`)
+      // console.log({ searchInput });
+    } catch (error) {
+      console.log({ error });
+    }
+  };
+
+  useEffect(() => {
+    testApi();
+  }, []);
+  const trials = () => viewinfo.map((x) => x.firstName);
+  console.log({ trials });
 
   return (
     <>
@@ -144,16 +165,22 @@ const EmployeeEducationInformation = (props) => {
       <CRow>
         <CCol md="4">
           <CSAutoComplete
-            filterUrl={SearchEmployees(searchInput, pageNumber, numberOfItems, orderBy, sortOrder)}
+            filterUrl={SearchEmployees(
+              searchInput,
+              pageNumber,
+              numberOfItems,
+              orderBy,
+              sortOrder
+            )}
             //filterUrl=''            //filterUrl={SearchInternalCurrencies(searchInput)}
-            placeholder={'Search for currency by name or code'}
+            placeholder={"Search for employee by name or code"}
             handleSelect={handleSearchResultSelect}
-            displayTextKey={'name'}
+            //onChange={()=>handleSearchResultSelect}
+            displayTextKey={"firstName"}
             setInput={setSearchInput}
-           input={searchInput}
+            input={searchInput}
             emptySearchFieldMessage={`Please input 3 or more characters to search`}
-            searchName={'Employee'}
-
+            searchName={"Employee"}
             isPaginated={true}
             pageNumber={pageNumber}
             setPageNumber={setPageNumber}
@@ -163,7 +190,6 @@ const EmployeeEducationInformation = (props) => {
             setOrderBy={setOrderBy}
             sortOrder={sortOrder}
             setSortOrder={setSortOrder}
-
             mode={mode}
             setMode={setMode}
             // reset={handleReset}
@@ -177,7 +203,15 @@ const EmployeeEducationInformation = (props) => {
                 <CCol md="4">
                   <b>Employee:</b>{" "}
                   <span
-                    style={{ textDecoration: "underline dotted", cursor: "pointer", }} type="button" onClick={() => setLarge(!large)} size="md" color="primary">
+                    style={{
+                      textDecoration: "underline dotted",
+                      cursor: "pointer",
+                    }}
+                    type="button"
+                    onClick={() => setLarge(!large)}
+                    size="md"
+                    color="primary"
+                  >
                     Michael Ameyaw
                   </span>
                 </CCol>
@@ -187,12 +221,16 @@ const EmployeeEducationInformation = (props) => {
                 </CTooltip> */}
                 </CCol>
                 <CCol md="4">
-                  <CButton color="primary" style={{ float: "right" }} onClick={() => setVisible(true)}>
+                  <CButton
+                    color="primary"
+                    style={{ float: "right" }}
+                    onClick={() => setVisible(true)}
+                  >
                     <AiOutlinePlus />
                     <CSLab code="Add Employee Education Information" />{" "}
                   </CButton>
                 </CCol>
-              </CFormGroup >
+              </CFormGroup>
             </CCardHeader>
 
             <CRow style={{ height: CardBodyHeight, overflowY: "auto" }}>
@@ -257,7 +295,6 @@ const EmployeeEducationInformation = (props) => {
                 </GridComponent>
               </CCol>
             </CRow>
-
           </CCard>
         </CCol>
       </CRow>

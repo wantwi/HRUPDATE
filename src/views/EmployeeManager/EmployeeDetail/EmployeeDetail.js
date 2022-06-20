@@ -87,6 +87,7 @@ import {
   GetOrgsByType,
 } from "src/reusable/API/EmployeeDetailsEndpoints";
 import { CImage } from "@coreui/bootstrap-react";
+import { CustomAxios } from "src/reusable/API/CustomAxios";
 // import Loader from 'src/Loader/Loader';
 
 const toaster = (toastId, message, type, time) => {
@@ -194,7 +195,26 @@ const EmployeeDetail = (props) => {
 
   const [searchInput, setSearchInput] = useState("");
   const [searchResult, setsearchResult] = useState(null);
+  const [viewinfo,setViewInfo]=useState([])
 
+
+  const testApi = async () => {
+    try {
+      const request = await CustomAxios.get(
+         `${process.env.REACT_APP_BASE_URL}/Employees`
+      );
+      const res = request.data.items;
+      setViewInfo(res);
+      console.log({ viewinfo });
+      // console.log({ searchInput });
+    } catch (error) {
+      console.log({ error });
+    }
+  };
+
+  useEffect(() => {
+    testApi();
+  }, []);
   const handleFileChange = (file) => {
     setFile(file);
   };

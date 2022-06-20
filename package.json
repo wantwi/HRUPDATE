@@ -23,6 +23,7 @@
     "@syncfusion/ej2-react-dropdowns": "^19.2.55",
     "@syncfusion/ej2-react-grids": "^19.2.55",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.0",
+    "axios": "^0.27.2",
     "classnames": "^2.2.6",
     "core-js": "^3.9.1",
     "enzyme": "^3.11.0",
