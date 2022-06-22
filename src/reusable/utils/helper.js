@@ -39,6 +39,7 @@ export async function MultipleGetRequest(urls = [], options = {}) {
  * @returns {Promise<Response[]>}
  */
 export async function PostRequest(url = '', options = { data: null }) {
+   console.log({url})
     // Default options are marked with *
     const response = await fetch(url, {
         method: 'POST', // *GET, POST, PUT, DELETE, etc.

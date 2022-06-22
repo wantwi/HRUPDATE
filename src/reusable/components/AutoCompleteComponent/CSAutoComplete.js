@@ -167,7 +167,7 @@ const CSAutoComplete = ({
           const filteredData = filteredSuggestions.filter(
             (_, index) => index === indexCount
           );
-          console.log(showSuggestions);
+          //console.log(showSuggestions);
 
           if (filteredData && filteredData.length > 0) {
             handleSelect(filteredData[0]);
@@ -207,7 +207,7 @@ const CSAutoComplete = ({
     setShowSuggestions(false);
   };
   //console.log(handleId);
-  console.log({ employeeid });
+  //console.log({ employeeid });
   const runSearch = (url) => {
     const toastId = toast.loading("Searching ");
     if (input && input.length > 2) {
@@ -322,7 +322,7 @@ const CSAutoComplete = ({
   //     console.log({ value, one, two })
   //     runSearch(two);
   // }
-  console.log({ filteredSuggestions });
+  //console.log({ filteredSuggestions });
   const SuggestionsListComponent = () => {
     return filteredSuggestions.length ? (
       <div>
@@ -364,13 +364,13 @@ const CSAutoComplete = ({
                         size={"lg"}
                         className="page-link"
                         onClick={() => {
-                          console.log({
-                            _pageNumber,
-                            _currentPage,
-                            currentPage,
-                            pageNumber,
-                            totalPages,
-                          });
+                          // console.log({
+                          //   _pageNumber,
+                          //   _currentPage,
+                          //   currentPage,
+                          //   pageNumber,
+                          //   totalPages,
+                          // });
                           //if ((_currentPage >= _pageNumber)) {
                           handlePagination(pageNumber - 1, "previous");
                           //}
@@ -395,13 +395,13 @@ const CSAutoComplete = ({
                         size={"lg"}
                         className="page-link"
                         onClick={() => {
-                          console.log({
-                            _pageNumber,
-                            _currentPage,
-                            currentPage,
-                            pageNumber,
-                            totalPages,
-                          });
+                          // console.log({
+                          //   _pageNumber,
+                          //   _currentPage,
+                          //   currentPage,
+                          //   pageNumber,
+                          //   totalPages,
+                          // });
 
                           //if ((_pageNumber <= _currentPage)) {
                           handlePagination(pageNumber + 1, "next");

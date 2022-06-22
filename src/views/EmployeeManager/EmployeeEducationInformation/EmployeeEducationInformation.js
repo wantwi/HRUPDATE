@@ -1,13 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-
-import CIcon from "@coreui/icons-react";
 import {
-  CInputGroupAppend,
-  CInputGroup,
   CInput,
   CCard,
-  CCardBody,
   CFormGroup,
   CCol,
   CRow,
@@ -31,44 +26,50 @@ import {
   Inject,
   Page,
   Sort,
-  Edit,
+
   //CommandColumn
 } from "@syncfusion/ej2-react-grids";
-import { CardBodyHeight, GetRequest } from "src/reusable/utils/helper";
+import { CardBodyHeight, GetRequest, HttpAPIRequest, PostRequest } from "src/reusable/utils/helper";
 import { GetLabelByName } from "src/reusable/configs/config";
 import { CSLab, CSAutoComplete } from "../../../reusable/components";
 import { AiOutlinePlus } from "react-icons/ai";
 import { SearchEmployees } from "src/reusable/API/EmployeeEndpoints";
 import { CustomAxios } from "src/reusable/API/CustomAxios";
+import { GetEducationCoreArea, GetProfessionalTitles, GetQualificationTypes, PostEmployeeEducationInfos } from "src/reusable/API/EmployeeEducationEndpoints";
+
+//GetEducationCoreArea
+// HttpAPIRequest
 // import { SearchEmployees } from 'src/reusable/API/CurrencyEndpoints';
+// GetProfessionalTitles
 
-const commandOptions = [
-  {
-    type: "Edit",
-    buttonOption: { iconCss: " e-icons e-edit", cssClass: "e-flat" },
-  },
-  {
-    type: "Delete",
-    buttonOption: { iconCss: "e-icons e-delete", cssClass: "e-flat" },
-  },
-  {
-    type: "Save",
-    buttonOption: { iconCss: "e-icons e-update", cssClass: "e-flat" },
-  },
-  {
-    type: "Cancel",
-    buttonOption: { iconCss: "e-icons e-cancel-icon", cssClass: "e-flat" },
-  },
-];
+// const commandOptions = [
+//   {
+//     type: "Edit",
+//     buttonOption: { iconCss: " e-icons e-edit", cssClass: "e-flat" },
+//   },
+//   {
+//     type: "Delete",
+//     buttonOption: { iconCss: "e-icons e-delete", cssClass: "e-flat" },
+//   },
+//   {
+//     type: "Save",
+//     buttonOption: { iconCss: "e-icons e-update", cssClass: "e-flat" },
+//   },
+//   {
+//     type: "Cancel",
+//     buttonOption: { iconCss: "e-icons e-cancel-icon", cssClass: "e-flat" },
+//   },
+// ];
 
-const editOptions = {
-  allowEditing: true,
-  allowAdding: true,
-  allowDeleting: false,
-  allowEditOnDblClick: true,
-};
+// const editOptions = {
+//   allowEditing: true,
+//   allowAdding: true,
+//   allowDeleting: false,
+//   allowEditOnDblClick: true,
+// };
 
 const EmployeeEducationInformation = (props) => {
+  const data = useSelector(state => state.data);
   const lan = useSelector((state) => state.language);
   const dispatch = useDispatch();
   const [searchInput, setSearchInput] = useState("");
@@ -85,9 +86,31 @@ const EmployeeEducationInformation = (props) => {
   const [viewinfo, setViewInfo] = useState([]);
   const [handleId, setHandleId] = useState("");
   const TransLabelByCode = (name) => GetLabelByName(name, lan);
+  const [titles, setProfessionalTitle] = useState([])
+  const [qualification, setQualification] = useState([])
+  const [educationCore, setEducationCore] = useState([])
+  // const [postdetails,setPostDetails]= useState([{name:"",gender:""}])
+
+  const MultipleGetRequests = async () => {
+    try {
+      let request = [HttpAPIRequest('GET', GetProfessionalTitles()), HttpAPIRequest('GET', GetQualificationTypes()), HttpAPIRequest('GET', GetEducationCoreArea())];
+      const multipleCall = await Promise.allSettled(request);
+      //console.log(multipleCall[2].value)
+
+      setProfessionalTitle([{ id: '-1', name: `Select Title` }, ...multipleCall[0].value]);
+      setQualification([{ id: '-1', name: `Select Qualification` }, ...multipleCall[1].value])
+      setEducationCore([{ id: '-1', name: `Select Education Core Area` }, ...multipleCall[2].value])
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    MultipleGetRequests()
+  }, []);
 
   const handleSearchResultSelect = (results) => {
-    //console.log("show results", results);
+    console.log("show results", results);
 
     // testApi();
     // return;
@@ -111,7 +134,7 @@ const EmployeeEducationInformation = (props) => {
                 // setDuplicateData({ ...response })
                 //console.log({ response });
 
-                let rates = response?.rates;
+                //let rates = response?.rates;
 
                 // setExchangeRate(rates);
                 setShow(false);
@@ -126,17 +149,74 @@ const EmployeeEducationInformation = (props) => {
           }
         })
         .catch((err) => {
-          console.log(err);
+          // console.log(err);
           // toaster(toastId, "Failed to retrieve details", 'error', 4000);
         });
     }
   };
 
-  console.log({ baseurl: process.env.REACT_APP_BASE_URL });
+  const handleOnSubmit = () => {
+    console.log(submitData)
+
+    // if (!submitData?.earningId || submitData?.earningId === -1) {
+    //     //toast.error('Please select an earning!', toastWarning);
+    //     return;
+    // }
+    // if (!submitData?.unit || submitData?.unit === '') {
+    //    // toast.error('Please enter a value for unit!', toastWarning);
+    //     return;
+    // }
+    // if (!submitData?.payPeriodId || submitData?.payPeriodId === '') {
+    //     //toast.error('Please select a pay period!', toastWarning);
+    //     return;
+    // }
+    // console.log(submitData)
+    let employeeId = submitData.id
+    //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
+    let newData = {
+      ...submitData, "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "userName": "string", "CompanyReference" : "00001_A01", employeeId
+    };
+    //let finalData = JSON.stringify(newData)
+    // console.log(finalData)
+    // 'Add' === mode ? AddGLAccount(newData) : updateGLAccount(newData);
+    postEmployeeEducationInfo(newData)
+  }
+
+  function postEmployeeEducationInfo(data){
+    console.log(data)
+    PostRequest(PostEmployeeEducationInfos(), {data: data})
+      .then(response => {
+        response.text().then(data => {
+          if ("" === data) {
+            // toast.success('Earning Mass Update Successful!',);
+            console.log("success")
+          } else {
+            try {
+              data = JSON.parse(data);
+              // toaster(toastId, data?.reason ? data?.reason : "Failed to update Currency", 'error', 4000);
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        });
+      })
+      .catch(err => {
+        console.log({ err })
+      })
+      .finally(() => {
+        console.log('Done');
+      }
+      );
+  }
+
+
+  // console.log({ baseurl: process.env.REACT_APP_BASE_URL });
   const testApi = async () => {
     try {
       const request = await CustomAxios.get(
-        `http://192.168.0.48:5100/Employees/${handleId}/profile`
+        // `http://192.168.0.48:5100/Employees/${handleId}/profile`
+        `http://192.168.0.48:5100/EmployeeBio/${handleId}`
         //`${process.env.REACT_APP_BASE_URL}/Employees?companyReference=00001_A01`
       );
 
@@ -151,17 +231,23 @@ const EmployeeEducationInformation = (props) => {
       console.log({ error });
     }
   };
-  console.log("log", viewinfo);
+  // console.log("log", viewinfo);
   useEffect(() => {
     if (handleId !== "") {
       testApi();
     }
   }, [handleId]);
   const employeeName = viewinfo.map((x) => x.firstName + " " + x.lastName);
-  console.log(employeeName);
-  console.log(handleId);
+  //console.log(employeeName);
+  //console.log(handleId);
   //console.log("trials : ", viewinfo[0]);
- // let content;
+  // let content;
+
+  const handleOnChange = (evnt) => {
+    //console.log(evnt)
+    setSubmitData(data => { return { ...data, [evnt?.target?.name]: evnt?.target?.value } })
+    dispatch({ type: 'set', data: { ...data, [evnt?.target?.name]: evnt?.target?.value } });
+  }
 
   return (
     <>
@@ -197,7 +283,7 @@ const EmployeeEducationInformation = (props) => {
             mode={mode}
             setMode={setMode}
             handleId={setHandleId}
-            // reset={handleReset}
+          // reset={handleReset}
           />
         </CCol>
         <CCol md="8" className="text-right"></CCol>
@@ -309,28 +395,22 @@ titleId: "00 */}
               <CLabel htmlFor="date">
                 <CSLab code="Start Date" />
               </CLabel>
-              <CInput className="" id="StartDate" type="date" />
+              <CInput className="" name="StartDate" id="StartDate" type="date" value={data?.StartDate || -1} onChange={handleOnChange} />
             </CCol>
             <CCol md="3">
               <CLabel htmlFor="endDate">
                 <CSLab code="End Date" />
               </CLabel>
-              <CInput className="" id="endDate" type="date" />
+              <CInput className="" id="endDate" name="endDate" type="date" value={data?.endDate || -1} onChange={handleOnChange} />
             </CCol>
             <CCol md="6">
               <CLabel htmlFor="qualification">
                 <CSLab code="Qualification" />
               </CLabel>
-              <CSelect>
-                {[
-                  "Select Qualification",
-                  "Qualification 1",
-                  "Qualification 2",
-                ].map((x, i) => (
-                  <option value={x} key={1}>
-                    {x}
-                  </option>
-                ))}
+              <CSelect name="qualificationId" value={data?.qualificationId || -1} onChange={handleOnChange}>
+                {
+                  qualification.map((x, i) => <option key={i} value={x.id}>{x.name}</option>)
+                }
               </CSelect>
             </CCol>
           </CRow>
@@ -339,37 +419,32 @@ titleId: "00 */}
               <CLabel htmlFor="coreArea">
                 <CSLab code="Core Area " />
               </CLabel>
-              <CSelect>
-                {["Select Core Area", "Core Area 1", "Core Area 2"].map(
+              <CSelect name="educationTypeId" value={data?.educationTypeId || -1} onChange={handleOnChange}>
+                {educationCore.map((x, i) => <option key={i} value={x.id}>{x.name}</option>)}
+                {/* {["Select Core Area", "Core Area 1", "Core Area 2"].map(
                   (x, i) => (
                     <option value={x} key={1}>
                       {x}
                     </option>
                   )
-                )}
+                )} */}
               </CSelect>
             </CCol>
             <CCol md="4">
               <CLabel htmlFor="professionalTitle">
                 <CSLab code="Professional Title" />
               </CLabel>
-              <CSelect>
-                {[
-                  "Select Professional Title",
-                  "Professional Title 1",
-                  "Professional Title 2",
-                ].map((x, i) => (
-                  <option value={x} key={1}>
-                    {x}
-                  </option>
-                ))}
+              <CSelect name="titleId" value={data?.titleId || -1} onChange={handleOnChange}>
+                {
+                  titles.map((x, i) => <option key={i} value={x.id}>{x.name}</option>)
+                }
               </CSelect>
             </CCol>
             <CCol md="4">
               <CLabel htmlFor="grade">
                 <CSLab code="Grade" />
               </CLabel>
-              <CInput className="" id="grade" type="text" />
+              <CInput className="" id="grade" type="text" name="grade" value={data?.grade || ""} onChange={handleOnChange} />
             </CCol>
           </CRow>
           <CRow>
@@ -380,6 +455,7 @@ titleId: "00 */}
               <CTextarea
                 id="comment"
                 style={{ height: "80px", resize: "none" }}
+                name="description" value={data?.description || ""} onChange={handleOnChange}
               ></CTextarea>
             </CCol>
           </CRow>
@@ -389,7 +465,7 @@ titleId: "00 */}
             <CSLab code="TL50" />
           </CButton>
           <CButton color="primary">
-            <CSLab code="TL11" />
+            <CSLab code="TL11" onClick={handleOnSubmit} />
           </CButton>
         </CModalFooter>
       </CModal>
