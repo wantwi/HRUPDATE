@@ -83,6 +83,7 @@ const EmployeeEducationInformation = (props) => {
   const [visible, setVisible] = useState(false);
   const [searchResult, setSearchResult] = useState(null);
   const [viewinfo, setViewInfo] = useState([]);
+  const [handleId, setHandleId] = useState("");
   const TransLabelByCode = (name) => GetLabelByName(name, lan);
 
   const handleSearchResultSelect = (results) => {
@@ -108,6 +109,7 @@ const EmployeeEducationInformation = (props) => {
                 dispatch({ type: "set", data: { ...response } });
                 setSubmitData({ ...response });
                 // setDuplicateData({ ...response })
+                //console.log({ response });
 
                 let rates = response?.rates;
 
@@ -134,11 +136,14 @@ const EmployeeEducationInformation = (props) => {
   const testApi = async () => {
     try {
       const request = await CustomAxios.get(
-        `${process.env.REACT_APP_BASE_URL}/Employees?companyReference=00001_A01`
+        `http://192.168.0.48:5100/Employees/${handleId}/profile`
+        //`${process.env.REACT_APP_BASE_URL}/Employees?companyReference=00001_A01`
       );
-      const res = request.data.items;
-      setViewInfo(res);
-      console.log({ viewinfo });
+
+      const res = request.data;
+
+      setViewInfo([res]);
+      //setViewInfo((nonRecurringData) => [res, ...nonRecurringData]);
 
       //console.log(`${process.env.REACT_APP_BASE_URL}/Employees?companyReference=00001_A01`)
       // console.log({ searchInput });
@@ -146,12 +151,17 @@ const EmployeeEducationInformation = (props) => {
       console.log({ error });
     }
   };
-
+  console.log("log", viewinfo);
   useEffect(() => {
-    testApi();
-  }, []);
-  const trials = () => viewinfo.map((x) => x.firstName);
-  console.log({ trials });
+    if (handleId !== "") {
+      testApi();
+    }
+  }, [handleId]);
+  const employeeName = viewinfo.map((x) => x.firstName + " " + x.lastName);
+  console.log(employeeName);
+  console.log(handleId);
+  //console.log("trials : ", viewinfo[0]);
+ // let content;
 
   return (
     <>
@@ -165,13 +175,7 @@ const EmployeeEducationInformation = (props) => {
       <CRow>
         <CCol md="4">
           <CSAutoComplete
-            filterUrl={SearchEmployees(
-              searchInput,
-              pageNumber,
-              numberOfItems,
-              orderBy,
-              sortOrder
-            )}
+            filterUrl={SearchEmployees(searchInput)}
             //filterUrl=''            //filterUrl={SearchInternalCurrencies(searchInput)}
             placeholder={"Search for employee by name or code"}
             handleSelect={handleSearchResultSelect}
@@ -181,7 +185,7 @@ const EmployeeEducationInformation = (props) => {
             input={searchInput}
             emptySearchFieldMessage={`Please input 3 or more characters to search`}
             searchName={"Employee"}
-            isPaginated={true}
+            isPaginated={false}
             pageNumber={pageNumber}
             setPageNumber={setPageNumber}
             numberOfItems={numberOfItems}
@@ -192,6 +196,7 @@ const EmployeeEducationInformation = (props) => {
             setSortOrder={setSortOrder}
             mode={mode}
             setMode={setMode}
+            handleId={setHandleId}
             // reset={handleReset}
           />
         </CCol>
@@ -212,7 +217,7 @@ const EmployeeEducationInformation = (props) => {
                     size="md"
                     color="primary"
                   >
-                    Michael Ameyaw
+                    {employeeName}
                   </span>
                 </CCol>
                 <CCol md="4">
@@ -224,7 +229,9 @@ const EmployeeEducationInformation = (props) => {
                   <CButton
                     color="primary"
                     style={{ float: "right" }}
-                    onClick={() => setVisible(true)}
+                    onClick={() => {
+                      setVisible(true);
+                    }}
                   >
                     <AiOutlinePlus />
                     <CSLab code="Add Employee Education Information" />{" "}
@@ -232,66 +239,52 @@ const EmployeeEducationInformation = (props) => {
                 </CCol>
               </CFormGroup>
             </CCardHeader>
+            {/* address: null
+country: "GH"
+createdAt: "2022-06-15T10:50:43.7867215"
+dateOfBirth: "2001-06-14T14:09:05.366"
+digitalAddress: null
+email: "michael.ameyaw@persol.net"
+firstName: "Michael"
+gender: "Male"
+isResident: true
+lastName: "Ameyaw"
+nationalID: null
+nationality: "GH"
+otherName: "Optional"
+phoneNumber: "0244123652"
+titleId: "00 */}
 
             <CRow style={{ height: CardBodyHeight, overflowY: "auto" }}>
               <CCol md="12">
                 <GridComponent
-                  height={500}
-                  dataSource={{}}
+                  height={300}
                   allowPaging={true}
-                  pageSettings={{ pageSize: 6 }}
-                  editSettings={editOptions}
+                  dataSource={viewinfo}
                 >
                   <ColumnsDirective>
                     <ColumnDirective
-                      field={"id"}
-                      headerText={"ID"}
-                      width="100"
-                      visible={false}
+                      field="firstName"
+                      headerText="First Name"
+                      width="120"
                     />
                     <ColumnDirective
-                      field={"startDate"}
-                      headerText="Start Date"
-                      width="100"
+                      field="lastName"
+                      headerText="lastName"
+                      width="150"
                     />
                     <ColumnDirective
-                      field={"endDate"}
-                      headerText="End Date"
-                      width="100"
+                      field="email"
+                      headerText="email"
+                      width="150"
                     />
                     <ColumnDirective
-                      field={"qualification"}
-                      headerText="Qualification"
-                      width="100"
-                    />
-                    <ColumnDirective
-                      field={"coreArea"}
-                      headerText="Core Area"
-                      width="100"
-                    />
-                    <ColumnDirective
-                      field={"professionalTitle"}
-                      headerText="Professional Title"
-                      width="100"
-                    />
-                    <ColumnDirective
-                      field={"grade"}
-                      headerText="Grade"
-                      width="100"
-                    />
-                    <ColumnDirective
-                      field={"comment"}
-                      headerText="Comment"
-                      width="100"
-                    />
-                    <ColumnDirective
-                      commands={commandOptions}
-                      headerText={"Action"}
-                      width="100"
-                      textAlign="Center"
+                      field="phoneNumber"
+                      headerText="phoneNumber"
+                      width="150"
                     />
                   </ColumnsDirective>
-                  <Inject services={[Page, Sort, Filter, Group, Edit]} />
+                  <Inject services={[Page, Sort, Filter, Group]} />
                 </GridComponent>
               </CCol>
             </CRow>

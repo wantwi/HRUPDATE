@@ -61,6 +61,7 @@ const CSAutoComplete = ({
   mode,
   setMode,
   reset,
+  handleId,
 }) => {
   //console.log({ filterUrl, uniqueIdKey, displayTextKey, placeholder, handleSelect, input, setInput, searchName, emptySearchFieldMessage, isPaginated, pageNumber, setPageNumber, numberOfItems, setNumberOfItems, orderBy, setOrderBy, sortOrder, setSortOrder, selectNumberOfItems, mode, setMode, reset })
   // Set default values
@@ -120,6 +121,7 @@ const CSAutoComplete = ({
   const [totalResults, setTotalResults] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const [employeeid, setEmployeeId] = useState("");
 
   //get user input
   const onChange = (e) => {
@@ -165,6 +167,7 @@ const CSAutoComplete = ({
           const filteredData = filteredSuggestions.filter(
             (_, index) => index === indexCount
           );
+          console.log(showSuggestions);
 
           if (filteredData && filteredData.length > 0) {
             handleSelect(filteredData[0]);
@@ -190,6 +193,10 @@ const CSAutoComplete = ({
       let selectedItem = filteredSuggestions.filter(
         (x) => x?.[uniqueIdKey] === e?.target?.id
       );
+      // console.log(selectedItem[0].id);
+      handleId(selectedItem[0].id);
+      //setEmployeeId(selectedItem[0].id);
+
       if (selectedItem && selectedItem.length === 1)
         handleSelect(selectedItem[0]);
     }
@@ -199,7 +206,8 @@ const CSAutoComplete = ({
     indexCount = 0;
     setShowSuggestions(false);
   };
-
+  //console.log(handleId);
+  console.log({ employeeid });
   const runSearch = (url) => {
     const toastId = toast.loading("Searching ");
     if (input && input.length > 2) {
@@ -207,7 +215,7 @@ const CSAutoComplete = ({
         .then((response) => {
           if (response.ok) {
             response.json().then((data) => {
-             // console.log({ data });
+              // console.log({ data });
 
               if (
                 data.items &&
@@ -236,7 +244,7 @@ const CSAutoComplete = ({
                     toaster(toastId, `No records found`, "info", 3000);
                   }
 
-                 // console.log("Paginated");
+                  // console.log("Paginated");
                 }
               }
 
@@ -314,7 +322,7 @@ const CSAutoComplete = ({
   //     console.log({ value, one, two })
   //     runSearch(two);
   // }
-  //console.log({ filteredSuggestions });
+  console.log({ filteredSuggestions });
   const SuggestionsListComponent = () => {
     return filteredSuggestions.length ? (
       <div>
@@ -325,8 +333,8 @@ const CSAutoComplete = ({
                 className={`dropdown-item ${
                   index === indexCount ? "active" : ""
                 }`}
-                //id={suggestion?.[uniqueIdKey]}
-                key={suggestion?.[uniqueIdKey]}
+                id={suggestion?.[uniqueIdKey]}
+                // key={suggestion?.[uniqueIdKey]}
                 onClick={onClick}
                 title={`Click to select `}
               >
