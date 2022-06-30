@@ -85,7 +85,7 @@ const EmployeeNote = () => {
       <CRow>
         <CCol xs="12">
           <h5>
-            <CSLab code="Employee Note" />
+            <CSLab code="HCM-IAOIDXJO5C9_KCMI" />
           </h5>
         </CCol>
       </CRow>
@@ -99,7 +99,7 @@ const EmployeeNote = () => {
                 id="username3"
                 name="username3"
                 autoComplete="name"
-                placeholder={TransLabelByCode("TL48")}
+                placeholder={TransLabelByCode("HCM-IAOIDXJO5C9_KCMI")}
               />
               <CInputGroupAppend>
                 <CButton
@@ -129,7 +129,7 @@ const EmployeeNote = () => {
                     color="primary"
                   >
                     {" "}
-                    <AiOutlinePlus /> <CSLab code="Employee Note" />
+                    <AiOutlinePlus /> <CSLab code="HCM-IAOIDXJO5C9_KCMI" />
                   </CButton>
                 </CCol>
                 <CCol md="12">
@@ -168,7 +168,7 @@ const EmployeeNote = () => {
                       />
                       <ColumnDirective
                         commands={commandOptions}
-                        headerText={GetLabelByName("TL51", lan)}
+                        headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
                         width="100"
                         textAlign="Center"
                       />
@@ -200,7 +200,7 @@ const EmployeeNote = () => {
         <CModalHeader>
           <CModalTitle>
             {" "}
-            <CSLab code="Add Employee Note" />{" "}
+            <CSLab code="HCM-IAOIDXJO5C9_KCMI" />{" "}
           </CModalTitle>
         </CModalHeader>
         <CModalBody>
@@ -208,13 +208,13 @@ const EmployeeNote = () => {
             <CRow>
               <CCol md="4">
                 <CLabel>
-                  <CSLab code="Date" />
+                  <CSLab code="HCM-VZL7SHYF7OB_KCMI" />
                 </CLabel>
                 <CInput className="" name="date" type="date" />
               </CCol>
               <CCol md="4">
                 <CLabel>
-                  <CSLab code="Follow Up Date" />
+                  <CSLab code="HCM-84Y7SXTY7GN-KCMI" />
                 </CLabel>
                 <CInput className="" name="followupdate" type="date" />
               </CCol>
@@ -222,9 +222,9 @@ const EmployeeNote = () => {
           </>
           <>
             <CRow>
-              <CCol md="12">
+              <CCol md="9">
                 <CLabel>
-                  <CSLab code="Follow Up" />
+                  <CSLab code="HCM-ZFIVQD66M1L_KCMI" />
                 </CLabel>
                 <CTextarea
                   className=""
@@ -232,9 +232,9 @@ const EmployeeNote = () => {
                   id="followup"
                 ></CTextarea>
               </CCol>
-              <CCol md="12">
+              <CCol md="9">
                 <CLabel>
-                  <CSLab code="Subject" />
+                  <CSLab code="HCM-1JQYEYIC22E-LASN" />
                 </CLabel>
                 <CTextarea
                   className=""
@@ -247,10 +247,10 @@ const EmployeeNote = () => {
         </CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setVisible(false)}>
-            <CSLab code="TL50" />
+            <CSLab code="HCM-9E3ZC2E1S0N-LASN" />
           </CButton>
           <CButton color="primary">
-            <CSLab code="TL11" />
+            <CSLab code="HCM-HGUHIR0OK6T" />
           </CButton>
         </CModalFooter>
       </CModal>

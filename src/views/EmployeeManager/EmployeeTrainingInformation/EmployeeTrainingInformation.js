@@ -1,5 +1,8 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import { toastWarning } from "src/toasters/Toaster";
+import { CustomAxios } from "src/reusable/API/CustomAxios";
 
 import CIcon from "@coreui/icons-react";
 import {
@@ -34,8 +37,18 @@ import {
 } from "@syncfusion/ej2-react-grids";
 import { CardBodyHeight } from "src/reusable/utils/helper";
 import { GetLabelByName } from "src/reusable/configs/config";
-import { CSLab } from "../../../reusable/components";
+import {
+  CSLab,
+  CSAutoComplete,
+  CSRequiredIndicator,
+} from "../../../reusable/components";
 import { AiOutlinePlus } from "react-icons/ai";
+import { SearchEmployees } from "src/reusable/API/EmployeeEndpoints";
+import {
+  GetRequest,
+  HttpAPIRequest,
+  PostRequest,
+} from "src/reusable/utils/helper";
 
 const commandOptions = [
   {
@@ -68,7 +81,96 @@ const EmployeeTrainingInformation = (props) => {
 
   const [show, setShow] = useState(true);
   const [visible, setVisible] = useState(false);
+  const data = useSelector((state) => state.data);
+  const dispatch = useDispatch();
+  const [searchInput, setSearchInput] = useState("");
+  const [pageNumber, setPageNumber] = useState(1);
+  const [numberOfItems, setNumberOfItems] = useState(10);
+  const [orderBy, setOrderBy] = useState("");
+  const [submitData, setSubmitData] = useState({});
+  const [sortOrder, setSortOrder] = useState("");
+  const [large, setLarge] = useState(false);
+  const [mode, setMode] = useState("");
+  const [searchResult, setSearchResult] = useState(null);
+  const [empDisplayName, setEmpDisplayName] = useState("");
+  const [handleId, setHandleId] = useState("");
+  const [viewinfo, setViewInfo] = useState([]);
+  const [providerTypes, setProviderTypes] = useState([]);
+  const [ailmentType, setAilmenentType] = useState([]);
+
+  const handleSearchResultSelect = (results) => {
+    console.log("show results", results);
+
+    //setting employee display name on select of suggested item
+    setEmpDisplayName(
+      (prevState) => `${results.firstName} ${results.lastName}`
+    );
+    // testApi();
+    // return;
+    setMode("Add");
+    setShow(false);
+    dispatch({ type: "set", data: { ...results } });
+    setSubmitData({ ...results });
+
+    if (results?.code) {
+      setSearchResult(results);
+
+      GetRequest()
+        .then((response) => {
+          // toast.dismiss(toastId);
+          if (response.ok) {
+            response.json().then((response) => {
+              // console.log({response});
+              if (response && Object.keys(response).length > 0) {
+                dispatch({ type: "set", data: { ...response } });
+                setSubmitData({ ...response });
+                // setDuplicateData({ ...response })
+                //console.log({ response });
+
+                //let rates = response?.rates;
+
+                // setExchangeRate(rates);
+                setShow(false);
+                setMode("Update");
+              } else {
+                setMode("Add");
+                setShow(false);
+                // dispatch({ type: 'set', data: { ...results, isHomeCurrency } });
+                // setSubmitData({ ...results, isHomeCurrency });
+              }
+            });
+          }
+        })
+        .catch((err) => {
+          // console.log(err);
+          // toaster(toastId, "Failed to retrieve details", 'error', 4000);
+        });
+    }
+  };
+
   const TransLabelByCode = (name) => GetLabelByName(name, lan);
+
+  //Get employee skill details
+  const getEmployeeSkills = async () => {
+    try {
+      const request = await CustomAxios.get(`EmployeeSkills/${handleId}`);
+
+      const response = request.data;
+      console.log("emp response:", response);
+      setViewInfo((prevState) => response);
+    } catch (error) {
+      console.log({ error });
+    }
+  };
+  useEffect(() => {
+    if (handleId !== "") {
+      getEmployeeSkills();
+    }
+  }, [handleId]);
+
+  useEffect(() => {
+    console.log("check view info ", viewinfo);
+  });
 
   return (
     <>
@@ -82,89 +184,116 @@ const EmployeeTrainingInformation = (props) => {
       <CRow>
         <CCol md="4">
           <CFormGroup>
-            <CInputGroup>
-              <CInput
-                className="border-left-curve"
-                type="text"
-                id="username3"
-                name="username3"
-                autoComplete="name"
-                placeholder={TransLabelByCode("Search for Employee name")}
-              />
-              <CInputGroupAppend>
-                <CButton
-                  className="border-right-curve"
-                  onClick={() => setShow(!show)}
-                  color="primary"
-                >
-                  <CIcon name="cil-magnifying-glass" />
-                </CButton>
-              </CInputGroupAppend>
-            </CInputGroup>
+            <CSAutoComplete
+              filterUrl={SearchEmployees(searchInput)}
+              //filterUrl=''            //filterUrl={SearchInternalCurrencies(searchInput)}
+              placeholder={"Search for employee by name or code"}
+              handleSelect={handleSearchResultSelect}
+              //onChange={()=>handleSearchResultSelect}
+              displayTextKey={"firstName"}
+              setInput={setSearchInput}
+              input={searchInput}
+              emptySearchFieldMessage={`Please input 3 or more characters to search`}
+              searchName={"Employee"}
+              isPaginated={false}
+              pageNumber={pageNumber}
+              setPageNumber={setPageNumber}
+              numberOfItems={numberOfItems}
+              setNumberOfItems={setNumberOfItems}
+              orderBy={orderBy}
+              setOrderBy={setOrderBy}
+              sortOrder={sortOrder}
+              setSortOrder={setSortOrder}
+              mode={mode}
+              setMode={setMode}
+              handleId={setHandleId}
+              // reset={handleReset}
+            />
           </CFormGroup>
         </CCol>
         <CCol md="8" className="text-right"></CCol>
         <CCol xs="12" hidden={show}>
           <CCard>
             <CCardBody style={{ height: CardBodyHeight, overflowY: "auto" }}>
-              <CRow>
-                <CCol md="12" style={{ marginBottom: "5px" }}>
-                  <CButton
+              <CFormGroup row>
+                <CCol md="4">
+                  <b>Employee:</b>{" "}
+                  <span
+                    style={{
+                      textDecoration: "underline dotted",
+                      cursor: "pointer",
+                    }}
                     type="button"
-                    size="sm"
+                    onClick={() => setLarge(!large)}
+                    size="md"
                     color="primary"
-                    onClick={() => setVisible(true)}
+                  >
+                    {empDisplayName}
+                  </span>
+                </CCol>
+                <CCol md="4">
+                  {/* <CTooltip content={`Click here to view Employees`} >
+                <CButton color="outline-primary"> <MdPeople /> 120 </CButton>
+                </CTooltip> */}
+                </CCol>
+                <CCol md="4">
+                  <CButton
+                    color="primary"
+                    style={{ float: "right" }}
+                    onClick={() => {
+                      setVisible(true);
+                    }}
                   >
                     <AiOutlinePlus />
-                    <CSLab code="Add Employee Training Information" />{" "}
+                    <CSLab code="HCM-YA012RXM2U-PSLL" />{" "}
                   </CButton>
                 </CCol>
-                <CCol md="12">
-                  <GridComponent
-                    dataSource={{}}
-                    allowPaging={true}
-                    pageSettings={{ pageSize: 6 }}
-                    editSettings={editOptions}
-                  >
-                    <ColumnsDirective>
-                      <ColumnDirective
-                        field={"id"}
-                        headerText={"ID"}
-                        width="100"
-                        visible={false}
-                      />
-                      <ColumnDirective
-                        field={"employeeID"}
-                        headerText={"Employee ID"}
-                        width="100"
-                        visible={false}
-                      />
-                      <ColumnDirective
-                        field={"programCode"}
-                        headerText="Program Code"
-                        width="100"
-                      />
-                      <ColumnDirective
-                        field={"programName"}
-                        headerText="Program Name"
-                        width="100"
-                      />
-                      <ColumnDirective
-                        field={"completedBy"}
-                        headerText="completed By"
-                        width="100"
-                      />
-                      <ColumnDirective
-                        commands={commandOptions}
-                        headerText={"Action"}
-                        width="100"
-                        textAlign="Center"
-                      />
-                    </ColumnsDirective>
-                    <Inject services={[Page, Sort, Filter, Group, Edit]} />
-                  </GridComponent>
-                </CCol>
-              </CRow>
+              </CFormGroup>
+              <CCol md="12">
+                <GridComponent
+                  dataSource={{}}
+                  allowPaging={true}
+                  pageSettings={{ pageSize: 6 }}
+                  editSettings={editOptions}
+                >
+                  <ColumnsDirective>
+                    <ColumnDirective
+                      field={"id"}
+                      headerText={"ID"}
+                      width="100"
+                      visible={false}
+                    />
+                    <ColumnDirective
+                      field={"employeeID"}
+                      headerText={GetLabelByName("Employee ID")}
+                      width="100"
+                      visible={false}
+                    />
+                    <ColumnDirective
+                      field={"programCode"}
+                      headerText={GetLabelByName("HCM-YTBRY0XIPAH_HRPR", lan)}
+                      width="100"
+                    />
+                    <ColumnDirective
+                      field={"programName"}
+                      headerText={GetLabelByName("HCM-OGH7US2WKV-LOLN", lan)}
+                      width="100"
+                    />
+                    <ColumnDirective
+                      field={"completedBy"}
+                      headerText={GetLabelByName("HCM-EAHZHCC8S3F_LOLN", lan)}
+                      width="100"
+                    />
+                    <ColumnDirective
+                      commands={commandOptions}
+                      headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
+                      width="100"
+                      textAlign="Center"
+                    />
+                  </ColumnsDirective>
+                  <Inject services={[Page, Sort, Filter, Group, Edit]} />
+                </GridComponent>
+              </CCol>
             </CCardBody>
           </CCard>
         </CCol>
@@ -178,32 +307,36 @@ const EmployeeTrainingInformation = (props) => {
         <CModalHeader>
           <CModalTitle>
             {" "}
-            <CSLab code="Add Employee Training Information" />{" "}
+            <CSLab code="HCM-YA012RXM2U-PSLL" />{" "}
           </CModalTitle>
         </CModalHeader>
         <CModalBody>
           <CRow>
             <CCol md="3">
               <CLabel>
-                <CSLab code="Employee ID" />
+                <CSLab code="HCM-B0VG88EHYDM_KCMI" />
+                <CSRequiredIndicator />
               </CLabel>
-              <CInput className="" name="date" />
+              <CInput className="" name="employeeId" />
             </CCol>
             <CCol md="2">
               <CLabel>
-                <CSLab code="Program Code" />
+                <CSLab code="HCM-YTBRY0XIPAH_HRPR" />
+                <CSRequiredIndicator />
               </CLabel>
               <CInput className="" name="ProgramCode" type="text" />
             </CCol>
             <CCol md="7">
               <CLabel>
-                <CSLab code="Program Name" />
+                <CSLab code="HCM-OGH7US2WKV-LOLN" />
+                <CSRequiredIndicator />
               </CLabel>
               <CInput className="" name="programName" type="text" />
             </CCol>
             <CCol md="5">
               <CLabel>
-                <CSLab code="Completed By" />
+                <CSLab code="HCM-EAHZHCC8S3F_LOLN" />
+                <CSRequiredIndicator />
               </CLabel>
               <CInput className="" name="Completed By" type="text" />
             </CCol>
@@ -211,7 +344,7 @@ const EmployeeTrainingInformation = (props) => {
           <CRow>
             <CCol md="12">
               <CLabel>
-                <CSLab code="Note" />
+                <CSLab code="HCM-Z0FV0XJJ06" />
               </CLabel>
               <CTextarea
                 name="note"
@@ -222,10 +355,10 @@ const EmployeeTrainingInformation = (props) => {
         </CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setVisible(false)}>
-            <CSLab code="TL50" />
+            <CSLab code="HCM-9E3ZC2E1S0N-LASN" />
           </CButton>
           <CButton color="primary">
-            <CSLab code="TL11" />
+            <CSLab code="HCM-HGUHIR0OK6T" />
           </CButton>
         </CModalFooter>
       </CModal>

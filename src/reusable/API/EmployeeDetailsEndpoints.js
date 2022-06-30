@@ -1,4 +1,5 @@
 import { EmployeeDetailsBaseAPIURL } from "./base";
+import { BaseURL } from "./base";
 
 /**
  * Endpoint to search for employee by name or code.
@@ -16,7 +17,7 @@ export const SearchEmployeeByNameOrCode = (
   orderBy,
   sortOrder
 ) =>
-  `${EmployeeDetailsBaseAPIURL}Employees/filter?Filter=${query}&Page=${pageNumber}&Results=${numberOfItems}&OrderBy=${orderBy}&SortOrder=${sortOrder}`;
+  `${BaseURL}Employees/filter?Filter=${query}&Page=${pageNumber}&Results=${numberOfItems}&OrderBy=${orderBy}&SortOrder=${sortOrder}`;
 
 /**
  * Endpoint to get currencies

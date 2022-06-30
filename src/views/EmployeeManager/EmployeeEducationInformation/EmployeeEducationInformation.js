@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import { toastWarning } from "src/toasters/Toaster";
 import {
   CInput,
   CCard,
@@ -20,56 +22,68 @@ import {
 import {
   ColumnDirective,
   ColumnsDirective,
+  CommandColumn,
+  Edit,
   Filter,
   GridComponent,
   Group,
   Inject,
   Page,
   Sort,
+  Toolbar,
 
   //CommandColumn
 } from "@syncfusion/ej2-react-grids";
-import { CardBodyHeight, GetRequest, HttpAPIRequest, PostRequest } from "src/reusable/utils/helper";
+import {
+  CardBodyHeight,
+  GetRequest,
+  HttpAPIRequest,
+  PostRequest,
+} from "src/reusable/utils/helper";
 import { GetLabelByName } from "src/reusable/configs/config";
-import { CSLab, CSAutoComplete } from "../../../reusable/components";
+import {
+  CSLab,
+  CSAutoComplete,
+  CSRequiredIndicator,
+} from "../../../reusable/components";
 import { AiOutlinePlus } from "react-icons/ai";
-import { SearchEmployees } from "src/reusable/API/EmployeeEndpoints";
+
+import {
+  GetEmployee,
+  SearchEmployees,
+} from "src/reusable/API/EmployeeEndpoints";
 import { CustomAxios } from "src/reusable/API/CustomAxios";
-import { GetEducationCoreArea, GetProfessionalTitles, GetQualificationTypes, PostEmployeeEducationInfos } from "src/reusable/API/EmployeeEducationEndpoints";
+import {
+  GetEducationCoreArea,
+  GetProfessionalTitles,
+  GetQualificationTypes,
+  PostEmployeeEducationInfos,
+  GetEmployeeEducationInfo,
+} from "src/reusable/API/EmployeeEducationEndpoints";
+import { GetEmployeeAccidentByEmployeeId } from "src/reusable/API/AccidentTransaction";
 
 //GetEducationCoreArea
 // HttpAPIRequest
 // import { SearchEmployees } from 'src/reusable/API/CurrencyEndpoints';
 // GetProfessionalTitles
 
-// const commandOptions = [
-//   {
-//     type: "Edit",
-//     buttonOption: { iconCss: " e-icons e-edit", cssClass: "e-flat" },
-//   },
-//   {
-//     type: "Delete",
-//     buttonOption: { iconCss: "e-icons e-delete", cssClass: "e-flat" },
-//   },
-//   {
-//     type: "Save",
-//     buttonOption: { iconCss: "e-icons e-update", cssClass: "e-flat" },
-//   },
-//   {
-//     type: "Cancel",
-//     buttonOption: { iconCss: "e-icons e-cancel-icon", cssClass: "e-flat" },
-//   },
-// ];
+const commandOptions = [
+  {
+    type: "Delete",
+    buttonOption: { iconCss: "e-icons e-delete", cssClass: "e-flat" },
+  },
+];
 
-// const editOptions = {
-//   allowEditing: true,
-//   allowAdding: true,
-//   allowDeleting: false,
-//   allowEditOnDblClick: true,
-// };
+const editOptions = {
+  allowEditing: true,
+  allowAdding: true,
+  allowDeleting: false,
+  allowEditOnDblClick: true,
+};
+const toolbarOptions = ["Add", "Cancel"];
 
 const EmployeeEducationInformation = (props) => {
-  const data = useSelector(state => state.data);
+  const data = useSelector((state) => state.data);
   const lan = useSelector((state) => state.language);
   const dispatch = useDispatch();
   const [searchInput, setSearchInput] = useState("");
@@ -86,32 +100,49 @@ const EmployeeEducationInformation = (props) => {
   const [viewinfo, setViewInfo] = useState([]);
   const [handleId, setHandleId] = useState("");
   const TransLabelByCode = (name) => GetLabelByName(name, lan);
-  const [titles, setProfessionalTitle] = useState([])
-  const [qualification, setQualification] = useState([])
-  const [educationCore, setEducationCore] = useState([])
+  const [titles, setProfessionalTitle] = useState([]);
+  const [qualification, setQualification] = useState([]);
+  const [educationCore, setEducationCore] = useState([]);
+  const [empDisplayName, setEmpDisplayName] = useState("");
   // const [postdetails,setPostDetails]= useState([{name:"",gender:""}])
 
   const MultipleGetRequests = async () => {
     try {
-      let request = [HttpAPIRequest('GET', GetProfessionalTitles()), HttpAPIRequest('GET', GetQualificationTypes()), HttpAPIRequest('GET', GetEducationCoreArea())];
+      let request = [
+        HttpAPIRequest("GET", GetProfessionalTitles()),
+        HttpAPIRequest("GET", GetQualificationTypes()),
+        HttpAPIRequest("GET", GetEducationCoreArea()),
+      ];
       const multipleCall = await Promise.allSettled(request);
       //console.log(multipleCall[2].value)
 
-      setProfessionalTitle([{ id: '-1', name: `Select Title` }, ...multipleCall[0].value]);
-      setQualification([{ id: '-1', name: `Select Qualification` }, ...multipleCall[1].value])
-      setEducationCore([{ id: '-1', name: `Select Education Core Area` }, ...multipleCall[2].value])
+      setProfessionalTitle([
+        { id: "-1", name: `Select Title` },
+        ...multipleCall[0].value,
+      ]);
+      setQualification([
+        { id: "-1", name: `Select Qualification` },
+        ...multipleCall[1].value,
+      ]);
+      setEducationCore([
+        { id: "-1", name: `Select Education Core Area` },
+        ...multipleCall[2].value,
+      ]);
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   useEffect(() => {
-    MultipleGetRequests()
+    MultipleGetRequests();
   }, []);
 
   const handleSearchResultSelect = (results) => {
     console.log("show results", results);
-
+    //setting employee display name on select of suggested item
+    setEmpDisplayName(
+      (prevState) => `${results.firstName} ${results.lastName}`
+    );
     // testApi();
     // return;
     setMode("Add");
@@ -156,41 +187,68 @@ const EmployeeEducationInformation = (props) => {
   };
 
   const handleOnSubmit = () => {
-    console.log(submitData)
+    console.log(submitData);
 
-    // if (!submitData?.earningId || submitData?.earningId === -1) {
-    //     //toast.error('Please select an earning!', toastWarning);
-    //     return;
-    // }
-    // if (!submitData?.unit || submitData?.unit === '') {
-    //    // toast.error('Please enter a value for unit!', toastWarning);
-    //     return;
-    // }
+    if (!submitData?.StartDate || submitData?.StartDate === -1) {
+      toast.error("Please Select Start Date!", toastWarning);
+      return;
+    }
+
+    if (!submitData?.endDate || submitData?.endDate === -1) {
+      toast.error("Please Select End Date!", toastWarning);
+      return;
+    }
+
+    if (!submitData?.qualificationId || submitData?.qualificationId === -1) {
+      toast.error("Please Select Qualification Type!", toastWarning);
+      return;
+    }
+
+    if (!submitData?.educationTypeId || submitData?.educationTypeId === -1) {
+      toast.error("Please Select Core Area!", toastWarning);
+      return;
+    }
+
+    if (!submitData?.titleId || submitData?.titleId === -1) {
+      toast.error("Please Select Professional Title!", toastWarning);
+      return;
+    }
+    if (!submitData?.grade || submitData?.grade === "") {
+      toast.error("Please Enter Grade!", toastWarning);
+      return;
+    }
+    if (!submitData?.school || submitData?.school === "") {
+      toast.error("Please Enter School!", toastWarning);
+      return;
+    }
     // if (!submitData?.payPeriodId || submitData?.payPeriodId === '') {
     //     //toast.error('Please select a pay period!', toastWarning);
     //     return;
     // }
     // console.log(submitData)
-    let employeeId = submitData.id
+    let employeeId = submitData.id;
     //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
     let newData = {
-      ...submitData, "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "userName": "string", "CompanyReference" : "00001_A01", employeeId
+      ...submitData,
+      userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      userName: "string",
+      CompanyReference: "00001_A01",
+      employeeId,
     };
     //let finalData = JSON.stringify(newData)
     // console.log(finalData)
     // 'Add' === mode ? AddGLAccount(newData) : updateGLAccount(newData);
-    postEmployeeEducationInfo(newData)
-  }
+    postEmployeeEducationInfo(newData);
+  };
 
-  function postEmployeeEducationInfo(data){
-    console.log(data)
-    PostRequest(PostEmployeeEducationInfos(), {data: data})
-      .then(response => {
-        response.text().then(data => {
+  function postEmployeeEducationInfo(data) {
+    console.log(data);
+    PostRequest(PostEmployeeEducationInfos(), { data: data })
+      .then((response) => {
+        response.text().then((data) => {
           if ("" === data) {
             // toast.success('Earning Mass Update Successful!',);
-            console.log("success")
+            console.log("success");
           } else {
             try {
               data = JSON.parse(data);
@@ -201,28 +259,22 @@ const EmployeeEducationInformation = (props) => {
           }
         });
       })
-      .catch(err => {
-        console.log({ err })
+      .catch((err) => {
+        console.log({ err });
       })
       .finally(() => {
-        console.log('Done');
-      }
-      );
+        console.log("Done");
+      });
   }
 
-
   // console.log({ baseurl: process.env.REACT_APP_BASE_URL });
-  const testApi = async () => {
+  const getEmployeebyId = async () => {
     try {
-      const request = await CustomAxios.get(
-        // `http://192.168.0.48:5100/Employees/${handleId}/profile`
-        `http://192.168.0.48:5100/EmployeeBio/${handleId}`
-        //`${process.env.REACT_APP_BASE_URL}/Employees?companyReference=00001_A01`
-      );
+      const request = await CustomAxios.get(`EmployeeEducation/${handleId}`);
 
-      const res = request.data;
-
-      setViewInfo([res]);
+      const response = request.data;
+      //console.log("emp response:", respond);
+      setViewInfo((prevState) => response);
       //setViewInfo((nonRecurringData) => [res, ...nonRecurringData]);
 
       //console.log(`${process.env.REACT_APP_BASE_URL}/Employees?companyReference=00001_A01`)
@@ -231,13 +283,15 @@ const EmployeeEducationInformation = (props) => {
       console.log({ error });
     }
   };
+
   // console.log("log", viewinfo);
   useEffect(() => {
     if (handleId !== "") {
-      testApi();
+      getEmployeebyId();
     }
   }, [handleId]);
-  const employeeName = viewinfo.map((x) => x.firstName + " " + x.lastName);
+
+  //const employeeName = viewinfo.map((x) => x.firstName + " " + x.lastName);
   //console.log(employeeName);
   //console.log(handleId);
   //console.log("trials : ", viewinfo[0]);
@@ -245,16 +299,21 @@ const EmployeeEducationInformation = (props) => {
 
   const handleOnChange = (evnt) => {
     //console.log(evnt)
-    setSubmitData(data => { return { ...data, [evnt?.target?.name]: evnt?.target?.value } })
-    dispatch({ type: 'set', data: { ...data, [evnt?.target?.name]: evnt?.target?.value } });
-  }
+    setSubmitData((data) => {
+      return { ...data, [evnt?.target?.name]: evnt?.target?.value };
+    });
+    dispatch({
+      type: "set",
+      data: { ...data, [evnt?.target?.name]: evnt?.target?.value },
+    });
+  };
 
   return (
     <>
       <CRow>
         <CCol xs="12">
           <h5>
-            <CSLab code="Employee Education Information" />
+            <CSLab code="HCM-ZHMVWWTZ63B_KCMI" />
           </h5>
         </CCol>
       </CRow>
@@ -283,7 +342,7 @@ const EmployeeEducationInformation = (props) => {
             mode={mode}
             setMode={setMode}
             handleId={setHandleId}
-          // reset={handleReset}
+            // reset={handleReset}
           />
         </CCol>
         <CCol md="8" className="text-right"></CCol>
@@ -303,7 +362,7 @@ const EmployeeEducationInformation = (props) => {
                     size="md"
                     color="primary"
                   >
-                    {employeeName}
+                    {empDisplayName}
                   </span>
                 </CCol>
                 <CCol md="4">
@@ -320,57 +379,65 @@ const EmployeeEducationInformation = (props) => {
                     }}
                   >
                     <AiOutlinePlus />
-                    <CSLab code="Add Employee Education Information" />{" "}
+                    <CSLab code="HCM-5RMQ68926X9_HRPR" />{" "}
                   </CButton>
                 </CCol>
               </CFormGroup>
             </CCardHeader>
-            {/* address: null
-country: "GH"
-createdAt: "2022-06-15T10:50:43.7867215"
-dateOfBirth: "2001-06-14T14:09:05.366"
-digitalAddress: null
-email: "michael.ameyaw@persol.net"
-firstName: "Michael"
-gender: "Male"
-isResident: true
-lastName: "Ameyaw"
-nationalID: null
-nationality: "GH"
-otherName: "Optional"
-phoneNumber: "0244123652"
-titleId: "00 */}
-
             <CRow style={{ height: CardBodyHeight, overflowY: "auto" }}>
               <CCol md="12">
                 <GridComponent
                   height={300}
                   allowPaging={true}
                   dataSource={viewinfo}
+                  //toolbar={toolbarOptions}
                 >
                   <ColumnsDirective>
                     <ColumnDirective
-                      field="firstName"
-                      headerText="First Name"
+                      field={"school"}
+                      headerText="School"
                       width="120"
                     />
                     <ColumnDirective
-                      field="lastName"
-                      headerText="lastName"
+                      field="qualification.name"
+                      headerText="Qualification"
                       width="150"
                     />
                     <ColumnDirective
-                      field="email"
-                      headerText="email"
+                      field={"educationType.name"}
+                      headerText="Core Area"
                       width="150"
                     />
                     <ColumnDirective
-                      field="phoneNumber"
-                      headerText="phoneNumber"
+                      field="startDate"
+                      headerText="Start Date"
                       width="150"
+                    />
+                    <ColumnDirective
+                      field="endDate"
+                      headerText="End Date"
+                      width="150"
+                    />
+
+                    <ColumnDirective
+                      commands={commandOptions}
+                      color="primary"
+                      headerText={"Action"}
+                      width="50"
+                      textAlign="Center"
                     />
                   </ColumnsDirective>
-                  <Inject services={[Page, Sort, Filter, Group]} />
+                  <Inject
+                    services={[
+                      Page,
+                      Sort,
+                      Filter,
+                      Group,
+                      Edit,
+                      Toolbar,
+                      CommandColumn,
+                    ]}
+                  />
                 </GridComponent>
               </CCol>
             </CRow>
@@ -386,41 +453,73 @@ titleId: "00 */}
         <CModalHeader>
           <CModalTitle>
             {" "}
-            <CSLab code="Add Employee Education Information" />{" "}
+            <CSLab code="HCM-5RMQ68926X9_HRPR" />{" "}
           </CModalTitle>
         </CModalHeader>
         <CModalBody>
           <CRow>
             <CCol md="3">
               <CLabel htmlFor="date">
-                <CSLab code="Start Date" />
+                <CSLab code="HCM-K85NF9HWVXC-LANG" />
+                <CSRequiredIndicator />
               </CLabel>
-              <CInput className="" name="StartDate" id="StartDate" type="date" value={data?.StartDate || -1} onChange={handleOnChange} />
+              <CInput
+                className=""
+                name="StartDate"
+                id="StartDate"
+                type="date"
+                value={data?.StartDate || -1}
+                onChange={handleOnChange}
+              />
             </CCol>
             <CCol md="3">
               <CLabel htmlFor="endDate">
-                <CSLab code="End Date" />
+                <CSLab code="HCM-S4N9DCXVMJ" />
+                <CSRequiredIndicator />
               </CLabel>
-              <CInput className="" id="endDate" name="endDate" type="date" value={data?.endDate || -1} onChange={handleOnChange} />
+              <CInput
+                className=""
+                id="endDate"
+                name="endDate"
+                type="date"
+                value={data?.endDate || -1}
+                onChange={handleOnChange}
+              />
             </CCol>
-            <CCol md="6">
+            <CCol md="5">
               <CLabel htmlFor="qualification">
-                <CSLab code="Qualification" />
+                <CSLab code="HCM-AQL471VH30T_LANG" />
+                <CSRequiredIndicator />
               </CLabel>
-              <CSelect name="qualificationId" value={data?.qualificationId || -1} onChange={handleOnChange}>
-                {
-                  qualification.map((x, i) => <option key={i} value={x.id}>{x.name}</option>)
-                }
+              <CSelect
+                name="qualificationId"
+                value={data?.qualificationId || -1}
+                onChange={handleOnChange}
+              >
+                {qualification.map((x, i) => (
+                  <option key={i} value={x.id}>
+                    {x.name}
+                  </option>
+                ))}
               </CSelect>
             </CCol>
           </CRow>
           <CRow>
-            <CCol md="4">
+            <CCol md="3">
               <CLabel htmlFor="coreArea">
-                <CSLab code="Core Area " />
+                <CSLab code="HCM-0GQBD3AIMTXJ_HRPR" />
+                <CSRequiredIndicator />
               </CLabel>
-              <CSelect name="educationTypeId" value={data?.educationTypeId || -1} onChange={handleOnChange}>
-                {educationCore.map((x, i) => <option key={i} value={x.id}>{x.name}</option>)}
+              <CSelect
+                name="educationTypeId"
+                value={data?.educationTypeId || -1}
+                onChange={handleOnChange}
+              >
+                {educationCore.map((x, i) => (
+                  <option key={i} value={x.id}>
+                    {x.name}
+                  </option>
+                ))}
                 {/* {["Select Core Area", "Core Area 1", "Core Area 2"].map(
                   (x, i) => (
                     <option value={x} key={1}>
@@ -430,42 +529,74 @@ titleId: "00 */}
                 )} */}
               </CSelect>
             </CCol>
-            <CCol md="4">
+            <CCol md="3">
               <CLabel htmlFor="professionalTitle">
-                <CSLab code="Professional Title" />
+                <CSLab code="HCM-14CIXISPX6X-LANG" />
+                <CSRequiredIndicator />
               </CLabel>
-              <CSelect name="titleId" value={data?.titleId || -1} onChange={handleOnChange}>
-                {
-                  titles.map((x, i) => <option key={i} value={x.id}>{x.name}</option>)
-                }
+              <CSelect
+                name="titleId"
+                value={data?.titleId || -1}
+                onChange={handleOnChange}
+              >
+                {titles.map((x, i) => (
+                  <option key={i} value={x.id}>
+                    {x.name}
+                  </option>
+                ))}
               </CSelect>
             </CCol>
-            <CCol md="4">
+            <CCol md="3">
               <CLabel htmlFor="grade">
-                <CSLab code="Grade" />
+                <CSLab code="HCM-P82D0RPB0G-LOLN" />
+                <CSRequiredIndicator />
               </CLabel>
-              <CInput className="" id="grade" type="text" name="grade" value={data?.grade || ""} onChange={handleOnChange} />
+              <CInput
+                className=""
+                id="grade"
+                type="text"
+                name="grade"
+                value={data?.grade || ""}
+                onChange={handleOnChange}
+              />
+            </CCol>
+            <CCol md="3">
+              <CLabel htmlFor="school">
+                <CSLab code="HCM-2QFYBV7EKOX-HRPR" />
+                <CSRequiredIndicator />
+              </CLabel>
+
+              <CInput
+                className=""
+                id="school"
+                type="text"
+                name="school"
+                value={data?.school || ""}
+                onChange={handleOnChange}
+              />
             </CCol>
           </CRow>
           <CRow>
             <CCol md="12">
               <CLabel htmlFor="comment">
-                <CSLab code="Comment" />
+                <CSLab code="HCM-XZE49GGWIEJ-PSLL" />
               </CLabel>
               <CTextarea
                 id="comment"
                 style={{ height: "80px", resize: "none" }}
-                name="description" value={data?.description || ""} onChange={handleOnChange}
+                name="description"
+                value={data?.description || ""}
+                onChange={handleOnChange}
               ></CTextarea>
             </CCol>
           </CRow>
         </CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setVisible(false)}>
-            <CSLab code="TL50" />
+            <CSLab code="HCM-9E3ZC2E1S0N-LASN" />
           </CButton>
           <CButton color="primary">
-            <CSLab code="TL11" onClick={handleOnSubmit} />
+            <CSLab code="HCM-HGUHIR0OK6T" onClick={handleOnSubmit} />
           </CButton>
         </CModalFooter>
       </CModal>

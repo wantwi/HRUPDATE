@@ -48,7 +48,7 @@ const EmployeeRetirementInformation = (props) => {
       <CRow>
         <CCol xs="12">
           <h5>
-            <CSLab code="Employee Retirement Information" />
+            <CSLab code="HCM-TKI66A490F-KCMI" />
           </h5>
         </CCol>
       </CRow>
@@ -62,7 +62,7 @@ const EmployeeRetirementInformation = (props) => {
                 id="username3"
                 name="username3"
                 autoComplete="name"
-                placeholder={TransLabelByCode("TL48")}
+                placeholder={TransLabelByCode("HCM-6FKJ6FEGW7A-HRPR")}
               />
               <CInputGroupAppend>
                 <CButton
@@ -81,7 +81,7 @@ const EmployeeRetirementInformation = (props) => {
           <CCard>
             <CCardBody style={{ height: CardBodyHeight, overflowY: "auto" }}>
               <CRow>
-                <CCol md="7">
+                <CCol md="9">
                   <CTabs>
                     <CNav variant="tabs">
                       <CNavItem>
@@ -93,7 +93,7 @@ const EmployeeRetirementInformation = (props) => {
                             setSaveContinueLabel("Terminate");
                           }}
                         >
-                          <CSLab code="Employee Retirement" />
+                          <CSLab code="HCM-PVVKE98OPU-KCMI" />
                         </CNavLink>
                       </CNavItem>
                       <CNavItem>
@@ -105,7 +105,7 @@ const EmployeeRetirementInformation = (props) => {
                             setSaveContinueLabel("Undo");
                           }}
                         >
-                          <CSLab code="Retired Retrieval" />
+                          <CSLab code="HCM-HJYLIJZ2N1_PSLL" />
                         </CNavLink>
                       </CNavItem>
                     </CNav>
@@ -124,7 +124,7 @@ const EmployeeRetirementInformation = (props) => {
                             <CCol md="4">
                               <CLabel>
                                 {" "}
-                                <CSLab code="Employee Type" />{" "}
+                                <CSLab code="HCM-HMLNLPOEIXG" />{" "}
                               </CLabel>
                               <CSelect>
                                 {[
@@ -142,7 +142,7 @@ const EmployeeRetirementInformation = (props) => {
                             <CCol md="4">
                               <CLabel>
                                 {" "}
-                                <CSLab code="Department" />{" "}
+                                <CSLab code="HCM-N6I0LSIYJF" />{" "}
                               </CLabel>
                               <CSelect>
                                 {[
@@ -160,7 +160,7 @@ const EmployeeRetirementInformation = (props) => {
                             <CCol md="4">
                               <CLabel>
                                 {" "}
-                                <CSLab code="Section" />{" "}
+                                <CSLab code="HCM-4D1SZ24U9UO" />{" "}
                               </CLabel>
                               <CSelect>
                                 {[
@@ -180,7 +180,7 @@ const EmployeeRetirementInformation = (props) => {
                             <CCol md="4">
                               <CLabel>
                                 {" "}
-                                <CSLab code="Division" />{" "}
+                                <CSLab code="HCM-LAFPT6FJ57N" />{" "}
                               </CLabel>
                               <CSelect>
                                 {[
@@ -198,7 +198,7 @@ const EmployeeRetirementInformation = (props) => {
                             <CCol md="4">
                               <CLabel>
                                 {" "}
-                                <CSLab code="Position" />{" "}
+                                <CSLab code="HCM-ATGLL367GOQ" />{" "}
                               </CLabel>
                               <CSelect>
                                 {[
@@ -216,7 +216,7 @@ const EmployeeRetirementInformation = (props) => {
                             <CCol md="4">
                               <CLabel>
                                 {" "}
-                                <CSLab code="Unit" />{" "}
+                                <CSLab code="HCM-DHV9W3RF11D" />{" "}
                               </CLabel>
                               <CSelect>
                                 {[
@@ -236,7 +236,7 @@ const EmployeeRetirementInformation = (props) => {
                             <CCol md="4">
                               <CLabel>
                                 {" "}
-                                <CSLab code="Location" />{" "}
+                                <CSLab code="HCM-6XXECXM4Q5S" />{" "}
                               </CLabel>
                               <CSelect>
                                 {[
@@ -254,7 +254,7 @@ const EmployeeRetirementInformation = (props) => {
                             <CCol md="4">
                               <CLabel>
                                 {" "}
-                                <CSLab code="Retirement Date" />{" "}
+                                <CSLab code="HCM-OG9VAWH9DRO-KCMI" />{" "}
                               </CLabel>
                               <CInput type="date" />
                             </CCol>
@@ -263,7 +263,7 @@ const EmployeeRetirementInformation = (props) => {
                             <CCol md="12">
                               <CLabel>
                                 {" "}
-                                <CSLab code="Reason" />{" "}
+                                <CSLab code="HCM-1NNHRS3H3JT_LANG" />{" "}
                               </CLabel>
                               <CTextarea
                                 style={{ height: "70px", resize: "none" }}
@@ -273,7 +273,7 @@ const EmployeeRetirementInformation = (props) => {
                             <CCol md="4">
                               <CLabel>
                                 {" "}
-                                <CSLab code="Authorised By" />{" "}
+                                <CSLab code="HCM-Z9XSW3FPTIP_HRPR" />{" "}
                               </CLabel>
                               <CInput type="text" />
                             </CCol>
@@ -287,14 +287,14 @@ const EmployeeRetirementInformation = (props) => {
                         <CRow className={"bottom-spacing"}>
                           <CCol md="12">
                             <h6 className="ch-l-s">
-                              <CSLab code="Current Status" />
+                              <CSLab code="HCM-KT1THTBX68-LOLN" />
                             </h6>
                           </CCol>
                           <>
                             <CCol md="4">
                               <CLabel>
                                 {" "}
-                                <CSLab code="Employee Type" />{" "}
+                                <CSLab code="HCM-HMLNLPOEIXG" />{" "}
                               </CLabel>
                               <CSelect>
                                 {[
@@ -312,7 +312,7 @@ const EmployeeRetirementInformation = (props) => {
                             <CCol md="4">
                               <CLabel>
                                 {" "}
-                                <CSLab code="Department" />{" "}
+                                <CSLab code="HCM-N6I0LSIYJF" />{" "}
                               </CLabel>
                               <CSelect>
                                 {[
@@ -330,7 +330,7 @@ const EmployeeRetirementInformation = (props) => {
                             <CCol md="4">
                               <CLabel>
                                 {" "}
-                                <CSLab code="Section" />{" "}
+                                <CSLab code="HCM-4D1SZ24U9UO" />{" "}
                               </CLabel>
                               <CSelect>
                                 {[
@@ -350,7 +350,7 @@ const EmployeeRetirementInformation = (props) => {
                             <CCol md="4">
                               <CLabel>
                                 {" "}
-                                <CSLab code="Division" />{" "}
+                                <CSLab code="HCM-LAFPT6FJ57N" />{" "}
                               </CLabel>
                               <CSelect>
                                 {[
@@ -368,7 +368,7 @@ const EmployeeRetirementInformation = (props) => {
                             <CCol md="4">
                               <CLabel>
                                 {" "}
-                                <CSLab code="Position" />{" "}
+                                <CSLab code="HCM-ATGLL367GOQ" />{" "}
                               </CLabel>
                               <CSelect>
                                 {[
@@ -386,7 +386,7 @@ const EmployeeRetirementInformation = (props) => {
                             <CCol md="4">
                               <CLabel>
                                 {" "}
-                                <CSLab code="Unit" />{" "}
+                                <CSLab code="HCM-DHV9W3RF11D" />{" "}
                               </CLabel>
                               <CSelect>
                                 {[
@@ -406,7 +406,7 @@ const EmployeeRetirementInformation = (props) => {
                             <CCol md="4">
                               <CLabel>
                                 {" "}
-                                <CSLab code="Location" />{" "}
+                                <CSLab code="HCM-6XXECXM4Q5S" />{" "}
                               </CLabel>
                               <CSelect>
                                 {[
@@ -424,7 +424,7 @@ const EmployeeRetirementInformation = (props) => {
                             <CCol md="4">
                               <CLabel>
                                 {" "}
-                                <CSLab code="Retirement Date" />{" "}
+                                <CSLab code="HCM-OG9VAWH9DRO-KCMI" />{" "}
                               </CLabel>
                               <CInput type="date" />
                             </CCol>
@@ -433,7 +433,7 @@ const EmployeeRetirementInformation = (props) => {
                             <CCol md="12">
                               <CLabel>
                                 {" "}
-                                <CSLab code="Note" />{" "}
+                                <CSLab code="HCM-Z0FV0XJJ06" />{" "}
                               </CLabel>
                               <CTextarea style={{ height: "80px" }}></CTextarea>
                             </CCol>
@@ -441,7 +441,7 @@ const EmployeeRetirementInformation = (props) => {
                             <CCol md="6">
                               <CLabel>
                                 {" "}
-                                <CSLab code="Authorised By" />{" "}
+                                <CSLab code="HCM-Z9XSW3FPTIP_HRPR" />{" "}
                               </CLabel>
                               <CInput type="text" />
                             </CCol>
@@ -461,7 +461,8 @@ const EmployeeRetirementInformation = (props) => {
                 size="sm"
                 color="success"
               >
-                <CIcon name="cil-scrubber" /> <CSLab code="View History" />{" "}
+                <CIcon name="cil-scrubber" />{" "}
+                <CSLab code="HCM-ZIRH5SVBDUF_LANG" />{" "}
               </CButton>
               <CButton
                 style={{ marginRight: 5, float: "right" }}
@@ -469,7 +470,7 @@ const EmployeeRetirementInformation = (props) => {
                 size="sm"
                 color="success"
               >
-                <AiFillSave size={20} /> <CSLab code="TL11" />{" "}
+                <AiFillSave size={20} /> <CSLab code="HCM-HGUHIR0OK6T" />{" "}
               </CButton>
               <CButton
                 style={{ marginRight: 5, float: "right" }}
@@ -477,7 +478,8 @@ const EmployeeRetirementInformation = (props) => {
                 size="sm"
                 color="danger"
               >
-                <AiOutlineRedo size={20} /> <CSLab code="TL12" />{" "}
+                <AiOutlineRedo size={20} />{" "}
+                <CSLab code="HCM-V3SL5X7PJ9C-LANG" />{" "}
               </CButton>
             </CCardFooter>
           </CCard>

@@ -1,4 +1,7 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { AiOutlinePlus } from "react-icons/ai";
+import { useSelector, useDispatch } from "react-redux";
+import { CustomAxios } from "src/reusable/API/CustomAxios";
 import {
   CInputGroupAppend,
   CInputGroup,
@@ -16,6 +19,7 @@ import {
   CTabs,
   CTabPane,
   CCardBody,
+  CLabel,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 //import { genericParamData } from '../../Deductions/DeductionMassUpdate/node_modules/src/reusable/utilities/config';
@@ -48,6 +52,17 @@ import "../../../../node_modules/@syncfusion/ej2-splitbuttons/styles/material.cs
 import "../../../../node_modules/@syncfusion/ej2-react-grids/styles/material.css";
 import { CardBodyHeight } from "src/reusable/utils/helper";
 // import { isEqual, differenceWith } from 'react-lodash'
+import { CSAutoComplete, CSLab } from "src/reusable/components";
+import { toast } from "react-toastify";
+import { toastWarning } from "src/toasters/Toaster";
+import { SearchEmployees } from "src/reusable/API/EmployeeEndpoints";
+
+import {
+  GetRequest,
+  HttpAPIRequest,
+  PostRequest,
+} from "src/reusable/utils/helper";
+import { GetLabelByName } from "src/reusable/configs/config";
 
 const commandOptions = [
   {
@@ -151,7 +166,28 @@ const EmployeeDetail = (props) => {
   const [otherPhone, setOtherPhone] = useState("");
   const [address, setAddress] = useState("");
 
- 
+  const lan = useSelector((state) => state.language);
+  const [visible, setVisible] = useState(false);
+  const [skill, setSkill] = useState("");
+  const data = useSelector((state) => state.data);
+  const dispatch = useDispatch();
+  const [searchInput, setSearchInput] = useState("");
+  const [pageNumber, setPageNumber] = useState(1);
+  const [numberOfItems, setNumberOfItems] = useState(10);
+  const [orderBy, setOrderBy] = useState("");
+  const [submitData, setSubmitData] = useState({});
+  const [sortOrder, setSortOrder] = useState("");
+  const [large, setLarge] = useState(false);
+  const [mode, setMode] = useState("");
+  const [searchResult, setSearchResult] = useState(null);
+  const [educationCore, setEducationCore] = useState([]);
+  const [empDisplayName, setEmpDisplayName] = useState("");
+  const [handleId, setHandleId] = useState("");
+  const [viewinfo, setViewInfo] = useState([]);
+  const [skillType, setSkillType] = useState([]);
+  const [nextOfKin, setGetNextOfKin] = useState([]);
+  const [guarantor, setGetGuarantor] = useState([]);
+
   const canSave = [fname, lname, relation, phone, address].every(Boolean);
 
   const firstGrid = useRef(null);
@@ -214,36 +250,113 @@ const EmployeeDetail = (props) => {
   const onCommandClick = (args) => {
     onCompleteAction(args);
   };
+  const handleSearchResultSelect = (results) => {
+    console.log("show results", results);
+
+    //setting employee display name on select of suggested item
+    setEmpDisplayName(
+      (prevState) => `${results.firstName} ${results.lastName}`
+    );
+    // testApi();
+    // return;
+    setMode("Add");
+    setShow(false);
+    dispatch({ type: "set", data: { ...results } });
+    setSubmitData({ ...results });
+
+    if (results?.code) {
+      setSearchResult(results);
+
+      GetRequest()
+        .then((response) => {
+          // toast.dismiss(toastId);
+          if (response.ok) {
+            response.json().then((response) => {
+              // console.log({response});
+              if (response && Object.keys(response).length > 0) {
+                dispatch({ type: "set", data: { ...response } });
+                setSubmitData({ ...response });
+                // setDuplicateData({ ...response })
+                //console.log({ response });
+
+                //let rates = response?.rates;
+
+                // setExchangeRate(rates);
+                setShow(false);
+                setMode("Update");
+              } else {
+                setMode("Add");
+                setShow(false);
+                // dispatch({ type: 'set', data: { ...results, isHomeCurrency } });
+                // setSubmitData({ ...results, isHomeCurrency });
+              }
+            });
+          }
+        })
+        .catch((err) => {
+          // console.log(err);
+          // toaster(toastId, "Failed to retrieve details", 'error', 4000);
+        });
+    }
+  };
+
+  const handleNextOfKin = async () => {
+    try {
+      const request = await CustomAxios.get(`EmployeeNextofKin/${handleId}`);
+
+      const response = request.data;
+      console.log("emp response:", response);
+      setGetNextOfKin((prevState) => response);
+    } catch (error) {
+      console.log({ error });
+    }
+  };
+
+  useEffect(() => {
+    if (handleId !== "") {
+      handleNextOfKin();
+    }
+  }, [handleId]);
+  console.log("Next of kin", nextOfKin);
+  console.log(handleId);
 
   return (
     <>
       <CRow>
         <CCol xs="12">
-          <h5>Employee Relationships</h5>
+          <h5>
+            <CSLab code="HCM-ETP5RDAYHNK_LANG" />
+          </h5>
         </CCol>
       </CRow>
       <CRow>
         <CCol md="4">
           <CFormGroup>
-            <CInputGroup>
-              <CInput
-                className="border-left-curve"
-                type="text"
-                id="username3"
-                name="username3"
-                autoComplete="name"
-                placeholder="Search by Employee ID or name"
-              />
-              <CInputGroupAppend>
-                <CButton
-                  onClick={() => setShow(!show)}
-                  className="border-right-curve"
-                  color="primary"
-                >
-                  <CIcon name="cil-magnifying-glass" />
-                </CButton>
-              </CInputGroupAppend>
-            </CInputGroup>
+            <CSAutoComplete
+              filterUrl={SearchEmployees(searchInput)}
+              //filterUrl=''            //filterUrl={SearchInternalCurrencies(searchInput)}
+              placeholder={"Search for employee by name or code"}
+              handleSelect={handleSearchResultSelect}
+              //onChange={()=>handleSearchResultSelect}
+              displayTextKey={"firstName"}
+              setInput={setSearchInput}
+              input={searchInput}
+              emptySearchFieldMessage={`Please input 3 or more characters to search`}
+              searchName={"Employee"}
+              isPaginated={false}
+              pageNumber={pageNumber}
+              setPageNumber={setPageNumber}
+              numberOfItems={numberOfItems}
+              setNumberOfItems={setNumberOfItems}
+              orderBy={orderBy}
+              setOrderBy={setOrderBy}
+              sortOrder={sortOrder}
+              setSortOrder={setSortOrder}
+              mode={mode}
+              setMode={setMode}
+              handleId={setHandleId}
+              // reset={handleReset}
+            />
           </CFormGroup>
         </CCol>
         <CCol xs="12" hidden={show}>
@@ -260,6 +373,29 @@ const EmployeeDetail = (props) => {
               }
             </CCardHeader> */}
             <CCardBody style={{ height: CardBodyHeight, overflowY: "auto" }}>
+              <CFormGroup row>
+                <CCol md="4">
+                  <b>Employee:</b>{" "}
+                  <span
+                    style={{
+                      textDecoration: "underline dotted",
+                      cursor: "pointer",
+                    }}
+                    type="button"
+                    onClick={() => setLarge(!large)}
+                    size="md"
+                    color="primary"
+                  >
+                    {empDisplayName}
+                  </span>
+                </CCol>
+                <CCol md="4">
+                  {/* <CTooltip content={`Click here to view Employees`} >
+                <CButton color="outline-primary"> <MdPeople /> 120 </CButton>
+                </CTooltip> */}
+                </CCol>
+                <CCol md="4"></CCol>
+              </CFormGroup>
               <CTabs>
                 <CNav variant="tabs">
                   <CNavItem>
@@ -268,7 +404,7 @@ const EmployeeDetail = (props) => {
                       active={activeKey === 1}
                       onClick={() => setActiveKey(1)}
                     >
-                      Beneficiary
+                      <CSLab code="HCM-MS5RN9DANOF-PSLL" />
                     </CNavLink>
                   </CNavItem>
                   <CNavItem>
@@ -277,7 +413,7 @@ const EmployeeDetail = (props) => {
                       active={activeKey === 2}
                       onClick={() => setActiveKey(2)}
                     >
-                      Dependant
+                      <CSLab code="HCM-TXJFM19UOAG-LOLN" />
                     </CNavLink>
                   </CNavItem>
                   <CNavItem>
@@ -286,7 +422,7 @@ const EmployeeDetail = (props) => {
                       active={activeKey === 6}
                       onClick={() => setActiveKey(6)}
                     >
-                      Emergency Contact
+                      <CSLab code="HCM-C7C1XLFCOS5-LANG" />
                     </CNavLink>
                   </CNavItem>
                   <CNavItem>
@@ -295,7 +431,7 @@ const EmployeeDetail = (props) => {
                       active={activeKey === 3}
                       onClick={() => setActiveKey(3)}
                     >
-                      Guarantor
+                      <CSLab code="HCM-2VDPTKA7U9T-LOLN" />
                     </CNavLink>
                   </CNavItem>
                   <CNavItem>
@@ -331,7 +467,7 @@ const EmployeeDetail = (props) => {
                         <ColumnDirective
                           field={"firstname"}
                           editType="text"
-                          headerText={"First Name"}
+                          headerText={GetLabelByName("HCM-KPH53NF08RG", lan)}
                           width="100"
                           edit={earnings}
                           value={"fname"}
@@ -339,7 +475,7 @@ const EmployeeDetail = (props) => {
                         />
                         <ColumnDirective
                           field="lastname"
-                          headerText={"Last Name"}
+                          headerText={GetLabelByName("HCM-ZYCFSGCKMC", lan)}
                           editType="text"
                           width="100"
                           textAlign="Center"
@@ -349,7 +485,10 @@ const EmployeeDetail = (props) => {
                         />
                         <ColumnDirective
                           field="address"
-                          headerText={"Address"}
+                          headerText={GetLabelByName(
+                            "HCM-7WIK8PDIQOV-LOLN",
+                            lan
+                          )}
                           editType="text"
                           width="100"
                           textAlign="Center"
@@ -359,7 +498,10 @@ const EmployeeDetail = (props) => {
                         />
                         <ColumnDirective
                           field="relation"
-                          headerText={"Relation"}
+                          headerText={GetLabelByName(
+                            "HCM-RWMIP9K3NEH_HRPR",
+                            lan
+                          )}
                           editType="text"
                           width="100"
                           textAlign="Center"
@@ -369,14 +511,17 @@ const EmployeeDetail = (props) => {
                         />
                         <ColumnDirective
                           field="percentage"
-                          headerText={"Percentage"}
+                          headerText={GetLabelByName(
+                            "HCM-HB5MNHJGQE5-HRPR",
+                            lan
+                          )}
                           editType="text"
                           width="100"
                           textAlign="Center"
                         />
                         <ColumnDirective
                           commands={commandOptions}
-                          headerText="Action"
+                          headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
                           width="100"
                           textAlign="Center"
                         />
@@ -415,20 +560,29 @@ const EmployeeDetail = (props) => {
                         <ColumnDirective
                           field={"name"}
                           editType="text"
-                          headerText={"Name"}
+                          headerText={GetLabelByName(
+                            "HCM-VD1B12NKKJ_LANG",
+                            lan
+                          )}
                           width="70"
                           //edit={earnings}
                         />
                         <ColumnDirective
                           field={"relation"}
-                          headerText={"Relation"}
+                          headerText={GetLabelByName(
+                            "HCM-RWMIP9K3NEH_HRPR",
+                            lan
+                          )}
                           editType="text"
                           width="100"
                           textAlign="Center"
                         />
                         <ColumnDirective
                           field="dateofbirth"
-                          headerText={"Date of Birth"}
+                          headerText={GetLabelByName(
+                            "HCM-XYNVK7A8USK_PSLL",
+                            lan
+                          )}
                           editType="datetimeedit"
                           editTemplate={editTemplate}
                           width="100"
@@ -436,14 +590,17 @@ const EmployeeDetail = (props) => {
                         />
                         <ColumnDirective
                           field="nationality"
-                          headerText={"Nationality"}
+                          headerText={GetLabelByName(
+                            "HCM-IM8I8SKJ1J9_KCMI",
+                            lan
+                          )}
                           editType="dropdownedit"
                           width="100"
                           textAlign="Center"
                         />
                         <ColumnDirective
                           commands={commandOptions}
-                          headerText="Action"
+                          headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
                           width="100"
                           textAlign="Center"
                         />
@@ -482,27 +639,39 @@ const EmployeeDetail = (props) => {
                         <ColumnDirective
                           field={"name"}
                           editType="text"
-                          headerText={"Name"}
+                          headerText={GetLabelByName(
+                            "HCM-RWMIP9K3NEH_HRPR",
+                            lan
+                          )}
                           width="70"
                           //edit={earnings}
                         />
                         <ColumnDirective
                           field={"relation"}
-                          headerText={"Relation"}
+                          headerText={GetLabelByName(
+                            "HCM-RWMIP9K3NEH_HRPR",
+                            lan
+                          )}
                           editType="text"
                           width="100"
                           textAlign="Center"
                         />
                         <ColumnDirective
                           field="phonenumber"
-                          headerText="Phone Number"
+                          headerText={GetLabelByName(
+                            "HCM-28JQRN57PA4-PSLL",
+                            lan
+                          )}
                           editType="numericedit"
                           width="100"
                           textAlign="Center"
                         />
                         <ColumnDirective
                           field="address"
-                          headerText="Address"
+                          headerText={GetLabelByName(
+                            "HCM-7WIK8PDIQOV-LOLN",
+                            lan
+                          )}
                           editType="text"
                           // editTemplate={editTemplate}
                           width="100"
@@ -510,7 +679,7 @@ const EmployeeDetail = (props) => {
                         />
                         <ColumnDirective
                           commands={commandOptions}
-                          headerText="Action"
+                          headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
                           width="100"
                           textAlign="Center"
                         />
@@ -549,41 +718,56 @@ const EmployeeDetail = (props) => {
                         <ColumnDirective
                           field={"name"}
                           editType="text"
-                          headerText={"Name"}
+                          headerText={GetLabelByName(
+                            "HCM-RWMIP9K3NEH_HRPR",
+                            lan
+                          )}
                           width="70"
                           // edit={earnings}
                         />
                         <ColumnDirective
                           field={"relation"}
-                          headerText={"Relation"}
+                          headerText={GetLabelByName(
+                            "HCM-RWMIP9K3NEH_HRPR",
+                            lan
+                          )}
                           editType="text"
                           width="100"
                           textAlign="Center"
                         />
                         <ColumnDirective
                           field={"email"}
-                          headerText={"Email"}
+                          headerText={GetLabelByName(
+                            "HCM-L8D4N8LGAS_PSLL",
+                            lan
+                          )}
                           editType="text"
                           width="100"
                           textAlign="Center"
                         />
                         <ColumnDirective
                           field="phonenumber"
-                          headerText="Phone Number"
+                          headerText={GetLabelByName(
+                            "HCM-28JQRN57PA4-PSLL",
+                            lan
+                          )}
                           editType="numericedit"
                           width="100"
                           textAlign="Center"
                         />
                         <ColumnDirective
                           field={"address"}
-                          headerText={"Address"}
+                          headerText={GetLabelByName(
+                            "HCM-7WIK8PDIQOV-LOLN",
+                            lan
+                          )}
                           editType="text"
                           width="100"
                           textAlign="Center"
                         />
                         <ColumnDirective
                           commands={commandOptions}
-                          headerText="Action"
+                          headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
                           width="100"
                           textAlign="Center"
                         />
@@ -603,6 +787,7 @@ const EmployeeDetail = (props) => {
                   </CTabPane>
                   <CTabPane visible={activeKey === 5 ? "true" : "false"}>
                     <GridComponent
+                      value={nextOfKin}
                       height={300}
                       allowPaging={true}
                       pageSettings={{ pageSize: 8 }}
@@ -622,41 +807,55 @@ const EmployeeDetail = (props) => {
                         <ColumnDirective
                           field={"name"}
                           editType="text"
-                          headerText={"Name"}
+                          headerText={GetLabelByName(
+                            "HCM-RWMIP9K3NEH_HRPR",
+                            lan
+                          )}
                           width="70"
-                          edit={earnings}
                         />
                         <ColumnDirective
-                          field={"relation"}
-                          headerText={"Relation"}
+                          field="relationId"
+                          headerText={GetLabelByName(
+                            "HCM-RWMIP9K3NEH_HRPR",
+                            lan
+                          )}
                           editType="text"
                           width="100"
                           textAlign="Center"
                         />
                         <ColumnDirective
-                          field="phonenumber"
-                          headerText="Phone Number"
+                          field="phone"
+                          headerText={GetLabelByName(
+                            "HCM-28JQRN57PA4-PSLL",
+                            lan
+                          )}
                           editType="numericedit"
                           width="100"
                           textAlign="Center"
                         />
                         <ColumnDirective
                           field="email"
-                          headerText="Email"
+                          headerText={GetLabelByName(
+                            "HCM-L8D4N8LGAS_PSLL",
+                            lan
+                          )}
                           editType="text"
                           width="100"
                           textAlign="Center"
                         />
                         <ColumnDirective
                           field="address"
-                          headerText="Address"
+                          headerText={GetLabelByName(
+                            "HCM-7WIK8PDIQOV-LOLN",
+                            lan
+                          )}
                           editType="text"
                           width="100"
                           textAlign="Center"
                         />
                         <ColumnDirective
                           commands={commandOptions}
-                          headerText="Action"
+                          headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
                           width="100"
                           textAlign="Center"
                         />
@@ -694,24 +893,33 @@ const EmployeeDetail = (props) => {
                         />
                         <ColumnDirective
                           field="name"
-                          headerText="Name"
+                          headerText={GetLabelByName(
+                            "HCM-RWMIP9K3NEH_HRPR",
+                            lan
+                          )}
                           width="100"
                         />
                         <ColumnDirective
                           field="numberOfCompanies"
-                          headerText="Companies"
+                          headerText={GetLabelByName(
+                            "HCM-XCT7UIQ8P9L_KCMI",
+                            lan
+                          )}
                           width="100"
                           textAlign="Center"
                         />
                         <ColumnDirective
                           field="strStatus"
-                          headerText="Status"
+                          headerText={GetLabelByName(
+                            "HCM-RQB38Y1ZFPO-LANG",
+                            lan
+                          )}
                           width="100"
                           textAlign="Center"
                         />
                         <ColumnDirective
                           commands={commandOptions}
-                          headerText="Action"
+                          headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
                           width="100"
                           textAlign="Center"
                         />
@@ -749,34 +957,46 @@ const EmployeeDetail = (props) => {
                         <ColumnDirective
                           field={"payPeriod"}
                           editType="dropdownedit"
-                          headerText={"Savings Scheme Type"}
+                          headerText={GetLabelByName(
+                            "HCM-IXI11NRGSL_LASN",
+                            lan
+                          )}
                           width="70"
                           edit={earnings}
                         />
                         <ColumnDirective
                           field={"ruleValue"}
-                          headerText={"Scheme ID"}
+                          headerText={GetLabelByName("HCM-KGCV55ZJX9A_PSLL")}
                           editType="text"
                           width="100"
                           textAlign="Center"
                         />
                         <ColumnDirective
                           field="unit"
-                          headerText="Employer Contibution"
+                          headerText={GetLabelByName(
+                            "HCM-L03LHDL3ZEH_LANG",
+                            lan
+                          )}
                           editType="numericedit"
                           width="100"
                           textAlign="Center"
                         />
                         <ColumnDirective
                           field="unit"
-                          headerText="Employee Contibution"
+                          headerText={GetLabelByName(
+                            "HCM-FPFINOQEG27_LANG",
+                            lan
+                          )}
                           editType="numericedit"
                           width="100"
                           textAlign="Center"
                         />
                         <ColumnDirective
                           commands={commandOptions}
-                          headerText="Action"
+                          headerText={GetLabelByName(
+                            "HCM-FPFINOQEG27_LANG",
+                            lan
+                          )}
                           width="100"
                           textAlign="Center"
                         />
@@ -815,34 +1035,46 @@ const EmployeeDetail = (props) => {
                         <ColumnDirective
                           field={"payPeriod"}
                           editType="dropdownedit"
-                          headerText={"Relief Type"}
+                          headerText={GetLabelByName(
+                            "HCM-QNAC7YH7NBO-LOLN",
+                            lan
+                          )}
                           width="70"
                           edit={earnings}
                         />
                         <ColumnDirective
                           field={"ruleValue"}
-                          headerText={"Scheme ID"}
+                          headerText={GetLabelByName(
+                            "HCM-KGCV55ZJX9A_PSLL",
+                            lan
+                          )}
                           editType="text"
                           width="100"
                           textAlign="Center"
                         />
                         <ColumnDirective
                           field="unit"
-                          headerText="Employer Contibution"
+                          headerText={GetLabelByName(
+                            "HCM-L03LHDL3ZEH_LANG",
+                            lan
+                          )}
                           editType="numericedit"
                           width="100"
                           textAlign="Center"
                         />
                         <ColumnDirective
                           field="unit"
-                          headerText="Employee Contibution"
+                          headerText={GetLabelByName(
+                            "HCM-FPFINOQEG27_LANG",
+                            lan
+                          )}
                           editType="numericedit"
                           width="100"
                           textAlign="Center"
                         />
                         <ColumnDirective
                           commands={commandOptions}
-                          headerText="Action"
+                          headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
                           width="100"
                           textAlign="Center"
                         />
@@ -875,7 +1107,7 @@ const EmployeeDetail = (props) => {
                 size="sm"
                 color="danger"
               >
-                <CIcon name="cil-ban" /> Reset
+                <CIcon name="cil-ban" /> <CSLab code="HCM-MELULU9B6R_KCMI" />
               </CButton>
             </CCardFooter>
           </CCard>

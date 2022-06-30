@@ -94,7 +94,7 @@ const EmployeeAppraisal = () => {
       <CRow>
         <CCol>
           <h5>
-            <CSLab code="Employee Appraisal" />
+            <CSLab code="HCM-7M8UAVLXOOJ_PSLL" />
           </h5>
         </CCol>
       </CRow>
@@ -148,7 +148,7 @@ const EmployeeAppraisal = () => {
                   <CRow>
                     <CCol md="8">
                       <CLabel>
-                        <CSLab code="Appraisal Name" />
+                        <CSLab code="HCM-MWUWNIIQ5PG_PSLL" />
                       </CLabel>
                       <CSelect name="name">
                         {[
@@ -165,7 +165,7 @@ const EmployeeAppraisal = () => {
                     </CCol>
                     <CCol md="4">
                       <CLabel>
-                        <CSLab code="Department" />
+                        <CSLab code="HCM-N6I0LSIYJF" />
                       </CLabel>
                       <CSelect>
                         {[
@@ -184,7 +184,7 @@ const EmployeeAppraisal = () => {
                   <CRow>
                     <CCol md="4">
                       <CLabel>
-                        <CSLab code="Position" />
+                        <CSLab code="HCM-ATGLL367GOQ" />
                       </CLabel>
                       <CSelect>
                         {[
@@ -201,13 +201,13 @@ const EmployeeAppraisal = () => {
                     </CCol>
                     <CCol md="4">
                       <CLabel>
-                        <CSLab code="Start Date" />
+                        <CSLab code="HCM-K85NF9HWVXC-LANG" />
                       </CLabel>
                       <CInput className="" name="startdate" type="date" />
                     </CCol>
                     <CCol md="4">
                       <CLabel>
-                        <CSLab code="End Date" />
+                        <CSLab code="HCM-S4N9DCXVMJ" />
                       </CLabel>
                       <CInput className="" name="enddate" type="date" />
                     </CCol>
@@ -216,7 +216,7 @@ const EmployeeAppraisal = () => {
                     <CCol md="12">
                       <CLabel>
                         {" "}
-                        <CSLab code="Notes" />{" "}
+                        <CSLab code="HCM-Z0FV0XJJ06" />{" "}
                       </CLabel>
                       <CTextarea
                         type="text"
@@ -288,7 +288,7 @@ const EmployeeAppraisal = () => {
                 >
                   <CIcon name="cil-scrubber" />
 
-                  <CSLab code="View History" />
+                  <CSLab code="HCM-ZIRH5SVBDUF_LANG" />
                 </CButton>
               ) : null}
               <CButton
@@ -297,7 +297,7 @@ const EmployeeAppraisal = () => {
                 size="sm"
                 color="success"
               >
-                <AiFillSave size={20} /> <CSLab code="TL11" />{" "}
+                <AiFillSave size={20} /> <CSLab code="HCM-HGUHIR0OK6T" />{" "}
               </CButton>
               <CButton
                 style={{ marginRight: 5, float: "right" }}
@@ -305,7 +305,8 @@ const EmployeeAppraisal = () => {
                 size="sm"
                 color="warning"
               >
-                <AiOutlineRedo size={20} /> <CSLab code="TL12" />{" "}
+                <AiOutlineRedo size={20} />{" "}
+                <CSLab code="HCM-9E3ZC2E1S0N-LASN" />{" "}
               </CButton>
               <CButton
                 style={{ marginRight: 5, float: "right", color: "white" }}
@@ -315,7 +316,7 @@ const EmployeeAppraisal = () => {
                 color="danger"
               >
                 <AiOutlineClose size={20} />
-                <CSLab code="Cancel" />
+                <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
               </CButton>
             </CCardFooter>
           </CCard>

@@ -89,7 +89,7 @@ const SupervisorAppraisal = () => {
       <CRow>
         <CCol>
           <h5>
-            <CSLab code="Supervisor Appraisal" />{" "}
+            <CSLab code="HCM-OJD8XVI3UC-LOLN" />{" "}
           </h5>
         </CCol>
       </CRow>
@@ -103,9 +103,7 @@ const SupervisorAppraisal = () => {
                 id="username3"
                 name="username3"
                 autoComplete="name"
-                placeholder={TransLabelByCode(
-                  "Search for Supervisor Appraisal by name"
-                )}
+                placeholder={TransLabelByCode("HCM-7H3V4Y8WXY_KCMI")}
               />
               <CInputGroupAppend>
                 <CButton className="border-right-curve" color="primary">
@@ -125,7 +123,7 @@ const SupervisorAppraisal = () => {
                 color="primary"
               >
                 {" "}
-                <AiOutlinePlus /> <CSLab code="Add" />
+                <AiOutlinePlus /> <CSLab code="HCM-TAAFD4M071D-HRPR" />
               </CButton>
             ) : null}
           </CFormGroup>
@@ -140,13 +138,13 @@ const SupervisorAppraisal = () => {
                   <CRow>
                     <CCol md="4">
                       <CLabel>
-                        <CSLab code={"Code"} />
+                        <CSLab code="HCM-7I262DWOU2R-LOLN" />
                       </CLabel>
                       <CInput className="" id="code" />
                     </CCol>
                     <CCol md="8">
                       <CLabel>
-                        <CSLab code={"Name"} />
+                        <CSLab code="HCM-VD1B12NKKJ_LANG" />
                       </CLabel>
                       <CInput className="" id="Name" />
                     </CCol>
@@ -154,7 +152,7 @@ const SupervisorAppraisal = () => {
                   <CRow>
                     <CCol md="6">
                       <CLabel>
-                        <CSLab code={"Department"} />
+                        <CSLab code="HCM-N6I0LSIYJF" />
                       </CLabel>
                       <CSelect>
                         {["Select Department", "Dept 1", "Dept 2"].map(
@@ -168,7 +166,7 @@ const SupervisorAppraisal = () => {
                     </CCol>
                     <CCol md="6">
                       <CLabel>
-                        <CSLab code={"Position"} />
+                        <CSLab code={"HCM-ATGLL367GOQ"} />
                       </CLabel>
                       <CSelect>
                         {["Select Position", "Position 1", "Position 2"].map(
@@ -184,13 +182,13 @@ const SupervisorAppraisal = () => {
                   <CRow>
                     <CCol md="4">
                       <CLabel htmlFor="startdate">
-                        <CSLab code={"start Date"} />
+                        <CSLab code="HCM-K85NF9HWVXC-LANG" />
                       </CLabel>
                       <CInput className="" type="date" id="startdate" />
                     </CCol>
                     <CCol md="4">
                       <CLabel htmlFor="enddate">
-                        <CSLab code={"End Date"} />
+                        <CSLab code="HCM-S4N9DCXVMJ" />
                       </CLabel>
                       <CInput className="" type="date" id="enddate" />
                     </CCol>
@@ -199,7 +197,7 @@ const SupervisorAppraisal = () => {
                     <CCol md="12">
                       <CLabel>
                         {" "}
-                        <CSLab code="Notes" />{" "}
+                        <CSLab code="HCM-Z0FV0XJJ06" />{" "}
                       </CLabel>
                       <CTextarea
                         type="text"
@@ -237,14 +235,17 @@ const SupervisorAppraisal = () => {
                           />
                           <ColumnDirective
                             field={"amount"}
-                            headerText="Supervisor Response"
+                            headerText={GetLabelByName(
+                              "HCM-X0UIJ5P6R3_KCMI",
+                              lan
+                            )}
                             editType="numericedit"
                             format="C2"
                             width="100"
                           />
                           <ColumnDirective
                             commands={commandOptions}
-                            headerText={"Action"}
+                            headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
                             width="100"
                             textAlign="Center"
                           />
@@ -267,7 +268,7 @@ const SupervisorAppraisal = () => {
               </CRow>
             </CCardBody>
             <CCardFooter>
-            {"Update" === mode ? (
+              {"Update" === mode ? (
                 <CButton
                   style={{ marginRight: 5 }}
                   type="button"
@@ -276,7 +277,7 @@ const SupervisorAppraisal = () => {
                 >
                   <CIcon name="cil-scrubber" />
 
-                  <CSLab code="View History" />
+                  <CSLab code="HCM-HGUHIR0OK6T" />
                 </CButton>
               ) : null}
               <CButton
@@ -285,7 +286,7 @@ const SupervisorAppraisal = () => {
                 size="sm"
                 color="success"
               >
-                <AiFillSave size={20} /> <CSLab code="TL11" />{" "}
+                <AiFillSave size={20} /> <CSLab code="HCM-HGUHIR0OK6T" />{" "}
               </CButton>
               <CButton
                 style={{ marginRight: 5, float: "right" }}
@@ -293,7 +294,7 @@ const SupervisorAppraisal = () => {
                 size="sm"
                 color="warning"
               >
-                <AiOutlineRedo size={20} /> <CSLab code="TL12" />{" "}
+                <AiOutlineRedo size={20} /> <CSLab code="HCM-MELULU9B6R_KCMI" />{" "}
               </CButton>
               <CButton
                 style={{ marginRight: 5, float: "right", color: "white" }}
@@ -303,7 +304,7 @@ const SupervisorAppraisal = () => {
                 color="danger"
               >
                 <AiOutlineClose size={20} />
-                <CSLab code="Cancel" />
+                <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
               </CButton>
             </CCardFooter>
           </CCard>
@@ -319,7 +320,7 @@ const SupervisorAppraisal = () => {
         <CModalHeader>
           <CModalTitle>
             {" "}
-            <CSLab code="Add GL Account" />{" "}
+            <CSLab code="HCM-7Z8IQDHY4MX-KCMI" />{" "}
           </CModalTitle>
         </CModalHeader>
         <CModalBody>
@@ -327,13 +328,13 @@ const SupervisorAppraisal = () => {
             <>
               <CCol md="6">
                 <CLabel>
-                  <CSLab code="Code" />
+                  <CSLab code="HCM-7I262DWOU2R-LOLN" />
                 </CLabel>
                 <CInput className="" id="glCode" />
               </CCol>
               <CCol md="6">
                 <CLabel>
-                  <CSLab code="Name" />
+                  <CSLab code="HCM-VYC1W2DO57" />
                 </CLabel>
                 <CInput className="" id="glName" />
               </CCol>
@@ -341,7 +342,7 @@ const SupervisorAppraisal = () => {
             <>
               <CCol md="6">
                 <CLabel>
-                  <CSLab code="GL Account" />
+                  <CSLab code="HCM-DIFIO6DCZ8-PSLL" />
                 </CLabel>
                 <CSelect>
                   {["Select GL Account", "GL 1", "GL 2"].map((x, i) => (
@@ -360,10 +361,10 @@ const SupervisorAppraisal = () => {
         <CModalFooter>
           <CButton color="secondary" onClick={() => setVisible(false)}>
             {" "}
-            <CSLab code="TL50" />{" "}
+            <CSLab code="HCM-V3SL5X7PJ9C-LANG" />{" "}
           </CButton>
           <CButton color="primary">
-            <CSLab code="TL11" />
+            <CSLab code="HCM-HGUHIR0OK6T" />
           </CButton>
         </CModalFooter>
       </CModal>

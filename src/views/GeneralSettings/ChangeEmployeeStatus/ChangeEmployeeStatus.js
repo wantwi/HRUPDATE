@@ -40,7 +40,7 @@ const ChangeEmployeeStatus = () => {
       <CRow>
         <CCol>
           <h5>
-            <CSLab code="Change Employee Status" />{" "}
+            <CSLab code="HCM-RH57N1T1EBH-KCMI" />{" "}
           </h5>
         </CCol>
       </CRow>
@@ -77,25 +77,25 @@ const ChangeEmployeeStatus = () => {
                   <CRow>
                     <CCol md="6">
                       <CLabel>
-                        <CSLab code={"Employee ID"} />
+                        <CSLab code="HCM-B0VG88EHYDM_KCMI" />
                       </CLabel>
                       <CInput className="" name="currentemployeeid" disabled />
                     </CCol>
                     <CCol md="6">
                       <CLabel>
-                        <CSLab code={"Employee Name"} />
+                        <CSLab code="HCM-FQYC4N0VN1W-HRPR" />
                       </CLabel>
                       <CInput className="" name="employeeName" />
                     </CCol>
                     <CCol md="6">
                       <CLabel>
-                        <CSLab code={"Date"} />
+                        <CSLab code="HCM-VZL7SHYF7OB_KCMI" />
                       </CLabel>
                       <CInput type="date" className="" name="date" />
                     </CCol>
                     <CCol md="6">
                       <CLabel>
-                        <CSLab code={"Employee Status"} />
+                        <CSLab code="HCM-B4SZR3O5JPO-PSLL" />
                       </CLabel>
                       <CSelect>
                         {BoolStatus.map((x, i) => (
@@ -111,7 +111,7 @@ const ChangeEmployeeStatus = () => {
                     <CCol md="12">
                       <CLabel>
                         {" "}
-                        <CSLab code="Reason" />
+                        <CSLab code="HCM-1NNHRS3H3JT_LANG" />
                       </CLabel>
                       <CTextarea
                         name="reason"
@@ -132,7 +132,8 @@ const ChangeEmployeeStatus = () => {
                 color="success"
               >
                 {" "}
-                <CIcon name="cil-scrubber" /> <CSLab code="View History" />{" "}
+                <CIcon name="cil-scrubber" />{" "}
+                <CSLab code="HCM-ZIRH5SVBDUF_LANG" />{" "}
               </CButton>
               <CButton
                 style={{ marginRight: 5, float: "right" }}
@@ -141,7 +142,7 @@ const ChangeEmployeeStatus = () => {
                 color="success"
               >
                 {" "}
-                <AiFillSave size={20} /> <CSLab code="TL11" />{" "}
+                <AiFillSave size={20} /> <CSLab code="HCM-HGUHIR0OK6T" />{" "}
               </CButton>
               <CButton
                 style={{ marginRight: 5, float: "right" }}
@@ -150,7 +151,9 @@ const ChangeEmployeeStatus = () => {
                 color="warning"
               >
                 {" "}
-                <AiOutlineRedo size={20} /> <CSLab code="TL12" />{" "}
+                <AiOutlineRedo
+                  size={20}
+                /> <CSLab code="HCM-MELULU9B6R_KCMI" />{" "}
               </CButton>
               <CButton
                 style={{ marginRight: 5, float: "right", color: "white" }}
@@ -160,7 +163,7 @@ const ChangeEmployeeStatus = () => {
                 color="danger"
               >
                 <AiOutlineClose size={20} />
-                <CSLab code="Cancel" />
+                <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
               </CButton>
             </CCardFooter>
           </CCard>

@@ -1,5 +1,15 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { SearchEmployees } from "src/reusable/API/EmployeeEndpoints";
+import { CustomAxios } from "src/reusable/API/CustomAxios";
+import { toast } from "react-toastify";
+import { toastWarning } from "src/toasters/Toaster";
+
+import {
+  GetRequest,
+  HttpAPIRequest,
+  PostRequest,
+} from "src/reusable/utils/helper";
 
 import CIcon from "@coreui/icons-react";
 import {
@@ -50,7 +60,16 @@ import "../../../../node_modules/@syncfusion/ej2-react-grids/styles/material.css
 import { GetLabelByName } from "src/reusable/configs/config";
 import { CSLab } from "../../../reusable/components";
 import { CardBodyHeight } from "src/reusable/utils/helper";
-import { CSCheckbox, CSLineLabel } from "../../../reusable/components";
+import {
+  CSCheckbox,
+  CSLineLabel,
+  CSAutoComplete,
+  CSRequiredIndicator,
+} from "../../../reusable/components";
+import {
+  GetEmployeeSkillsTypes,
+  PostEmployeeSkill,
+} from "src/reusable/API/EmployeeSkillsEndPoints";
 
 const editOptions = {
   allowEditing: false,
@@ -81,11 +100,184 @@ const EmployeeSkill = (props) => {
   const lan = useSelector((state) => state.language);
   const [show, setShow] = useState(true);
   const [visible, setVisible] = useState(false);
-  const[skill,setSkill] = useState("")
- 
-  const canSave = [skill].every(Boolean)
+  const [skill, setSkill] = useState("");
 
+  const data = useSelector((state) => state.data);
+  const dispatch = useDispatch();
+  const [searchInput, setSearchInput] = useState("");
+  const [pageNumber, setPageNumber] = useState(1);
+  const [numberOfItems, setNumberOfItems] = useState(10);
+  const [orderBy, setOrderBy] = useState("");
+  const [submitData, setSubmitData] = useState({});
+  const [sortOrder, setSortOrder] = useState("");
+  const [large, setLarge] = useState(false);
+  const [mode, setMode] = useState("");
+  const [searchResult, setSearchResult] = useState(null);
+  const [educationCore, setEducationCore] = useState([]);
+  const [empDisplayName, setEmpDisplayName] = useState("");
+  const [handleId, setHandleId] = useState("");
+  const [viewinfo, setViewInfo] = useState([]);
+  const [skillType, setSkillType] = useState([]);
 
+  const handleSearchResultSelect = (results) => {
+    console.log("show results", results);
+
+    //setting employee display name on select of suggested item
+    setEmpDisplayName(
+      (prevState) => `${results.firstName} ${results.lastName}`
+    );
+    // testApi();
+    // return;
+    setMode("Add");
+    setShow(false);
+    dispatch({ type: "set", data: { ...results } });
+    setSubmitData({ ...results });
+
+    if (results?.code) {
+      setSearchResult(results);
+
+      GetRequest()
+        .then((response) => {
+          // toast.dismiss(toastId);
+          if (response.ok) {
+            response.json().then((response) => {
+              // console.log({response});
+              if (response && Object.keys(response).length > 0) {
+                dispatch({ type: "set", data: { ...response } });
+                setSubmitData({ ...response });
+                // setDuplicateData({ ...response })
+                //console.log({ response });
+
+                //let rates = response?.rates;
+
+                // setExchangeRate(rates);
+                setShow(false);
+                setMode("Update");
+              } else {
+                setMode("Add");
+                setShow(false);
+                // dispatch({ type: 'set', data: { ...results, isHomeCurrency } });
+                // setSubmitData({ ...results, isHomeCurrency });
+              }
+            });
+          }
+        })
+        .catch((err) => {
+          // console.log(err);
+          // toaster(toastId, "Failed to retrieve details", 'error', 4000);
+        });
+    }
+  };
+
+  //Get employee skill details
+  const getEmployeeSkills = async () => {
+    try {
+      const request = await CustomAxios.get(`EmployeeSkills/${handleId}`);
+
+      const response = request.data;
+      console.log("emp response:", response);
+      setViewInfo((prevState) => response);
+    } catch (error) {
+      console.log({ error });
+    }
+  };
+  useEffect(() => {
+    if (handleId !== "") {
+      getEmployeeSkills();
+    }
+  }, [handleId]);
+
+  useEffect(() => {
+    console.log("check view info ", viewinfo);
+  });
+
+  //Drop down list for hobby types
+  const MultipleGetRequests = async () => {
+    try {
+      let request = [HttpAPIRequest("GET", GetEmployeeSkillsTypes())];
+      const multipleCall = await Promise.allSettled(request);
+      console.log(multipleCall[0].value);
+
+      setSkillType([
+        { id: "-1", name: `Select Skill` },
+        ...multipleCall[0].value,
+      ]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    MultipleGetRequests();
+  }, []);
+
+  //Handles Submit
+  const handleOnSubmit = () => {
+    console.log("submit data ", submitData);
+
+    if (!submitData?.skillTypeId || submitData?.skillTypeId === "") {
+      toast.error("Please Select a Skill Type!", toastWarning);
+      return;
+    }
+    // if (!submitData?.payPeriodId || submitData?.payPeriodId === '') {
+    //     //toast.error('Please select a pay period!', toastWarning);
+    //     return;
+    // }
+    // console.log(submitData)
+    let employeeId = submitData.id;
+    //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
+    let newData = {
+      ...submitData,
+      userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      userName: "string",
+      CompanyReference: "00001_A01",
+      employeeId,
+    };
+    //let finalData = JSON.stringify(newData)
+    // console.log(finalData)
+    // 'Add' === mode ? AddGLAccount(newData) : updateGLAccount(newData);
+    postEmployeeSkill(newData);
+  };
+
+  //Post Employee Skill
+  function postEmployeeSkill(data) {
+    console.log("post data", data);
+    PostRequest(PostEmployeeSkill(), { data: data })
+      .then((response) => {
+        response.text().then((data) => {
+          if ("" === data) {
+            // toast.success('Earning Mass Update Successful!',);
+            console.log("success");
+          } else {
+            try {
+              data = JSON.parse(data);
+              // toaster(toastId, data?.reason ? data?.reason : "Failed to update Currency", 'error', 4000);
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        });
+      })
+      .catch((err) => {
+        console.log({ err });
+      })
+      .finally(() => {
+        console.log("Done");
+      });
+  }
+  const handleOnChange = (evnt) => {
+    //console.log(evnt)
+    setSubmitData((data) => {
+      return { ...data, [evnt?.target?.name]: evnt?.target?.value };
+    });
+    dispatch({
+      type: "set",
+      data: { ...data, [evnt?.target?.name]: evnt?.target?.value },
+    });
+  };
+
+  console.log(" skiltype", skillType);
+  const canSave = [skill].every(Boolean);
 
   const TransLabelByCode = (name) => GetLabelByName(name, lan);
   return (
@@ -93,55 +285,82 @@ const EmployeeSkill = (props) => {
       <CRow>
         <CCol xs="12">
           <h5>
-            <CSLab code="Employee Skill" />
+            <CSLab code="HCM-GW2XDSAH46_LASN" />
           </h5>
         </CCol>
       </CRow>
       <CRow>
         <CCol md="4">
           <CFormGroup>
-            <CInputGroup>
-              <CInput
-                className="border-left-curve"
-                type="text"
-                id="username3"
-                name="username3"
-                autoComplete="name"
-                placeholder={TransLabelByCode("TL48")}
-              />
-              <CInputGroupAppend>
-                <CButton
-                  type="button"
-                  className="border-right-curve"
-                  color="primary"
-                  onClick={() => setShow(!show)}
-                >
-                  <CIcon name="cil-magnifying-glass" />
-                </CButton>
-              </CInputGroupAppend>
-            </CInputGroup>
+            <CSAutoComplete
+              filterUrl={SearchEmployees(searchInput)}
+              //filterUrl=''            //filterUrl={SearchInternalCurrencies(searchInput)}
+              placeholder={"Search for employee by name or code"}
+              handleSelect={handleSearchResultSelect}
+              //onChange={()=>handleSearchResultSelect}
+              displayTextKey={"firstName"}
+              setInput={setSearchInput}
+              input={searchInput}
+              emptySearchFieldMessage={`Please input 3 or more characters to search`}
+              searchName={"Employee"}
+              isPaginated={false}
+              pageNumber={pageNumber}
+              setPageNumber={setPageNumber}
+              numberOfItems={numberOfItems}
+              setNumberOfItems={setNumberOfItems}
+              orderBy={orderBy}
+              setOrderBy={setOrderBy}
+              sortOrder={sortOrder}
+              setSortOrder={setSortOrder}
+              mode={mode}
+              setMode={setMode}
+              handleId={setHandleId}
+              // reset={handleReset}
+            />
           </CFormGroup>
         </CCol>
         <CCol md="8" className="text-right"></CCol>
         <CCol xs="12" hidden={show}>
           <CCard>
             <CCardBody style={{ height: CardBodyHeight, overflowY: "auto" }}>
-              <CButton
-                type="button"
-                style={{ marginBottom: 5 }}
-                onClick={() => {
-                  setVisible(true);
-                }}
-                size="sm"
-                color="primary"
-              >
-                {" "}
-                <AiOutlinePlus /> <CSLab code="Employee Skill" />
-              </CButton>
+              <CFormGroup row>
+                <CCol md="4">
+                  <b>Employee:</b>{" "}
+                  <span
+                    style={{
+                      textDecoration: "underline dotted",
+                      cursor: "pointer",
+                    }}
+                    type="button"
+                    onClick={() => setLarge(!large)}
+                    size="md"
+                    color="primary"
+                  >
+                    {empDisplayName}
+                  </span>
+                </CCol>
+                <CCol md="4">
+                  {/* <CTooltip content={`Click here to view Employees`} >
+                <CButton color="outline-primary"> <MdPeople /> 120 </CButton>
+                </CTooltip> */}
+                </CCol>
+                <CCol md="4">
+                  <CButton
+                    color="primary"
+                    style={{ float: "right" }}
+                    onClick={() => {
+                      setVisible(true);
+                    }}
+                  >
+                    <AiOutlinePlus />
+                    <CSLab code="HCM-NUIZ7RTQ2AD_KCMI" />{" "}
+                  </CButton>
+                </CCol>
+              </CFormGroup>
               <CForm action="" method="post">
                 <>
                   <GridComponent
-                    dataSource={{}}
+                    dataSource={viewinfo}
                     allowPaging={true}
                     pageSettings={{ pageSize: 6 }}
                     editSettings={editOptions}
@@ -154,19 +373,19 @@ const EmployeeSkill = (props) => {
                         visible={false}
                       />
                       <ColumnDirective
-                        field={""}
-                        headerText={"Name"}
+                        field={"employee.firstName"}
+                        headerText={GetLabelByName("HCM-VD1B12NKKJ_LANG", lan)}
                         width="100"
                       />
 
                       <ColumnDirective
-                        field={""}
-                        headerText={"Skill"}
+                        field={"skillType.name"}
+                        headerText={GetLabelByName("HCM-P29OOIV9P7_PSLL", lan)}
                         width="100"
                       />
                       <ColumnDirective
                         commands={commandOptions}
-                        headerText={GetLabelByName("TL51", lan)}
+                        headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
                         width="100"
                         textAlign="Center"
                       />
@@ -198,7 +417,7 @@ const EmployeeSkill = (props) => {
         <CModalHeader>
           <CModalTitle>
             {" "}
-            <CSLab code="Add Employee Skill" />{" "}
+            <CSLab code="HCM-NUIZ7RTQ2AD_KCMI" />{" "}
           </CModalTitle>
         </CModalHeader>
         <CModalBody>
@@ -212,12 +431,17 @@ const EmployeeSkill = (props) => {
               </CCol> */}
               <CCol md="4">
                 <CLabel htmlFor="Skiil">
-                  <CSLab code="Skill" />
+                  <CSLab code="HCM-P29OOIV9P7_PSLL" />
+                  <CSRequiredIndicator />
                 </CLabel>
-                <CSelect name="skill" value={skill} onChange={(e)=> setSkill(e.target.value)}>
-                  {["Select Skill"].map((x, i) => (
-                    <option key={i} value={x}>
-                      {x}
+                <CSelect
+                  name="skillTypeId"
+                  value={data?.id || -1}
+                  onChange={handleOnChange}
+                >
+                  {skillType.map((x, i) => (
+                    <option key={i} value={x.id}>
+                      {x.name}
                     </option>
                   ))}
                 </CSelect>
@@ -233,7 +457,7 @@ const EmployeeSkill = (props) => {
           <CRow className={"bottom-spacing"}>
             <CCol md="8">
               <CLabel htmlFor="Note">
-                <CSLab code="Note" />
+                <CSLab code="HCM-Z0FV0XJJ06" />
               </CLabel>
               <CTextarea
                 name="Note"
@@ -311,13 +535,18 @@ const EmployeeSkill = (props) => {
         </CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setVisible(false)}>
-            <CSLab code="TL50" />
+            <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
           </CButton>
-          <CButton   style={{ cursor: !canSave ? "not-allowed" : "pointer" }}
-            disabled={!canSave}
-            onClick={() => setVisible(false)}
-            color="primary">
-            <CSLab code="TL11" />
+          <CButton
+            // style={{ cursor: !canSave ? "not-allowed" : "pointer" }}
+            //disabled={!canSave}
+            onClick={() => {
+              setVisible(false);
+              handleOnSubmit();
+            }}
+            color="primary"
+          >
+            <CSLab code="HCM-HGUHIR0OK6T" />
           </CButton>
         </CModalFooter>
       </CModal>

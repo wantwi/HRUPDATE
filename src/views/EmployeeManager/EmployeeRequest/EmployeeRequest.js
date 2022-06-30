@@ -1,4 +1,3 @@
-
 import {
   CSDivider,
   CSLineLabel,
@@ -73,7 +72,7 @@ const EmployeeRequest = (props) => {
       <CRow>
         <CCol xs="12">
           <h5>
-            <CSLab code="TL47" />
+            <CSLab code="HCM-RMSWVES71HF-PSLL" />
           </h5>
         </CCol>
       </CRow>
@@ -87,7 +86,7 @@ const EmployeeRequest = (props) => {
                 id="username3"
                 name="username3"
                 autoComplete="name"
-                placeholder={TransLabelByCode("TL48")}
+                placeholder={TransLabelByCode("search for employee")}
               />
               <CInputGroupAppend>
                 <CButton
@@ -171,7 +170,7 @@ const EmployeeRequest = (props) => {
         <CModalHeader>
           <CModalTitle>
             {" "}
-            <CSLab code="Add Employee Request" />{" "}
+            <CSLab code="HCM-3BQS3NBAJD7_LANG" />{" "}
           </CModalTitle>
         </CModalHeader>
         <CModalBody>
@@ -179,7 +178,7 @@ const EmployeeRequest = (props) => {
             <>
               <CCol md="4">
                 <CLabel htmlFor="type">
-                  <CSLab code="Request Type" />
+                  <CSLab code="HCM-SU3UY023WZH-PSLL" />
                   <CSRequiredIndicator />
                 </CLabel>
                 <CSelect
@@ -230,7 +229,7 @@ const EmployeeRequest = (props) => {
             <>
               <CCol md="12">
                 <CLabel htmlFor="description">
-                  <CSLab code="Request" />
+                  <CSLab code="HCM-9FY7YTVZ1I4" />
                 </CLabel>
                 <CTextarea
                   id="description"
@@ -242,7 +241,7 @@ const EmployeeRequest = (props) => {
         </CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setVisible(false)}>
-            <CSLab code="TL50" />
+            <CSLab code="HCM-9E3ZC2E1S0N-LASN" />
           </CButton>
           <CButton
             style={{ cursor: !canSave ? "not-allowed" : "pointer" }}
@@ -250,7 +249,7 @@ const EmployeeRequest = (props) => {
             onClick={() => setVisible(false)}
             color="primary"
           >
-            <CSLab code="TL11" />
+            <CSLab code="HCM-HGUHIR0OK6T" />
           </CButton>
         </CModalFooter>
       </CModal>

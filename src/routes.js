@@ -6,6 +6,7 @@ import AccidentTransaction from "./views/EmployeeManager/AccidentTransaction/Acc
 import Beneficiaries from "./views/EmployeeManager/Beneficiary/Beneficiary";
 //import EmergencyContact from "./views/EmployeeRelationships/EmergencyContact/EmergencyContact";
 //import NextofKin from "./views/EmployeeManager/NextofKin/NextofKin";
+//import {LeaveTransaction} from "./views/EmployeeManager/LeaveTransaction/LeaveTransaction";
 
 const Dashboard = React.lazy(() => import("./templates/dashboard/Dashboard"));
 
@@ -82,6 +83,9 @@ const EmployeeHobby = React.lazy(() =>
 );
 const EmployeeSkill = React.lazy(() =>
   import("./views/EmployeeManager/EmployeeSkill/EmployeeSkill")
+);
+const LeaveTransaction = React.lazy(() =>
+  import("./views/EmployeeManager/LeaveTransaction/LeaveTransaction")
 );
 
 // Position Manager
@@ -368,6 +372,12 @@ const routes = [
     name: "Employee Skill",
     component: EmployeeSkill,
   },
+  {
+    path: "/employeemanager/leavetransaction",
+    name: "Employee Transaction",
+    component: LeaveTransaction,
+  },
+,
 
   // Bank Information
   {

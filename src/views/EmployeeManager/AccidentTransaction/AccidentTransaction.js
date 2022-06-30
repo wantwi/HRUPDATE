@@ -1,5 +1,7 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+//import { toast } from "react-toastify";
+import { toastWarning } from "src/toasters/Toaster";
 
 import CIcon from "@coreui/icons-react";
 import {
@@ -21,6 +23,7 @@ import {
   CLabel,
   CSelect,
   CTextarea,
+  CCardHeader,
 } from "@coreui/react";
 import { AiOutlinePlus } from "react-icons/ai";
 
@@ -48,8 +51,26 @@ import "../../../../node_modules/@syncfusion/ej2-splitbuttons/styles/material.cs
 import "../../../../node_modules/@syncfusion/ej2-react-grids/styles/material.css";
 
 import { GetLabelByName } from "src/reusable/configs/config";
-import { CSLab } from "../../../reusable/components";
-import { CardBodyHeight } from "src/reusable/utils/helper";
+import {
+  CSLab,
+  CSAutoComplete,
+  CSRequiredIndicator,
+} from "../../../reusable/components";
+import {
+  CardBodyHeight,
+  GetRequest,
+  HttpAPIRequest,
+  PostRequest,
+} from "src/reusable/utils/helper";
+import { SearchEmployees } from "src/reusable/API/EmployeeEndpoints";
+import {
+  PostAccidentTransaction,
+  GetAccidentTypes,
+  GetEmployeeAccidentByEmployeeId,
+} from "src/reusable/API/AccidentTransaction";
+import { CustomAxios } from "src/reusable/API/CustomAxios";
+import { BaseURL } from "src/reusable/API/base";
+import { toast } from "react-toastify";
 
 const editOptions = {
   allowEditing: false,
@@ -57,6 +78,7 @@ const editOptions = {
   allowDeleting: false,
   allowEditOnDblClick: false,
 };
+
 const commandOptions = [
   {
     type: "Edit",
@@ -80,62 +102,269 @@ const AccidentTransaction = () => {
   const lan = useSelector((state) => state.language);
   const [show, setShow] = useState(true);
   const [visible, setVisible] = useState(false);
+  const data = useSelector((state) => state.data);
 
+  const dispatch = useDispatch();
+  const [searchInput, setSearchInput] = useState("");
+  const [pageNumber, setPageNumber] = useState(1);
+  const [numberOfItems, setNumberOfItems] = useState(10);
+  const [orderBy, setOrderBy] = useState("");
+  const [submitData, setSubmitData] = useState({});
+  const [sortOrder, setSortOrder] = useState("");
+  const [large, setLarge] = useState(false);
+  const [mode, setMode] = useState("");
+  const [searchResult, setSearchResult] = useState(null);
+  const [viewinfo, setViewInfo] = useState([]);
+  const [handleId, setHandleId] = useState("");
+  const [titles, setProfessionalTitle] = useState([]);
+  const [accidentTypes, setAccidentTypes] = useState([]);
+  const [getEmployeeAccident, setEmployeeAccident] = useState([]);
+
+  //fucntion for multiple get (dropDown list in the form)
+  const MultipleGetRequests = async () => {
+    try {
+      let request = [HttpAPIRequest("GET", GetAccidentTypes())];
+      const multipleCall = await Promise.allSettled(request);
+      console.log(multipleCall[0].value);
+
+      setAccidentTypes([
+        { id: "-1", name: `Select Accident Type` },
+        ...multipleCall[0].value,
+      ]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    MultipleGetRequests();
+  }, []);
+
+  // get employee by id for grid view
+  const getEmployyeAccidentById = async () => {
+    try {
+      const request = await CustomAxios.get(
+        `${BaseURL}EmployeeAccident/${handleId}`
+      );
+      const respond = request.data;
+      setEmployeeAccident(respond);
+      console.log("responds", respond);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  //handles form submit
+  const handleOnSubmit = () => {
+    console.log(submitData);
+
+    if (!submitData?.accidentTypeId || submitData?.accidentTypeId === -1) {
+      toast.error("Please Select Accident Type!", toastWarning);
+      return;
+    }
+    if (
+      !submitData?.LocationofAccident ||
+      submitData?.LocationofAccident === ""
+    ) {
+      // toast.error('Please Enter Location!', toastWarning);
+      return;
+    }
+    if (!submitData?.DateofAccident || submitData?.DateofAccident === "") {
+      //toast.error('Please Select Accident Date!', toastWarning);
+      return;
+    }
+    if (!submitData?.DateInformed || submitData?.DateInformed === "") {
+      //toast.error('Please select a Date!', toastWarning);
+      return;
+    }
+
+    // console.log(submitData)
+
+    let employeeId = submitData.id;
+    let newData = {
+      ...submitData,
+      userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      userName: "string",
+      CompanyReference: "00001_A01",
+      employeeId,
+    };
+
+    postAccidentTrans(newData);
+  };
+
+  //funtion to handle post
+  function postAccidentTrans(data) {
+    console.log(data);
+    PostRequest(PostAccidentTransaction(), { data: data })
+      .then((response) => {
+        response.text().then((data) => {
+          if ("" === data) {
+            // toast.success('Earning Mass Update Successful!',);
+            console.log("success");
+          } else {
+            try {
+              data = JSON.parse(data);
+              // toaster(toastId, data?.reason ? data?.reason : "Failed to update Currency", 'error', 4000);
+            } catch (error) {
+              console.log("MODEL", error);
+            }
+          }
+        });
+      })
+      .catch((err) => {
+        console.log({ err });
+      })
+      .finally(() => {
+        console.log("Done");
+      });
+  }
+
+  const handleSearchResultSelect = (results) => {
+    console.log("show results", results);
+
+    setMode("Add");
+    setShow(false);
+    dispatch({ type: "set", data: { ...results } });
+    setSubmitData({ ...results });
+
+    if (results?.code) {
+      setSearchResult(results);
+
+      GetRequest()
+        .then((response) => {
+          // toast.dismiss(toastId);
+          if (response.ok) {
+            response.json().then((response) => {
+              // console.log({response});
+              if (response && Object.keys(response).length > 0) {
+                dispatch({ type: "set", data: { ...response } });
+                setSubmitData({ ...response });
+
+                setShow(false);
+                setMode("Update");
+              } else {
+                setMode("Add");
+                setShow(false);
+              }
+            });
+          }
+        })
+        .catch((err) => {});
+    }
+  };
+  const testApi = async () => {
+    try {
+      const request = await CustomAxios.get(
+        `http://192.168.0.48:5100/EmployeeBio/${handleId}`
+      );
+
+      const res = request.data;
+
+      setViewInfo([res]);
+    } catch (error) {
+      console.log({ error });
+    }
+  };
+
+  useEffect(() => {
+    if (handleId !== "") {
+      testApi();
+      getEmployyeAccidentById();
+      console.log(viewinfo);
+    }
+  }, [handleId]);
+  const employeeName = viewinfo.map((x) => x.firstName + " " + x.lastName);
   const TransLabelByCode = (name) => GetLabelByName(name, lan);
+
+  const handleOnChange = (evnt) => {
+    //console.log(evnt)
+    setSubmitData((data) => {
+      return { ...data, [evnt?.target?.name]: evnt?.target?.value };
+    });
+    dispatch({
+      type: "set",
+      data: { ...data, [evnt?.target?.name]: evnt?.target?.value },
+    });
+  };
+  console.log("from Db: ", getEmployeeAccident);
   return (
     <>
       <CRow>
         <CCol xs="12">
           <h5>
-            <CSLab code="Accident Transaction" />
+            <CSLab code="HCM-Z0GANCGNQO-LOLN" />
           </h5>
         </CCol>
       </CRow>
       <CRow>
         <CCol md="4">
-          <CFormGroup>
-            <CInputGroup>
-              <CInput
-                className="border-left-curve"
-                type="text"
-                id="username3"
-                name="username3"
-                autoComplete="name"
-                placeholder={TransLabelByCode("TL48")}
-              />
-              <CInputGroupAppend>
-                <CButton
-                  type="button"
-                  className="border-right-curve"
-                  color="primary"
-                  onClick={() => setShow(!show)}
-                >
-                  <CIcon name="cil-magnifying-glass" />
-                </CButton>
-              </CInputGroupAppend>
-            </CInputGroup>
-          </CFormGroup>
+          <CSAutoComplete
+            filterUrl={SearchEmployees(searchInput)}
+            placeholder={"Search for employee by name or code"}
+            handleSelect={handleSearchResultSelect}
+            displayTextKey={"firstName"}
+            setInput={setSearchInput}
+            input={searchInput}
+            emptySearchFieldMessage={`Please input 3 or more characters to search`}
+            searchName={"Employee"}
+            isPaginated={false}
+            pageNumber={pageNumber}
+            setPageNumber={setPageNumber}
+            numberOfItems={numberOfItems}
+            setNumberOfItems={setNumberOfItems}
+            orderBy={orderBy}
+            setOrderBy={setOrderBy}
+            sortOrder={sortOrder}
+            setSortOrder={setSortOrder}
+            mode={mode}
+            setMode={setMode}
+            handleId={setHandleId}
+          />
         </CCol>
         <CCol md="8" className="text-right"></CCol>
         <CCol xs="12" hidden={show}>
           <CCard>
+            <CCardHeader hidden={show} className={""}>
+              <CFormGroup row>
+                <CCol md="4">
+                  <b>Employee:</b>{" "}
+                  <span
+                    style={{
+                      textDecoration: "underline dotted",
+                      cursor: "pointer",
+                    }}
+                    type="button"
+                    onClick={() => setLarge(!large)}
+                    size="md"
+                    color="primary"
+                  >
+                    {employeeName}
+                  </span>
+                </CCol>
+                <CCol md="4">
+                  {/* <CTooltip content={`Click here to view Employees`} >
+                <CButton color="outline-primary"> <MdPeople /> 120 </CButton>
+                </CTooltip> */}
+                </CCol>
+                <CCol md="4">
+                  <CButton
+                    color="primary"
+                    style={{ float: "right" }}
+                    onClick={() => {
+                      setVisible(true);
+                    }}
+                  >
+                    <AiOutlinePlus />
+                    <CSLab code="HCM-7SLZ9PA5A0V_KCMI" />{" "}
+                  </CButton>
+                </CCol>
+              </CFormGroup>
+            </CCardHeader>
             <CCardBody style={{ height: CardBodyHeight, overflowY: "auto" }}>
-              <CButton
-                type="button"
-                style={{ marginBottom: 5 }}
-                onClick={() => {
-                  setVisible(true);
-                }}
-                size="sm"
-                color="primary"
-              >
-                {" "}
-                <AiOutlinePlus /> <CSLab code="Accident Transaction" />
-              </CButton>
               <CForm action="" method="post">
                 <>
                   <GridComponent
-                    dataSource={{}}
+                    dataSource={getEmployeeAccident}
                     allowPaging={true}
                     pageSettings={{ pageSize: 6 }}
                     editSettings={editOptions}
@@ -143,33 +372,34 @@ const AccidentTransaction = () => {
                     <ColumnsDirective>
                       <ColumnDirective
                         field={""}
-                        headerText={"ID"}
+                        headerText="ID"
                         width="100"
                         visible={false}
                       />
                       <ColumnDirective
-                        field={""}
-                        headerText={"Accident"}
+                        field="accidentTypesDto.name"
+                        headerText={GetLabelByName("HCM-EZWGSC0K0OK_KCMI", lan)}
                         width="100"
                       />
                       <ColumnDirective
-                        field={""}
-                        headerText={"Date of Accident"}
+                        field="dateOfAccident"
+                        headerText={GetLabelByName("HCM-JVUPJOPETGK-LANG", lan)}
                         width="100"
                       />
                       <ColumnDirective
-                        field={""}
-                        headerText={"Location of Accident"}
+                        field="locationOfAccident"
+                        headerText={GetLabelByName("HCM-QJCY2VRWA7_LOLN", lan)}
                         width="100"
                       />
                       <ColumnDirective
-                        field={""}
-                        headerText={"Date Informed"}
+                        field="dateInformed"
+                        headerText={GetLabelByName("HCM-GOO3SSJSCG5_LANG", lan)}
                         width="100"
                       />
+                      HCM-GOO3SSJSCG5_LANG
                       <ColumnDirective
                         commands={commandOptions}
-                        headerText={GetLabelByName("TL51", lan)}
+                        headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
                         width="100"
                         textAlign="Center"
                       />
@@ -201,55 +431,86 @@ const AccidentTransaction = () => {
         <CModalHeader style={{ position: "right" }}>
           <CModalTitle>
             {" "}
-            <CSLab code="Add Accident Transaction" />{" "}
+            <CSLab code="HCM-7SLZ9PA5A0V_KCMI" />{" "}
           </CModalTitle>
         </CModalHeader>
         <CModalBody>
           <CRow className={"bottom-spacing"}>
             <>
-              <CCol md="5">
+              <CCol md="6">
                 <CLabel htmlFor="AccidentType">
-                  <CSLab code="Accident Type" />
+                  <CSLab code="HCM-LPG0UTX0P7H-HRPR" />
+                  <CSRequiredIndicator />
                 </CLabel>
-                <CSelect>
-                  {["Select Accident Type"].map((x, i) => (
-                    <option key={i} value={x}>
-                      {x}
+                <CSelect
+                  name="accidentTypeId"
+                  value={data?.accidentTypeId || ""}
+                  onChange={handleOnChange}
+                >
+                  {accidentTypes.map((x, i) => (
+                    <option key={i} value={x.id}>
+                      {x.name}
                     </option>
                   ))}
                 </CSelect>
               </CCol>
-              <CCol md="4">
+              <CCol md="6">
                 <CLabel htmlFor="LocationofAccident">
-                  <CSLab code="Location of Accident" />
+                  <CSLab code="HCM-QJCY2VRWA7_LOLN" />
+                  <CSRequiredIndicator />
                 </CLabel>
-                <CInput id="LocationofAccident" type="text"></CInput>
+                <CInput
+                  id="LocationofAccident"
+                  name="LocationofAccident"
+                  type="text"
+                  value={data?.LocationofAccident || ""}
+                  onChange={handleOnChange}
+                ></CInput>
               </CCol>
             </>
           </CRow>
           <CRow className={"bottom-spacing"}>
             <>
-              <CCol md="4">
+              <CCol md="6">
                 <CLabel htmlFor="DateofAccident">
-                  <CSLab code="Date of Accident" />
+                  <CSLab code="HCM-JVUPJOPETGK-LANG" />
+                  <CSRequiredIndicator />
                 </CLabel>
-                <CInput className="" id="DateofAccident" type="date" />
+                <CInput
+                  className=""
+                  id="DateofAccident"
+                  name="DateofAccident"
+                  value={data?.DateofAccident || -1}
+                  type="date"
+                  onChange={handleOnChange}
+                />
               </CCol>
-              <CCol md="4">
+              <CCol md="6">
                 <CLabel htmlFor="DateInformed">
-                  <CSLab code="Cost" />
+                  <CSLab code="HCM-GOO3SSJSCG5_LANG" />
+                  <CSRequiredIndicator />
                 </CLabel>
-                <CInput className="" id="DateInformed" type="text" />
+                <CInput
+                  className=""
+                  id="DateInformed"
+                  type="date"
+                  name="DateInformed"
+                  value={data?.DateInformed || -1}
+                  onChange={handleOnChange}
+                />
               </CCol>
             </>
           </CRow>
           <CRow>
             <CCol md="12">
               <CLabel>
-                <CSLab code="Remarks" />
+                <CSLab code="HCM-8G6FY80Q2NM-HRPR" />
               </CLabel>
               <CTextarea
-                name="Remarks"
+                id="Remarks"
+                name="Note"
+                value={data?.Note || ""}
+                onChange={handleOnChange}
                 style={{ height: "60px", resize: "none" }}
               ></CTextarea>
             </CCol>
@@ -257,10 +518,10 @@ const AccidentTransaction = () => {
         </CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setVisible(false)}>
-            <CSLab code="TL50" />
+            <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
           </CButton>
-          <CButton color="primary">
-            <CSLab code="TL11" />
+          <CButton color="primary" onClick={handleOnSubmit}>
+            <CSLab code="HCM-HGUHIR0OK6T" />
           </CButton>
         </CModalFooter>
       </CModal>

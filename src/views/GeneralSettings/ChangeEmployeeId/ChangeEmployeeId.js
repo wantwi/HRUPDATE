@@ -41,7 +41,7 @@ const ChangeEmployeeId = () => {
       <CRow>
         <CCol>
           <h5>
-            <CSLab code="Change Employee ID " />{" "}
+            <CSLab code="HCM-800UM59F8V-KCMI " />{" "}
           </h5>
         </CCol>
       </CRow>
@@ -78,21 +78,21 @@ const ChangeEmployeeId = () => {
                   <CRow>
                     <CCol md="6">
                       <CLabel htmlFor="currentemployeeid">
-                        <CSLab code={"Current Employee ID"} />
+                        <CSLab code="HCM-7ZX1U2H1MPT_PSLL" />
                       </CLabel>
                       <CInput className="" id="currentemployeeid" disabled />
                     </CCol>
                     <CCol md="6">
                       <CLabel htmlFor="newemployeeid">
-                        <CSLab code={"New Employee ID"} />
+                        <CSLab code="HCM-0APUYMVMP2Z_PSLL" />
                       </CLabel>
                       <CInput className="" id="newemployeeid" />
                     </CCol>
                   </CRow>
                   <CRow>
                     <CCol md="6">
-                      <CLabel htmlFor="currentemployeeid">
-                        <CSLab code={"Date"} />{" "}
+                      <CLabel htmlFor="date">
+                        <CSLab code="HCM-VZL7SHYF7OB_KCMI" />{" "}
                       </CLabel>
                       <CInput type="date" name="name" />
                     </CCol>
@@ -100,7 +100,7 @@ const ChangeEmployeeId = () => {
                   <CRow>
                     <CCol md="12">
                       <CLabel htmlFor="Reason">
-                        <CSLab code="Reason" />
+                        <CSLab code="HCM-1NNHRS3H3JT_LANG" />
                       </CLabel>
                       <CTextarea
                         className=""
@@ -128,7 +128,7 @@ const ChangeEmployeeId = () => {
                 size="sm"
                 color="success"
               >
-                <AiFillSave size={20} /> <CSLab code="TL11" />{" "}
+                <AiFillSave size={20} /> <CSLab code="HCM-HGUHIR0OK6T" />{" "}
               </CButton>
               <CButton
                 style={{ marginRight: 5, float: "right" }}
@@ -136,7 +136,7 @@ const ChangeEmployeeId = () => {
                 size="sm"
                 color="warning"
               >
-                <AiOutlineRedo size={20} /> <CSLab code="TL12" />{" "}
+                <AiOutlineRedo size={20} /> <CSLab code="HCM-MELULU9B6R_KCMI" />{" "}
               </CButton>
               <CButton
                 style={{ marginRight: 5, float: "right", color: "white" }}
@@ -146,7 +146,7 @@ const ChangeEmployeeId = () => {
                 color="danger"
               >
                 <AiOutlineClose size={20} />
-                <CSLab code="Cancel" />
+                <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
               </CButton>
             </CCardFooter>
           </CCard>

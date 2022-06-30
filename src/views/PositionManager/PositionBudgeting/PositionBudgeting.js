@@ -66,7 +66,7 @@ const PositionBudgeting = () => {
       <CRow>
         <CCol xs="12">
           <h5>
-            <CSLab code="Position Budgeting" />
+            <CSLab code="HCM-MLMWRF2B3AM_PSLL" />
           </h5>
         </CCol>
       </CRow>
@@ -99,7 +99,7 @@ const PositionBudgeting = () => {
                 size="sm"
                 color="primary"
               >
-                <AiOutlinePlus /> <CSLab code={"Add"} />{" "}
+                <AiOutlinePlus /> <CSLab code="HCM-TAAFD4M071D-HRPR" />{" "}
               </CButton>
             ) : null}
           </CFormGroup>
@@ -114,7 +114,7 @@ const PositionBudgeting = () => {
                   <CRow>
                     <CCol md="6">
                       <CLabel>
-                        <CSLab code={"Division"} />
+                        <CSLab code="HCM-LAFPT6FJ57N" />
                       </CLabel>
                       <CSelect name="division">
                         {["Select Division", "Division 1", "Division 2"].map(
@@ -128,7 +128,7 @@ const PositionBudgeting = () => {
                     </CCol>
                     <CCol md="6">
                       <CLabel>
-                        <CSLab code={"Department"} />
+                        <CSLab code="HCM-N6I0LSIYJF" />
                       </CLabel>
                       <CSelect name="depatment">
                         {[
@@ -144,7 +144,7 @@ const PositionBudgeting = () => {
                     </CCol>
                     <CCol md="6">
                       <CLabel>
-                        <CSLab code={"Section"} />
+                        <CSLab code="HCM-4D1SZ24U9UO" />
                       </CLabel>
                       <CSelect name="section">
                         {["Select Section", "Section 1", "Section 2"].map(
@@ -158,13 +158,13 @@ const PositionBudgeting = () => {
                     </CCol>
                     <CCol md="6">
                       <CLabel>
-                        <CSLab code={"Start Date"} />
+                        <CSLab code="HCM-K85NF9HWVXC-LANG" />
                       </CLabel>
                       <CInput className="" name="startDate" type="date" />
                     </CCol>
                     <CCol md="6">
                       <CLabel>
-                        <CSLab code={"End Date"} />
+                        <CSLab code="HCM-S4N9DCXVMJ" />
                       </CLabel>
                       <CInput className="" name="endDate" type="date" />
                     </CCol>
@@ -189,22 +189,34 @@ const PositionBudgeting = () => {
                           />
                           <ColumnDirective
                             field={"grade"}
-                            headerText="Grade"
+                            headerText={GetLabelByName(
+                              "HCM-P82D0RPB0G-LOLN",
+                              lan
+                            )}
                             width="85"
                           />
                           <ColumnDirective
                             field={"actual"}
-                            headerText="Actual"
+                            headerText={GetLabelByName(
+                              "HCM-I92QHLUMN-KCMI",
+                              lan
+                            )}
                             width="85"
                           />
                           <ColumnDirective
                             field={"budgeted"}
-                            headerText="Budgeted"
+                            headerText={GetLabelByName(
+                              "HCM-VF3DCK9GX88_LASN",
+                              lan
+                            )}
                             width="100"
                           />
                           <ColumnDirective
                             field={"revisedBudget"}
-                            headerText="Revised Budget"
+                            headerText={GetLabelByName(
+                              "HCM-EV3NKIK7IL_LASN",
+                              lan
+                            )}
                             width="100"
                           />
                           {/* <ColumnDirective commands={commandOptions} headerText={"Action"} width='100' textAlign="Center" /> */}
@@ -240,7 +252,7 @@ const PositionBudgeting = () => {
                 >
                   <CIcon name="cil-scrubber" />
 
-                  <CSLab code="View History" />
+                  <CSLab code="HCM-ZIRH5SVBDUF_LANG" />
                 </CButton>
               ) : null}
               <CButton
@@ -249,7 +261,7 @@ const PositionBudgeting = () => {
                 size="sm"
                 color="success"
               >
-                <AiFillSave size={20} /> <CSLab code="TL11" />{" "}
+                <AiFillSave size={20} /> <CSLab code="HCM-HGUHIR0OK6T" />{" "}
               </CButton>
               <CButton
                 style={{ marginRight: 5, float: "right" }}
@@ -257,7 +269,7 @@ const PositionBudgeting = () => {
                 size="sm"
                 color="warning"
               >
-                <AiOutlineRedo size={20} /> <CSLab code="TL12" />{" "}
+                <AiOutlineRedo size={20} /> <CSLab code="HCM-MELULU9B6R_KCMI" />{" "}
               </CButton>
               <CButton
                 style={{ marginRight: 5, float: "right", color: "white" }}
@@ -267,7 +279,7 @@ const PositionBudgeting = () => {
                 color="danger"
               >
                 <AiOutlineClose size={20} />
-                <CSLab code="Cancel" />
+                <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
               </CButton>
             </CCardFooter>
           </CCard>

@@ -330,6 +330,7 @@ const CSAutoComplete = ({
           {filteredSuggestions.map((suggestion, index) => {
             return (
               <li
+                key={index}
                 className={`dropdown-item ${
                   index === indexCount ? "active" : ""
                 }`}

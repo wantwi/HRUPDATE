@@ -79,7 +79,7 @@ import {
 //   "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
 // }
 
-const LeaveTypes = (props) => {
+const LeaveTransaction = (props) => {
   const lan = useSelector((state) => state.language);
 
   const [show, setShow] = useState(true);
@@ -300,7 +300,7 @@ const LeaveTypes = (props) => {
       <CRow>
         <CCol xs="12">
           <h5>
-            <CSLab code="HCM-E3ZPL9HV68G-LOLN" />
+            <CSLab code="HCM-I0ZV6XVP41I_LASN" />
           </h5>
         </CCol>
       </CRow>
@@ -626,4 +626,4 @@ const LeaveTypes = (props) => {
   );
 };
 
-export default LeaveTypes;
+export default LeaveTransaction;

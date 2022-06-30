@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { FileUploader } from "react-drag-drop-files";
-
+import { SearchEmployees } from "src/reusable/API/EmployeeEndpoints";
 import CIcon from "@coreui/icons-react";
 import {
   CInputGroup,
@@ -56,7 +56,11 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 //import { getValue } from '@syncfusion/ej2-base';
-
+import {
+  GetRequest,
+  HttpAPIRequest,
+  PostRequest,
+} from "src/reusable/utils/helper";
 import {
   BoolStatus,
   CardBodyHeight,
@@ -70,6 +74,7 @@ import {
   CSDivider,
   CSLab,
   CSLineLabel,
+  CSRequiredIndicator,
 } from "../../../reusable/components";
 import "../../../scss/_custom_table.scss";
 import { glAccountData } from "src/views/GenericParameters/data/DataModel";
@@ -88,6 +93,7 @@ import {
 } from "src/reusable/API/EmployeeDetailsEndpoints";
 import { CImage } from "@coreui/bootstrap-react";
 import { CustomAxios } from "src/reusable/API/CustomAxios";
+import { GetLabelByName } from "src/reusable/configs/config";
 // import Loader from 'src/Loader/Loader';
 
 const toaster = (toastId, message, type, time) => {
@@ -167,6 +173,7 @@ const paymentOpts = {
 const FileTypes = ["jpg", "png", "gif", "jpeg"];
 
 const EmployeeDetail = (props) => {
+  const lan = useSelector((state) => state.language);
   const dispatch = useDispatch();
   const data = useSelector((state) => state.data);
 
@@ -187,6 +194,7 @@ const EmployeeDetail = (props) => {
   const [gLAccountData, setGLAccountData] = useState([]);
   const [mode, setMode] = useState("");
   const [Orgs, setOrgs] = useState([]);
+  const [searchResult, setSearchResult] = useState(null);
 
   const [pageNumber, setPageNumber] = useState(1);
   const [numberOfItems, setNumberOfItems] = useState(10);
@@ -194,27 +202,12 @@ const EmployeeDetail = (props) => {
   const [sortOrder, setSortOrder] = useState("");
 
   const [searchInput, setSearchInput] = useState("");
-  const [searchResult, setsearchResult] = useState(null);
-  const [viewinfo,setViewInfo]=useState([])
 
+  const [viewinfo, setViewInfo] = useState([]);
+  const [empDisplayName, setEmpDisplayName] = useState([]);
 
-  const testApi = async () => {
-    try {
-      const request = await CustomAxios.get(
-         `${process.env.REACT_APP_BASE_URL}/Employees`
-      );
-      const res = request.data.items;
-      setViewInfo(res);
-      console.log({ viewinfo });
-      // console.log({ searchInput });
-    } catch (error) {
-      console.log({ error });
-    }
-  };
+  const [handleId, setHandleId] = useState("");
 
-  useEffect(() => {
-    testApi();
-  }, []);
   const handleFileChange = (file) => {
     setFile(file);
   };
@@ -385,14 +378,71 @@ const EmployeeDetail = (props) => {
     setSearchInput("");
   };
 
-  const handlesearchResultelect = (results) => {
-    console.log(results);
+  const handleSearchResultSelect = (results) => {
+    console.log("show results", results);
+    //setting employee display name on select of suggested item
+    setEmpDisplayName(
+      (prevState) => `${results.firstName} ${results.lastName}`
+    );
+    // testApi();
+    // return;
+    setMode("Add");
+    setShow(false);
+    dispatch({ type: "set", data: { ...results } });
+    setSubmitData({ ...results });
 
-    if (results?.id) {
-      setsearchResult(results);
-      const toastId = toast.loading("Retrieving Details");
+    if (results?.code) {
+      setSearchResult(results);
+
+      GetRequest()
+        .then((response) => {
+          // toast.dismiss(toastId);
+          if (response.ok) {
+            response.json().then((response) => {
+              // console.log({response});
+              if (response && Object.keys(response).length > 0) {
+                dispatch({ type: "set", data: { ...response } });
+                setSubmitData({ ...response });
+                // setDuplicateData({ ...response })
+                //console.log({ response });
+
+                //let rates = response?.rates;
+
+                // setExchangeRate(rates);
+                setShow(false);
+                setMode("Update");
+              } else {
+                setMode("Add");
+                setShow(false);
+                // dispatch({ type: 'set', data: { ...results, isHomeCurrency } });
+                // setSubmitData({ ...results, isHomeCurrency });
+              }
+            });
+          }
+        })
+        .catch((err) => {
+          // console.log(err);
+          // toaster(toastId, "Failed to retrieve details", 'error', 4000);
+        });
     }
   };
+
+  const getEmployeeDetails = async () => {
+    try {
+      const request = await CustomAxios.get(`EmployeeBio/${handleId}`);
+      const response = request.data;
+      setViewInfo(response);
+      console.log(request);
+      // console.log({ searchInput });
+    } catch (error) {
+      console.log({ error });
+    }
+  };
+
+  useEffect(() => {
+    getEmployeeDetails();
+    console.log(viewinfo);
+  }, []);
 
   const handleAddNewRecord = () => {
     setMode("Add");
@@ -421,6 +471,8 @@ const EmployeeDetail = (props) => {
     console.log(newData);
     //'ss' === mode ? createGLAccount(newData) : updateGLAccount(newData);
   };
+  console.log(handleId);
+  console.log(viewinfo);
 
   return (
     <>
@@ -431,7 +483,9 @@ const EmployeeDetail = (props) => {
             <CRow>
               <CCol xs="12">
                 <CSLab
-                  code={!show ? mode + " Employee Details" : "Employee Details"}
+                  code={
+                    !show ? mode + " Employee Details" : "HCM-2DVGKL0FBGW_HRPR"
+                  }
                 />
               </CCol>
             </CRow>
@@ -441,20 +495,16 @@ const EmployeeDetail = (props) => {
       <CRow hidden={!show ? true : false}>
         <CCol md="4" xs="7">
           <CSAutoComplete
-            filterUrl={SearchEmployeeByNameOrCode(
-              searchInput,
-              pageNumber,
-              numberOfItems,
-              orderBy,
-              sortOrder
-            )}
-            placeholder={"Search for Employee Details by name or code"}
-            handleSelect={handlesearchResultelect}
-            uniqueIdKey={"id"}
-            displayTextKey={"name"}
+            filterUrl={SearchEmployees(searchInput)}
+            //filterUrl=''            //filterUrl={SearchInternalCurrencies(searchInput)}
+            placeholder={"Search for employee by name or code"}
+            handleSelect={handleSearchResultSelect}
+            //onChange={()=>handleSearchResultSelect}
+            displayTextKey={"firstName"}
             setInput={setSearchInput}
-            emptySearchFieldMessage={`Please input three or more characters to search`}
             input={searchInput}
+            emptySearchFieldMessage={`Please input 3 or more characters to search`}
+            searchName={"Employee"}
             isPaginated={false}
             pageNumber={pageNumber}
             setPageNumber={setPageNumber}
@@ -464,6 +514,10 @@ const EmployeeDetail = (props) => {
             setOrderBy={setOrderBy}
             sortOrder={sortOrder}
             setSortOrder={setSortOrder}
+            mode={mode}
+            setMode={setMode}
+            handleId={setHandleId}
+            // reset={handleReset}
           />
         </CCol>
         <CCol md="8" xs="5" className="text-right">
@@ -475,7 +529,8 @@ const EmployeeDetail = (props) => {
               color="primary"
             >
               {" "}
-              <AiOutlinePlus /> {show ? <CSLab code={"Add "} /> : null}{" "}
+              <AiOutlinePlus />{" "}
+              {show ? <CSLab code="HCM-TAAFD4M071D-HRPR" /> : null}{" "}
             </CButton>
           </CFormGroup>
         </CCol>
@@ -493,7 +548,7 @@ const EmployeeDetail = (props) => {
                         active={activeKey === 1}
                         onClick={() => setActiveKey(1)}
                       >
-                        <CSLab code="TL63" />
+                        <CSLab code="HCM-HZU4WPFB1L9-LASN" />
                       </CNavLink>
                     </CNavItem>
                     <CNavItem>
@@ -502,7 +557,7 @@ const EmployeeDetail = (props) => {
                         active={activeKey === 2}
                         onClick={() => setActiveKey(2)}
                       >
-                        <CSLab code="TL64" />
+                        <CSLab code="HCM-GQR50DATROE_PSLL" />
                       </CNavLink>
                     </CNavItem>
 
@@ -512,7 +567,7 @@ const EmployeeDetail = (props) => {
                         active={activeKey === 3}
                         onClick={() => setActiveKey(3)}
                       >
-                        <CSLab code="Banks" />
+                        <CSLab code="HCM-11LBZZDSTTE-HRPR" />
                       </CNavLink>
                     </CNavItem>
                     <CNavItem>
@@ -521,7 +576,7 @@ const EmployeeDetail = (props) => {
                         active={activeKey === 4}
                         onClick={() => setActiveKey(4)}
                       >
-                        <CSLab code="Other Info" />
+                        <CSLab code="HCM-TNH48GNHQW-LANG" />
                       </CNavLink>
                     </CNavItem>
                     <CNavItem>
@@ -530,7 +585,7 @@ const EmployeeDetail = (props) => {
                         active={activeKey === 5}
                         onClick={() => setActiveKey(5)}
                       >
-                        <CSLab code="GL Account" />
+                        <CSLab code="HCM-DIFIO6DCZ8-PSLL" />
                       </CNavLink>
                     </CNavItem>
                   </CNav>
@@ -547,7 +602,7 @@ const EmployeeDetail = (props) => {
                             <CCol md="4" xs="4">
                               <CLabel>
                                 {" "}
-                                <CSLab code="Title" />{" "}
+                                <CSLab code="HCM-KZPKH8ICPD-PSLL" />{" "}
                               </CLabel>
                               <CInput
                                 name="title"
@@ -558,7 +613,7 @@ const EmployeeDetail = (props) => {
                             <CCol md="4" xs="8">
                               <CLabel>
                                 {" "}
-                                <CSLab code="TL15" />{" "}
+                                <CSLab code="HCM-KPH53NF08RG" />{" "}
                               </CLabel>
                               <CInput
                                 name="firstName"
@@ -569,7 +624,7 @@ const EmployeeDetail = (props) => {
                             <CCol md="4">
                               <CLabel>
                                 {" "}
-                                <CSLab code="TL17" />{" "}
+                                <CSLab code="HCM-ZYCFSGCKMC" />{" "}
                               </CLabel>
                               <CInput
                                 name="lastName"
@@ -583,7 +638,7 @@ const EmployeeDetail = (props) => {
                             <CCol md="4">
                               <CLabel>
                                 {" "}
-                                <CSLab code="TL68" />{" "}
+                                <CSLab code="HCM-S2MUMDYJNP_HRPR" />{" "}
                               </CLabel>
                               <CInput
                                 name="otherName"
@@ -594,7 +649,7 @@ const EmployeeDetail = (props) => {
 
                             <CCol md="4" xs="6">
                               <CLabel>
-                                <CSLab code="TL70" />
+                                <CSLab code="HCM-7HTWFD0THEN-PSLL" />
                               </CLabel>
                               <CSelect
                                 name="gender"
@@ -612,7 +667,7 @@ const EmployeeDetail = (props) => {
                             </CCol>
                             <CCol md="4" xs="6">
                               <CLabel>
-                                <CSLab code="TL71" />
+                                <CSLab code="HCM-XYNVK7A8USK_PSLL" />
                               </CLabel>
                               <CInput
                                 name="dateOfBirth"
@@ -629,7 +684,7 @@ const EmployeeDetail = (props) => {
                             </CCol>
                             <CCol md="5">
                               <CLabel>
-                                <CSLab code="TL18" />
+                                <CSLab code="HCM-L8D4N8LGAS_PSLL" />
                               </CLabel>
                               <CInput
                                 name="emailAddress"
@@ -639,7 +694,7 @@ const EmployeeDetail = (props) => {
                             </CCol>
                             <CCol md="4" xs="6">
                               <CLabel>
-                                <CSLab code="TL19" />
+                                <CSLab code="HCM-28JQRN57PA4-PSLL" />
                               </CLabel>
                               {/* <CInput className="" id="phone" /> */}
                               <PhoneInput
@@ -650,7 +705,7 @@ const EmployeeDetail = (props) => {
                             </CCol>
                             <CCol md="3" xs="6">
                               <CLabel>
-                                <CSLab code="TL74" />
+                                <CSLab code="HCM-W7SKIIIFCKE_PSLL" />
                               </CLabel>
                               <CInput
                                 name="digitalAddress"
@@ -662,7 +717,7 @@ const EmployeeDetail = (props) => {
                           <CRow>
                             <CCol md="12">
                               <CLabel>
-                                <CSLab code="Street Address" />
+                                <CSLab code="HCM-LZJUGBQ5RPP_KCMI" />
                               </CLabel>
                               <CTextarea
                                 name="homeAddress"
@@ -680,7 +735,7 @@ const EmployeeDetail = (props) => {
                           <CRow>
                             <CCol md="6" xs="6">
                               <CLabel>
-                                <CSLab code="Country" />
+                                <CSLab code="HCM-CSKVMLLGNW" />
                               </CLabel>
                               <CSelect
                                 name="countryId"
@@ -701,7 +756,7 @@ const EmployeeDetail = (props) => {
                             </CCol>
                             <CCol md="6" xs="6">
                               <CLabel>
-                                <CSLab code="TL69" />
+                                <CSLab code="HCM-IM8I8SKJ1J9_KCMI" />
                               </CLabel>
                               <CSelect
                                 name="nationalityId"
@@ -723,7 +778,7 @@ const EmployeeDetail = (props) => {
                           <CRow>
                             <CCol md="6" xs="7">
                               <CLabel>
-                                <CSLab code="National ID" />
+                                <CSLab code="HCM-WRKPLF34TW_LOLN" />
                               </CLabel>
                               <CInput
                                 name="nationalID"
@@ -732,8 +787,10 @@ const EmployeeDetail = (props) => {
                               />
                             </CCol>
                             <CCol md="2" xs="5" style={{ marginTop: "15px" }}>
+                              <CLabel>
+                                <CSLab code="HCM-95HTK1MHWY_PSLL" />
+                              </CLabel>
                               <CSCheckbox
-                                label="Resident"
                                 checked={data?.options?.isResident || false}
                                 name="isResident"
                                 onChange={handleCheckboxChange}
@@ -744,7 +801,7 @@ const EmployeeDetail = (props) => {
                             <CCol md="12" style={{ marginTop: "5px" }}>
                               <CRow>
                                 <CCol md="12">
-                                  <CSLineLabel name="Employee Image" />{" "}
+                                  <CSLineLabel code="HCM-VSHKR5ODJ1H_LANG" />{" "}
                                 </CCol>
                               </CRow>
 
@@ -813,7 +870,7 @@ const EmployeeDetail = (props) => {
                           <CRow>
                             <CCol md="3">
                               <CLabel>
-                                <CSLab code="TL75" />
+                                <CSLab code="HCM-B0VG88EHYDM_KCMI" />
                               </CLabel>
                               <CInput
                                 name="staffId"
@@ -823,7 +880,7 @@ const EmployeeDetail = (props) => {
                             </CCol>
                             <CCol md="4">
                               <CLabel>
-                                <CSLab code="TL76" />
+                                <CSLab code="HCM-HL6HU7PY50C_KCMI" />
                               </CLabel>
                               <CInput
                                 name="hireDate"
@@ -834,7 +891,7 @@ const EmployeeDetail = (props) => {
                             </CCol>
                             <CCol md="5">
                               <CLabel>
-                                <CSLab code="Supervisor Group Name" />
+                                <CSLab code="HCM-UA0A9VOKO2S_KCMI" />
                               </CLabel>
                               <CSelect
                                 name="supervisorGroupId"
@@ -858,7 +915,7 @@ const EmployeeDetail = (props) => {
                             </CCol>
                             <CCol md="4">
                               <CLabel>
-                                <CSLab code="TL80" />
+                                <CSLab code="HCM-4D1SZ24U9UO" />
                               </CLabel>
                               <CSelect
                                 name="sectionId"
@@ -879,7 +936,7 @@ const EmployeeDetail = (props) => {
                             </CCol>
                             <CCol md="4">
                               <CLabel>
-                                <CSLab code="TL79" />
+                                <CSLab code="HCM-N6I0LSIYJF" />
                               </CLabel>
                               <CSelect
                                 name="departmentId"
@@ -900,7 +957,7 @@ const EmployeeDetail = (props) => {
                             </CCol>
                             <CCol md="4">
                               <CLabel>
-                                <CSLab code="TL05" />
+                                <CSLab code="HCM-LAFPT6FJ57N" />
                               </CLabel>
                               <CSelect
                                 name="divisionId"
@@ -924,7 +981,7 @@ const EmployeeDetail = (props) => {
                             <CCol md="12"></CCol>
                             <CCol md="4">
                               <CLabel>
-                                <CSLab code="TL77" />
+                                <CSLab code="HCM-HMLNLPOEIXG" />
                               </CLabel>
                               <CSelect
                                 name="employeeTypeId"
@@ -945,7 +1002,7 @@ const EmployeeDetail = (props) => {
                             </CCol>
                             <CCol md="4">
                               <CLabel>
-                                <CSLab code="TL78" />
+                                <CSLab code="HCM-ATGLL367GOQ" />
                               </CLabel>
                               <CSelect
                                 name="positionId"
@@ -966,7 +1023,7 @@ const EmployeeDetail = (props) => {
                             </CCol>
                             <CCol md="4">
                               <CLabel>
-                                <CSLab code="TL81" />
+                                <CSLab code="HCM-DHV9W3RF11D" />
                               </CLabel>
                               <CSelect
                                 name="unitId"
@@ -990,7 +1047,7 @@ const EmployeeDetail = (props) => {
                           <CRow>
                             <CCol md="4">
                               <CLabel>
-                                <CSLab code="TL07" />
+                                <CSLab code="HCM-6XXECXM4Q5S" />
                               </CLabel>
                               <CSelect
                                 name="locationId"
@@ -1011,7 +1068,7 @@ const EmployeeDetail = (props) => {
                             </CCol>
                             <CCol md="4">
                               <CLabel>
-                                <CSLab code="Employee Status" />
+                                <CSLab code="HCM-B4SZR3O5JPO-PSLL" />
                               </CLabel>
                               <CSelect
                                 name="employeeStatus"
@@ -1027,7 +1084,7 @@ const EmployeeDetail = (props) => {
                             </CCol>
                             <CCol md="4">
                               <CLabel>
-                                <CSLab code="Payroll Status" />
+                                <CSLab code="HCM-I3AS1TUOS2_LOLN" />
                               </CLabel>
                               <CSelect
                                 name="payrollStatus"
@@ -1111,12 +1168,12 @@ const EmployeeDetail = (props) => {
                           <CRow>
                             <CCol md="12" style={{ marginTop: "5px" }}>
                               <h6 htmlFor="name" className="ch-l-s">
-                                <CSLab code="TL83" />
+                                <CSLab code="HCM-E6FV7KUTAIJ-PSLL" />
                               </h6>
                             </CCol>
                             <CCol md="6">
                               <CLabel>
-                                <CSLab code="TL84" />
+                                <CSLab code="HCM-P82D0RPB0G-LOLN" />
                               </CLabel>
                               <CSelect
                                 name="salaryGradeId"
@@ -1146,7 +1203,7 @@ const EmployeeDetail = (props) => {
                             </CCol>
                             <CCol md="4">
                               <CLabel>
-                                <CSLab code="TL85" />
+                                <CSLab code="HCM-8SV0WSF3M27-KCMI" />
                               </CLabel>
                               <CSelect
                                 name="salaryType"
@@ -1164,7 +1221,7 @@ const EmployeeDetail = (props) => {
                             </CCol>
                             <CCol md="6">
                               <CLabel htmlFor="rate">
-                                <CSLab code="TL86" />
+                                <CSLab code="HCM-PH98CHJVZO_KCMI" />
                               </CLabel>
                               {/*  */}
                               <CFormGroup>
@@ -1216,38 +1273,59 @@ const EmployeeDetail = (props) => {
                               <ColumnDirective
                                 field={"bankId"}
                                 editType="dropdownedit"
-                                headerText="Bank Name"
+                                headerText={GetLabelByName(
+                                  "HCM-ID4MYCDESH-LANG",
+                                  lan
+                                )}
                                 width="100"
                               />
                               <ColumnDirective
                                 field={"branchId"}
                                 editType="dropdownedit"
-                                headerText="Branch"
+                                headerText={GetLabelByName(
+                                  "HCM-5JJIZBZLYWP_LANG",
+                                  lan
+                                )}
                                 width="100"
                               />
                               <ColumnDirective
                                 field={"bankAccountNumber"}
-                                headerText="Account #"
+                                headerText={GetLabelByName(
+                                  "HCM-HVW65C2S13E_LANG",
+                                  lan
+                                )}
                                 width="100"
                               />
                               <ColumnDirective
                                 field={"fixeAmount"}
-                                headerText="Fixed Amount"
+                                headerText={GetLabelByName(
+                                  "HCM-MCVF3K3UGYK_LANG",
+                                  lan
+                                )}
                                 width="100"
                               />
                               <ColumnDirective
                                 field={"percentage"}
-                                headerText="Percentage"
+                                headerText={GetLabelByName(
+                                  "HCM-HB5MNHJGQE5-HRPR",
+                                  lan
+                                )}
                                 width="100"
                               />
                               <ColumnDirective
                                 field={"baseAmount"}
-                                headerText="Base"
+                                headerText={GetLabelByName(
+                                  "HCM-SLT58KQT1_PSLL",
+                                  lan
+                                )}
                                 width="100"
                               />
                               <ColumnDirective
                                 commands={commandOptions}
-                                headerText={"Action"}
+                                headerText={GetLabelByName(
+                                  "HCM-F4IUJ9QVOM6",
+                                  lan
+                                )}
                                 width="100"
                                 textAlign="Center"
                               />
@@ -1276,13 +1354,13 @@ const EmployeeDetail = (props) => {
                         <CCol md="6">
                           <CRow>
                             <CCol md="12">
-                              <CSLineLabel name="TL83" />{" "}
+                              <CSLineLabel name="HCM-E6FV7KUTAIJ-PSLL" />{" "}
                             </CCol>
                           </CRow>
                           <CRow>
                             <CCol md="6">
                               <CLabel>
-                                <CSLab code="% of Basic Salary" />
+                                <CSLab code="HCM-N0SSN34ZO5-HRPR" />
                               </CLabel>
                               <CSelect
                                 name="percentageOfBasicSalary"
@@ -1303,7 +1381,7 @@ const EmployeeDetail = (props) => {
                             </CCol>
                             <CCol md="6">
                               <CLabel>
-                                <CSLab code="Payroll Hours" />
+                                <CSLab code="HCM-9LAWIPOM3V" />
                               </CLabel>
                               <CSelect
                                 name="payrollHours"
@@ -1326,7 +1404,7 @@ const EmployeeDetail = (props) => {
                           <CRow>
                             <CCol md="12">
                               <CLabel>
-                                <CSLab code="Pay Slip Note" />
+                                <CSLab code="HCM-JBF5RIYQSNH" />
                               </CLabel>
                               <CTextarea
                                 name="paySlipNote"
@@ -1343,13 +1421,14 @@ const EmployeeDetail = (props) => {
                         <CCol md="5">
                           <CRow>
                             <CCol md="12">
-                              <CSLineLabel name="Mobile Money Info" />{" "}
+                              <CSLineLabel name="HCM-38YN5L69WMQ-LASN" />{" "}
                             </CCol>
                           </CRow>
                           <CRow>
                             <CCol md="6">
                               <CLabel>
-                                <CSLab code="Select Network" />
+                                <CSLab code="HCM-DMPCPBT8I4K-LOLN" />
+                               
                               </CLabel>
                               <CSelect
                                 name="network"
@@ -1371,7 +1450,7 @@ const EmployeeDetail = (props) => {
                             </CCol>
                             <CCol md="6">
                               <CLabel>
-                                <CSLab code="Enter Mobile Money No." />
+                                <CSLab code="HCM-6T9OAR0ZB4_LASN" />
                               </CLabel>
                               <CInput
                                 name="momoNumber"
@@ -1383,7 +1462,7 @@ const EmployeeDetail = (props) => {
                           <CRow>
                             <CCol md="12">
                               <CLabel>
-                                <CSLab code="Enter Mobile Money Name" />
+                                <CSLab code="HCM-1QAFIBP0XL7_KCMI" />
                               </CLabel>
                               <CInput
                                 name="momoName"
@@ -1393,7 +1472,7 @@ const EmployeeDetail = (props) => {
                             </CCol>
                             <CCol md="4">
                               <CLabel>
-                                <CSLab code="Fixed Amount" />
+                                <CSLab code="HCM-MCVF3K3UGYK_LANG" />
                               </CLabel>
                               <CInput
                                 name="fixedAmount"
@@ -1403,7 +1482,7 @@ const EmployeeDetail = (props) => {
                             </CCol>
                             <CCol md="4">
                               <CLabel>
-                                <CSLab code="Percentage" />
+                                <CSLab code="HCM-HB5MNHJGQE5-HRPR" />
                               </CLabel>
                               <CInput
                                 name="percentage"
@@ -1413,7 +1492,7 @@ const EmployeeDetail = (props) => {
                             </CCol>
                             <CCol md="4">
                               <CLabel>
-                                <CSLab code="Base" />
+                                <CSLab code="HCM-SLT58KQT1_PSLL" />
                               </CLabel>
                               <CInput
                                 name="base"
@@ -1453,7 +1532,7 @@ const EmployeeDetail = (props) => {
                 >
                   <CIcon name="cil-scrubber" />
 
-                  <CSLab code="View History" />
+                  <CSLab code="HCM-ZIRH5SVBDUF_LANG" />
                 </CButton>
               ) : null}
               <CButton
@@ -1462,7 +1541,7 @@ const EmployeeDetail = (props) => {
                 size="sm"
                 color="success"
               >
-                <AiFillSave size={20} /> <CSLab code="TL11" />{" "}
+                <AiFillSave size={20} /> <CSLab code="HCM-HGUHIR0OK6T" />{" "}
               </CButton>
               <CButton
                 style={{ marginRight: 5, float: "right" }}
@@ -1471,7 +1550,7 @@ const EmployeeDetail = (props) => {
                 color="warning"
                 onClick={handleOnSubmit}
               >
-                <AiOutlineRedo size={20} /> <CSLab code="TL12" />{" "}
+                <AiOutlineRedo size={20} /> <CSLab code="HCM-MELULU9B6R_KCMI" />{" "}
               </CButton>
               <CButton
                 style={{ marginRight: 5, float: "right", color: "white" }}
@@ -1481,7 +1560,7 @@ const EmployeeDetail = (props) => {
                 color="danger"
               >
                 <AiOutlineClose size={20} />
-                <CSLab code="Cancel" />
+                <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
               </CButton>
             </CCardFooter>
           </CCard>

@@ -53,7 +53,7 @@ const EmployeeCheckList = () => {
       <CRow>
         <CCol>
           <h5>
-            <CSLab code="TL90" />{" "}
+            <CSLab code="HCM-ZN0HQXYQ7E9_HRPR" />{" "}
           </h5>
         </CCol>
       </CRow>
@@ -67,7 +67,7 @@ const EmployeeCheckList = () => {
                 id="username3"
                 name="username3"
                 autoComplete="name"
-                placeholder={TransLabelByCode("TL91")}
+                placeholder={TransLabelByCode("Search for check list by name")}
               />
               <CInputGroupAppend>
                 <CButton className="border-right-curve" color="primary">
@@ -102,13 +102,13 @@ const EmployeeCheckList = () => {
                   <CRow>
                     <CCol md="4">
                       <CLabel htmlFor="code">
-                        <CSLab code={"TL03"} />
+                        <CSLab code="HCM-7I262DWOU2R-LOLN" />
                       </CLabel>
                       <CInput className="" id="code" />
                     </CCol>
                     <CCol md="8">
                       <CLabel htmlFor="name">
-                        <CSLab code={"TL04"} />
+                        <CSLab code="HCM-VD1B12NKKJ_LANG" />
                         <CSRequiredIndicator />
                       </CLabel>
                       <CInput
@@ -123,7 +123,7 @@ const EmployeeCheckList = () => {
                   <CRow>
                     <CCol md="4">
                       <CLabel htmlFor="status">
-                        <CSLab code={"TL53"} />
+                        <CSLab code="HCM-RQB38Y1ZFPO-LANG" />
                         <CSRequiredIndicator />
                       </CLabel>
                       <CSelect
@@ -142,7 +142,7 @@ const EmployeeCheckList = () => {
                   <CRow className={"bottom-spacing"}>
                     <CCol md="12">
                       <CLabel htmlFor="name">
-                        <CSLab code={"TL31"} />
+                        <CSLab code="HCM-Z0FV0XJJ06" />
                       </CLabel>
                       <CTextarea
                         className=""
@@ -178,7 +178,7 @@ const EmployeeCheckList = () => {
                 onClick={() => setVisible(false)}
                 color="primary"
               >
-                <AiFillSave size={20} /> <CSLab code="TL11" />{" "}
+                <AiFillSave size={20} /> <CSLab code="HCM-HGUHIR0OK6T" />{" "}
               </CButton>
               <CButton
                 style={{ marginRight: 5, float: "right" }}
@@ -186,7 +186,8 @@ const EmployeeCheckList = () => {
                 size="sm"
                 color="warning"
               >
-                <AiOutlineRedo size={20} /> <CSLab code="TL12" />{" "}
+                <AiOutlineRedo size={20} />{" "}
+                <CSLab code="HCM-9E3ZC2E1S0N-LASN" />{" "}
               </CButton>
               <CButton
                 style={{ marginRight: 5, float: "right", color: "white" }}
