@@ -122,6 +122,10 @@
           "_tag": "CSidebarNavItem",
           "name": "Employee Relationships",
           "to": "/employeemanager/relationships"
+        }, {
+          "_tag": "CSidebarNavItem",
+          "name": "Leave Transaction",
+          "to": "/employeemanager/leavetransaction"
         }
       ]
     },
@@ -318,6 +322,11 @@
           "_tag": "CSidebarNavItem",
           "name": "Guarantor",
           "to": "/employeemanager/guarantor"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Leave Transaction",
+          "to": "/employeemanager/leavetransaction"
         }
       ]
     },

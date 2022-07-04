@@ -345,238 +345,120 @@ const LeaveTransaction = (props) => {
             >
               {" "}
               <AiOutlinePlus />{" "}
-              {show ? <CSLab code="HCM-TAAFD4M071D-HRPR" /> : null}{" "}
+              {show ? <CSLab code="HCM-I0ZV6XVP41I_LASN" /> : null}{" "}
             </CButton>
           </CFormGroup>
         </CCol>
       </CRow>
       <CRow>
-        <CCol md="8" className="text-right"></CCol>
-        <CCol xs="12" hidden={show}>
+        <CCol md="4" className="text-right"></CCol>
+        <CCol xs="10" hidden={show}>
           <CCard>
             <CCardBody style={{ height: CardBodyHeight }}>
-              <CRow className={"bottom-spacing"}>
-                <CCol md="5">
-                  <CCol md="12">
+              {/* <CRow className={"bottom-spacing"}> */}
+              {/* <CCol md="5"> */}
+              {/* <CCol md="12">
                     <CSLineLabel name="HCM-5S2JSN34J47_LANG" />{" "}
+                  </CCol> */}
+              <CRow>
+                <>
+                  <CCol md="2">
+                    <CLabel>
+                      {" "}
+                      <CSLab code="HCM-FQYC4N0VN1W-HRPR" />{" "}
+                    </CLabel>
+                    <CInput
+                      name="employeename"
+                      value={data?.employeename || ""}
+                      onChange={handleOnChange}
+                    />
                   </CCol>
-                  <>
-                    <CRow>
-                      <CCol md="4">
-                        <CLabel>
-                          {" "}
-                          <CSLab code="HCM-7I262DWOU2R-LOLN" />{" "}
-                        </CLabel>
-                        <CInput
-                          name="code"
-                          value={data?.code || ""}
-                          onChange={handleOnChange}
-                        />
-                      </CCol>
-                      <CCol md="8">
-                        <CLabel>
-                          {" "}
-                          <CSLab code="HCM-VD1B12NKKJ_LANG" />{" "}
-                        </CLabel>
-                        <CInput
-                          name="name"
-                          value={data?.name || ""}
-                          onChange={handleOnChange}
-                        />
-                      </CCol>
-                    </CRow>
-                  </>
-                  <>
-                    <CRow style={{ marginTop: "10px" }}>
-                      <CCol md="6">
-                        <CLabel>
-                          {" "}
-                          <CSLab code="HCM-3J3RLRI3K62_LOLN" />{" "}
-                        </CLabel>
-                        <CSelect
-                          name="availableDayBasisId"
-                          value={data?.availableDayBasisId || -1}
-                          onChange={handleOnChange}
-                        >
-                          {availableDayBasis.map((x, i) => (
-                            <option key={i} value={x.id}>
-                              {x.name}
-                            </option>
-                          ))}
-                        </CSelect>
-                      </CCol>
-                      <CCol md="6">
-                        <CLabel>
-                          {" "}
-                          <CSLab code="HCM-LFITDP0PORN_KCMI" />{" "}
-                        </CLabel>
-                        <CSelect
-                          name="allowedDayBasisId"
-                          value={data?.allowedDayBasisId || -1}
-                        >
-                          {allowedDayBasis.map((x, i) => (
-                            <option key={i} value={x.id}>
-                              {x.name}
-                            </option>
-                          ))}
-                        </CSelect>
-                      </CCol>
-                    </CRow>
-                    <CRow>
-                      <CCol md="12">
-                        <CLabel>
-                          {" "}
-                          <CSLab code="HCM-Z0FV0XJJ06" />{" "}
-                        </CLabel>
-                        <CTextarea
-                          name="description"
-                          value={data?.description || ""}
-                          onChange={handleOnChange}
-                          style={{ height: "80px", resize: "none" }}
-                        ></CTextarea>
-                      </CCol>
-                    </CRow>
-                    <CRow style={{ marginTop: "10px" }}>
-                      <CCol md="4">
-                        <CLabel>
-                          {" "}
-                          <CSLab code="HCM-RQB38Y1ZFPO-LANG" />{" "}
-                        </CLabel>
-                        <CSelect>
-                          {["Select Status", "Active", "Inactive"].map(
-                            (x, i) => (
-                              <option key={i} value={x}>
-                                {x}
-                              </option>
-                            )
-                          )}
-                        </CSelect>
-                      </CCol>
-                    </CRow>
-                  </>
-                  <></>
-                </CCol>
-
-                <CSDivider style={{ height: "100%" }} md="1" />
-
-                <CCol md="6">
-                  <CCol md="12">
-                    <CSLineLabel name="HCM-QPXNX5OVYX_LASN" />{" "}
-                    <CRow>
-                      <CCol md="6">
-                        <CLabel>
-                          {" "}
-                          <CSLab code="HCM-YRHOMTPDQFB-KCMI" />{" "}
-                        </CLabel>
-                        <CSelect
-                          name="yearEndBasisId"
-                          value={data?.yearEndBasisId || -1}
-                        >
-                          {yearBasis.map((x, i) => (
-                            <option key={i} value={x.id}>
-                              {x.name}
-                            </option>
-                          ))}
-                        </CSelect>
-                      </CCol>
-                    </CRow>
-                    <CRow
-                      style={{
-                        border: "1px solid #e1e2e3",
-                        // height: 85,
-                        background: "#ebedef",
-                        marginTop: "10px",
-                        borderRadius: "8px",
-
-                        // padding: "13px",
-                        width: "100%",
-                      }}
+                  <CCol md="2">
+                    <CLabel>
+                      {" "}
+                      <CSLab code="HCM-5S2JSN34J47_LANG" />{" "}
+                    </CLabel>
+                    <CSelect
+                      name="leaveType"
+                      value={data?.leaveType || -1}
+                      onChange={handleOnChange}
                     >
-                      {/* <CCol
-                        sm={2}
-                        md="6"
-                        style={{ marginTop: "10px" }}
-                        class=" form-check-inline"
-                      >
-                        <CFormCheck
-                          type="radio"
-                          name="gridRadios"
-                          id="gridRadios1"
-                          value="option1"
-                          label="Forfeit-Outstanding Days"
-                          defaultChecked
-                        />
-                        <CFormCheck
-                          type="radio"
-                          name="gridRadios"
-                          id="gridRadios2"
-                          value="option2"
-                          label="Carry-Forward Outstanding Days"
-                        />
-                      </CCol> */}
-                      <CCol md="6" style={{ marginTop: "10px" }}>
-                        <div class="form-check form-check-inline">
-                          <CInput
-                            class="form-check-input"
-                            id="inlineRadio1"
-                            type="radio"
-                            name="inlineRadio"
-                            value="option1"
-                            style={{ width: "15px" }}
-                          />
-                          <label class="form-check-label" for="inlineRadio1">
-                            <CSLab code="HCM-V97JP40B8M_LANG" />
-                          </label>
-                        </div>
-                      </CCol>
-                      <CCol md="6" style={{ marginTop: "10px" }}>
-                        <div class="form-check form-check-inline">
-                          <CInput
-                            class="form-check-input"
-                            id="inlineRadio2"
-                            type="radio"
-                            name="inlineRadio"
-                            value="option2"
-                            style={{ width: "18px" }}
-                            checked
-                          />
-                          <label class="form-check-label" for="inlineRadio2">
-                            <CSLab code="HCM-3BTDN1V82EI-HRPR" />
-                          </label>
-                        </div>
-                      </CCol>
-                    </CRow>
-                    {/* style={{ background: "red", width: "100%" }} */}
-                    <CRow>
-                      <CCol md="6" style={{ marginTop: "15px" }}>
-                        <CSCheckbox
-                          label="HCM-TVARQV319C_PSLL"
-                          name="applyMaximumOutstandingDay"
-                          onClick={() => setIsChecked(!isChecked)}
-                          value={data?.applyMaximumOutstandingDay || isChecked}
-                          onChange={handleOnChange}
-                        />
-                      </CCol>
-
-                      {isChecked && (
-                        <CCol md="6">
-                          <CLabel>
-                            {" "}
-                            <CSLab code="HCM-B5HI1B86NGK_HRPR" />{" "}
-                          </CLabel>
-                          <CInput
-                            style={{ width: "152px" }}
-                            name="maximumNumberOfDays"
-                            value={data?.maximumNumberOfDays || ""}
-                          />
-                        </CCol>
-                      )}
-                    </CRow>
+                      {availableDayBasis.map((x, i) => (
+                        <option key={i} value={x.id}>
+                          {x.name}
+                        </option>
+                      ))}
+                    </CSelect>
                   </CCol>
-                  <CRow></CRow>
-                  <CRow></CRow>
-                </CCol>
+                  <CCol md="2">
+                    <CLabel>
+                      {" "}
+                      <CSLab code="HCM-SFIO9LH60UG-KCMI" />{" "}
+                    </CLabel>
+                    <CInput
+                      name="leaveBalance"
+                      value={data?.leaveBalance || ""}
+                      onChange={handleOnChange}
+                    />
+                  </CCol>
+                </>
               </CRow>
+              <>
+                <CRow style={{ marginTop: "10px" }}>
+                  <CCol md="2">
+                    <CLabel>
+                      {" "}
+                      <CSLab code="HCM-LFITDP0PORN_KCMI" />{" "}
+                    </CLabel>
+                    <CSelect
+                      name="allowedDayBasisId"
+                      value={data?.allowedDayBasisId || -1}
+                    >
+                      {allowedDayBasis.map((x, i) => (
+                        <option key={i} value={x.id}>
+                          {x.name}
+                        </option>
+                      ))}
+                    </CSelect>
+                  </CCol>
+                </CRow>
+                <CRow>
+                  <CCol md="6">
+                    <CLabel>
+                      {" "}
+                      <CSLab code="HCM-Z0FV0XJJ06" />{" "}
+                    </CLabel>
+                    <CTextarea
+                      name="description"
+                      value={data?.description || ""}
+                      onChange={handleOnChange}
+                      style={{ height: "80px", resize: "none" }}
+                    ></CTextarea>
+                  </CCol>
+                </CRow>
+                <CRow style={{ marginTop: "10px" }}>
+                  <CCol md="4">
+                    <CLabel>
+                      {" "}
+                      <CSLab code="HCM-RQB38Y1ZFPO-LANG" />{" "}
+                    </CLabel>
+                    <CSelect>
+                      {["Select Status", "Active", "Inactive"].map((x, i) => (
+                        <option key={i} value={x}>
+                          {x}
+                        </option>
+                      ))}
+                    </CSelect>
+                  </CCol>
+                </CRow>
+              </>
+              <></>
+              {/* </CCol> */}
+
+              {/* <CSDivider style={{ height: "100%" }} md="1" /> */}
+              {/* bgb
+               */}
+              {/* </CRow> */}
             </CCardBody>
             <CCardFooter>
               {"Update" === mode ? (
