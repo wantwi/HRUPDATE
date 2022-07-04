@@ -249,7 +249,7 @@ const AccidentTransaction = () => {
             });
           }
         })
-        .catch((err) => {});
+        .catch((err) => { });
     }
   };
   const testApi = async () => {
@@ -360,64 +360,62 @@ const AccidentTransaction = () => {
                 </CCol>
               </CFormGroup>
             </CCardHeader>
-            <CCardBody style={{ height: CardBodyHeight, overflowY: "auto" }}>
-              <CForm action="" method="post">
-                <>
-                  <GridComponent
-                    dataSource={getEmployeeAccident}
-                    allowPaging={true}
-                    pageSettings={{ pageSize: 6 }}
-                    editSettings={editOptions}
-                  >
-                    <ColumnsDirective>
-                      <ColumnDirective
-                        field={""}
-                        headerText="ID"
-                        width="100"
-                        visible={false}
-                      />
-                      <ColumnDirective
-                        field="accidentTypesDto.name"
-                        headerText={GetLabelByName("HCM-EZWGSC0K0OK_KCMI", lan)}
-                        width="100"
-                      />
-                      <ColumnDirective
-                        field="dateOfAccident"
-                        headerText={GetLabelByName("HCM-JVUPJOPETGK-LANG", lan)}
-                        width="100"
-                      />
-                      <ColumnDirective
-                        field="locationOfAccident"
-                        headerText={GetLabelByName("HCM-QJCY2VRWA7_LOLN", lan)}
-                        width="100"
-                      />
-                      <ColumnDirective
-                        field="dateInformed"
-                        headerText={GetLabelByName("HCM-GOO3SSJSCG5_LANG", lan)}
-                        width="100"
-                      />
-                      HCM-GOO3SSJSCG5_LANG
-                      <ColumnDirective
-                        commands={commandOptions}
-                        headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
-                        width="100"
-                        textAlign="Center"
-                      />
-                    </ColumnsDirective>
-                    <Inject
-                      services={[
-                        Page,
-                        Sort,
-                        Filter,
-                        Group,
-                        Edit,
-                        CommandColumn,
-                      ]}
-                    />
-                  </GridComponent>
-                </>
-              </CForm>
-            </CCardBody>
+            {/* style={{ height: CardBodyHeight, overflowY: "auto" }} */}
+
+            <GridComponent
+              height={"500"}
+              dataSource={getEmployeeAccident}
+              allowPaging={true}
+              pageSettings={{ pageSize: 10 }}
+              editSettings={editOptions}
+            >
+              <ColumnsDirective>
+                <ColumnDirective
+                  field={""}
+                  headerText="ID"
+                  width="100"
+                  visible={false}
+                />
+                <ColumnDirective
+                  field="accidentTypesDto.name"
+                  headerText={GetLabelByName("HCM-EZWGSC0K0OK_KCMI", lan)}
+                  width="100"
+                />
+                <ColumnDirective
+                  field="dateOfAccident"
+                  headerText={GetLabelByName("HCM-JVUPJOPETGK-LANG", lan)}
+                  width="100"
+                />
+                <ColumnDirective
+                  field="locationOfAccident"
+                  headerText={GetLabelByName("HCM-QJCY2VRWA7_LOLN", lan)}
+                  width="100"
+                />
+                <ColumnDirective
+                  field="dateInformed"
+                  headerText={GetLabelByName("HCM-GOO3SSJSCG5_LANG", lan)}
+                  width="100"
+                />
+                HCM-GOO3SSJSCG5_LANG
+                <ColumnDirective
+                  commands={commandOptions}
+                  headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
+                  width="100"
+                  textAlign="Center"
+                />
+              </ColumnsDirective>
+              <Inject
+                services={[
+                  Page,
+                  Sort,
+                  Filter,
+                  Group,
+                  Edit,
+                  CommandColumn,
+                ]}
+              />
+            </GridComponent>
+
           </CCard>
         </CCol>
       </CRow>

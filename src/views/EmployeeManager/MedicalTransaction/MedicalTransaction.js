@@ -70,6 +70,7 @@ import {
   GetAilmentType,
   PostEmployeeMedical,
 } from "src/reusable/API/MedicalTransactionsEndPoints";
+import { CCardHeader } from "@coreui/bootstrap-react";
 
 const editOptions = {
   allowEditing: false,
@@ -333,14 +334,14 @@ const MedicalTransaction = () => {
               mode={mode}
               setMode={setMode}
               handleId={setHandleId}
-              // reset={handleReset}
+            // reset={handleReset}
             />
           </CFormGroup>
         </CCol>
         <CCol md="8" className="text-right"></CCol>
         <CCol xs="12" hidden={show}>
           <CCard>
-            <CCardBody style={{ height: CardBodyHeight, overflowY: "auto" }}>
+            <CCardHeader>
               <CFormGroup row>
                 <CCol md="4">
                   <b>Employee:</b>{" "}
@@ -375,62 +376,59 @@ const MedicalTransaction = () => {
                   </CButton>
                 </CCol>
               </CFormGroup>
-              <CForm action="" method="post">
-                <>
-                  <GridComponent
-                    dataSource={viewinfo}
-                    allowPaging={true}
-                    pageSettings={{ pageSize: 6 }}
-                    editSettings={editOptions}
-                  >
-                    <ColumnsDirective>
-                      <ColumnDirective
-                        field={"id"}
-                        headerText={"ID"}
-                        width="100"
-                        visible={false}
-                      />
-                      <ColumnDirective
-                        field={"ailmentTypesDto.name"}
-                        headerText={GetLabelByName("HCM-QRFDOPK87VI_LASN", lan)}
-                        width="100"
-                      />
-                      <ColumnDirective
-                        field={"providorTypesDto.name"}
-                        headerText={GetLabelByName("HCM-D7HKVE8UGRI_LOLN", lan)}
-                        width="100"
-                      />
-                      <ColumnDirective
-                        field={"dateOfService"}
-                        headerText={GetLabelByName("HCM-I23QDSWPM1D_KCMI", lan)}
-                        width="100"
-                      />
-                      <ColumnDirective
-                        field={"cost"}
-                        headerText={GetLabelByName("HCM-7I262DWOU2R-LOLN", lan)}
-                        width="100"
-                      />
-                      <ColumnDirective
-                        commands={commandOptions}
-                        headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
-                        width="100"
-                        textAlign="Center"
-                      />
-                    </ColumnsDirective>
-                    <Inject
-                      services={[
-                        Page,
-                        Sort,
-                        Filter,
-                        Group,
-                        Edit,
-                        CommandColumn,
-                      ]}
-                    />
-                  </GridComponent>
-                </>
-              </CForm>
-            </CCardBody>
+            </CCardHeader>
+            <GridComponent
+            height={"500"}
+              dataSource={viewinfo}
+              allowPaging={true}
+              pageSettings={{ pageSize: 10 }}
+              editSettings={editOptions}
+            >
+              <ColumnsDirective>
+                <ColumnDirective
+                  field={"id"}
+                  headerText={"ID"}
+                  width="100"
+                  visible={false}
+                />
+                <ColumnDirective
+                  field={"ailmentTypesDto.name"}
+                  headerText={GetLabelByName("HCM-QRFDOPK87VI_LASN", lan)}
+                  width="100"
+                />
+                <ColumnDirective
+                  field={"providorTypesDto.name"}
+                  headerText={GetLabelByName("HCM-D7HKVE8UGRI_LOLN", lan)}
+                  width="100"
+                />
+                <ColumnDirective
+                  field={"dateOfService"}
+                  headerText={GetLabelByName("HCM-I23QDSWPM1D_KCMI", lan)}
+                  width="100"
+                />
+                <ColumnDirective
+                  field={"cost"}
+                  headerText={GetLabelByName("HCM-7I262DWOU2R-LOLN", lan)}
+                  width="100"
+                />
+                <ColumnDirective
+                  commands={commandOptions}
+                  headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
+                  width="100"
+                  textAlign="Center"
+                />
+              </ColumnsDirective>
+              <Inject
+                services={[
+                  Page,
+                  Sort,
+                  Filter,
+                  Group,
+                  Edit,
+                  CommandColumn,
+                ]}
+              />
+            </GridComponent>
           </CCard>
         </CCol>
       </CRow>

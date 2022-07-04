@@ -31,6 +31,7 @@ import {
   CLabel,
   CSelect,
   CTextarea,
+  CCardHeader,
 } from "@coreui/react";
 import { AiOutlinePlus } from "react-icons/ai";
 
@@ -70,6 +71,7 @@ import {
   GetEmployeeSkillsTypes,
   PostEmployeeSkill,
 } from "src/reusable/API/EmployeeSkillsEndPoints";
+import { CCardGroup } from "@coreui/bootstrap-react";
 
 const editOptions = {
   allowEditing: false,
@@ -244,14 +246,16 @@ const EmployeeSkill = (props) => {
     console.log("post data", data);
     PostRequest(PostEmployeeSkill(), { data: data })
       .then((response) => {
+        console.log(response)
         response.text().then((data) => {
-          if ("" === data) {
-            // toast.success('Earning Mass Update Successful!',);
+          
+          if ("" == data) {
+            toast.success('Employee Skill Added Successfully!',);
             console.log("success");
           } else {
             try {
               data = JSON.parse(data);
-              // toaster(toastId, data?.reason ? data?.reason : "Failed to update Currency", 'error', 4000);
+               toast.error(data?.reason ? data?.reason : "Failed to Add Employee Skill", 'error', 4000);
             } catch (error) {
               console.log(error);
             }
@@ -315,14 +319,14 @@ const EmployeeSkill = (props) => {
               mode={mode}
               setMode={setMode}
               handleId={setHandleId}
-              // reset={handleReset}
+            // reset={handleReset}
             />
           </CFormGroup>
         </CCol>
         <CCol md="8" className="text-right"></CCol>
         <CCol xs="12" hidden={show}>
           <CCard>
-            <CCardBody style={{ height: CardBodyHeight, overflowY: "auto" }}>
+            <CCardHeader>
               <CFormGroup row>
                 <CCol md="4">
                   <b>Employee:</b>{" "}
@@ -357,60 +361,64 @@ const EmployeeSkill = (props) => {
                   </CButton>
                 </CCol>
               </CFormGroup>
-              <CForm action="" method="post">
-                <>
-                  <GridComponent
-                    dataSource={viewinfo}
-                    allowPaging={true}
-                    pageSettings={{ pageSize: 6 }}
-                    editSettings={editOptions}
-                  >
-                    <ColumnsDirective>
-                      <ColumnDirective
-                        field={""}
-                        headerText={"ID"}
-                        width="100"
-                        visible={false}
-                      />
-                      <ColumnDirective
-                        field={"employee.firstName"}
-                        headerText={GetLabelByName("HCM-VD1B12NKKJ_LANG", lan)}
-                        width="100"
-                      />
 
-                      <ColumnDirective
-                        field={"skillType.name"}
-                        headerText={GetLabelByName("HCM-P29OOIV9P7_PSLL", lan)}
-                        width="100"
-                      />
-                      <ColumnDirective
-                        commands={commandOptions}
-                        headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
-                        width="100"
-                        textAlign="Center"
-                      />
-                    </ColumnsDirective>
-                    <Inject
-                      services={[
-                        Page,
-                        Sort,
-                        Filter,
-                        Group,
-                        Edit,
-                        CommandColumn,
-                      ]}
+            </CCardHeader>
+
+            <CForm action="" method="post">
+              <>
+                <GridComponent
+                  height={500}
+                  dataSource={viewinfo}
+                  allowPaging={true}
+                  pageSettings={{ pageSize: 10 }}
+                  editSettings={editOptions}
+                >
+                  <ColumnsDirective>
+                    <ColumnDirective
+                      field={""}
+                      headerText={"ID"}
+                      width="100"
+                      visible={false}
                     />
-                  </GridComponent>
-                </>
-              </CForm>
-            </CCardBody>
+                    <ColumnDirective
+                      field={"employee.firstName"}
+                      headerText={GetLabelByName("HCM-VD1B12NKKJ_LANG", lan)}
+                      width="100"
+                    />
+
+                    <ColumnDirective
+                      field={"skillType.name"}
+                      headerText={GetLabelByName("HCM-P29OOIV9P7_PSLL", lan)}
+                      width="100"
+                    />
+                    <ColumnDirective
+                      commands={commandOptions}
+                      headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
+                      width="100"
+                      textAlign="Center"
+                    />
+                  </ColumnsDirective>
+                  <Inject
+                    services={[
+                      Page,
+                      Sort,
+                      Filter,
+                      Group,
+                      Edit,
+                      CommandColumn,
+                    ]}
+                  />
+                </GridComponent>
+              </>
+            </CForm>
+
           </CCard>
         </CCol>
       </CRow>
 
       <CModal
         show={visible}
-        size={"lg"}
+        size={"md"}
         onClose={() => setVisible(false)}
         closeOnBackdrop={false}
       >
@@ -429,7 +437,7 @@ const EmployeeSkill = (props) => {
                 </CLabel>
                 <CInput type="text" id="Name" />
               </CCol> */}
-              <CCol md="4">
+              <CCol md="12">
                 <CLabel htmlFor="Skiil">
                   <CSLab code="HCM-P29OOIV9P7_PSLL" />
                   <CSRequiredIndicator />
@@ -455,7 +463,7 @@ const EmployeeSkill = (props) => {
             </>
           </CRow>
           <CRow className={"bottom-spacing"}>
-            <CCol md="8">
+            <CCol md="12">
               <CLabel htmlFor="Note">
                 <CSLab code="HCM-Z0FV0XJJ06" />
               </CLabel>
