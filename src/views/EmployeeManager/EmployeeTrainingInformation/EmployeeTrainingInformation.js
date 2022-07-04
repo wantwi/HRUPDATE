@@ -43,7 +43,7 @@ import {
   CSRequiredIndicator,
 } from "../../../reusable/components";
 import { AiOutlinePlus } from "react-icons/ai";
-import { SearchEmployees } from "src/reusable/API/EmployeeEndpoints";
+import { SearchEmployees,SearchEmployeesByNameAndProgram } from "src/reusable/API/EmployeeEndpoints";
 import {
   GetRequest,
   HttpAPIRequest,
@@ -185,7 +185,7 @@ const EmployeeTrainingInformation = (props) => {
         <CCol md="4">
           <CFormGroup>
             <CSAutoComplete
-              filterUrl={SearchEmployees(searchInput)}
+              filterUrl={SearchEmployeesByNameAndProgram(searchInput)}
               //filterUrl=''            //filterUrl={SearchInternalCurrencies(searchInput)}
               placeholder={"Search for employee by name or code"}
               handleSelect={handleSearchResultSelect}
@@ -312,21 +312,23 @@ const EmployeeTrainingInformation = (props) => {
         </CModalHeader>
         <CModalBody>
           <CRow>
-            <CCol md="3">
+            <CCol md="5">
               <CLabel>
                 <CSLab code="HCM-B0VG88EHYDM_KCMI" />
                 <CSRequiredIndicator />
               </CLabel>
               <CInput className="" name="employeeId" />
             </CCol>
-            <CCol md="2">
+            <CCol md="5">
               <CLabel>
                 <CSLab code="HCM-YTBRY0XIPAH_HRPR" />
                 <CSRequiredIndicator />
               </CLabel>
               <CInput className="" name="ProgramCode" type="text" />
             </CCol>
-            <CCol md="7">
+          </CRow>
+          <CRow>
+            <CCol md="5">
               <CLabel>
                 <CSLab code="HCM-OGH7US2WKV-LOLN" />
                 <CSRequiredIndicator />
@@ -341,8 +343,9 @@ const EmployeeTrainingInformation = (props) => {
               <CInput className="" name="Completed By" type="text" />
             </CCol>
           </CRow>
+
           <CRow>
-            <CCol md="12">
+            <CCol md="10">
               <CLabel>
                 <CSLab code="HCM-Z0FV0XJJ06" />
               </CLabel>
