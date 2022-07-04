@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+
 //import { toast } from "react-toastify";
 import { toastWarning } from "src/toasters/Toaster";
+import moment from "moment";
 
 import CIcon from "@coreui/icons-react";
 import {
@@ -166,15 +168,19 @@ const AccidentTransaction = () => {
       !submitData?.LocationofAccident ||
       submitData?.LocationofAccident === ""
     ) {
-      // toast.error('Please Enter Location!', toastWarning);
+      toast.error("Please Enter Location!", toastWarning);
       return;
     }
     if (!submitData?.DateofAccident || submitData?.DateofAccident === "") {
-      //toast.error('Please Select Accident Date!', toastWarning);
+      toast.error("Please Select Accident Date!", toastWarning);
       return;
     }
     if (!submitData?.DateInformed || submitData?.DateInformed === "") {
-      //toast.error('Please select a Date!', toastWarning);
+      toast.error("Please select a Date!", toastWarning);
+      return;
+    }
+    if (!submitData?.note || submitData?.note === "") {
+      toast.error("Please Provide Description!", toastWarning);
       return;
     }
 
@@ -199,12 +205,19 @@ const AccidentTransaction = () => {
       .then((response) => {
         response.text().then((data) => {
           if ("" === data) {
-            // toast.success('Earning Mass Update Successful!',);
+            toast.success("Accident Transaction Added Successfully!");
             console.log("success");
+            getEmployyeAccidentById();
           } else {
             try {
               data = JSON.parse(data);
-              // toaster(toastId, data?.reason ? data?.reason : "Failed to update Currency", 'error', 4000);
+              toast.error(
+                data?.reason
+                  ? data?.reason
+                  : "Failed to Add Accident Transaction",
+                "error",
+                4000
+              );
             } catch (error) {
               console.log("MODEL", error);
             }
@@ -249,7 +262,7 @@ const AccidentTransaction = () => {
             });
           }
         })
-        .catch((err) => { });
+        .catch((err) => {});
     }
   };
   const testApi = async () => {
@@ -384,6 +397,8 @@ const AccidentTransaction = () => {
                 <ColumnDirective
                   field="dateOfAccident"
                   headerText={GetLabelByName("HCM-JVUPJOPETGK-LANG", lan)}
+                  type="date"
+                  format="dd/MMM/yyyy"
                   width="100"
                 />
                 <ColumnDirective
@@ -394,6 +409,8 @@ const AccidentTransaction = () => {
                 <ColumnDirective
                   field="dateInformed"
                   headerText={GetLabelByName("HCM-GOO3SSJSCG5_LANG", lan)}
+                  type="date"
+                  format="dd/MMM/yyyy"
                   width="100"
                 />
                 HCM-GOO3SSJSCG5_LANG
@@ -405,17 +422,9 @@ const AccidentTransaction = () => {
                 />
               </ColumnsDirective>
               <Inject
-                services={[
-                  Page,
-                  Sort,
-                  Filter,
-                  Group,
-                  Edit,
-                  CommandColumn,
-                ]}
+                services={[Page, Sort, Filter, Group, Edit, CommandColumn]}
               />
             </GridComponent>
-
           </CCard>
         </CCol>
       </CRow>
@@ -481,6 +490,7 @@ const AccidentTransaction = () => {
                   value={data?.DateofAccident || -1}
                   type="date"
                   onChange={handleOnChange}
+                  max={moment().format("YYYY-MM-DD")}
                 />
               </CCol>
               <CCol md="6">
@@ -495,19 +505,20 @@ const AccidentTransaction = () => {
                   name="DateInformed"
                   value={data?.DateInformed || -1}
                   onChange={handleOnChange}
+                  max={moment().format("YYYY-MM-DD")}
                 />
               </CCol>
             </>
           </CRow>
           <CRow>
-            <CCol md="12">
+            <CCol md="6">
               <CLabel>
                 <CSLab code="HCM-8G6FY80Q2NM-HRPR" />
               </CLabel>
               <CTextarea
                 id="Remarks"
-                name="Note"
-                value={data?.Note || ""}
+                name="note"
+                value={data?.note || ""}
                 onChange={handleOnChange}
                 style={{ height: "60px", resize: "none" }}
               ></CTextarea>
@@ -518,7 +529,13 @@ const AccidentTransaction = () => {
           <CButton color="secondary" onClick={() => setVisible(false)}>
             <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
           </CButton>
-          <CButton color="primary" onClick={handleOnSubmit}>
+          <CButton
+            color="primary"
+            onClick={() => {
+              setVisible(false);
+              handleOnSubmit();
+            }}
+          >
             <CSLab code="HCM-HGUHIR0OK6T" />
           </CButton>
         </CModalFooter>

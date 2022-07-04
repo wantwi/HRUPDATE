@@ -5,7 +5,7 @@ import { toastWarning } from "src/toasters/Toaster";
 import { CustomAxios } from "src/reusable/API/CustomAxios";
 import { SearchEmployees } from "src/reusable/API/EmployeeEndpoints";
 import { GetEmployeeMedical } from "src/reusable/API/MedicalTransactionsEndPoints";
-
+import moment from "moment";
 import {
   GetRequest,
   HttpAPIRequest,
@@ -245,12 +245,19 @@ const MedicalTransaction = () => {
       .then((response) => {
         response.text().then((data) => {
           if ("" === data) {
-            // toast.success('Earning Mass Update Successful!',);
+            toast.success("Medical Transaction Successful!");
+            getEmployeeMedicalyById();
             console.log("success");
           } else {
             try {
               data = JSON.parse(data);
-              // toaster(toastId, data?.reason ? data?.reason : "Failed to update Currency", 'error', 4000);
+              toast.error(
+                data?.reason
+                  ? data?.reason
+                  : "Failed to Create Medical Transaction",
+                "error",
+                400
+              );
             } catch (error) {
               console.log(error);
             }
@@ -334,7 +341,7 @@ const MedicalTransaction = () => {
               mode={mode}
               setMode={setMode}
               handleId={setHandleId}
-            // reset={handleReset}
+              // reset={handleReset}
             />
           </CFormGroup>
         </CCol>
@@ -378,7 +385,7 @@ const MedicalTransaction = () => {
               </CFormGroup>
             </CCardHeader>
             <GridComponent
-            height={"500"}
+              height={"500"}
               dataSource={viewinfo}
               allowPaging={true}
               pageSettings={{ pageSize: 10 }}
@@ -404,6 +411,8 @@ const MedicalTransaction = () => {
                 <ColumnDirective
                   field={"dateOfService"}
                   headerText={GetLabelByName("HCM-I23QDSWPM1D_KCMI", lan)}
+                  type="date"
+                  format="dd/MMM/yyyy"
                   width="100"
                 />
                 <ColumnDirective
@@ -419,14 +428,7 @@ const MedicalTransaction = () => {
                 />
               </ColumnsDirective>
               <Inject
-                services={[
-                  Page,
-                  Sort,
-                  Filter,
-                  Group,
-                  Edit,
-                  CommandColumn,
-                ]}
+                services={[Page, Sort, Filter, Group, Edit, CommandColumn]}
               />
             </GridComponent>
           </CCard>
@@ -498,6 +500,7 @@ const MedicalTransaction = () => {
                   name="dateOfService"
                   value={data?.dateOfService || -1}
                   onChange={handleOnChange}
+                  max={moment().format("YYYY-MM-DD")}
                 />
               </CCol>
               <CCol md="5">
@@ -534,7 +537,13 @@ const MedicalTransaction = () => {
           <CButton color="secondary" onClick={() => setVisible(false)}>
             <CSLab code="HCM-MELULU9B6R_KCMI" />
           </CButton>
-          <CButton color="primary" onClick={handleOnSubmit}>
+          <CButton
+            color="primary"
+            onClick={() => {
+              setVisible(false);
+              handleOnSubmit();
+            }}
+          >
             <CSLab code="HCM-HGUHIR0OK6T" />
           </CButton>
         </CModalFooter>

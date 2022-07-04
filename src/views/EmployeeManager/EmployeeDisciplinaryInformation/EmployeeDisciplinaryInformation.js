@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { toastWarning } from "src/toasters/Toaster";
 import { CustomAxios } from "src/reusable/API/CustomAxios";
+import moment from "moment";
 
 import {
   GetRequest,
@@ -281,9 +282,6 @@ const EmployeeDisciplinaryInformation = (props) => {
       CompanyReference: "00001_A01",
       employeeId,
     };
-    //let finalData = JSON.stringify(newData)
-    // console.log(finalData)
-    // 'Add' === mode ? AddGLAccount(newData) : updateGLAccount(newData);
     postEmployeeDisciplinaryInfo(newData);
   };
 
@@ -294,12 +292,19 @@ const EmployeeDisciplinaryInformation = (props) => {
       .then((response) => {
         response.text().then((data) => {
           if ("" === data) {
-            // toast.success('Earning Mass Update Successful!',);
+            toast.success("Disciplinary Information Added Successful!");
             console.log("success");
+            getEmployeeOffence();
           } else {
             try {
               data = JSON.parse(data);
-              // toaster(toastId, data?.reason ? data?.reason : "Failed to update Currency", 'error', 4000);
+              toast.error(
+                data?.reason
+                  ? data?.reason
+                  : "Failed to Add Disciplinary Information",
+                "error",
+                4000
+              );
             } catch (error) {
               console.log(error);
             }
@@ -325,14 +330,6 @@ const EmployeeDisciplinaryInformation = (props) => {
       data: { ...data, [evnt?.target?.name]: evnt?.target?.value },
     });
   };
-
-  // useEffect(() => {
-
-  //   if (submitData?.offenceCategoryId.length > 0) {
-  //     handleNewId(submitData.offenceCategoryId);
-  //   }
-  // }, [submitData?.offenceCategoryId]);
-
   return (
     <>
       <CRow>
@@ -433,11 +430,15 @@ const EmployeeDisciplinaryInformation = (props) => {
                       field={"incidentDate"}
                       headerText={GetLabelByName("HCM-T0013FX72OI_LASN", lan)}
                       width="100"
+                      type="date"
+                      format="dd/MMM/yyyy"
                     />
                     <ColumnDirective
                       field={"actionDate"}
                       headerText={GetLabelByName("HCM-S3239KDC9DF-PSLL", lan)}
                       width="100"
+                      type="date"
+                      format="dd/MMM/yyyy"
                     />
                     {/* <ColumnDirective
                       field={""}
@@ -521,6 +522,7 @@ const EmployeeDisciplinaryInformation = (props) => {
                 type="date"
                 value={data?.actionDate || ""}
                 onChange={handleOnChange}
+                max={moment().format("YYYY-MM-DD")}
               />
             </CCol>
 
@@ -536,6 +538,7 @@ const EmployeeDisciplinaryInformation = (props) => {
                 type="date"
                 value={data?.incidentDate || ""}
                 onChange={handleOnChange}
+                max={moment().format("YYYY-MM-DD")}
               />
             </CCol>
           </CRow>
@@ -596,9 +599,15 @@ const EmployeeDisciplinaryInformation = (props) => {
           <CButton color="secondary" onClick={() => setVisible(false)}>
             <CSLab code="HCM-9E3ZC2E1S0N-LASN" />
           </CButton>
-          <CButton color="primary" onClick={handleOnSubmit}>
+          <CButton
+            color="primary"
+            onClick={() => {
+              setVisible(false);
+              handleOnSubmit();
+            }}
+          >
             <CSLab code="HCM-HGUHIR0OK6T" />
-          </CButton>
+          </CButton> 
         </CModalFooter>
       </CModal>
     </>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
+import moment from "moment";
 import { toastWarning } from "src/toasters/Toaster";
 import {
   CInput,
@@ -247,12 +248,19 @@ const EmployeeEducationInformation = (props) => {
       .then((response) => {
         response.text().then((data) => {
           if ("" === data) {
-            // toast.success('Earning Mass Update Successful!',);
+            toast.success("Employee Education Information Added Succesfully!");
             console.log("success");
+            getEmployeebyId();
           } else {
             try {
               data = JSON.parse(data);
-              // toaster(toastId, data?.reason ? data?.reason : "Failed to update Currency", 'error', 4000);
+              toast.error(
+                data?.reason
+                  ? data?.reason
+                  : "Failed to Employee Education Information",
+                "error",
+                4000
+              );
             } catch (error) {
               console.log(error);
             }
@@ -273,12 +281,7 @@ const EmployeeEducationInformation = (props) => {
       const request = await CustomAxios.get(`EmployeeEducation/${handleId}`);
 
       const response = request.data;
-      //console.log("emp response:", respond);
       setViewInfo((prevState) => response);
-      //setViewInfo((nonRecurringData) => [res, ...nonRecurringData]);
-
-      //console.log(`${process.env.REACT_APP_BASE_URL}/Employees?companyReference=00001_A01`)
-      // console.log({ searchInput });
     } catch (error) {
       console.log({ error });
     }
@@ -290,12 +293,6 @@ const EmployeeEducationInformation = (props) => {
       getEmployeebyId();
     }
   }, [handleId]);
-
-  //const employeeName = viewinfo.map((x) => x.firstName + " " + x.lastName);
-  //console.log(employeeName);
-  //console.log(handleId);
-  //console.log("trials : ", viewinfo[0]);
-  // let content;
 
   const handleOnChange = (evnt) => {
     //console.log(evnt)
@@ -412,11 +409,15 @@ const EmployeeEducationInformation = (props) => {
                       field="startDate"
                       headerText="Start Date"
                       width="150"
+                      type="date"
+                      format={"dd/MMM/yyyy"}
                     />
                     <ColumnDirective
                       field="endDate"
                       headerText="End Date"
                       width="150"
+                      type="date"
+                      format={"dd/MMM/yyyy"}
                     />
 
                     <ColumnDirective
@@ -470,6 +471,7 @@ const EmployeeEducationInformation = (props) => {
                 type="date"
                 value={data?.StartDate || -1}
                 onChange={handleOnChange}
+                max={moment().format("YYYY-MM-DD")}
               />
             </CCol>
             <CCol md="3">
@@ -484,6 +486,7 @@ const EmployeeEducationInformation = (props) => {
                 type="date"
                 value={data?.endDate || -1}
                 onChange={handleOnChange}
+                max={moment().format("YYYY-MM-DD")}
               />
             </CCol>
             <CCol md="5">

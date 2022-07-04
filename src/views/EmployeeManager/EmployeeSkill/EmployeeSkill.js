@@ -221,10 +221,10 @@ const EmployeeSkill = (props) => {
       toast.error("Please Select a Skill Type!", toastWarning);
       return;
     }
-    // if (!submitData?.payPeriodId || submitData?.payPeriodId === '') {
-    //     //toast.error('Please select a pay period!', toastWarning);
-    //     return;
-    // }
+    if (!submitData?.description || submitData?.description === '') {
+        toast.error('Please Enter Description!', toastWarning);
+        return;
+    }
     // console.log(submitData)
     let employeeId = submitData.id;
     //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
@@ -246,16 +246,16 @@ const EmployeeSkill = (props) => {
     console.log("post data", data);
     PostRequest(PostEmployeeSkill(), { data: data })
       .then((response) => {
-        console.log(response)
+        
         response.text().then((data) => {
-          
+         
           if ("" == data) {
             toast.success('Employee Skill Added Successfully!',);
             console.log("success");
           } else {
             try {
               data = JSON.parse(data);
-               toast.error(data?.reason ? data?.reason : "Failed to Add Employee Skill", 'error', 4000);
+               toast.error(data?.reason ? data?.reason : "Failed to Add Employee Skill", 'error', 400);
             } catch (error) {
               console.log(error);
             }
@@ -444,7 +444,7 @@ const EmployeeSkill = (props) => {
                 </CLabel>
                 <CSelect
                   name="skillTypeId"
-                  value={data?.id || -1}
+                  value={data?.skillTypeId || -1}
                   onChange={handleOnChange}
                 >
                   {skillType.map((x, i) => (
@@ -464,11 +464,13 @@ const EmployeeSkill = (props) => {
           </CRow>
           <CRow className={"bottom-spacing"}>
             <CCol md="12">
-              <CLabel htmlFor="Note">
+              <CLabel htmlFor="description">
                 <CSLab code="HCM-Z0FV0XJJ06" />
               </CLabel>
               <CTextarea
-                name="Note"
+                name="description"
+                value={data?.description || ""}
+                onChange={handleOnChange}
                 style={{ height: "60px", resize: "none" }}
               />
             </CCol>

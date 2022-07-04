@@ -24,6 +24,7 @@ import {
   CLabel,
   CSelect,
   CTextarea,
+  CCardHeader,
 } from "@coreui/react";
 import { AiOutlinePlus } from "react-icons/ai";
 import {
@@ -238,12 +239,17 @@ const EmployeeHobby = (props) => {
       .then((response) => {
         response.text().then((data) => {
           if ("" === data) {
-            // toast.success('Earning Mass Update Successful!',);
+            toast.success("Employee Hobby Added Succesfully!");
             console.log("success");
+            getEmployeeHobbybyId();
           } else {
             try {
               data = JSON.parse(data);
-              // toaster(toastId, data?.reason ? data?.reason : "Failed to update Currency", 'error', 4000);
+              toast.error(
+                data?.reason ? data?.reason : "Failed Add Employee Hobby",
+                "error",
+                400
+              );
             } catch (error) {
               console.log(error);
             }
@@ -333,7 +339,7 @@ const EmployeeHobby = (props) => {
         <CCol md="8" className="text-right"></CCol>
         <CCol xs="12" hidden={show}>
           <CCard>
-            <CCardBody style={{ height: CardBodyHeight, overflowY: "auto" }}>
+            <CCardHeader>
               <CFormGroup row>
                 <CCol md="4">
                   <b>Employee:</b>{" "}
@@ -368,54 +374,49 @@ const EmployeeHobby = (props) => {
                   </CButton>
                 </CCol>
               </CFormGroup>
-              <CForm action="" method="post">
-                <>
-                  <GridComponent
-                    dataSource={viewinfo}
-                    allowPaging={true}
-                    pageSettings={{ pageSize: 6 }}
-                    editSettings={editOptions}
-                  >
-                    <ColumnsDirective>
-                      <ColumnDirective
-                        field={""}
-                        headerText={"ID"}
-                        width="100"
-                        visible={false}
-                      />
-                      <ColumnDirective
-                        field={"employee.firstName"}
-                        headerText={GetLabelByName("HCM-VD1B12NKKJ_LANG", lan)}
-                        width="100"
-                      />
+            </CCardHeader>
 
-                      <ColumnDirective
-                        field="hobbyType.name"
-                        headerText={GetLabelByName("HCM-7NAYG6MHKMA-KCMI", lan)}
-                        width="100"
-                      />
-                    </ColumnsDirective>
-                    <Inject
-                      services={[
-                        Page,
-                        Sort,
-                        Filter,
-                        Group,
-                        Edit,
-                        CommandColumn,
-                      ]}
+            <CForm action="" method="post">
+              <>
+                <GridComponent
+                  height={500}
+                  dataSource={viewinfo}
+                  allowPaging={true}
+                  pageSettings={{ pageSize: 10 }}
+                  editSettings={editOptions}
+                >
+                  <ColumnsDirective>
+                    <ColumnDirective
+                      field={""}
+                      headerText={"ID"}
+                      width="100"
+                      visible={false}
                     />
-                  </GridComponent>
-                </>
-              </CForm>
-            </CCardBody>
+                    <ColumnDirective
+                      field={"employee.firstName"}
+                      headerText={GetLabelByName("HCM-FQYC4N0VN1W-HRPR", lan)}
+                      width="100"
+                    />
+
+                    <ColumnDirective
+                      field="hobbyType.name"
+                      headerText={GetLabelByName("HCM-7NAYG6MHKMA-KCMI", lan)}
+                      width="100"
+                    />
+                  </ColumnsDirective>
+                  <Inject
+                    services={[Page, Sort, Filter, Group, Edit, CommandColumn]}
+                  />
+                </GridComponent>
+              </>
+            </CForm>
           </CCard>
         </CCol>
       </CRow>
 
       <CModal
         show={visible}
-        size={"lg"}
+        size={"md"}
         onClose={() => setVisible(false)}
         closeOnBackdrop={false}
       >
@@ -434,7 +435,7 @@ const EmployeeHobby = (props) => {
                 </CLabel>
                 <CInput type="text" id="Name" />
               </CCol> */}
-              <CCol md="4">
+              <CCol md="8">
                 <CLabel htmlFor="Hobby">
                   <CSLab code="HCM-7NAYG6MHKMA-KCMI" />
                   <CSRequiredIndicator />
@@ -458,7 +459,13 @@ const EmployeeHobby = (props) => {
           <CButton color="secondary" onClick={() => setVisible(false)}>
             <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
           </CButton>
-          <CButton color="primary" onClick={handleOnSubmit}>
+          <CButton
+            color="primary"
+            onClick={() => {
+              setVisible(false);
+              handleOnSubmit();
+            }}
+          >
             <CSLab code="HCM-HGUHIR0OK6T" />
           </CButton>
         </CModalFooter>
