@@ -38,7 +38,7 @@ let indexCount = 0,
   _pageNumber = 0,
   _currentPage = 0;
 
-const CSAutoComplete = ({
+const CSTrainingInformation = ({
   filterUrl,
   uniqueIdKey,
   displayTextKey,
@@ -62,6 +62,7 @@ const CSAutoComplete = ({
   setMode,
   reset,
   handleId,
+  programIdGet,
 }) => {
   //console.log({ filterUrl, uniqueIdKey, displayTextKey, placeholder, handleSelect, input, setInput, searchName, emptySearchFieldMessage, isPaginated, pageNumber, setPageNumber, numberOfItems, setNumberOfItems, orderBy, setOrderBy, sortOrder, setSortOrder, selectNumberOfItems, mode, setMode, reset })
   // Set default values
@@ -215,7 +216,8 @@ const CSAutoComplete = ({
         .then((response) => {
           if (response.ok) {
             response.json().then((data) => {
-             // console.log({ data });
+              programIdGet();
+              // console.log(data);
 
               if (
                 data.items &&
@@ -227,7 +229,7 @@ const CSAutoComplete = ({
                 setFilteredSuggestions(data.items);
                 setShowSuggestions(true);
               }
-              console.log({ test: data });
+
               if (data && isObject(data)) {
                 if (data?.hasOwnProperty("empty")) {
                   if (!data?.empty) {
@@ -240,8 +242,11 @@ const CSAutoComplete = ({
                     setFilteredSuggestions(values);
                     setShowSuggestions(true);
                     _currentPage = data?.currentPage;
+                    console.log("second if");
                   } else {
-                    toaster(toastId, `No records found`, "info", 3000);
+                    toast.dismiss(toastId);
+                    toast.error(`No records found`, "info", 3000);
+                    console.log("first else");
                   }
 
                   // console.log("Paginated");
@@ -250,6 +255,8 @@ const CSAutoComplete = ({
 
               if (data && Array.isArray(data) && data.length === 0) {
                 toaster(toastId, `No records found`, "info", 2000);
+                toast.dismiss(toastId);
+                console.log("third if");
               }
             });
           }
@@ -260,7 +267,7 @@ const CSAutoComplete = ({
         });
     } else {
       toaster(toastId, `${emptySearchFieldMessage}`, "info", 2000);
-      //alert('Input to short');
+      alert("Input to short");
     }
   };
 
@@ -322,7 +329,7 @@ const CSAutoComplete = ({
   //     console.log({ value, one, two })
   //     runSearch(two);
   // }
-  //console.log({ filteredSuggestions });
+  console.log({ filteredSuggestions });
   const SuggestionsListComponent = () => {
     return filteredSuggestions.length ? (
       <div>
@@ -477,4 +484,4 @@ const CSAutoComplete = ({
     </>
   );
 };
-export default CSAutoComplete;
+export default CSTrainingInformation;

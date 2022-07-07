@@ -63,6 +63,13 @@ import {
   PostRequest,
 } from "src/reusable/utils/helper";
 import { GetLabelByName } from "src/reusable/configs/config";
+import {
+  GetBeneficiary,
+  GetEmployeeDependant,
+  GetEmployeeEmergencyContact,
+  GetEmployeeGuarantor,
+} from "src/reusable/API/EmployeeRelationshipsEndPoint";
+import axios from "axios";
 
 const commandOptions = [
   {
@@ -118,16 +125,16 @@ const getSampleData = (data) => {
 //   )
 //}
 
-const earnings = {
-  params: {
-    actionComplete: () => false,
-    allowFiltering: true,
-    dataSource: new DataManager(sampleData),
-    fields: { text: "name", value: "name" },
-    query: new Query(),
-  },
-};
-console.log("trials", earnings.params.fields);
+// const earnings = {
+//   params: {
+//     actionComplete: () => false,
+//     allowFiltering: true,
+
+//     fields: { text: "name", value: "name" },
+//     query: new Query(),
+//   },
+// };
+// console.log("trials", earnings.params.fields);
 function refreshPage() {
   window.location.reload(false);
 }
@@ -184,13 +191,19 @@ const EmployeeDetail = (props) => {
   const [empDisplayName, setEmpDisplayName] = useState("");
   const [handleId, setHandleId] = useState("");
   const [viewinfo, setViewInfo] = useState([]);
-  const [skillType, setSkillType] = useState([]);
+  const [emergencyContact, setEmergencyContact] = useState([]);
   const [nextOfKin, setGetNextOfKin] = useState([]);
   const [guarantor, setGetGuarantor] = useState([]);
+  const [benefiaciary, setGetBenefiary] = useState([]);
+  const [dependant, setDependant] = useState([]);
 
   const canSave = [fname, lname, relation, phone, address].every(Boolean);
 
   const firstGrid = useRef(null);
+  const secondGrid = useRef(null);
+  const thirdGrid = useRef(null);
+  const fourthGrid = useRef(null);
+  const fifthGrid = useRef(null);
 
   const toolbarOptions = [
     "Add",
@@ -220,14 +233,14 @@ const EmployeeDetail = (props) => {
   const submitRequest = (args) => {
     if (firstGrid && args.item.id === "saveItems") {
       console.log("first");
-      console.log({ value: firstGrid?.current?.currentViewData });
+      let request = axios.post();
+      console.log({ first: firstGrid?.current?.currentViewData });
     }
 
     //console.log({ value: firstGrid });
   };
 
   const actionBegin = (args) => {
-    console.log(args);
     // if (args.requestType === 'add') {
     //   args.cancel = true
     //   console.log(sampleData)
@@ -306,7 +319,8 @@ const EmployeeDetail = (props) => {
 
       const response = request.data;
       console.log("emp response:", response);
-      setGetNextOfKin((prevState) => response);
+      console.log({ response });
+      setGetNextOfKin([response]);
     } catch (error) {
       console.log({ error });
     }
@@ -317,8 +331,41 @@ const EmployeeDetail = (props) => {
       handleNextOfKin();
     }
   }, [handleId]);
-  console.log("Next of kin", nextOfKin);
-  console.log(handleId);
+  console.log(nextOfKin);
+  //console.log(handleId);
+
+  const MultipleGetRequests = async () => {
+    try {
+      let request = [
+        HttpAPIRequest("GET", GetBeneficiary(handleId)),
+        HttpAPIRequest("GET", GetEmployeeDependant(handleId)),
+        HttpAPIRequest("GET", GetEmployeeEmergencyContact(handleId)),
+        HttpAPIRequest("GET", GetEmployeeGuarantor(handleId)),
+      ];
+      const multipleCall = await Promise.allSettled(request);
+      console.log(multipleCall[0].value);
+
+      setGetBenefiary([...multipleCall[0].value]);
+      setDependant([...multipleCall[1].value]);
+      setEmergencyContact([...multipleCall[2].value]);
+      setGetGuarantor([...multipleCall[3].value]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const integerParams = {
+    params: {
+      min: 0,
+    },
+  };
+
+  useEffect(() => {
+    MultipleGetRequests();
+  }, [handleId]);
+  console.log({ emergency: emergencyContact });
+  console.log({ guarant: guarantor });
+  console.log({ benefits: benefiaciary });
+  console.log({ dependands: dependant });
 
   return (
     <>
@@ -449,6 +496,7 @@ const EmployeeDetail = (props) => {
                     <GridComponent
                       height={300}
                       actionComplete={actionBegin}
+                      dataSource={benefiaciary}
                       allowPaging={true}
                       pageSettings={{ pageSize: 8 }}
                       editSettings={editOptions}
@@ -465,18 +513,27 @@ const EmployeeDetail = (props) => {
                           isPrimaryKey={true}
                         />
                         <ColumnDirective
-                          field={"firstname"}
+                          field="firstName"
                           editType="text"
                           headerText={GetLabelByName("HCM-KPH53NF08RG", lan)}
                           width="100"
-                          edit={earnings}
-                          value={"fname"}
+
                           //onChange={(e) => setfname(e.target.value)}
                         />
                         <ColumnDirective
-                          field="lastname"
+                          field="lastName"
                           headerText={GetLabelByName("HCM-ZYCFSGCKMC", lan)}
                           editType="text"
+                          width="100"
+                          textAlign="Center"
+                          // name="lname"
+                          // value={lname}
+                          // onChange={(e) => setlname(e.target.value)}
+                        />
+                        <ColumnDirective
+                          field="relation.name"
+                          headerText={GetLabelByName("HCM-ZYCFSGCKMC", lan)}
+                          editType="dropdownedit"
                           width="100"
                           textAlign="Center"
                           // name="lname"
@@ -496,7 +553,7 @@ const EmployeeDetail = (props) => {
                           // value={address}
                           // onChange={(e) => setAddress(e.target.value)}
                         />
-                        <ColumnDirective
+                        {/* <ColumnDirective
                           field="relation"
                           headerText={GetLabelByName(
                             "HCM-RWMIP9K3NEH_HRPR",
@@ -508,14 +565,15 @@ const EmployeeDetail = (props) => {
                           // name="relation"
                           // value={relation}
                           // onChange ={(e)=>setRelation(e.target.value)}
-                        />
+                        /> */}
                         <ColumnDirective
                           field="percentage"
                           headerText={GetLabelByName(
                             "HCM-HB5MNHJGQE5-HRPR",
                             lan
                           )}
-                          editType="text"
+                          editType="numericedit"
+                          editParams={" minValue: 0"}
                           width="100"
                           textAlign="Center"
                         />
@@ -541,11 +599,12 @@ const EmployeeDetail = (props) => {
                   </CTabPane>
                   <CTabPane visible={activeKey === 2 ? "true" : "false"}>
                     <GridComponent
+                      dataSource={dependant}
                       height={300}
                       allowPaging={true}
                       pageSettings={{ pageSize: 8 }}
                       editSettings={editOptions}
-                      ref={(g) => setGrid(g)}
+                      ref={secondGrid}
                       commandClick={onCommandClick}
                       toolbar={toolbarOptions}
                     >
@@ -558,7 +617,7 @@ const EmployeeDetail = (props) => {
                           isPrimaryKey={true}
                         />
                         <ColumnDirective
-                          field={"name"}
+                          field="firstName"
                           editType="text"
                           headerText={GetLabelByName(
                             "HCM-VD1B12NKKJ_LANG",
@@ -568,7 +627,7 @@ const EmployeeDetail = (props) => {
                           //edit={earnings}
                         />
                         <ColumnDirective
-                          field={"relation"}
+                          field="lastName"
                           headerText={GetLabelByName(
                             "HCM-RWMIP9K3NEH_HRPR",
                             lan
@@ -578,26 +637,72 @@ const EmployeeDetail = (props) => {
                           textAlign="Center"
                         />
                         <ColumnDirective
-                          field="dateofbirth"
+                          field="dateOfBirth"
+                          headerText={GetLabelByName(
+                            "HCM-IM8I8SKJ1J9_KCMI",
+                            lan
+                          )}
+                          editType="date"
+                          width="100"
+                          textAlign="Center"
+                          type="date"
+                          format="dd/MMM/yyyy"
+                        />
+                        <ColumnDirective
+                          field="address"
                           headerText={GetLabelByName(
                             "HCM-XYNVK7A8USK_PSLL",
                             lan
                           )}
-                          editType="datetimeedit"
+                          editType="text"
                           editTemplate={editTemplate}
                           width="100"
                           textAlign="Center"
                         />
                         <ColumnDirective
-                          field="nationality"
+                          field="nationality.name"
+                          headerText={GetLabelByName(
+                            "HCM-XYNVK7A8USK_PSLL",
+                            lan
+                          )}
+                          editType="text"
+                          editTemplate={editTemplate}
+                          width="100"
+                          textAlign="Center"
+                        />
+                        <ColumnDirective
+                          field="relation.name"
                           headerText={GetLabelByName(
                             "HCM-IM8I8SKJ1J9_KCMI",
                             lan
                           )}
-                          editType="dropdownedit"
+                          editType="text"
                           width="100"
                           textAlign="Center"
                         />
+                        <ColumnDirective
+                          field="identityType.name"
+                          headerText={GetLabelByName(
+                            "HCM-IM8I8SKJ1J9_KCMI",
+                            lan
+                          )}
+                          editType="text"
+                          width="100"
+                          textAlign="Center"
+                        />
+                        <ColumnDirective
+                          field="dateOfExpiry"
+                          headerText={GetLabelByName(
+                            "HCM-IM8I8SKJ1J9_KCMI",
+                            lan
+                          )}
+                          type="date"
+                          format="dd/MMM/yyyy"
+                          editType="dateedit"
+                          width="100"
+                          textAlign="Center"
+                        />
+
                         <ColumnDirective
                           commands={commandOptions}
                           headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
@@ -620,11 +725,12 @@ const EmployeeDetail = (props) => {
                   </CTabPane>
                   <CTabPane visible={activeKey === 3 ? "true" : "false"}>
                     <GridComponent
+                      dataSource={emergencyContact}
                       height={300}
                       allowPaging={true}
                       pageSettings={{ pageSize: 8 }}
                       editSettings={editOptions}
-                      ref={(g) => setGrid(g)}
+                      ref={thirdGrid}
                       commandClick={onCommandClick}
                       toolbar={toolbarOptions}
                     >
@@ -637,7 +743,7 @@ const EmployeeDetail = (props) => {
                           isPrimaryKey={true}
                         />
                         <ColumnDirective
-                          field={"name"}
+                          field="name"
                           editType="text"
                           headerText={GetLabelByName(
                             "HCM-RWMIP9K3NEH_HRPR",
@@ -647,7 +753,7 @@ const EmployeeDetail = (props) => {
                           //edit={earnings}
                         />
                         <ColumnDirective
-                          field={"relation"}
+                          field="email"
                           headerText={GetLabelByName(
                             "HCM-RWMIP9K3NEH_HRPR",
                             lan
@@ -657,7 +763,7 @@ const EmployeeDetail = (props) => {
                           textAlign="Center"
                         />
                         <ColumnDirective
-                          field="phonenumber"
+                          field="phone"
                           headerText={GetLabelByName(
                             "HCM-28JQRN57PA4-PSLL",
                             lan
@@ -699,11 +805,12 @@ const EmployeeDetail = (props) => {
                   </CTabPane>
                   <CTabPane visible={activeKey === 4 ? "true" : "false"}>
                     <GridComponent
+                      dataSource={guarantor}
                       height={300}
                       allowPaging={true}
                       pageSettings={{ pageSize: 8 }}
                       editSettings={editOptions}
-                      ref={(g) => setGrid(g)}
+                      ref={fourthGrid}
                       commandClick={onCommandClick}
                       toolbar={toolbarOptions}
                     >
@@ -716,7 +823,7 @@ const EmployeeDetail = (props) => {
                           isPrimaryKey={true}
                         />
                         <ColumnDirective
-                          field={"name"}
+                          field="name"
                           editType="text"
                           headerText={GetLabelByName(
                             "HCM-RWMIP9K3NEH_HRPR",
@@ -726,7 +833,7 @@ const EmployeeDetail = (props) => {
                           // edit={earnings}
                         />
                         <ColumnDirective
-                          field={"relation"}
+                          field="relation.name"
                           headerText={GetLabelByName(
                             "HCM-RWMIP9K3NEH_HRPR",
                             lan
@@ -736,7 +843,7 @@ const EmployeeDetail = (props) => {
                           textAlign="Center"
                         />
                         <ColumnDirective
-                          field={"email"}
+                          field="email"
                           headerText={GetLabelByName(
                             "HCM-L8D4N8LGAS_PSLL",
                             lan
@@ -746,7 +853,7 @@ const EmployeeDetail = (props) => {
                           textAlign="Center"
                         />
                         <ColumnDirective
-                          field="phonenumber"
+                          field="phone"
                           headerText={GetLabelByName(
                             "HCM-28JQRN57PA4-PSLL",
                             lan
@@ -756,7 +863,17 @@ const EmployeeDetail = (props) => {
                           textAlign="Center"
                         />
                         <ColumnDirective
-                          field={"address"}
+                          field="nationality.name"
+                          headerText={GetLabelByName(
+                            "HCM-7WIK8PDIQOV-LOLN",
+                            lan
+                          )}
+                          editType="text"
+                          width="100"
+                          textAlign="Center"
+                        />
+                        <ColumnDirective
+                          field="address"
                           headerText={GetLabelByName(
                             "HCM-7WIK8PDIQOV-LOLN",
                             lan
@@ -787,12 +904,12 @@ const EmployeeDetail = (props) => {
                   </CTabPane>
                   <CTabPane visible={activeKey === 5 ? "true" : "false"}>
                     <GridComponent
-                      value={nextOfKin}
+                      dataSource={nextOfKin[0]}
                       height={300}
                       allowPaging={true}
-                      pageSettings={{ pageSize: 8 }}
+                      pageSettings={{ pageSize: 10 }}
                       editSettings={editOptions}
-                      ref={(g) => setGrid(g)}
+                      ref={fifthGrid}
                       commandClick={onCommandClick}
                       toolbar={toolbarOptions}
                     >
@@ -802,10 +919,10 @@ const EmployeeDetail = (props) => {
                           headerText="ID"
                           width="100"
                           visible={false}
-                          isPrimaryKey={true}
+                          // isPrimaryKey={true}
                         />
                         <ColumnDirective
-                          field={"name"}
+                          field="name"
                           editType="text"
                           headerText={GetLabelByName(
                             "HCM-RWMIP9K3NEH_HRPR",
@@ -813,7 +930,7 @@ const EmployeeDetail = (props) => {
                           )}
                           width="70"
                         />
-                        <ColumnDirective
+                        {/* <ColumnDirective
                           field="relationId"
                           headerText={GetLabelByName(
                             "HCM-RWMIP9K3NEH_HRPR",
@@ -822,7 +939,7 @@ const EmployeeDetail = (props) => {
                           editType="text"
                           width="100"
                           textAlign="Center"
-                        />
+                        /> */}
                         <ColumnDirective
                           field="phone"
                           headerText={GetLabelByName(
@@ -860,7 +977,7 @@ const EmployeeDetail = (props) => {
                           textAlign="Center"
                         />
                       </ColumnsDirective>
-                      <Inject
+                      {/* <Inject
                         services={[
                           Page,
                           Sort,
@@ -870,10 +987,10 @@ const EmployeeDetail = (props) => {
                           CommandColumn,
                           Toolbar,
                         ]}
-                      />
+                      /> */}
                     </GridComponent>
                   </CTabPane>
-                  <CTabPane visible={activeKey === 6 ? "true" : "false"}>
+                  {/* <CTabPane visible={activeKey === 6 ? "true" : "false"}>
                     <GridComponent
                       height={300}
                       dataSource={sampleData}
@@ -1000,8 +1117,8 @@ const EmployeeDetail = (props) => {
                           width="100"
                           textAlign="Center"
                         />
-                      </ColumnsDirective>
-                      <Inject
+                      </ColumnsDirective> */}
+                  {/* <Inject
                         services={[
                           Page,
                           Sort,
@@ -1011,10 +1128,10 @@ const EmployeeDetail = (props) => {
                           CommandColumn,
                           Toolbar,
                         ]}
-                      />
-                    </GridComponent>
-                  </CTabPane>
-                  <CTabPane visible={activeKey === 8 ? "true" : "false"}>
+                      /> */}
+                  {/* </GridComponent>
+                  </CTabPane> */}
+                  {/* <CTabPane visible={activeKey === 8 ? "true" : "false"}>
                     <GridComponent
                       height={300}
                       allowPaging={true}
@@ -1091,7 +1208,7 @@ const EmployeeDetail = (props) => {
                         ]}
                       />
                     </GridComponent>
-                  </CTabPane>
+                  </CTabPane> */}
                 </CTabContent>
               </CTabs>
             </CCardBody>

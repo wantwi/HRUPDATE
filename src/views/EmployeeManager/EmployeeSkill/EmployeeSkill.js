@@ -544,6 +544,7 @@ const EmployeeSkill = (props) => {
           </CRow> */}
         </CModalBody>
         <CModalFooter>
+        <CSLab code="HCM-3KZ0O74GRZP-LOLN" style={{ marginRight: 215 }} />
           <CButton color="secondary" onClick={() => setVisible(false)}>
             <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
           </CButton>

@@ -87,6 +87,7 @@ const EmployeeSkill = React.lazy(() =>
 const LeaveTransaction = React.lazy(() =>
   import("./views/EmployeeManager/LeaveTransaction/LeaveTransaction")
 );
+const EmployeeLanguage = React.lazy(() => import("./views/EmployeeManager/EmployeeLanguage/EmployeeLanguage"))
 
 // Position Manager
 const EmployeeMovement = React.lazy(() =>
@@ -377,6 +378,12 @@ const routes = [
     name: "Employee Transaction",
     component: LeaveTransaction,
   },
+  {
+    path: "/employeemanager/employeelanguage",
+    name: "Employee Language",
+    component: EmployeeLanguage,
+  },
+,
 ,
 
   // Bank Information

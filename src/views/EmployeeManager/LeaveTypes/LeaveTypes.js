@@ -57,12 +57,11 @@ import { setChecked } from "@syncfusion/ej2-react-grids";
 import { CFormCheck, CFormInput } from "@coreui/bootstrap-react";
 import {
   GetYearBasis,
-  PostEmployeeLeave,
-  GetAllowedDayBasis,
   GetAvailableDayBasis,
-  GetLeaveTypes,
+  GetAllowedDayBasis,
+  PostEmployeeLeave,
+  SearchLeaveTypes,
 } from "src/reusable/API/EmployeeLeaveTypes";
-
 // {
 //   "employeeId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
 //   "code": "string",
@@ -138,8 +137,8 @@ const LeaveTypes = (props) => {
             response.json().then((response) => {
               // console.log({response});
               if (response && Object.keys(response).length > 0) {
-                dispatch({ type: "set", data: { ...response } });
-                setSubmitData({ ...response });
+                dispatch({ type: "set", data: { ...renderData(response) } });
+                setSubmitData(renderData(response));
                 // setDuplicateData({ ...response })
                 //console.log({ response });
 
@@ -180,7 +179,7 @@ const LeaveTypes = (props) => {
   //     getEmployeeSkills();
   //   }
   // }, [handleId]);
-
+  console.log({ submitdata: setSubmitData });
   const TransLabelByCode = (name) => GetLabelByName(name, lan);
   const searchReset = () => {
     setShow(true);
@@ -233,15 +232,38 @@ const LeaveTypes = (props) => {
   const handleOnSubmit = () => {
     console.log("submit data ", submitData);
 
-    if (!submitData?.skillTypeId || submitData?.skillTypeId === "") {
-      toast.error("Please Select a Skill Type!", toastWarning);
+    if (!submitData?.code || submitData?.code === "") {
+      toast.error("Please enter code!", toastWarning);
       return;
     }
-    // if (!submitData?.payPeriodId || submitData?.payPeriodId === '') {
-    //     //toast.error('Please select a pay period!', toastWarning);
-    //     return;
-    // }
-    // console.log(submitData)
+    if (!submitData?.name || submitData?.name === "") {
+      toast.error("Please enter name!", toastWarning);
+      return;
+    }
+    if (
+      !submitData?.availableDayBasisId ||
+      submitData?.availableDayBasisId === -1
+    ) {
+      toast.error("Please select available day basis!", toastWarning);
+      return;
+    }
+    if (
+      !submitData?.allowedDayBasisId ||
+      submitData?.allowedDayBasisId === -1
+    ) {
+      toast.error("Please select allowed day basis ", toastWarning);
+      return;
+    }
+    if (!submitData?.status || submitData?.status === -1) {
+      toast.error("Please select status", toastWarning);
+      return;
+    }
+    if (!submitData?.yearEndBasisId || submitData?.yearEndBasisId === -1) {
+      toast.error("Please select year end basis", toastWarning);
+      return;
+    }
+
+    console.log(submitData);
     let employeeId = submitData.id;
     //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
     let newData = {
@@ -265,12 +287,16 @@ const LeaveTypes = (props) => {
       .then((response) => {
         response.text().then((data) => {
           if ("" === data) {
-            // toast.success('Earning Mass Update Successful!',);
+            toast.success("Leave Type Added Successfully!!");
             console.log("success");
           } else {
             try {
               data = JSON.parse(data);
-              // toaster(toastId, data?.reason ? data?.reason : "Failed to update Currency", 'error', 4000);
+              toast.error(
+                data?.reason ? data?.reason : "Failed to Add Leave Type",
+                "error",
+                4000
+              );
             } catch (error) {
               console.log(error);
             }
@@ -284,16 +310,79 @@ const LeaveTypes = (props) => {
         console.log("Done");
       });
   }
+  // {
+  //   "id": "88be80f3-37c5-4739-9157-f058a60c7926",
+  //   "code": "LV0001",
+  //   "name": "annual",
+  //   "description": "unknown",
+  //   "availableDayBasis": {
+  //     "id": "dac4936d-a277-4100-816b-0548b720f7c1",
+  //     "code": "ADB00002",
+  //     "name": "Balance"
+  //   },
+  //   "allowedDayBasis": {
+  //     "id": "063999cc-27ce-4bef-9a93-3eae9866dab7",
+  //     "code": "ALDB00001",
+  //     "name": "Calender"
+  //   },
+  //   "status": true,
+  //   "yearEndBasis": {
+  //     "id": "be2223b9-dbf5-4754-a561-a348feb99898",
+  //     "code": "YEB00002",
+  //     "name": "Employee Anniversary"
+  //   },
+  //   "outstandingDayType": true,
+  //   "applyMaximumOutstandingDay": true,
+  //   "maximumNumberOfDays": 5
+  // }
+
+  // {
+  //   "employeeId": "514ba0ac-e65e-4d20-b553-4d61c5f52e9f",
+  //   "code": "LV0001",
+  //   "name": "annual",
+  //   "description": "unknown",
+  //   "availableDayBasisId": "dac4936d-a277-4100-816b-0548b720f7c1",
+  //   "allowedDayBasisId": "063999cc-27ce-4bef-9a93-3eae9866dab7",
+  //   "status": true,
+  //   "yearEndBasisId": "be2223b9-dbf5-4754-a561-a348feb99898",
+  //   "outstandingDayType": true,
+  //   "applyMaximumOutstandingDay": true,
+  //   "maximumNumberOfDays": 5,
+  //   "companyReference": "00001_a01",
+  //   "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+  // }
+
+  const renderData = (userInfo) => {
+    let newObj = {};
+    newObj.employeeId = userInfo?.id || "";
+    newObj.code = userInfo?.code || "";
+    newObj.name = userInfo?.name || "";
+    newObj.description = userInfo?.description || "";
+    newObj.availableDayBasisId = userInfo?.availableDayBasis?.id || "";
+    newObj.allowedDayBasisId = userInfo?.allowedDayBasis?.id || "";
+    newObj.status = userInfo?.status || true;
+    newObj.yearEndBasisId = userInfo?.yearEndBasis?.id || "";
+    newObj.outstandingDayType = userInfo?.outstandingDayType || "";
+    newObj.userId = "3fa85f64-5717-4562-b3fc-2c963f66afa6";
+    newObj.companyReference = "00001_a01";
+    newObj.applyMaximumOutstandingDay =
+      userInfo?.applyMaximumOutstandingDay || false;
+    newObj.maximumNumberOfDays = userInfo?.maximumNumberOfDays || 0;
+
+    return newObj;
+  };
+
   const handleOnChange = (evnt) => {
     //console.log(evnt)
     setSubmitData((data) => {
-      return { ...data, [evnt?.target?.name]: evnt?.target?.value };
+      return renderData({ ...data, [evnt?.target?.name]: evnt?.target?.value });
     });
     dispatch({
       type: "set",
-      data: { ...data, [evnt?.target?.name]: evnt?.target?.value },
+      data: renderData({ ...data, [evnt?.target?.name]: evnt?.target?.value }),
     });
   };
+  console.log({ populate: renderData(submitData) });
 
   return (
     <>
@@ -308,12 +397,12 @@ const LeaveTypes = (props) => {
         <CCol md="4">
           <CFormGroup>
             <CSAutoComplete
-              filterUrl={SearchEmployees(searchInput)}
+              filterUrl={SearchLeaveTypes(searchInput)}
               //filterUrl=''            //filterUrl={SearchInternalCurrencies(searchInput)}
-              placeholder={"Search for employee by name or code"}
+              placeholder={"Search for leave by leave type "}
               handleSelect={handleSearchResultSelect}
               //onChange={()=>handleSearchResultSelect}
-              displayTextKey={"firstName"}
+              displayTextKey={"name"}
               setInput={setSearchInput}
               input={searchInput}
               emptySearchFieldMessage={`Please input 3 or more characters to search`}
@@ -366,6 +455,7 @@ const LeaveTypes = (props) => {
                         <CLabel>
                           {" "}
                           <CSLab code="HCM-7I262DWOU2R-LOLN" />{" "}
+                          <CSRequiredIndicator />
                         </CLabel>
                         <CInput
                           name="code"
@@ -377,10 +467,11 @@ const LeaveTypes = (props) => {
                         <CLabel>
                           {" "}
                           <CSLab code="HCM-VD1B12NKKJ_LANG" />{" "}
+                          <CSRequiredIndicator />
                         </CLabel>
                         <CInput
                           name="name"
-                          value={data?.name || ""}
+                          value={submitData?.name || ""}
                           onChange={handleOnChange}
                         />
                       </CCol>
@@ -392,10 +483,11 @@ const LeaveTypes = (props) => {
                         <CLabel>
                           {" "}
                           <CSLab code="HCM-3J3RLRI3K62_LOLN" />{" "}
+                          <CSRequiredIndicator />
                         </CLabel>
                         <CSelect
                           name="availableDayBasisId"
-                          value={data?.availableDayBasisId || -1}
+                          value={submitData?.availableDayBasisId || -1}
                           onChange={handleOnChange}
                         >
                           {availableDayBasis.map((x, i) => (
@@ -409,9 +501,10 @@ const LeaveTypes = (props) => {
                         <CLabel>
                           {" "}
                           <CSLab code="HCM-LFITDP0PORN_KCMI" />{" "}
+                          <CSRequiredIndicator />
                         </CLabel>
                         <CSelect
-                          name="allowedDayBasisId"
+                          name="allowedDayBasis.name"
                           value={data?.allowedDayBasisId || -1}
                         >
                           {allowedDayBasis.map((x, i) => (
@@ -441,15 +534,16 @@ const LeaveTypes = (props) => {
                         <CLabel>
                           {" "}
                           <CSLab code="HCM-RQB38Y1ZFPO-LANG" />{" "}
+                          <CSRequiredIndicator />
                         </CLabel>
-                        <CSelect>
-                          {["Select Status", "Active", "Inactive"].map(
-                            (x, i) => (
-                              <option key={i} value={x}>
-                                {x}
-                              </option>
-                            )
-                          )}
+                        <CSelect
+                          name="status"
+                          value={data?.status || -1}
+                          onChange={handleOnChange}
+                        >
+                          <option value={-1}>Select Status </option>
+                          <option value={true}>Active</option>
+                          <option value={false}>Inactive</option>
                         </CSelect>
                       </CCol>
                     </CRow>
@@ -467,6 +561,7 @@ const LeaveTypes = (props) => {
                         <CLabel>
                           {" "}
                           <CSLab code="HCM-YRHOMTPDQFB-KCMI" />{" "}
+                          <CSRequiredIndicator />
                         </CLabel>
                         <CSelect
                           name="yearEndBasisId"
@@ -526,6 +621,7 @@ const LeaveTypes = (props) => {
                           />
                           <label class="form-check-label" for="inlineRadio1">
                             <CSLab code="HCM-V97JP40B8M_LANG" />
+                            <CSRequiredIndicator />
                           </label>
                         </div>
                       </CCol>
@@ -542,6 +638,7 @@ const LeaveTypes = (props) => {
                           />
                           <label class="form-check-label" for="inlineRadio2">
                             <CSLab code="HCM-3BTDN1V82EI-HRPR" />
+                            <CSRequiredIndicator />
                           </label>
                         </div>
                       </CCol>
@@ -553,7 +650,7 @@ const LeaveTypes = (props) => {
                           label="HCM-TVARQV319C_PSLL"
                           name="applyMaximumOutstandingDay"
                           onClick={() => setIsChecked(!isChecked)}
-                          value={data?.applyMaximumOutstandingDay || isChecked}
+                          value={data?.applyMaximumOutstandingDay || ""}
                           onChange={handleOnChange}
                         />
                       </CCol>
@@ -579,6 +676,7 @@ const LeaveTypes = (props) => {
               </CRow>
             </CCardBody>
             <CCardFooter>
+              <CSLab code="HCM-3KZ0O74GRZP-LOLN" style={{ marginRight: 215 }} />
               {"Update" === mode ? (
                 <CButton
                   style={{ marginRight: 5 }}

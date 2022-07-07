@@ -437,7 +437,7 @@ const EmployeeHobby = (props) => {
               </CCol> */}
               <CCol md="8">
                 <CLabel htmlFor="Hobby">
-                  <CSLab code="HCM-7NAYG6MHKMA-KCMI" />
+                  <CSLab name="hobby" code="HCM-7NAYG6MHKMA-KCMI" />
                   <CSRequiredIndicator />
                 </CLabel>
                 <CSelect
@@ -456,6 +456,7 @@ const EmployeeHobby = (props) => {
           </CRow>
         </CModalBody>
         <CModalFooter>
+        <CSLab code="HCM-3KZ0O74GRZP-LOLN" style={{ marginRight: 215 }} />
           <CButton color="secondary" onClick={() => setVisible(false)}>
             <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
           </CButton>

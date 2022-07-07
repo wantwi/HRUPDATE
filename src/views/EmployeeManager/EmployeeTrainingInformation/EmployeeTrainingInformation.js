@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { toastWarning } from "src/toasters/Toaster";
 import { CustomAxios } from "src/reusable/API/CustomAxios";
+import CSTrainingInformation from "src/reusable/components/CSTrainingInformation/CSTrainingInformation";
 
 import CIcon from "@coreui/icons-react";
 import {
@@ -22,6 +23,9 @@ import {
   CModalFooter,
   CLabel,
   CTextarea,
+  CCardHeader,
+  CForm,
+  CSelect,
 } from "@coreui/react";
 import {
   ColumnDirective,
@@ -33,7 +37,7 @@ import {
   Page,
   Sort,
   Edit,
-  //CommandColumn
+  CommandColumn,
 } from "@syncfusion/ej2-react-grids";
 import { CardBodyHeight } from "src/reusable/utils/helper";
 import { GetLabelByName } from "src/reusable/configs/config";
@@ -41,14 +45,22 @@ import {
   CSLab,
   CSAutoComplete,
   CSRequiredIndicator,
+  CSAutoCompleteTraInfo,
 } from "../../../reusable/components";
 import { AiOutlinePlus } from "react-icons/ai";
-import { SearchEmployees,SearchEmployeesByNameAndProgram } from "src/reusable/API/EmployeeEndpoints";
+import {
+  SearchEmployees,
+  SearchEmployeesByNameAndProgram,
+} from "src/reusable/API/EmployeeEndpoints";
 import {
   GetRequest,
   HttpAPIRequest,
   PostRequest,
 } from "src/reusable/utils/helper";
+import {
+  PostProgramInfo,
+  GetPrograms,
+} from "src/reusable/API/TrainingInformationEndPoint";
 
 const commandOptions = [
   {
@@ -97,14 +109,13 @@ const EmployeeTrainingInformation = (props) => {
   const [viewinfo, setViewInfo] = useState([]);
   const [providerTypes, setProviderTypes] = useState([]);
   const [ailmentType, setAilmenentType] = useState([]);
+  const [program, setProgram] = useState([]);
 
   const handleSearchResultSelect = (results) => {
     console.log("show results", results);
 
     //setting employee display name on select of suggested item
-    setEmpDisplayName(
-      (prevState) => `${results.firstName} ${results.lastName}`
-    );
+    setEmpDisplayName((prevState) => `${results.name}`);
     // testApi();
     // return;
     setMode("Add");
@@ -115,62 +126,150 @@ const EmployeeTrainingInformation = (props) => {
     if (results?.code) {
       setSearchResult(results);
 
-      GetRequest()
-        .then((response) => {
-          // toast.dismiss(toastId);
-          if (response.ok) {
-            response.json().then((response) => {
-              // console.log({response});
-              if (response && Object.keys(response).length > 0) {
-                dispatch({ type: "set", data: { ...response } });
-                setSubmitData({ ...response });
-                // setDuplicateData({ ...response })
-                //console.log({ response });
+      // GetRequest()
+      //   .then((response) => {
+      //     // toast.dismiss(toastId);
+      //     if (response.ok) {
+      //       response.json().then((response) => {
+      //         // console.log({response});
+      //         if (response && Object.keys(response).length > 0) {
+      //           dispatch({ type: "set", data: { ...response } });
+      //           setSubmitData({ ...response });
+      //           // setDuplicateData({ ...response })
+      //           //console.log({ response });
 
-                //let rates = response?.rates;
+      //           //let rates = response?.rates;
 
-                // setExchangeRate(rates);
-                setShow(false);
-                setMode("Update");
-              } else {
-                setMode("Add");
-                setShow(false);
-                // dispatch({ type: 'set', data: { ...results, isHomeCurrency } });
-                // setSubmitData({ ...results, isHomeCurrency });
-              }
-            });
-          }
-        })
-        .catch((err) => {
-          // console.log(err);
-          // toaster(toastId, "Failed to retrieve details", 'error', 4000);
-        });
+      //           // setExchangeRate(rates);
+      //           setShow(false);
+      //           setMode("Update");
+      //         } else {
+      //           setMode("Add");
+      //           setShow(false);
+      //           // dispatch({ type: 'set', data: { ...results, isHomeCurrency } });
+      //           // setSubmitData({ ...results, isHomeCurrency });
+      //         }
+      //       });
+      //     }
+      //   })
+      // .catch((err) => {
+      //   // console.log(err);
+      //   // toaster(toastId, "Failed to retrieve details", 'error', 4000);
+      // });
     }
   };
+  console.log({ submitData });
 
   const TransLabelByCode = (name) => GetLabelByName(name, lan);
 
-  //Get employee skill details
-  const getEmployeeSkills = async () => {
+  const MultipleGetRequests = async () => {
     try {
-      const request = await CustomAxios.get(`EmployeeSkills/${handleId}`);
+      let request = [HttpAPIRequest("GET", GetPrograms())];
+      const multipleCall = await Promise.allSettled(request);
+      console.log(multipleCall[0].value);
+
+      setProgram([
+        { id: "-1", name: `Select Program` },
+        ...multipleCall[0].value,
+      ]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    MultipleGetRequests();
+  }, []);
+
+  // Get employee skill details
+  const getProgramById = async () => {
+    try {
+      const request = await CustomAxios.get(
+        `EmployeeTraining/Program/${handleId}`
+      );
 
       const response = request.data;
       console.log("emp response:", response);
-      setViewInfo((prevState) => response);
+      setViewInfo([response]);
     } catch (error) {
       console.log({ error });
     }
   };
   useEffect(() => {
     if (handleId !== "") {
-      getEmployeeSkills();
+      getProgramById();
     }
   }, [handleId]);
+  console.log(handleId);
 
-  useEffect(() => {
-    console.log("check view info ", viewinfo);
-  });
+  //Handles Submit
+  const handleOnSubmit = () => {
+    console.log("submit data ", submitData);
+
+    if (!submitData?.skillTypeId || submitData?.skillTypeId === "") {
+      toast.error("Please Select a Skill Type!", toastWarning);
+      return;
+    }
+    if (!submitData?.description || submitData?.description === "") {
+      toast.error("Please Enter Description!", toastWarning);
+      return;
+    }
+    // console.log(submitData)
+    let employeeId = submitData.id;
+    //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
+    let newData = {
+      ...submitData,
+      userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      userName: "string",
+      CompanyReference: "00001_A01",
+      employeeId,
+    };
+    //let finalData = JSON.stringify(newData)
+    // console.log(finalData)
+    // 'Add' === mode ? AddGLAccount(newData) : updateGLAccount(newData);
+    postProgramInfo(newData);
+  };
+  console.log({ viewinfo });
+  //Post Employee Skill
+  function postProgramInfo(data) {
+    console.log("post data", data);
+    PostRequest(PostProgramInfo(), { data: data })
+      .then((response) => {
+        response.text().then((data) => {
+          if ("" == data) {
+            toast.success("Program Added Successfully!");
+            console.log("success");
+          } else {
+            try {
+              data = JSON.parse(data);
+              toast.error(
+                data?.reason ? data?.reason : "Failed to Add Program",
+                "error",
+                400
+              );
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        });
+      })
+      .catch((err) => {
+        console.log({ err });
+      })
+      .finally(() => {
+        console.log("Done");
+      });
+  }
+  const handleOnChange = (evnt) => {
+    //console.log(evnt)
+    setSubmitData((data) => {
+      return { ...data, [evnt?.target?.name]: evnt?.target?.value };
+    });
+    dispatch({
+      type: "set",
+      data: { ...data, [evnt?.target?.name]: evnt?.target?.value },
+    });
+  };
 
   return (
     <>
@@ -184,13 +283,13 @@ const EmployeeTrainingInformation = (props) => {
       <CRow>
         <CCol md="4">
           <CFormGroup>
-            <CSAutoComplete
+            <CSTrainingInformation
               filterUrl={SearchEmployeesByNameAndProgram(searchInput)}
               //filterUrl=''            //filterUrl={SearchInternalCurrencies(searchInput)}
               placeholder={"Search for employee by name or code"}
               handleSelect={handleSearchResultSelect}
               //onChange={()=>handleSearchResultSelect}
-              displayTextKey={"firstName"}
+              displayTextKey={"name"}
               setInput={setSearchInput}
               input={searchInput}
               emptySearchFieldMessage={`Please input 3 or more characters to search`}
@@ -207,6 +306,7 @@ const EmployeeTrainingInformation = (props) => {
               mode={mode}
               setMode={setMode}
               handleId={setHandleId}
+              programIdGet={getProgramById}
               // reset={handleReset}
             />
           </CFormGroup>
@@ -214,10 +314,10 @@ const EmployeeTrainingInformation = (props) => {
         <CCol md="8" className="text-right"></CCol>
         <CCol xs="12" hidden={show}>
           <CCard>
-            <CCardBody style={{ height: CardBodyHeight, overflowY: "auto" }}>
+            <CCardHeader>
               <CFormGroup row>
                 <CCol md="4">
-                  <b>Employee:</b>{" "}
+                  <b>Program:</b>{" "}
                   <span
                     style={{
                       textDecoration: "underline dotted",
@@ -249,52 +349,51 @@ const EmployeeTrainingInformation = (props) => {
                   </CButton>
                 </CCol>
               </CFormGroup>
-              <CCol md="12">
-                <GridComponent
-                  dataSource={{}}
-                  allowPaging={true}
-                  pageSettings={{ pageSize: 6 }}
-                  editSettings={editOptions}
-                >
-                  <ColumnsDirective>
-                    <ColumnDirective
-                      field={"id"}
-                      headerText={"ID"}
-                      width="100"
-                      visible={false}
-                    />
-                    <ColumnDirective
-                      field={"employeeID"}
-                      headerText={GetLabelByName("Employee ID")}
-                      width="100"
-                      visible={false}
-                    />
-                    <ColumnDirective
-                      field={"programCode"}
-                      headerText={GetLabelByName("HCM-YTBRY0XIPAH_HRPR", lan)}
-                      width="100"
-                    />
-                    <ColumnDirective
-                      field={"programName"}
-                      headerText={GetLabelByName("HCM-OGH7US2WKV-LOLN", lan)}
-                      width="100"
-                    />
-                    <ColumnDirective
-                      field={"completedBy"}
-                      headerText={GetLabelByName("HCM-EAHZHCC8S3F_LOLN", lan)}
-                      width="100"
-                    />
-                    <ColumnDirective
-                      commands={commandOptions}
-                      headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
-                      width="100"
-                      textAlign="Center"
-                    />
-                  </ColumnsDirective>
-                  <Inject services={[Page, Sort, Filter, Group, Edit]} />
-                </GridComponent>
-              </CCol>
-            </CCardBody>
+            </CCardHeader>
+
+            <CForm action="" method="post">
+              <GridComponent
+                dataSource={viewinfo}
+                height={500}
+                allowPaging={true}
+                pageSettings={{ pageSize: 10 }}
+                editSettings={editOptions}
+              >
+                <ColumnsDirective>
+                  <ColumnDirective
+                    field="id"
+                    headerText="ID"
+                    width="100"
+                    visible={false}
+                  />
+                  <ColumnDirective
+                    field="name"
+                    headerText={GetLabelByName("HCM-OGH7US2WKV-LOLN", lan)}
+                    width="100"
+                  />
+                  <ColumnDirective
+                    field="code"
+                    headerText={GetLabelByName("HCM-YTBRY0XIPAH_HRPR", lan)}
+                    width="100"
+                  />
+
+                  {/* <ColumnDirective
+                    field="completedBy"
+                    headerText={GetLabelByName("HCM-EAHZHCC8S3F_LOLN", lan)}
+                    width="100"
+                  /> */}
+                  {/* <ColumnDirective
+                    commands={commandOptions}
+                    headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
+                    width="100"
+                    textAlign="Center"
+                  /> */}
+                </ColumnsDirective>
+                <Inject
+                  services={[Page, Sort, Filter, Group, Edit, CommandColumn]}
+                />
+              </GridComponent>
+            </CForm>
           </CCard>
         </CCol>
       </CRow>
@@ -317,30 +416,40 @@ const EmployeeTrainingInformation = (props) => {
                 <CSLab code="HCM-B0VG88EHYDM_KCMI" />
                 <CSRequiredIndicator />
               </CLabel>
-              <CInput className="" name="employeeId" />
+              <CSelect
+                name="programId"
+                value={data?.programId || -1}
+                onChange={handleOnChange}
+              >
+                {program.map((x, i) => (
+                  <option key={i} value={x.id}>
+                    {x.name}
+                  </option>
+                ))}
+              </CSelect>
             </CCol>
             <CCol md="5">
               <CLabel>
-                <CSLab code="HCM-YTBRY0XIPAH_HRPR" />
+                <CSLab code="HCM-K85NF9HWVXC-LANG" />
                 <CSRequiredIndicator />
               </CLabel>
-              <CInput className="" name="ProgramCode" type="text" />
+              <CInput className="" name="startDate" type="date" />
             </CCol>
           </CRow>
           <CRow>
             <CCol md="5">
               <CLabel>
-                <CSLab code="HCM-OGH7US2WKV-LOLN" />
+                <CSLab code="HCM-S4N9DCXVMJ" />
                 <CSRequiredIndicator />
               </CLabel>
-              <CInput className="" name="programName" type="text" />
+              <CInput className="" name="endDate" type="date" />
             </CCol>
             <CCol md="5">
               <CLabel>
                 <CSLab code="HCM-EAHZHCC8S3F_LOLN" />
                 <CSRequiredIndicator />
               </CLabel>
-              <CInput className="" name="Completed By" type="text" />
+              <CInput className="" name="createTraningEmployees" type="text" />
             </CCol>
           </CRow>
 
@@ -360,7 +469,13 @@ const EmployeeTrainingInformation = (props) => {
           <CButton color="secondary" onClick={() => setVisible(false)}>
             <CSLab code="HCM-9E3ZC2E1S0N-LASN" />
           </CButton>
-          <CButton color="primary">
+          <CButton
+            color="primary"
+            onClick={() => {
+              setVisible(false);
+              handleOnSubmit();
+            }}
+          >
             <CSLab code="HCM-HGUHIR0OK6T" />
           </CButton>
         </CModalFooter>

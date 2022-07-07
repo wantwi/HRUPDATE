@@ -14,3 +14,5 @@ export const GetLeaveTypes = () =>
   `${BaseURL}EmployeeLeave/LeaveType/dropdown-types?companyReference=00001_a01`;
 
 export const PostEmployeeLeave = () => `${BaseURL}EmployeeLeave/LeaveType`;
+
+export const SearchLeaveTypes = (filter) => `${BaseURL}EmployeeLeave/LeaveType?filter=${filter}`;

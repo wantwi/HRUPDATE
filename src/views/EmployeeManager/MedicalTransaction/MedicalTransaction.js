@@ -450,7 +450,7 @@ const MedicalTransaction = () => {
         <CModalBody>
           <CRow className={"bottom-spacing"}>
             <>
-              <CCol md="5">
+              <CCol md="4">
                 <CLabel htmlFor="ailmentTypeId">
                   <CSLab code="HCM-QRFDOPK87VI_LASN" />
                   <CSRequiredIndicator />
@@ -467,7 +467,7 @@ const MedicalTransaction = () => {
                   ))}
                 </CSelect>
               </CCol>
-              <CCol md="5">
+              <CCol md="4">
                 <CLabel htmlFor="HealthCareProvider">
                   <CSLab code="HCM-D7HKVE8UGRI_LOLN" />
                   <CSRequiredIndicator />
@@ -488,7 +488,7 @@ const MedicalTransaction = () => {
           </CRow>
           <CRow className={"bottom-spacing"}>
             <>
-              <CCol md="5">
+              <CCol md="4">
                 <CLabel htmlFor="dateOfService">
                   <CSLab code="HCM-I23QDSWPM1D_KCM" />
                   <CSRequiredIndicator />
@@ -503,7 +503,7 @@ const MedicalTransaction = () => {
                   max={moment().format("YYYY-MM-DD")}
                 />
               </CCol>
-              <CCol md="5">
+              <CCol md="4">
                 <CLabel htmlFor="Cost">
                   <CSLab code="HCM-3OZ72JARXE-KCMI" />
                   <CSRequiredIndicator />
@@ -534,6 +534,7 @@ const MedicalTransaction = () => {
           </CRow>
         </CModalBody>
         <CModalFooter>
+          <CSLab code="HCM-3KZ0O74GRZP-LOLN" style={{ marginRight: 215 }} />
           <CButton color="secondary" onClick={() => setVisible(false)}>
             <CSLab code="HCM-MELULU9B6R_KCMI" />
           </CButton>

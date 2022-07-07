@@ -57,6 +57,7 @@ import {
   CSLab,
   CSAutoComplete,
   CSRequiredIndicator,
+  CSLineLabel,
 } from "../../../reusable/components";
 import {
   CardBodyHeight,
@@ -65,14 +66,14 @@ import {
   PostRequest,
 } from "src/reusable/utils/helper";
 import { SearchEmployees } from "src/reusable/API/EmployeeEndpoints";
-import {
-  PostAccidentTransaction,
-  GetAccidentTypes,
-  GetEmployeeAccidentByEmployeeId,
-} from "src/reusable/API/AccidentTransaction";
+
 import { CustomAxios } from "src/reusable/API/CustomAxios";
 import { BaseURL } from "src/reusable/API/base";
 import { toast } from "react-toastify";
+import {
+  PostEmployeeLanguage,
+  GetEmployeeLanguagesType,
+} from "src/reusable/API/EmployeeLanguage";
 
 const editOptions = {
   allowEditing: false,
@@ -100,7 +101,7 @@ const commandOptions = [
   },
 ];
 
-const AccidentTransaction = () => {
+const EmployeeLanguage = () => {
   const lan = useSelector((state) => state.language);
   const [show, setShow] = useState(true);
   const [visible, setVisible] = useState(false);
@@ -120,121 +121,20 @@ const AccidentTransaction = () => {
   const [handleId, setHandleId] = useState("");
   const [titles, setProfessionalTitle] = useState([]);
   const [accidentTypes, setAccidentTypes] = useState([]);
-  const [getEmployeeAccident, setEmployeeAccident] = useState([]);
 
-  //fucntion for multiple get (dropDown list in the form)
-  const MultipleGetRequests = async () => {
-    try {
-      let request = [HttpAPIRequest("GET", GetAccidentTypes())];
-      const multipleCall = await Promise.allSettled(request);
-      console.log(multipleCall[0].value);
-
-      setAccidentTypes([
-        { id: "-1", name: `Select Accident Type` },
-        ...multipleCall[0].value,
-      ]);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    MultipleGetRequests();
-  }, []);
-
-  // get employee by id for grid view
-  const getEmployyeAccidentById = async () => {
-    try {
-      const request = await CustomAxios.get(
-        `${BaseURL}EmployeeAccident/${handleId}`
-      );
-      const respond = request.data;
-      setEmployeeAccident(respond);
-      console.log("responds", respond);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  //handles form submit
-  const handleOnSubmit = () => {
-    console.log(submitData);
-
-    if (!submitData?.accidentTypeId || submitData?.accidentTypeId === -1) {
-      toast.error("Please Select Accident Type!", toastWarning);
-      return;
-    }
-    if (
-      !submitData?.LocationofAccident ||
-      submitData?.LocationofAccident === ""
-    ) {
-      toast.error("Please Enter Location!", toastWarning);
-      return;
-    }
-    if (!submitData?.DateofAccident || submitData?.DateofAccident === "") {
-      toast.error("Please Select Accident Date!", toastWarning);
-      return;
-    }
-    if (!submitData?.DateInformed || submitData?.DateInformed === "") {
-      toast.error("Please select a Date!", toastWarning);
-      return;
-    }
-    if (!submitData?.note || submitData?.note === "") {
-      toast.error("Please Provide Description!", toastWarning);
-      return;
-    }
-
-    // console.log(submitData)
-
-    let employeeId = submitData.id;
-    let newData = {
-      ...submitData,
-      userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      userName: "string",
-      CompanyReference: "00001_A01",
-      employeeId,
-    };
-
-    postAccidentTrans(newData);
-  };
-
-  //funtion to handle post
-  function postAccidentTrans(data) {
-    console.log(data);
-    PostRequest(PostAccidentTransaction(), { data: data })
-      .then((response) => {
-        response.text().then((data) => {
-          if ("" === data) {
-            toast.success("Accident Transaction Added Successfully!");
-            console.log("success");
-            getEmployyeAccidentById();
-          } else {
-            try {
-              data = JSON.parse(data);
-              toast.error(
-                data?.reason
-                  ? data?.reason
-                  : "Failed to Add Accident Transaction",
-                "error",
-                4000
-              );
-            } catch (error) {
-              console.log("MODEL", error);
-            }
-          }
-        });
-      })
-      .catch((err) => {
-        console.log({ err });
-      })
-      .finally(() => {
-        console.log("Done");
-      });
-  }
+  const [employeeLanguage, setEmployeelanguage] = useState([]);
+  const [employeeLanguageType, setEmployeelanguageType] = useState([]);
+  const [employeeName, setEmpDisplayName] = useState("");
 
   const handleSearchResultSelect = (results) => {
     console.log("show results", results);
 
+    //setting employee display name on select of suggested item
+    setEmpDisplayName(
+      (prevState) => `${results.firstName} ${results.lastName}`
+    );
+    // testApi();
+    // return;
     setMode("Add");
     setShow(false);
     dispatch({ type: "set", data: { ...results } });
@@ -248,46 +148,143 @@ const AccidentTransaction = () => {
           // toast.dismiss(toastId);
           if (response.ok) {
             response.json().then((response) => {
+              // console.log({response});
               if (response && Object.keys(response).length > 0) {
                 dispatch({ type: "set", data: { ...response } });
                 setSubmitData({ ...response });
+                // setDuplicateData({ ...response })
+                //console.log({ response });
 
+                //let rates = response?.rates;
+
+                // setExchangeRate(rates);
                 setShow(false);
                 setMode("Update");
               } else {
                 setMode("Add");
                 setShow(false);
+                // dispatch({ type: 'set', data: { ...results, isHomeCurrency } });
+                // setSubmitData({ ...results, isHomeCurrency });
               }
             });
           }
         })
-        .catch((err) => {});
+        .catch((err) => {
+          // console.log(err);
+          // toaster(toastId, "Failed to retrieve details", 'error', 4000);
+        });
     }
   };
-  const testApi = async () => {
+
+  //Get employee skill details
+  const getEmployeelanguage = async () => {
     try {
-      const request = await CustomAxios.get(
-        `http://192.168.0.48:5100/EmployeeBio/${handleId}`
-      );
+      const request = await CustomAxios.get(`EmployeeLanguage/${handleId}`);
 
-      const res = request.data;
-
-      setViewInfo([res]);
+      const response = request.data;
+      console.log("emp response:", response);
+      setViewInfo((prevState) => response);
     } catch (error) {
       console.log({ error });
     }
   };
-
   useEffect(() => {
     if (handleId !== "") {
-      testApi();
-      getEmployyeAccidentById();
-      console.log(viewinfo);
+      getEmployeelanguage();
     }
   }, [handleId]);
-  const employeeName = viewinfo.map((x) => x.firstName + " " + x.lastName);
-  const TransLabelByCode = (name) => GetLabelByName(name, lan);
 
+  useEffect(() => {
+    console.log("check view info ", viewinfo);
+  });
+
+  //Drop down list for hobby types
+  const MultipleGetRequests = async () => {
+    try {
+      let request = [HttpAPIRequest("GET", GetEmployeeLanguagesType())];
+      const multipleCall = await Promise.allSettled(request);
+      console.log(multipleCall[0].value);
+
+      setEmployeelanguageType([
+        { id: "-1", name: `Select Language` },
+        ...multipleCall[0].value,
+      ]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    MultipleGetRequests();
+  }, []);
+
+  //Handles Submit
+  const handleOnSubmit = () => {
+    console.log("submit data ", submitData);
+
+    if (!submitData?.languageId || submitData?.languageId === -1) {
+      toast.error("Please Select a Language!", toastWarning);
+      return;
+    }
+    if (!submitData?.read || submitData?.read === -1) {
+      toast.error("Please Select Ability(Reading)!", toastWarning);
+      return;
+    }
+    if (!submitData?.write || submitData?.write === -1) {
+      toast.error("Please Select Ability(Writing)!", toastWarning);
+      return;
+    }
+    if (!submitData?.speak || submitData?.speak === -1) {
+      toast.error("Please Select Ability(Speaking)!", toastWarning);
+      return;
+    }
+    // console.log(submitData)
+    let employeeId = submitData.id;
+    //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
+    let newData = {
+      ...submitData,
+      userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      userName: "string",
+      CompanyReference: "00001_A01",
+      employeeId,
+    };
+    //let finalData = JSON.stringify(newData)
+    // console.log(finalData)
+    // 'Add' === mode ? AddGLAccount(newData) : updateGLAccount(newData);
+    postEmployeeLanguage(newData);
+  };
+
+  //Post Employee Skill
+  function postEmployeeLanguage(data) {
+    console.log("post data", data);
+    PostRequest(PostEmployeeLanguage(), { data: data })
+      .then((response) => {
+        response.text().then((data) => {
+          if ("" == data) {
+            toast.success("Employee Language Added Successfully!");
+            console.log("success");
+            getEmployeelanguage();
+          } else {
+            try {
+              data = JSON.parse(data);
+              toast.error(
+                data?.reason ? data?.reason : "Failed to Add Employee Language",
+                "error",
+                400
+              );
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        });
+      })
+      .catch((err) => {
+        console.log({ err });
+      })
+      .finally(() => {
+        console.log("Done");
+      });
+  }
   const handleOnChange = (evnt) => {
     //console.log(evnt)
     setSubmitData((data) => {
@@ -298,15 +295,18 @@ const AccidentTransaction = () => {
       data: { ...data, [evnt?.target?.name]: evnt?.target?.value },
     });
   };
-  console.log("from Db: ", getEmployeeAccident);
 
-  console.log({ submitdatas: data });
+  // console.log(" skiltype", skillType);
+  // const canSave = [skill].every(Boolean);
+
+  const TransLabelByCode = (name) => GetLabelByName(name, lan);
+
   return (
     <>
       <CRow>
         <CCol xs="12">
           <h5>
-            <CSLab code="HCM-Z0GANCGNQO-LOLN" />
+            <CSLab code="HCM-2YN2O0KO4YX-LASN" />
           </h5>
         </CCol>
       </CRow>
@@ -369,7 +369,7 @@ const AccidentTransaction = () => {
                     }}
                   >
                     <AiOutlinePlus />
-                    <CSLab code="HCM-7SLZ9PA5A0V_KCMI" />{" "}
+                    <CSLab code="HCM-I5D6MXXMDOO_LANG" />{" "}
                   </CButton>
                 </CCol>
               </CFormGroup>
@@ -378,7 +378,7 @@ const AccidentTransaction = () => {
 
             <GridComponent
               height={"500"}
-              dataSource={getEmployeeAccident}
+              dataSource={viewinfo}
               allowPaging={true}
               pageSettings={{ pageSize: 10 }}
               editSettings={editOptions}
@@ -391,27 +391,23 @@ const AccidentTransaction = () => {
                   visible={false}
                 />
                 <ColumnDirective
-                  field="accidentTypesDto.name"
-                  headerText={GetLabelByName("HCM-EZWGSC0K0OK_KCMI", lan)}
+                  field="language.name"
+                  headerText={GetLabelByName("HCM-CPUHVEW404-LOLN", lan)}
                   width="100"
                 />
                 <ColumnDirective
-                  field="dateOfAccident"
-                  headerText={GetLabelByName("HCM-JVUPJOPETGK-LANG", lan)}
-                  type="date"
-                  format="dd/MMM/yyyy"
+                  field="read"
+                  headerText={GetLabelByName("HCM-1TTFQIMXC5L_LASN", lan)}
                   width="100"
                 />
                 <ColumnDirective
-                  field="locationOfAccident"
-                  headerText={GetLabelByName("HCM-QJCY2VRWA7_LOLN", lan)}
+                  field="write"
+                  headerText={GetLabelByName("HCM-D7I7MVGUUNL_KCMI", lan)}
                   width="100"
                 />
                 <ColumnDirective
-                  field="dateInformed"
-                  headerText={GetLabelByName("HCM-GOO3SSJSCG5_LANG", lan)}
-                  type="date"
-                  format="dd/MMM/yyyy"
+                  field="speak"
+                  headerText={GetLabelByName("HCM-RN4OAN30KMI-KCMI", lan)}
                   width="100"
                 />
                 HCM-GOO3SSJSCG5_LANG
@@ -439,91 +435,102 @@ const AccidentTransaction = () => {
         <CModalHeader style={{ position: "right" }}>
           <CModalTitle>
             {" "}
-            <CSLab code="HCM-7SLZ9PA5A0V_KCMI" />{" "}
+            <CSLab code="HCM-I5D6MXXMDOO_LANG" />{" "}
           </CModalTitle>
         </CModalHeader>
         <CModalBody>
           <CRow className={"bottom-spacing"}>
             <>
               <CCol md="6">
-                <CLabel htmlFor="AccidentType">
-                  <CSLab code="HCM-LPG0UTX0P7H-HRPR" />
-                  <CSRequiredIndicator />
+                <CLabel htmlFor="languageType">
+                  <CSLab code="HCM-3WG87DYRWCR-LOLN" /> <CSRequiredIndicator />
                 </CLabel>
                 <CSelect
-                  name="accidentTypeId"
-                  value={data?.accidentTypeId || ""}
+                  name="languageId"
+                  value={data?.languageId || ""}
                   onChange={handleOnChange}
                 >
-                  {accidentTypes.map((x, i) => (
+                  {employeeLanguageType.map((x, i) => (
                     <option key={i} value={x.id}>
                       {x.name}
                     </option>
                   ))}
                 </CSelect>
               </CCol>
-              <CCol md="6">
-                <CLabel htmlFor="LocationofAccident">
-                  <CSLab code="HCM-QJCY2VRWA7_LOLN" />
-                  <CSRequiredIndicator />
-                </CLabel>
-                <CInput
-                  id="LocationofAccident"
-                  name="LocationofAccident"
-                  type="text"
-                  value={data?.LocationofAccident || ""}
-                  onChange={handleOnChange}
-                ></CInput>
-              </CCol>
             </>
           </CRow>
           <CRow className={"bottom-spacing"}>
             <>
-              <CCol md="6">
-                <CLabel htmlFor="DateofAccident">
-                  <CSLab code="HCM-JVUPJOPETGK-LANG" />
-                  <CSRequiredIndicator />
-                </CLabel>
-                <CInput
-                  className=""
-                  id="DateofAccident"
-                  name="DateofAccident"
-                  value={data?.DateofAccident || -1}
-                  type="date"
-                  onChange={handleOnChange}
-                  max={moment().format("YYYY-MM-DD")}
-                />
+              <CCol md="12" style={{ marginTop: "5px" }}>
+                <CSLineLabel name={"Proficiency"} />
               </CCol>
-              <CCol md="6">
-                <CLabel htmlFor="DateInformed">
-                  <CSLab code="HCM-GOO3SSJSCG5_LANG" />
-                  <CSRequiredIndicator />
+              <CCol md="4">
+                <CLabel>
+                  <CSLab code="HCM-NZQAVOJB6PG_LANG" /> <CSRequiredIndicator />
                 </CLabel>
-                <CInput
-                  className=""
-                  id="DateInformed"
-                  type="date"
-                  name="DateInformed"
-                  value={data?.DateInformed || -1}
+                <CSelect
+                  name="read"
+                  value={data?.read || -1}
                   onChange={handleOnChange}
-                  max={moment().format("YYYY-MM-DD")}
-                />
+                >
+                  {/* {employeeLanguageType.map((x, i) => (
+                    <option key={i} value={x.id}>
+                      {x.name}
+                    </option>
+                  ))} */}
+                  <option value={-1}>Select Ability</option>
+                  <option value={1}>Beginner</option>
+                  <option value={2}>Intermediate</option>
+                  <option value={3}>Advanced</option>
+                  <option value={4}>Fluent</option>
+                  <option value={5}>Native</option>
+                </CSelect>
+              </CCol>
+              <CCol md="4">
+                <CLabel>
+                  <CSLab code="HCM-D7I7MVGUUNL_KCMI" /> <CSRequiredIndicator />
+                </CLabel>
+                <CSelect
+                  name="write"
+                  value={data?.write || -1}
+                  onChange={handleOnChange}
+                >
+                  {/* {employeeLanguageType.map((x, i) => (
+                    <option key={i} value={x.id}>
+                      {x.name}
+                    </option>
+                  ))} */}
+                  <option value={-1}>Select Ability</option>
+                  <option value={1}>Beginner</option>
+                  <option value={2}>Intermediate</option>
+                  <option value={3}>Advanced</option>
+                  <option value={4}>Fluent</option>
+                  <option value={5}>Native</option>
+                </CSelect>
+              </CCol>
+              <CCol md="4">
+                <CLabel>
+                  <CSLab code="HCM-3OMR0504EHX-HRPR" /> <CSRequiredIndicator />
+                </CLabel>
+                <CSelect
+                  name="speak"
+                  value={data?.write || -1}
+                  onChange={handleOnChange}
+                >
+                  {/* {employeeLanguageType.map((x, i) => (
+                    <option key={i} value={x.id}>
+                      {x.name}
+                    </option>
+                  ))} */}
+                  <option value={-1}>Select Ability</option>
+                  <option value={1}>Beginner</option>
+                  <option value={2}>Intermediate</option>
+                  <option value={3}>Advanced</option>
+                  <option value={4}>Fluent</option>
+                  <option value={5}>Native</option>
+                </CSelect>
               </CCol>
             </>
-          </CRow>
-          <CRow>
-            <CCol md="6">
-              <CLabel>
-                <CSLab code="HCM-8G6FY80Q2NM-HRPR" />
-              </CLabel>
-              <CTextarea
-                id="Remarks"
-                name="note"
-                value={data?.note || ""}
-                onChange={handleOnChange}
-                style={{ height: "60px", resize: "none" }}
-              ></CTextarea>
-            </CCol>
           </CRow>
         </CModalBody>
         <CModalFooter>
@@ -546,4 +553,4 @@ const AccidentTransaction = () => {
   );
 };
 
-export default AccidentTransaction;
+export default EmployeeLanguage;

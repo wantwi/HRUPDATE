@@ -426,23 +426,23 @@ const EmployeeDetail = (props) => {
         });
     }
   };
+  console.log({ submitData });
+  // const getEmployeeDetails = async () => {
+  //   try {
+  //     const request = await CustomAxios.get(`EmployeeBio/${handleId}`);
+  //     const response = request.data;
+  //     setViewInfo(response);
+  //     console.log(request);
+  //     // console.log({ searchInput });
+  //   } catch (error) {
+  //     console.log({ error });
+  //   }
+  // };
 
-  const getEmployeeDetails = async () => {
-    try {
-      const request = await CustomAxios.get(`EmployeeBio/${handleId}`);
-      const response = request.data;
-      setViewInfo(response);
-      console.log(request);
-      // console.log({ searchInput });
-    } catch (error) {
-      console.log({ error });
-    }
-  };
-
-  useEffect(() => {
-    getEmployeeDetails();
-    console.log(viewinfo);
-  }, []);
+  // useEffect(() => {
+  //   getEmployeeDetails();
+  //   console.log(viewinfo);
+  // }, []);
 
   const handleAddNewRecord = () => {
     setMode("Add");
@@ -617,7 +617,7 @@ const EmployeeDetail = (props) => {
                               </CLabel>
                               <CInput
                                 name="firstName"
-                                value={data?.firstName || ""}
+                                value={submitData?.firstName || ""}
                                 onChange={handleOnChange}
                               />
                             </CCol>
@@ -1428,7 +1428,6 @@ const EmployeeDetail = (props) => {
                             <CCol md="6">
                               <CLabel>
                                 <CSLab code="HCM-DMPCPBT8I4K-LOLN" />
-                               
                               </CLabel>
                               <CSelect
                                 name="network"
