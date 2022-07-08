@@ -70,6 +70,7 @@ import {
   GetEmployeeGuarantor,
 } from "src/reusable/API/EmployeeRelationshipsEndPoint";
 import axios from "axios";
+import { RelationTypes } from "src/reusable/API/EmployeeFamilyEndPoint";
 
 const commandOptions = [
   {
@@ -162,7 +163,7 @@ const EmployeeDetail = (props) => {
   const [editOptions] = useState({
     allowEditing: false,
     allowAdding: true,
-    allowDeleting: false,
+    allowDeleting: true,
     allowEditOnDblClick: false,
   });
   const [fname, setfname] = useState("");
@@ -196,6 +197,7 @@ const EmployeeDetail = (props) => {
   const [guarantor, setGetGuarantor] = useState([]);
   const [benefiaciary, setGetBenefiary] = useState([]);
   const [dependant, setDependant] = useState([]);
+  const [relationTypes, setRelationTypes] = useState([]);
 
   const canSave = [fname, lname, relation, phone, address].every(Boolean);
 
@@ -234,7 +236,7 @@ const EmployeeDetail = (props) => {
     if (firstGrid && args.item.id === "saveItems") {
       console.log("first");
       let request = axios.post();
-      console.log({ first: firstGrid?.current?.currentViewData });
+      console.log({ first: firstGrid?.current?.currentViewData[0] });
     }
 
     //console.log({ value: firstGrid });
@@ -341,6 +343,7 @@ const EmployeeDetail = (props) => {
         HttpAPIRequest("GET", GetEmployeeDependant(handleId)),
         HttpAPIRequest("GET", GetEmployeeEmergencyContact(handleId)),
         HttpAPIRequest("GET", GetEmployeeGuarantor(handleId)),
+        HttpAPIRequest("GET", RelationTypes()),
       ];
       const multipleCall = await Promise.allSettled(request);
       console.log(multipleCall[0].value);
@@ -349,12 +352,15 @@ const EmployeeDetail = (props) => {
       setDependant([...multipleCall[1].value]);
       setEmergencyContact([...multipleCall[2].value]);
       setGetGuarantor([...multipleCall[3].value]);
+      setRelationTypes([...multipleCall[4].value]);
     } catch (error) {
       console.log(error);
     }
   };
   const integerParams = {
     params: {
+      // decimals: 1,
+      format: "N",
       min: 0,
     },
   };
@@ -362,10 +368,19 @@ const EmployeeDetail = (props) => {
   useEffect(() => {
     MultipleGetRequests();
   }, [handleId]);
-  console.log({ emergency: emergencyContact });
-  console.log({ guarant: guarantor });
-  console.log({ benefits: benefiaciary });
-  console.log({ dependands: dependant });
+  // console.log({ emergency: emergencyContact });
+  // console.log({ guarant: guarantor });
+  // console.log({ benefits: benefiaciary });
+  // console.log({ dependands: dependant });
+  console.log({ relation: relationTypes });
+
+  const handleRelationTypes = () => {
+    const data = {
+      dataSource: new DataManager([relationTypes]),
+      fields: { text: relationTypes.name, value: relationTypes.id },
+      query: new Query(),
+    };
+  };
 
   return (
     <>
@@ -531,14 +546,12 @@ const EmployeeDetail = (props) => {
                           // onChange={(e) => setlname(e.target.value)}
                         />
                         <ColumnDirective
-                          field="relation.name"
+                          field="relation"
                           headerText={GetLabelByName("HCM-ZYCFSGCKMC", lan)}
+                          edit={handleRelationTypes}
                           editType="dropdownedit"
                           width="100"
                           textAlign="Center"
-                          // name="lname"
-                          // value={lname}
-                          // onChange={(e) => setlname(e.target.value)}
                         />
                         <ColumnDirective
                           field="address"
@@ -573,7 +586,7 @@ const EmployeeDetail = (props) => {
                             lan
                           )}
                           editType="numericedit"
-                          editParams={" minValue: 0"}
+                          edit={integerParams}
                           width="100"
                           textAlign="Center"
                         />

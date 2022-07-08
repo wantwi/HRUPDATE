@@ -21,3 +21,4 @@ export const PostEmployeeEmergencyContact =()=>`${BaseURL}EmployeeEmergencyConta
 
 export const GetBeneficiary  =(filter)=>`${BaseURL}EmployeeBeneficiary/${filter}`
 export const PostBeneficiary =()=>`${BaseURL}EmployeeBeneficiary`
+
