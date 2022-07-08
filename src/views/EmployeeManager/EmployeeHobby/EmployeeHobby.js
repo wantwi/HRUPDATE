@@ -71,6 +71,10 @@ import {
   PostEmployeeHobbies,
   GetEmployeeHobbyTypes,
 } from "src/reusable/API/EmployeeHobbyEndPoints";
+import Select from "react-select";
+
+import { MultiValue } from "src/templates/maxvalue/maxvalue";
+import { customStyles } from "src/templates/maxvalue/maxvalue";
 
 const editOptions = {
   allowEditing: false,
@@ -118,6 +122,7 @@ const EmployeeHobby = (props) => {
   const [viewinfo, setViewInfo] = useState([]);
   const [hobbyTypes, setHobbyTypes] = useState([]);
   const [employeeHobbyId, setEmployeeHobbybyId] = useState([]);
+  const [unitId, setUnitValue] = useState([]);
 
   const handleSearchResultSelect = (results) => {
     console.log("show results", results);
@@ -246,9 +251,9 @@ const EmployeeHobby = (props) => {
             try {
               data = JSON.parse(data);
               toast.error(
-                data?.reason ? data?.reason : "Failed Add Employee Hobby",
+                data?.reason ? data?.reason : "Failed to Add Employee Hobby",
                 "error",
-                400
+                4000
               );
             } catch (error) {
               console.log(error);
@@ -297,6 +302,11 @@ const EmployeeHobby = (props) => {
   };
   console.log(viewinfo);
   const TransLabelByCode = (name) => GetLabelByName(name, lan);
+
+  const handleUnit = (e) => {
+    setUnitValue(Array.isArray(e) ? e.map((x) => x.id) : []);
+  };
+
   return (
     <>
       <CRow>
@@ -416,7 +426,7 @@ const EmployeeHobby = (props) => {
 
       <CModal
         show={visible}
-        size={"md"}
+        size={"lg"}
         onClose={() => setVisible(false)}
         closeOnBackdrop={false}
       >
@@ -429,34 +439,36 @@ const EmployeeHobby = (props) => {
         <CModalBody>
           <CRow className={"bottom-spacing"}>
             <>
-              {/* <CCol md="4">
-                <CLabel htmlFor="Name">
-                  <CSLab code="Name" />
-                </CLabel>
-                <CInput type="text" id="Name" />
-              </CCol> */}
-              <CCol md="8">
+              <CCol md="6">
                 <CLabel htmlFor="Hobby">
                   <CSLab name="hobby" code="HCM-7NAYG6MHKMA-KCMI" />
                   <CSRequiredIndicator />
                 </CLabel>
-                <CSelect
-                  name="hobbyTypeId"
-                  value={data?.hobbyTypeId || -1}
-                  onChange={handleOnChange}
-                >
-                  {hobbyTypes.map((x, i) => (
-                    <option key={i} value={x.id}>
-                      {x.name}
-                    </option>
-                  ))}
-                </CSelect>
+
+                <Select
+                  //defaultValue={[colourOptions[2], colourOptions[3]]}
+
+                  // onFocus={() => setIsDisabled(!isDisabled)}
+
+                  onChange={handleUnit}
+                  isMulti
+                  name="unit"
+                  options={hobbyTypes}
+                  getOptionLabel={(option) => option.name}
+                  getOptionValue={(option) => option.id}
+                  className="general-ledger-account-select"
+                  classNamePrefix="mySelect"
+                  value={hobbyTypes.filter((obj) => unitId.includes(obj.id))}
+                  components={{ MultiValue }}
+                  styles={customStyles}
+                  // placeholder={<CSLab code={"HCM-12HRKJ3VLGIH_HRPR"} />}
+                />
               </CCol>
             </>
           </CRow>
         </CModalBody>
         <CModalFooter>
-        <CSLab code="HCM-3KZ0O74GRZP-LOLN" style={{ marginRight: 215 }} />
+          <CSLab code="HCM-3KZ0O74GRZP-LOLN" style={{ marginRight: 215 }} />
           <CButton color="secondary" onClick={() => setVisible(false)}>
             <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
           </CButton>

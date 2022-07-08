@@ -548,7 +548,7 @@ const EmployeeDetail = (props) => {
                         <ColumnDirective
                           field="relation"
                           headerText={GetLabelByName("HCM-ZYCFSGCKMC", lan)}
-                          edit={handleRelationTypes}
+                          //edit={handleRelationTypes}
                           editType="dropdownedit"
                           width="100"
                           textAlign="Center"
@@ -855,7 +855,7 @@ const EmployeeDetail = (props) => {
                           width="100"
                           textAlign="Center"
                         />
-                        <ColumnDirective
+                        {/* <ColumnDirective
                           field="email"
                           headerText={GetLabelByName(
                             "HCM-L8D4N8LGAS_PSLL",
@@ -864,7 +864,7 @@ const EmployeeDetail = (props) => {
                           editType="text"
                           width="100"
                           textAlign="Center"
-                        />
+                        /> */}
                         <ColumnDirective
                           field="phone"
                           headerText={GetLabelByName(
