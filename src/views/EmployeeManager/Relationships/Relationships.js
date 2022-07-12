@@ -425,15 +425,6 @@ const NonRecurringEarningsByEarning = (props) => {
                     <CButton color="outline-primary"> <MdPeople /> 120 </CButton>
                   </CTooltip> */}
                 </CCol>
-                <CCol md="4">
-                  <CButton
-                    color="primary"
-                    style={{ float: "right" }}
-                    onClick={() => setshowEmpModal(!showEmpModal)}
-                  >
-                    <AiOutlinePlus /> <CSLab code={"HCM-N6EVCOP12K-LOLN"} />{" "}
-                  </CButton>
-                </CCol>
               </CRow>
             </CCardHeader>
             <CTabs>
@@ -486,6 +477,18 @@ const NonRecurringEarningsByEarning = (props) => {
               </CNav>
               <CTabContent>
                 <CTabPane visible={activeKey === 1 ? "true" : "false"}>
+                  <div>
+                    <CCol md="4">
+                      <CButton
+                        color="primary"
+                         style={{ position: "absolute" }}
+                         
+                        onClick={() => setshowEmpModal(!showEmpModal)}
+                      >
+                        <AiOutlinePlus /> <CSLab code={"HCM-N6EVCOP12K-LOLN"} />{" "}
+                      </CButton>
+                    </CCol>
+                  </div>
                   <GridComponent
                     height={400}
                     dataSource={benefiaciary}
@@ -899,243 +902,24 @@ const NonRecurringEarningsByEarning = (props) => {
                         textAlign="Center"
                       />
                     </ColumnsDirective>
-                    {/* <Inject
-                        services={[
-                          Page,
-                          Sort,
-                          Filter,
-                          Group,
-                          Edit,
-                          CommandColumn,
-                          Toolbar,
-                        ]}
-                      /> */}
+                    <Inject
+                      services={[
+                        Page,
+                        Sort,
+                        Filter,
+                        Group,
+                        Edit,
+                        CommandColumn,
+                        Toolbar,
+                      ]}
+                    />
                   </GridComponent>
                 </CTabPane>
-                {/* <CTabPane visible={activeKey === 6 ? "true" : "false"}>
-                    <GridComponent
-                      height={300}
-                      dataSource={sampleData}
-                      allowPaging={true}
-                      pageSettings={{ pageSize: 8 }}
-                      editSettings={editOptions}
-                      ref={(g) => setGrid(g)}
-                      commandClick={onCommandClick}
-                    >
-                      <ColumnsDirective>
-                        <ColumnDirective
-                          field="id"
-                          headerText="ID"
-                          width="100"
-                          visible={false}
-                          isPrimaryKey={true}
-                        />
-                        <ColumnDirective
-                          field="name"
-                          headerText={GetLabelByName(
-                            "HCM-RWMIP9K3NEH_HRPR",
-                            lan
-                          )}
-                          width="100"
-                        />
-                        <ColumnDirective
-                          field="numberOfCompanies"
-                          headerText={GetLabelByName(
-                            "HCM-XCT7UIQ8P9L_KCMI",
-                            lan
-                          )}
-                          width="100"
-                          textAlign="Center"
-                        />
-                        <ColumnDirective
-                          field="strStatus"
-                          headerText={GetLabelByName(
-                            "HCM-RQB38Y1ZFPO-LANG",
-                            lan
-                          )}
-                          width="100"
-                          textAlign="Center"
-                        />
-                        <ColumnDirective
-                          commands={commandOptions}
-                          headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
-                          width="100"
-                          textAlign="Center"
-                        />
-                      </ColumnsDirective>
-                      <Inject
-                        services={[
-                          Page,
-                          Sort,
-                          Filter,
-                          Group,
-                          Edit,
-                          CommandColumn,
-                        ]}
-                      />
-                    </GridComponent>
-                  </CTabPane>
-                  <CTabPane visible={activeKey === 7 ? "true" : "false"}>
-                    <GridComponent
-                      height={300}
-                      allowPaging={true}
-                      pageSettings={{ pageSize: 8 }}
-                      editSettings={editOptions}
-                      ref={trans}
-                      commandClick={onCommandClick}
-                               
-                    >
-                      <ColumnsDirective>
-                        <ColumnDirective
-                          field="id"
-                          headerText="ID"
-                          width="100"
-                          visible={false}
-                          isPrimaryKey={true}
-                        />
-                        <ColumnDirective
-                          field={"payPeriod"}
-                          editType="dropdownedit"
-                          headerText={GetLabelByName(
-                            "HCM-IXI11NRGSL_LASN",
-                            lan
-                          )}
-                          width="70"
-                          edit={earnings}
-                        />
-                        <ColumnDirective
-                          field={"ruleValue"}
-                          headerText={GetLabelByName("HCM-KGCV55ZJX9A_PSLL")}
-                          editType="text"
-                          width="100"
-                          textAlign="Center"
-                        />
-                        <ColumnDirective
-                          field="unit"
-                          headerText={GetLabelByName(
-                            "HCM-L03LHDL3ZEH_LANG",
-                            lan
-                          )}
-                          editType="numericedit"
-                          width="100"
-                          textAlign="Center"
-                        />
-                        <ColumnDirective
-                          field="unit"
-                          headerText={GetLabelByName(
-                            "HCM-FPFINOQEG27_LANG",
-                            lan
-                          )}
-                          editType="numericedit"
-                          width="100"
-                          textAlign="Center"
-                        />
-                        <ColumnDirective
-                          commands={commandOptions}
-                          headerText={GetLabelByName(
-                            "HCM-FPFINOQEG27_LANG",
-                            lan
-                          )}
-                          width="100"
-                          textAlign="Center"
-                        />
-                      </ColumnsDirective> */}
-                {/* <Inject
-                        services={[
-                          Page,
-                          Sort,
-                          Filter,
-                          Group,
-                          Edit,
-                          CommandColumn,
-                          Toolbar,
-                        ]}
-                      /> */}
-                {/* </GridComponent>
-                  </CTabPane> */}
-                {/* <CTabPane visible={activeKey === 8 ? "true" : "false"}>
-                    <GridComponent
-                      height={300}
-                      allowPaging={true}
-                      pageSettings={{ pageSize: 8 }}
-                      editSettings={editOptions}
-                      ref={trans}
-                      commandClick={onCommandClick}
-                               
-                    >
-                      <ColumnsDirective>
-                        <ColumnDirective
-                          field="id"
-                          headerText="ID"
-                          width="100"
-                          visible={false}
-                          isPrimaryKey={true}
-                        />
-                        <ColumnDirective
-                          field={"payPeriod"}
-                          editType="dropdownedit"
-                          headerText={GetLabelByName(
-                            "HCM-QNAC7YH7NBO-LOLN",
-                            lan
-                          )}
-                          width="70"
-                          edit={earnings}
-                        />
-                        <ColumnDirective
-                          field={"ruleValue"}
-                          headerText={GetLabelByName(
-                            "HCM-KGCV55ZJX9A_PSLL",
-                            lan
-                          )}
-                          editType="text"
-                          width="100"
-                          textAlign="Center"
-                        />
-                        <ColumnDirective
-                          field="unit"
-                          headerText={GetLabelByName(
-                            "HCM-L03LHDL3ZEH_LANG",
-                            lan
-                          )}
-                          editType="numericedit"
-                          width="100"
-                          textAlign="Center"
-                        />
-                        <ColumnDirective
-                          field="unit"
-                          headerText={GetLabelByName(
-                            "HCM-FPFINOQEG27_LANG",
-                            lan
-                          )}
-                          editType="numericedit"
-                          width="100"
-                          textAlign="Center"
-                        />
-                        <ColumnDirective
-                          commands={commandOptions}
-                          headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
-                          width="100"
-                          textAlign="Center"
-                        />
-                      </ColumnsDirective>
-                      <Inject
-                        services={[
-                          Page,
-                          Sort,
-                          Filter,
-                          Group,
-                          Edit,
-                          CommandColumn,
-                          Toolbar,
-                        ]}
-                      />
-                    </GridComponent>
-                  </CTabPane> */}
               </CTabContent>
             </CTabs>
             <CCardFooter>
               {/* { <CButton style={{ marginRight: 5 }} type="button" size="sm" color="success"><CIcon name="cil-scrubber" /> <CSLab code="View History" /> </CButton>} */}
-              <CButton
+              {/* <CButton
                 style={{ marginRight: 5, float: "right" }}
                 type="button"
                 size="sm"
@@ -1144,7 +928,7 @@ const NonRecurringEarningsByEarning = (props) => {
               >
                 <AiFillSave size={20} />
                 <CSLab code="Update" />
-              </CButton>
+              </CButton> */}
               <CButton
                 style={{ marginRight: 5, float: "right", color: "white" }}
                 onClick={() => handleReset(1)}
