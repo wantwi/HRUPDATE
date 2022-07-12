@@ -1,28 +1,34 @@
 import React, { useState, useRef, useEffect } from "react";
-import { AiOutlinePlus } from "react-icons/ai";
 import { useSelector, useDispatch } from "react-redux";
-import { CustomAxios } from "src/reusable/API/CustomAxios";
+import Select from "react-select";
+import { GetLabelByName } from "src/reusable/configs/config";
+
 import {
   CInputGroupAppend,
   CInputGroup,
   CInput,
   CCard,
+  CModal,
+  CModalBody,
+  CModalFooter,
+  CModalHeader,
+  CModalTitle,
   CRow,
-  CFormGroup,
   CCol,
   CButton,
+  CLabel,
   CCardFooter,
-  CTabContent,
+  CCardHeader,
+  CFormGroup,
+  CTabs,
+  CNav,
   CNavItem,
   CNavLink,
-  CNav,
-  CTabs,
+  CTabContent,
   CTabPane,
-  CCardBody,
-  CLabel,
+  CSelect,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-//import { genericParamData } from '../../Deductions/DeductionMassUpdate/node_modules/src/reusable/utilities/config';
 import {
   ColumnDirective,
   ColumnsDirective,
@@ -36,11 +42,12 @@ import {
   CommandColumn,
   Toolbar,
 } from "@syncfusion/ej2-react-grids";
-// import { Variable } from "../../../reusable/utils/GenericData";
-// import { RecurringEarningData } from "../../../reusable/utils/EarningsData";
-import { getValue } from "@syncfusion/ej2-base";
-import { DataManager, Query } from "@syncfusion/ej2-data";
-import { DatePickerComponent } from "@syncfusion/ej2-react-calendars";
+//import { RecurringEarningData2, } from "../../../reusable/utils/EarningsData";
+//import { payPeriod } from '../../../reusable/utils/GenericData';
+//import { employees } from '../../../reusable/utils/GenericData';
+//import { getValue } from "@syncfusion/ej2-base";
+//import 'react-toastify/dist/ReactToastify.css';
+import { AiOutlinePlus } from "react-icons/ai";
 import "../../../../node_modules/@syncfusion/ej2-base/styles/material.css";
 import "../../../../node_modules/@syncfusion/ej2-buttons/styles/material.css";
 import "../../../../node_modules/@syncfusion/ej2-calendars/styles/material.css";
@@ -50,19 +57,22 @@ import "../../../../node_modules/@syncfusion/ej2-navigations/styles/material.css
 import "../../../../node_modules/@syncfusion/ej2-popups/styles/material.css";
 import "../../../../node_modules/@syncfusion/ej2-splitbuttons/styles/material.css";
 import "../../../../node_modules/@syncfusion/ej2-react-grids/styles/material.css";
+import { CSCheckbox } from "src/reusable/components";
 import { CardBodyHeight } from "src/reusable/utils/helper";
-// import { isEqual, differenceWith } from 'react-lodash'
-import { CSAutoComplete, CSLab } from "src/reusable/components";
-import { toast } from "react-toastify";
-import { toastWarning } from "src/toasters/Toaster";
-import { SearchEmployees } from "src/reusable/API/EmployeeEndpoints";
-
+import { AiFillSave, AiOutlineRedo } from "react-icons/ai";
+import { CSLab } from "src/reusable/components";
+//import toast, { Toaster } from 'react-hot-toast';
+//import { toastWarning } from 'src/reusable/components/ToastStylesComponent/ToastStyles';
+//import { customStyles } from 'src/reusable/components/SelectComponent/SelectStyle';
+//import { handleNumberOnly } from 'src/reusable/utils/helper';
+//import { GetAllEarning, SearchEarnings, GetAllEarningEmployees, GetGLAccounts, PutBasicSalaryMassUpdate, GetAllEmployees } from 'src/reusable/API/EarningEndPoints';
 import {
-  GetRequest,
   HttpAPIRequest,
-  PostRequest,
+  PutRequest,
+  GetRequest,
 } from "src/reusable/utils/helper";
-import { GetLabelByName } from "src/reusable/configs/config";
+import CSAutoComplete from "src/reusable/components/AutoCompleteComponent/CSAutoComplete";
+import { SearchEmployees } from "src/reusable/API/EmployeeEndpoints";
 import {
   GetBeneficiary,
   GetEmployeeDependant,
@@ -71,6 +81,7 @@ import {
 } from "src/reusable/API/EmployeeRelationshipsEndPoint";
 import axios from "axios";
 import { RelationTypes } from "src/reusable/API/EmployeeFamilyEndPoint";
+import { ConsoleIcon } from "evergreen-ui";
 
 const commandOptions = [
   {
@@ -91,106 +102,27 @@ const commandOptions = [
   },
 ];
 
-const sampleData = [
-  { name: "Clothing Allowance", id: "1", stateId: "101" },
-  { name: "Airtime Allowance", id: "2", stateId: "102" },
-  { name: "Accommodation Allowances", id: "3", stateId: "103" },
-  { name: "Fuel Allowance", id: "4", stateId: "104" },
-];
-let response = [];
-const getSampleData = (data) => {
-  console.log(data);
-
-  if (data) {
-    //filter
-    const newdata = sampleData.filter((val) => {
-      return !data.find((val2) => {
-        //  console.log({valueID:val.id+":"+val2.id});
-        return val.name === val2.name;
-      });
-    });
-    response = newdata;
-  } else {
-    response = sampleData;
-  }
-  return response;
-};
-
-//onClick={handleOnSubmit}
-
-// const saveButton = () => {
-//   return (
-//     <CButton style={{ marginRight: 5, float: 'right' }} type="button" size="sm" color="success"><AiFillSave size={20} />
-//       <CSLab code="Update" />
-//     </CButton>
-//   )
-//}
-
-// const earnings = {
-//   params: {
-//     actionComplete: () => false,
-//     allowFiltering: true,
-
-//     fields: { text: "name", value: "name" },
-//     query: new Query(),
-//   },
-// };
-// console.log("trials", earnings.params.fields);
-function refreshPage() {
-  window.location.reload(false);
-}
-
-const editTemplate = (args) => {
-  return (
-    <DatePickerComponent
-      value={getValue("date", args)}
-      id="date"
-      placeholder="Expiry Date"
-      floatLabelType="Never"
-      format="dd-mmm-yyyy"
-    />
-  );
-  //(<CInput type='date' />)
-};
-
-const EmployeeDetail = (props) => {
-  // const [showEmpModal, setshowEmpModal] = useState(false);
-  // const [showEmpModal1, setshowEmpModal1] = useState(false);
-  const [show, setShow] = useState(true);
-  const [grid, setGrid] = useState(null);
-  const [recEarnings, setRecEarnings] = useState(sampleData);
-  const trans = useRef(null);
-  const [editOptions] = useState({
-    allowEditing: false,
-    allowAdding: true,
-    allowDeleting: true,
-    allowEditOnDblClick: false,
-  });
-  const [fname, setfname] = useState("");
-  const [lname, setlname] = useState("");
-  const [email, setEmail] = useState("");
-  const [relation, setRelation] = useState("");
-  const [phone, setPhone] = useState("");
-  const [otherPhone, setOtherPhone] = useState("");
-  const [address, setAddress] = useState("");
-
-  const lan = useSelector((state) => state.language);
-  const [visible, setVisible] = useState(false);
-  const [skill, setSkill] = useState("");
-  const data = useSelector((state) => state.data);
+const NonRecurringEarningsByEarning = (props) => {
+  const [selectedValue, setSelectedValue] = useState();
   const dispatch = useDispatch();
+  const [array, setArray] = useState([]);
   const [searchInput, setSearchInput] = useState("");
+  const [mode, setMode] = useState("");
   const [pageNumber, setPageNumber] = useState(1);
   const [numberOfItems, setNumberOfItems] = useState(10);
   const [orderBy, setOrderBy] = useState("");
-  const [submitData, setSubmitData] = useState({});
-  const [sortOrder, setSortOrder] = useState("");
-  const [large, setLarge] = useState(false);
-  const [mode, setMode] = useState("");
-  const [searchResult, setSearchResult] = useState(null);
-  const [educationCore, setEducationCore] = useState([]);
-  const [empDisplayName, setEmpDisplayName] = useState("");
   const [handleId, setHandleId] = useState("");
+  const [sortOrder, setSortOrder] = useState("");
+  const [searchResult, setSearchResult] = useState(null);
+  const [submitData, setSubmitData] = useState({});
+  const [show, setShow] = useState(true);
+  const [grid, setGrid] = useState(null);
+  const [activeKey, setActiveKey] = useState(1);
+  const [large, setLarge] = useState(false);
+  const [options, setOptions] = useState({});
+  const [showEmpModal, setshowEmpModal] = useState(false);
+  const [empDisplayName, setEmpDisplayName] = useState("");
+
   const [viewinfo, setViewInfo] = useState([]);
   const [emergencyContact, setEmergencyContact] = useState([]);
   const [nextOfKin, setGetNextOfKin] = useState([]);
@@ -198,73 +130,183 @@ const EmployeeDetail = (props) => {
   const [benefiaciary, setGetBenefiary] = useState([]);
   const [dependant, setDependant] = useState([]);
   const [relationTypes, setRelationTypes] = useState([]);
+  const [showTypes, setShowTypes] = useState([]);
 
-  const canSave = [fname, lname, relation, phone, address].every(Boolean);
+  const lan = useSelector((state) => state.language);
 
+  const [editOptions] = useState({
+    allowEditing: false,
+    allowAdding: false,
+    allowDeleting: false,
+    allowEditOnDblClick: false,
+  });
+  const data = useSelector((state) => state.data);
+  const [earningName, setEarningName] = useState([]);
+  const [earningID, setEarningId] = useState([]);
+  const [cmbEmployees, setEmployees] = useState([]);
+  //const nonRecurringData = []
+  //
   const firstGrid = useRef(null);
   const secondGrid = useRef(null);
   const thirdGrid = useRef(null);
   const fourthGrid = useRef(null);
   const fifthGrid = useRef(null);
 
-  const toolbarOptions = [
-    "Add",
-    "Cancel",
-    {
-      text: "Save",
-      tooltipText: "Save",
-      prefixIcon: "e-save",
-      id: "saveItems",
-      align: "Right",
-    },
-  ];
-
-  const [activeKey, setActiveKey] = useState(1);
-
-  // const [large, setLarge] = useState(false);
-
   const onCompleteAction = (args) => {
-    console.log(getValue("name", args));
+    // console.log(getValue("name", args));
     console.log(grid);
     if (grid) {
       // here you can update the new row data by using setRowData method of Grid
       // grid.setRowData(newData.id, newData)
     }
+
+    /*
+            actionComplete={onCompleteAction}
+            actionBegin={onBeginAction}
+        */
   };
+
+  const handleChange = (e) => {
+    console.log(e);
+    setSelectedValue(e.label);
+  };
+
+  const MultipleGetRequests = async () => {
+    try {
+      let request = [
+        HttpAPIRequest("GET", GetBeneficiary(handleId)),
+        HttpAPIRequest("GET", GetEmployeeDependant(handleId)),
+        HttpAPIRequest("GET", GetEmployeeEmergencyContact(handleId)),
+        HttpAPIRequest("GET", GetEmployeeGuarantor(handleId)),
+        HttpAPIRequest("GET", RelationTypes()),
+      ];
+      const multipleCall = await Promise.allSettled(request);
+      console.log(multipleCall[0].value);
+
+      setGetBenefiary([...multipleCall[0].value]);
+      setDependant([...multipleCall[1].value]);
+      setEmergencyContact([...multipleCall[2].value]);
+      setGetGuarantor([...multipleCall[3].value]);
+      setRelationTypes([...multipleCall[4].value]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    if (handleId) {
+      MultipleGetRequests();
+    }
+  }, [handleId]);
+
+  // const MultipleGetRequests = async () => {
+  //   try {
+  //   //  let request = [HttpAPIRequest('GET', GetAllEarningEmployees()),];
+  //     const multipleCall = await Promise.allSettled(request);
+
+  //     // console.log(multipleCall[6].value.id)
+  //     let employeeData = multipleCall[0].value
+
+  //     let empData = []
+  //     for (let i = 0; i < employeeData.length; i++) {
+  //       empData.push({
+  //         id: `${employeeData[i].id}`,
+  //         name: `${employeeData[i].name} - ${employeeData[i].staffId}`
+  //       })
+  //     }
+
+  //     setEmployees([{ id: '-1', name: `Select Employee` }, ...empData])
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   MultipleGetRequests()
+  // }, []);
+  const integerParams = {
+    params: {
+      // decimals: 1,
+      format: "N",
+      min: 0,
+    },
+  };
+  const handleOnSubmit = () => {
+    console.log(submitData);
+    // if (!submitData.employeeId || submitData.employeeId === -1) {
+    //   toast.error('Please select an employee!', toastWarning);
+    //   return;
+    // }
+    // if (!submitData?.payPeriodId || submitData?.payPeriodId === -1) {
+    //   toast.error('Please select a period!', toastWarning);
+    //   return;
+    // }
+    // if (!submitData?.unit || submitData?.unit === '') {
+    //   toast.error('Please enter a value for unit!', toastWarning);
+    //   return;
+    // }
+    //console.log(selectedValue)
+    let newData = { earningId: earningID, ...submitData, options };
+    console.log("new", newData);
+    setArray((nonRecurringData) => [newData, ...nonRecurringData]);
+    handleReset();
+    // 'Add' === mode ? AddGLAccount(newData) : updateGLAccount(newData);
+  };
+
+  const trans = useRef(null);
 
   const submitRequest = (args) => {
-    if (firstGrid && args.item.id === "saveItems") {
-      console.log("first");
-      let request = axios.post();
-      console.log({ first: firstGrid?.current?.currentViewData[0] });
-    }
-
-    //console.log({ value: firstGrid });
+    let tabData = trans?.current?.currentViewData;
+    let finaldata = {
+      earningIDs: earningID,
+      tabData,
+      userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      userName: "string",
+      companyReference: "string",
+    };
+    console.log(JSON.stringify(finaldata));
   };
 
-  const actionBegin = (args) => {
-    // if (args.requestType === 'add') {
-    //   args.cancel = true
-    //   console.log(sampleData)
-    // }
-
-    if (args.requestType === "save") {
-      // setRecEarnings(firstGrid.current.currentViewData)
-      let currentData = firstGrid.current.currentViewData;
-      //console.log(sampleData)
-      console.log(currentData);
-      getSampleData(currentData);
-
-      // console.log(newdata)
-      // let result = differenceWith(currentData, sampleData, isEqual);
-      //setRecEarnings(newdata)
-    }
+  const handleOnChange = (evnt) => {
+    setSubmitData((data) => {
+      return { ...data, [evnt?.target?.name]: evnt?.target?.value };
+    });
+    dispatch({
+      type: "set",
+      data: { ...data, [evnt?.target?.name]: evnt?.target?.value },
+    });
   };
-  var values = ColumnDirective.getValue;
 
-  const onCommandClick = (args) => {
-    onCompleteAction(args);
+  const handleReset = (type = 1) => {
+    dispatch({ type: "set", data: {} });
+    setSubmitData({});
+    setSelectedValue([]);
   };
+
+  const handleCheckboxChange = (evnt) => {
+    console.log(1);
+    setOptions((data) => {
+      return { ...data, [evnt?.target?.name]: evnt?.target?.checked };
+    });
+    let option = {
+      ...data?.options,
+      [evnt?.target?.name]: evnt?.target?.checked,
+    };
+    dispatch({ type: "set", data: { ...data, option, options: option } });
+  };
+
+  const handleCheckboxChanges = (evnt) => {
+    console.log(2);
+    setOptions((data) => {
+      return { ...data, [evnt?.target?.name]: evnt?.target?.checked };
+    });
+    let option = {
+      ...data?.options,
+      [evnt?.target?.name]: evnt?.target?.checked,
+    };
+    console.log(option);
+    dispatch({ type: "set", data: { ...data, option, options: option } });
+  };
+
   const handleSearchResultSelect = (results) => {
     console.log("show results", results);
 
@@ -315,136 +357,63 @@ const EmployeeDetail = (props) => {
     }
   };
 
-  const handleNextOfKin = async () => {
-    try {
-      const request = await CustomAxios.get(`EmployeeNextofKin/${handleId}`);
-
-      const response = request.data;
-      console.log("emp response:", response);
-      console.log({ response });
-      setGetNextOfKin([response]);
-    } catch (error) {
-      console.log({ error });
-    }
+  const onCommandClick = (args) => {
+    console.log(args);
+    onCompleteAction(args);
   };
 
-  useEffect(() => {
-    if (handleId !== "") {
-      handleNextOfKin();
-    }
-  }, [handleId]);
-  console.log(nextOfKin);
-  //console.log(handleId);
-
-  const MultipleGetRequests = async () => {
-    try {
-      let request = [
-        HttpAPIRequest("GET", GetBeneficiary(handleId)),
-        HttpAPIRequest("GET", GetEmployeeDependant(handleId)),
-        HttpAPIRequest("GET", GetEmployeeEmergencyContact(handleId)),
-        HttpAPIRequest("GET", GetEmployeeGuarantor(handleId)),
-        HttpAPIRequest("GET", RelationTypes()),
-      ];
-      const multipleCall = await Promise.allSettled(request);
-      console.log(multipleCall[0].value);
-
-      setGetBenefiary([...multipleCall[0].value]);
-      setDependant([...multipleCall[1].value]);
-      setEmergencyContact([...multipleCall[2].value]);
-      setGetGuarantor([...multipleCall[3].value]);
-      setRelationTypes([...multipleCall[4].value]);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const integerParams = {
-    params: {
-      // decimals: 1,
-      format: "N",
-      min: 0,
-    },
-  };
-
-  useEffect(() => {
-    MultipleGetRequests();
-  }, [handleId]);
-  // console.log({ emergency: emergencyContact });
-  // console.log({ guarant: guarantor });
-  // console.log({ benefits: benefiaciary });
-  // console.log({ dependands: dependant });
-  console.log({ relation: relationTypes });
-
-  const handleRelationTypes = () => {
-    const data = {
-      dataSource: new DataManager([relationTypes]),
-      fields: { text: relationTypes.name, value: relationTypes.id },
-      query: new Query(),
-    };
-  };
+  //const renderError = (message) => <p className="help is-danger">{message}</p>;
 
   return (
     <>
       <CRow>
         <CCol xs="12">
-          <h5>
-            <CSLab code="HCM-ETP5RDAYHNK_LANG" />
-          </h5>
+          <h5>Employee Relationship</h5>
         </CCol>
       </CRow>
       <CRow>
         <CCol md="4">
-          <CFormGroup>
-            <CSAutoComplete
-              filterUrl={SearchEmployees(searchInput)}
-              //filterUrl=''            //filterUrl={SearchInternalCurrencies(searchInput)}
-              placeholder={"Search for employee by name or code"}
-              handleSelect={handleSearchResultSelect}
-              //onChange={()=>handleSearchResultSelect}
-              displayTextKey={"firstName"}
-              setInput={setSearchInput}
-              input={searchInput}
-              emptySearchFieldMessage={`Please input 3 or more characters to search`}
-              searchName={"Employee"}
-              isPaginated={false}
-              pageNumber={pageNumber}
-              setPageNumber={setPageNumber}
-              numberOfItems={numberOfItems}
-              setNumberOfItems={setNumberOfItems}
-              orderBy={orderBy}
-              setOrderBy={setOrderBy}
-              sortOrder={sortOrder}
-              setSortOrder={setSortOrder}
-              mode={mode}
-              setMode={setMode}
-              handleId={setHandleId}
-              // reset={handleReset}
-            />
-          </CFormGroup>
+          <CSAutoComplete
+            filterUrl={SearchEmployees(searchInput)}
+            //filterUrl=''            //filterUrl={SearchInternalCurrencies(searchInput)}
+            placeholder={"Search for employee by name or code"}
+            handleSelect={handleSearchResultSelect}
+            //onChange={()=>handleSearchResultSelect}
+            displayTextKey={"firstName"}
+            setInput={setSearchInput}
+            input={searchInput}
+            emptySearchFieldMessage={`Please input 3 or more characters to search`}
+            searchName={"Employee"}
+            isPaginated={false}
+            pageNumber={pageNumber}
+            setPageNumber={setPageNumber}
+            numberOfItems={numberOfItems}
+            setNumberOfItems={setNumberOfItems}
+            orderBy={orderBy}
+            setOrderBy={setOrderBy}
+            sortOrder={sortOrder}
+            setSortOrder={setSortOrder}
+            mode={mode}
+            setMode={setMode}
+            handleId={setHandleId}
+            // reset={handleReset}
+          />
         </CCol>
-        <CCol xs="12" hidden={show}>
+        <CCol hidden={show} xs="12">
           <CCard>
-            {/* <CCardHeader hidden={show} className={""}>
-              <b>Employee:</b>{" "}
-              <span style={{textDecoration: "underline dotted", cursor: "pointer", }} type="button" onClick={() => setLarge(!large)} size="md" color="primary" >
-               Michael Nartey
-              </span>
-              {
-              Number(activeKey) !== 5 ?
-                <CButton color="primary" style={{ float: "right" }} onClick={() => setshowEmpModal(!showEmpModal)}>{"Add " + btnVals[activeKey]}</CButton> :
-                <CButton color="primary" style={{ float: "right" }} onClick={() => setshowEmpModal1(!showEmpModal1)}>{"Add " + btnVals[activeKey]}</CButton>
-              }
-            </CCardHeader> */}
-            <CCardBody style={{ height: CardBodyHeight, overflowY: "auto" }}>
-              <CFormGroup row>
+            <CCardHeader>
+              <CRow>
                 <CCol md="4">
-                  <b>Employee:</b>{" "}
+                  <b>
+                    <CSLab code={"HCM-8LH7SFKKDJG_LASN"} /> :{" "}
+                  </b>
                   <span
                     style={{
                       textDecoration: "underline dotted",
                       cursor: "pointer",
                     }}
                     type="button"
-                    onClick={() => setLarge(!large)}
+                    //onClick={() => setLarge(!large)}
                     size="md"
                     color="primary"
                   >
@@ -452,121 +421,127 @@ const EmployeeDetail = (props) => {
                   </span>
                 </CCol>
                 <CCol md="4">
-                  {/* <CTooltip content={`Click here to view Employees`} >
-                <CButton color="outline-primary"> <MdPeople /> 120 </CButton>
-                </CTooltip> */}
+                  {/* <CTooltip content={`Click here to view Employees`}>
+                    <CButton color="outline-primary"> <MdPeople /> 120 </CButton>
+                  </CTooltip> */}
                 </CCol>
-                <CCol md="4"></CCol>
-              </CFormGroup>
-              <CTabs>
-                <CNav variant="tabs">
-                  <CNavItem>
-                    <CNavLink
-                      href="#"
-                      active={activeKey === 1}
-                      onClick={() => setActiveKey(1)}
-                    >
-                      <CSLab code="HCM-MS5RN9DANOF-PSLL" />
-                    </CNavLink>
-                  </CNavItem>
-                  <CNavItem>
-                    <CNavLink
-                      href="#"
-                      active={activeKey === 2}
-                      onClick={() => setActiveKey(2)}
-                    >
-                      <CSLab code="HCM-TXJFM19UOAG-LOLN" />
-                    </CNavLink>
-                  </CNavItem>
-                  <CNavItem>
-                    <CNavLink
-                      href="#"
-                      active={activeKey === 6}
-                      onClick={() => setActiveKey(6)}
-                    >
-                      <CSLab code="HCM-C7C1XLFCOS5-LANG" />
-                    </CNavLink>
-                  </CNavItem>
-                  <CNavItem>
-                    <CNavLink
-                      href="#"
-                      active={activeKey === 3}
-                      onClick={() => setActiveKey(3)}
-                    >
-                      <CSLab code="HCM-2VDPTKA7U9T-LOLN" />
-                    </CNavLink>
-                  </CNavItem>
-                  <CNavItem>
-                    <CNavLink
-                      href="#"
-                      active={activeKey === 4}
-                      onClick={() => setActiveKey(4)}
-                    >
-                      Next of Kin
-                    </CNavLink>
-                  </CNavItem>
-                </CNav>
-                <CTabContent>
-                  <CTabPane visible={activeKey === 1 ? "true" : "false"}>
-                    <GridComponent
-                      height={300}
-                      actionComplete={actionBegin}
-                      dataSource={benefiaciary}
-                      allowPaging={true}
-                      pageSettings={{ pageSize: 8 }}
-                      editSettings={editOptions}
-                      ref={firstGrid}
-                      toolbar={toolbarOptions}
-                      toolbarClick={submitRequest}
-                    >
-                      <ColumnsDirective>
-                        <ColumnDirective
-                          field="id"
-                          headerText="ID"
-                          width="100"
-                          visible={false}
-                          isPrimaryKey={true}
-                        />
-                        <ColumnDirective
-                          field="firstName"
-                          editType="text"
-                          headerText={GetLabelByName("HCM-KPH53NF08RG", lan)}
-                          width="100"
+                <CCol md="4">
+                  <CButton
+                    color="primary"
+                    style={{ float: "right" }}
+                    onClick={() => setshowEmpModal(!showEmpModal)}
+                  >
+                    <AiOutlinePlus /> <CSLab code={"HCM-N6EVCOP12K-LOLN"} />{" "}
+                  </CButton>
+                </CCol>
+              </CRow>
+            </CCardHeader>
+            <CTabs>
+              <CNav variant="tabs">
+                <CNavItem>
+                  <CNavLink
+                    href="#"
+                    active={activeKey === 1}
+                    onClick={() => setActiveKey(1)}
+                  >
+                    <CSLab code="HCM-MS5RN9DANOF-PSLL" />
+                  </CNavLink>
+                </CNavItem>
+                <CNavItem>
+                  <CNavLink
+                    href="#"
+                    active={activeKey === 2}
+                    onClick={() => setActiveKey(2)}
+                  >
+                    <CSLab code="HCM-TXJFM19UOAG-LOLN" />
+                  </CNavLink>
+                </CNavItem>
+                <CNavItem>
+                  <CNavLink
+                    href="#"
+                    active={activeKey === 6}
+                    onClick={() => setActiveKey(6)}
+                  >
+                    <CSLab code="HCM-C7C1XLFCOS5-LANG" />
+                  </CNavLink>
+                </CNavItem>
+                <CNavItem>
+                  <CNavLink
+                    href="#"
+                    active={activeKey === 3}
+                    onClick={() => setActiveKey(3)}
+                  >
+                    <CSLab code="HCM-2VDPTKA7U9T-LOLN" />
+                  </CNavLink>
+                </CNavItem>
+                <CNavItem>
+                  <CNavLink
+                    href="#"
+                    active={activeKey === 4}
+                    onClick={() => setActiveKey(4)}
+                  >
+                    Next of Kin
+                  </CNavLink>
+                </CNavItem>
+              </CNav>
+              <CTabContent>
+                <CTabPane visible={activeKey === 1 ? "true" : "false"}>
+                  <GridComponent
+                    height={400}
+                    dataSource={benefiaciary}
+                    allowPaging={true}
+                    pageSettings={{ pageSize: 8 }}
+                    editSettings={editOptions}
+                    ref={firstGrid}
+                    toolbarClick={submitRequest}
+                  >
+                    <ColumnsDirective>
+                      <ColumnDirective
+                        field="id"
+                        headerText="ID"
+                        width="100"
+                        visible={false}
+                        isPrimaryKey={true}
+                      />
+                      <ColumnDirective
+                        field="firstName"
+                        editType="text"
+                        headerText={GetLabelByName("HCM-KPH53NF08RG", lan)}
+                        width="100"
 
-                          //onChange={(e) => setfname(e.target.value)}
-                        />
-                        <ColumnDirective
-                          field="lastName"
-                          headerText={GetLabelByName("HCM-ZYCFSGCKMC", lan)}
-                          editType="text"
-                          width="100"
-                          textAlign="Center"
-                          // name="lname"
-                          // value={lname}
-                          // onChange={(e) => setlname(e.target.value)}
-                        />
-                        <ColumnDirective
-                          field="relation"
-                          headerText={GetLabelByName("HCM-ZYCFSGCKMC", lan)}
-                          //edit={handleRelationTypes}
-                          editType="dropdownedit"
-                          width="100"
-                          textAlign="Center"
-                        />
-                        <ColumnDirective
-                          field="address"
-                          headerText={GetLabelByName(
-                            "HCM-7WIK8PDIQOV-LOLN",
-                            lan
-                          )}
-                          editType="text"
-                          width="100"
-                          textAlign="Center"
-                          name="address"
-                          // value={address}
-                          // onChange={(e) => setAddress(e.target.value)}
-                        />
-                        {/* <ColumnDirective
+                        //onChange={(e) => setfname(e.target.value)}
+                      />
+                      <ColumnDirective
+                        field="lastName"
+                        headerText={GetLabelByName("HCM-ZYCFSGCKMC", lan)}
+                        editType="text"
+                        width="100"
+                        textAlign="Center"
+                        // name="lname"
+                        // value={lname}
+                        // onChange={(e) => setlname(e.target.value)}
+                      />
+                      <ColumnDirective
+                        field="relation.name"
+                        //   edit={relationTypes}
+                        headerText={GetLabelByName("HCM-ZYCFSGCKMC", lan)}
+                        editType="text"
+                        width="100"
+                        textAlign="Center"
+                        //  template={tem}
+                      />
+
+                      <ColumnDirective
+                        field="address"
+                        headerText={GetLabelByName("HCM-7WIK8PDIQOV-LOLN", lan)}
+                        editType="text"
+                        width="100"
+                        textAlign="Center"
+                        name="address"
+                        // value={address}
+                        // onChange={(e) => setAddress(e.target.value)}
+                      />
+                      {/* <ColumnDirective
                           field="relation"
                           headerText={GetLabelByName(
                             "HCM-RWMIP9K3NEH_HRPR",
@@ -579,283 +554,238 @@ const EmployeeDetail = (props) => {
                           // value={relation}
                           // onChange ={(e)=>setRelation(e.target.value)}
                         /> */}
-                        <ColumnDirective
-                          field="percentage"
-                          headerText={GetLabelByName(
-                            "HCM-HB5MNHJGQE5-HRPR",
-                            lan
-                          )}
-                          editType="numericedit"
-                          edit={integerParams}
-                          width="100"
-                          textAlign="Center"
-                        />
-                        <ColumnDirective
-                          commands={commandOptions}
-                          headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
-                          width="100"
-                          textAlign="Center"
-                        />
-                      </ColumnsDirective>
-                      <Inject
-                        services={[
-                          Page,
-                          Sort,
-                          Filter,
-                          Group,
-                          Edit,
-                          CommandColumn,
-                          Toolbar,
-                        ]}
+                      <ColumnDirective
+                        field="percentage"
+                        headerText={GetLabelByName("HCM-HB5MNHJGQE5-HRPR", lan)}
+                        editType="numericedit"
+                        edit={integerParams}
+                        width="100"
+                        textAlign="Center"
                       />
-                    </GridComponent>
-                  </CTabPane>
-                  <CTabPane visible={activeKey === 2 ? "true" : "false"}>
-                    <GridComponent
-                      dataSource={dependant}
-                      height={300}
-                      allowPaging={true}
-                      pageSettings={{ pageSize: 8 }}
-                      editSettings={editOptions}
-                      ref={secondGrid}
-                      commandClick={onCommandClick}
-                      toolbar={toolbarOptions}
-                    >
-                      <ColumnsDirective>
-                        <ColumnDirective
-                          field="id"
-                          headerText="ID"
-                          width="100"
-                          visible={false}
-                          isPrimaryKey={true}
-                        />
-                        <ColumnDirective
-                          field="firstName"
-                          editType="text"
-                          headerText={GetLabelByName(
-                            "HCM-VD1B12NKKJ_LANG",
-                            lan
-                          )}
-                          width="70"
-                          //edit={earnings}
-                        />
-                        <ColumnDirective
-                          field="lastName"
-                          headerText={GetLabelByName(
-                            "HCM-RWMIP9K3NEH_HRPR",
-                            lan
-                          )}
-                          editType="text"
-                          width="100"
-                          textAlign="Center"
-                        />
-                        <ColumnDirective
-                          field="dateOfBirth"
-                          headerText={GetLabelByName(
-                            "HCM-IM8I8SKJ1J9_KCMI",
-                            lan
-                          )}
-                          editType="date"
-                          width="100"
-                          textAlign="Center"
-                          type="date"
-                          format="dd/MMM/yyyy"
-                        />
-                        <ColumnDirective
-                          field="address"
-                          headerText={GetLabelByName(
-                            "HCM-XYNVK7A8USK_PSLL",
-                            lan
-                          )}
-                          editType="text"
-                          editTemplate={editTemplate}
-                          width="100"
-                          textAlign="Center"
-                        />
-                        <ColumnDirective
-                          field="nationality.name"
-                          headerText={GetLabelByName(
-                            "HCM-XYNVK7A8USK_PSLL",
-                            lan
-                          )}
-                          editType="text"
-                          editTemplate={editTemplate}
-                          width="100"
-                          textAlign="Center"
-                        />
-                        <ColumnDirective
-                          field="relation.name"
-                          headerText={GetLabelByName(
-                            "HCM-IM8I8SKJ1J9_KCMI",
-                            lan
-                          )}
-                          editType="text"
-                          width="100"
-                          textAlign="Center"
-                        />
-                        <ColumnDirective
-                          field="identityType.name"
-                          headerText={GetLabelByName(
-                            "HCM-IM8I8SKJ1J9_KCMI",
-                            lan
-                          )}
-                          editType="text"
-                          width="100"
-                          textAlign="Center"
-                        />
-                        <ColumnDirective
-                          field="dateOfExpiry"
-                          headerText={GetLabelByName(
-                            "HCM-IM8I8SKJ1J9_KCMI",
-                            lan
-                          )}
-                          type="date"
-                          format="dd/MMM/yyyy"
-                          editType="dateedit"
-                          width="100"
-                          textAlign="Center"
-                        />
+                      {/* <ColumnDirective
+                        commands={commandOptions}
+                        headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
+                        width="100"
+                        textAlign="Center"
+                      /> */}
+                    </ColumnsDirective>
+                    <Inject
+                      services={[
+                        Page,
+                        Sort,
+                        Filter,
+                        Group,
+                        Edit,
+                        CommandColumn,
+                        Toolbar,
+                      ]}
+                    />
+                  </GridComponent>
+                </CTabPane>
+                <CTabPane visible={activeKey === 2 ? "true" : "false"}>
+                  <GridComponent
+                    dataSource={dependant}
+                    height={300}
+                    allowPaging={true}
+                    pageSettings={{ pageSize: 8 }}
+                    editSettings={editOptions}
+                    ref={secondGrid}
+                    commandClick={onCommandClick}
+                    toolbarClick={submitRequest}
+                  >
+                    <ColumnsDirective>
+                      <ColumnDirective
+                        field="id"
+                        headerText="ID"
+                        width="100"
+                        visible={false}
+                        isPrimaryKey={true}
+                      />
+                      <ColumnDirective
+                        field="firstName"
+                        editType="text"
+                        headerText={GetLabelByName("HCM-VD1B12NKKJ_LANG", lan)}
+                        width="70"
+                        //edit={earnings}
+                      />
+                      <ColumnDirective
+                        field="lastName"
+                        headerText={GetLabelByName("HCM-RWMIP9K3NEH_HRPR", lan)}
+                        editType="text"
+                        width="100"
+                        textAlign="Center"
+                      />
+                      <ColumnDirective
+                        field="dateOfBirth"
+                        headerText={GetLabelByName("HCM-IM8I8SKJ1J9_KCMI", lan)}
+                        editType="date"
+                        width="100"
+                        textAlign="Center"
+                        type="date"
+                        format="dd/MMM/yyyy"
+                      />
+                      <ColumnDirective
+                        field="address"
+                        headerText={GetLabelByName("HCM-XYNVK7A8USK_PSLL", lan)}
+                        editType="text"
+                        width="100"
+                        textAlign="Center"
+                      />
+                      <ColumnDirective
+                        field="nationality.name"
+                        headerText={GetLabelByName("HCM-XYNVK7A8USK_PSLL", lan)}
+                        editType="text"
+                        width="100"
+                        textAlign="Center"
+                      />
+                      <ColumnDirective
+                        field="relation.name"
+                        headerText={GetLabelByName("HCM-IM8I8SKJ1J9_KCMI", lan)}
+                        editType="text"
+                        width="100"
+                        textAlign="Center"
+                      />
+                      <ColumnDirective
+                        field="identityType.name"
+                        headerText={GetLabelByName("HCM-IM8I8SKJ1J9_KCMI", lan)}
+                        editType="text"
+                        width="100"
+                        textAlign="Center"
+                      />
+                      <ColumnDirective
+                        field="dateOfExpiry"
+                        headerText={GetLabelByName("HCM-IM8I8SKJ1J9_KCMI", lan)}
+                        type="date"
+                        format="dd/MMM/yyyy"
+                        editType="dateedit"
+                        width="100"
+                        textAlign="Center"
+                      />
 
-                        <ColumnDirective
-                          commands={commandOptions}
-                          headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
-                          width="100"
-                          textAlign="Center"
-                        />
-                      </ColumnsDirective>
-                      <Inject
-                        services={[
-                          Page,
-                          Sort,
-                          Filter,
-                          Group,
-                          Edit,
-                          CommandColumn,
-                          Toolbar,
-                        ]}
+                      {/* <ColumnDirective
+                        commands={commandOptions}
+                        headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
+                        width="100"
+                        textAlign="Center"
+                      /> */}
+                    </ColumnsDirective>
+                    <Inject
+                      services={[
+                        Page,
+                        Sort,
+                        Filter,
+                        Group,
+                        Edit,
+                        CommandColumn,
+                        Toolbar,
+                      ]}
+                    />
+                  </GridComponent>
+                </CTabPane>
+                <CTabPane visible={activeKey === 3 ? "true" : "false"}>
+                  <GridComponent
+                    dataSource={emergencyContact}
+                    height={300}
+                    allowPaging={true}
+                    pageSettings={{ pageSize: 8 }}
+                    editSettings={editOptions}
+                    ref={thirdGrid}
+                    commandClick={onCommandClick}
+                    //
+                    toolbarClick={submitRequest}
+                  >
+                    <ColumnsDirective>
+                      <ColumnDirective
+                        field="id"
+                        headerText="ID"
+                        width="100"
+                        visible={false}
+                        isPrimaryKey={true}
                       />
-                    </GridComponent>
-                  </CTabPane>
-                  <CTabPane visible={activeKey === 3 ? "true" : "false"}>
-                    <GridComponent
-                      dataSource={emergencyContact}
-                      height={300}
-                      allowPaging={true}
-                      pageSettings={{ pageSize: 8 }}
-                      editSettings={editOptions}
-                      ref={thirdGrid}
-                      commandClick={onCommandClick}
-                      toolbar={toolbarOptions}
-                    >
-                      <ColumnsDirective>
-                        <ColumnDirective
-                          field="id"
-                          headerText="ID"
-                          width="100"
-                          visible={false}
-                          isPrimaryKey={true}
-                        />
-                        <ColumnDirective
-                          field="name"
-                          editType="text"
-                          headerText={GetLabelByName(
-                            "HCM-RWMIP9K3NEH_HRPR",
-                            lan
-                          )}
-                          width="70"
-                          //edit={earnings}
-                        />
-                        <ColumnDirective
-                          field="email"
-                          headerText={GetLabelByName(
-                            "HCM-RWMIP9K3NEH_HRPR",
-                            lan
-                          )}
-                          editType="text"
-                          width="100"
-                          textAlign="Center"
-                        />
-                        <ColumnDirective
-                          field="phone"
-                          headerText={GetLabelByName(
-                            "HCM-28JQRN57PA4-PSLL",
-                            lan
-                          )}
-                          editType="numericedit"
-                          width="100"
-                          textAlign="Center"
-                        />
-                        <ColumnDirective
-                          field="address"
-                          headerText={GetLabelByName(
-                            "HCM-7WIK8PDIQOV-LOLN",
-                            lan
-                          )}
-                          editType="text"
-                          // editTemplate={editTemplate}
-                          width="100"
-                          textAlign="Center"
-                        />
-                        <ColumnDirective
-                          commands={commandOptions}
-                          headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
-                          width="100"
-                          textAlign="Center"
-                        />
-                      </ColumnsDirective>
-                      <Inject
-                        services={[
-                          Page,
-                          Sort,
-                          Filter,
-                          Group,
-                          Edit,
-                          CommandColumn,
-                          Toolbar,
-                        ]}
+                      <ColumnDirective
+                        field="name"
+                        editType="text"
+                        headerText={GetLabelByName("HCM-RWMIP9K3NEH_HRPR", lan)}
+                        width="70"
+                        //edit={earnings}
                       />
-                    </GridComponent>
-                  </CTabPane>
-                  <CTabPane visible={activeKey === 4 ? "true" : "false"}>
-                    <GridComponent
-                      dataSource={guarantor}
-                      height={300}
-                      allowPaging={true}
-                      pageSettings={{ pageSize: 8 }}
-                      editSettings={editOptions}
-                      ref={fourthGrid}
-                      commandClick={onCommandClick}
-                      toolbar={toolbarOptions}
-                    >
-                      <ColumnsDirective>
-                        <ColumnDirective
-                          field="id"
-                          headerText="ID"
-                          width="100"
-                          visible={false}
-                          isPrimaryKey={true}
-                        />
-                        <ColumnDirective
-                          field="name"
-                          editType="text"
-                          headerText={GetLabelByName(
-                            "HCM-RWMIP9K3NEH_HRPR",
-                            lan
-                          )}
-                          width="70"
-                          // edit={earnings}
-                        />
-                        <ColumnDirective
-                          field="relation.name"
-                          headerText={GetLabelByName(
-                            "HCM-RWMIP9K3NEH_HRPR",
-                            lan
-                          )}
-                          editType="text"
-                          width="100"
-                          textAlign="Center"
-                        />
-                        {/* <ColumnDirective
+                      <ColumnDirective
+                        field="email"
+                        headerText={GetLabelByName("HCM-RWMIP9K3NEH_HRPR", lan)}
+                        editType="text"
+                        width="100"
+                        textAlign="Center"
+                      />
+                      <ColumnDirective
+                        field="phone"
+                        headerText={GetLabelByName("HCM-28JQRN57PA4-PSLL", lan)}
+                        editType="numericedit"
+                        width="100"
+                        textAlign="Center"
+                      />
+                      <ColumnDirective
+                        field="address"
+                        headerText={GetLabelByName("HCM-7WIK8PDIQOV-LOLN", lan)}
+                        editType="text"
+                        //
+                        width="100"
+                        textAlign="Center"
+                      />
+                      {/* <ColumnDirective
+                        commands={commandOptions}
+                        headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
+                        width="100"
+                        textAlign="Center"
+                      /> */}
+                    </ColumnsDirective>
+                    <Inject
+                      services={[
+                        Page,
+                        Sort,
+                        Filter,
+                        Group,
+                        Edit,
+                        CommandColumn,
+                        Toolbar,
+                      ]}
+                    />
+                  </GridComponent>
+                </CTabPane>
+                <CTabPane visible={activeKey === 4 ? "true" : "false"}>
+                  <GridComponent
+                    dataSource={guarantor}
+                    height={300}
+                    allowPaging={true}
+                    pageSettings={{ pageSize: 8 }}
+                    editSettings={editOptions}
+                    ref={fourthGrid}
+                    commandClick={onCommandClick}
+
+                    // toolbarClick={submitRequest}
+                  >
+                    <ColumnsDirective>
+                      <ColumnDirective
+                        field="id"
+                        headerText="ID"
+                        width="100"
+                        visible={false}
+                        isPrimaryKey={true}
+                      />
+                      <ColumnDirective
+                        field="name"
+                        editType="text"
+                        headerText={GetLabelByName("HCM-RWMIP9K3NEH_HRPR", lan)}
+                        width="70"
+                        // edit={earnings}
+                      />
+                      <ColumnDirective
+                        field="relation.name"
+                        headerText={GetLabelByName("HCM-RWMIP9K3NEH_HRPR", lan)}
+                        editType="text"
+                        width="100"
+                        textAlign="Center"
+                      />
+                      {/* <ColumnDirective
                           field="email"
                           headerText={GetLabelByName(
                             "HCM-L8D4N8LGAS_PSLL",
@@ -865,85 +795,73 @@ const EmployeeDetail = (props) => {
                           width="100"
                           textAlign="Center"
                         /> */}
-                        <ColumnDirective
-                          field="phone"
-                          headerText={GetLabelByName(
-                            "HCM-28JQRN57PA4-PSLL",
-                            lan
-                          )}
-                          editType="numericedit"
-                          width="100"
-                          textAlign="Center"
-                        />
-                        <ColumnDirective
-                          field="nationality.name"
-                          headerText={GetLabelByName(
-                            "HCM-7WIK8PDIQOV-LOLN",
-                            lan
-                          )}
-                          editType="text"
-                          width="100"
-                          textAlign="Center"
-                        />
-                        <ColumnDirective
-                          field="address"
-                          headerText={GetLabelByName(
-                            "HCM-7WIK8PDIQOV-LOLN",
-                            lan
-                          )}
-                          editType="text"
-                          width="100"
-                          textAlign="Center"
-                        />
-                        <ColumnDirective
-                          commands={commandOptions}
-                          headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
-                          width="100"
-                          textAlign="Center"
-                        />
-                      </ColumnsDirective>
-                      <Inject
-                        services={[
-                          Page,
-                          Sort,
-                          Filter,
-                          Group,
-                          Edit,
-                          CommandColumn,
-                          Toolbar,
-                        ]}
+                      <ColumnDirective
+                        field="phone"
+                        headerText={GetLabelByName("HCM-28JQRN57PA4-PSLL", lan)}
+                        editType="numericedit"
+                        width="100"
+                        textAlign="Center"
                       />
-                    </GridComponent>
-                  </CTabPane>
-                  <CTabPane visible={activeKey === 5 ? "true" : "false"}>
-                    <GridComponent
-                      dataSource={nextOfKin[0]}
-                      height={300}
-                      allowPaging={true}
-                      pageSettings={{ pageSize: 10 }}
-                      editSettings={editOptions}
-                      ref={fifthGrid}
-                      commandClick={onCommandClick}
-                      toolbar={toolbarOptions}
-                    >
-                      <ColumnsDirective>
-                        <ColumnDirective
-                          field="id"
-                          headerText="ID"
-                          width="100"
-                          visible={false}
-                          // isPrimaryKey={true}
-                        />
-                        <ColumnDirective
-                          field="name"
-                          editType="text"
-                          headerText={GetLabelByName(
-                            "HCM-RWMIP9K3NEH_HRPR",
-                            lan
-                          )}
-                          width="70"
-                        />
-                        {/* <ColumnDirective
+                      <ColumnDirective
+                        field="nationality.name"
+                        headerText={GetLabelByName("HCM-7WIK8PDIQOV-LOLN", lan)}
+                        editType="text"
+                        width="100"
+                        textAlign="Center"
+                      />
+                      <ColumnDirective
+                        field="address"
+                        headerText={GetLabelByName("HCM-7WIK8PDIQOV-LOLN", lan)}
+                        editType="text"
+                        width="100"
+                        textAlign="Center"
+                      />
+                      {/* <ColumnDirective
+                        commands={commandOptions}
+                        headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
+                        width="100"
+                        textAlign="Center"
+                      /> */}
+                    </ColumnsDirective>
+                    <Inject
+                      services={[
+                        Page,
+                        Sort,
+                        Filter,
+                        Group,
+                        Edit,
+                        CommandColumn,
+                        Toolbar,
+                      ]}
+                    />
+                  </GridComponent>
+                </CTabPane>
+                <CTabPane visible={activeKey === 5 ? "true" : "false"}>
+                  <GridComponent
+                    dataSource={nextOfKin[0]}
+                    height={300}
+                    allowPaging={true}
+                    pageSettings={{ pageSize: 10 }}
+                    editSettings={editOptions}
+                    ref={fifthGrid}
+                    commandClick={onCommandClick}
+                    toolbarClick={submitRequest}
+                  >
+                    <ColumnsDirective>
+                      <ColumnDirective
+                        field="id"
+                        headerText="ID"
+                        width="100"
+                        visible={false}
+                        // isPrimaryKey={true}
+                      />
+                      <ColumnDirective
+                        field="name"
+                        editType="text"
+                        headerText={GetLabelByName("HCM-RWMIP9K3NEH_HRPR", lan)}
+                        width="70"
+                      />
+                      {/* <ColumnDirective
                           field="relationId"
                           headerText={GetLabelByName(
                             "HCM-RWMIP9K3NEH_HRPR",
@@ -953,44 +871,35 @@ const EmployeeDetail = (props) => {
                           width="100"
                           textAlign="Center"
                         /> */}
-                        <ColumnDirective
-                          field="phone"
-                          headerText={GetLabelByName(
-                            "HCM-28JQRN57PA4-PSLL",
-                            lan
-                          )}
-                          editType="numericedit"
-                          width="100"
-                          textAlign="Center"
-                        />
-                        <ColumnDirective
-                          field="email"
-                          headerText={GetLabelByName(
-                            "HCM-L8D4N8LGAS_PSLL",
-                            lan
-                          )}
-                          editType="text"
-                          width="100"
-                          textAlign="Center"
-                        />
-                        <ColumnDirective
-                          field="address"
-                          headerText={GetLabelByName(
-                            "HCM-7WIK8PDIQOV-LOLN",
-                            lan
-                          )}
-                          editType="text"
-                          width="100"
-                          textAlign="Center"
-                        />
-                        <ColumnDirective
-                          commands={commandOptions}
-                          headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
-                          width="100"
-                          textAlign="Center"
-                        />
-                      </ColumnsDirective>
-                      {/* <Inject
+                      <ColumnDirective
+                        field="phone"
+                        headerText={GetLabelByName("HCM-28JQRN57PA4-PSLL", lan)}
+                        editType="numericedit"
+                        width="100"
+                        textAlign="Center"
+                      />
+                      <ColumnDirective
+                        field="email"
+                        headerText={GetLabelByName("HCM-L8D4N8LGAS_PSLL", lan)}
+                        editType="text"
+                        width="100"
+                        textAlign="Center"
+                      />
+                      <ColumnDirective
+                        field="address"
+                        headerText={GetLabelByName("HCM-7WIK8PDIQOV-LOLN", lan)}
+                        editType="text"
+                        width="100"
+                        textAlign="Center"
+                      />
+                      <ColumnDirective
+                        commands={commandOptions}
+                        headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
+                        width="100"
+                        textAlign="Center"
+                      />
+                    </ColumnsDirective>
+                    {/* <Inject
                         services={[
                           Page,
                           Sort,
@@ -1001,9 +910,9 @@ const EmployeeDetail = (props) => {
                           Toolbar,
                         ]}
                       /> */}
-                    </GridComponent>
-                  </CTabPane>
-                  {/* <CTabPane visible={activeKey === 6 ? "true" : "false"}>
+                  </GridComponent>
+                </CTabPane>
+                {/* <CTabPane visible={activeKey === 6 ? "true" : "false"}>
                     <GridComponent
                       height={300}
                       dataSource={sampleData}
@@ -1074,7 +983,7 @@ const EmployeeDetail = (props) => {
                       editSettings={editOptions}
                       ref={trans}
                       commandClick={onCommandClick}
-                      toolbar={toolbarOptions}
+                               
                     >
                       <ColumnsDirective>
                         <ColumnDirective
@@ -1131,7 +1040,7 @@ const EmployeeDetail = (props) => {
                           textAlign="Center"
                         />
                       </ColumnsDirective> */}
-                  {/* <Inject
+                {/* <Inject
                         services={[
                           Page,
                           Sort,
@@ -1142,9 +1051,9 @@ const EmployeeDetail = (props) => {
                           Toolbar,
                         ]}
                       /> */}
-                  {/* </GridComponent>
+                {/* </GridComponent>
                   </CTabPane> */}
-                  {/* <CTabPane visible={activeKey === 8 ? "true" : "false"}>
+                {/* <CTabPane visible={activeKey === 8 ? "true" : "false"}>
                     <GridComponent
                       height={300}
                       allowPaging={true}
@@ -1152,7 +1061,7 @@ const EmployeeDetail = (props) => {
                       editSettings={editOptions}
                       ref={trans}
                       commandClick={onCommandClick}
-                      toolbar={toolbarOptions}
+                               
                     >
                       <ColumnsDirective>
                         <ColumnDirective
@@ -1222,29 +1131,227 @@ const EmployeeDetail = (props) => {
                       />
                     </GridComponent>
                   </CTabPane> */}
-                </CTabContent>
-              </CTabs>
-            </CCardBody>
-
+              </CTabContent>
+            </CTabs>
             <CCardFooter>
-              {/* <CButton onClick={submitRequest} style={{ marginRight: 5, float: "right" }} type="submit" size="sm" color="success" >
-                <CIcon name="cil-scrubber" /> Submit
-              </CButton> */}
+              {/* { <CButton style={{ marginRight: 5 }} type="button" size="sm" color="success"><CIcon name="cil-scrubber" /> <CSLab code="View History" /> </CButton>} */}
               <CButton
-                onClick={refreshPage}
                 style={{ marginRight: 5, float: "right" }}
-                type="reset"
+                type="button"
                 size="sm"
-                color="danger"
+                onClick={submitRequest}
+                color="success"
               >
-                <CIcon name="cil-ban" /> <CSLab code="HCM-MELULU9B6R_KCMI" />
+                <AiFillSave size={20} />
+                <CSLab code="Update" />
+              </CButton>
+              <CButton
+                style={{ marginRight: 5, float: "right", color: "white" }}
+                onClick={() => handleReset(1)}
+                type="button"
+                size="sm"
+                color="warning"
+              >
+                <AiOutlineRedo size={20} /> <CSLab code="Undo" />
               </CButton>
             </CCardFooter>
           </CCard>
         </CCol>
       </CRow>
+
+      <CModal show={large} onClose={() => setLarge(!large)} size="md">
+        <CModalHeader closeButton>
+          <CModalTitle>Earning Details</CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          <CRow>
+            <CCol md="5">
+              <p>
+                <b>Code:</b>
+              </p>
+            </CCol>
+            <CCol md="6">
+              <p>EARN266</p>
+            </CCol>
+            <CCol md="1"></CCol>
+          </CRow>
+          <CRow>
+            <CCol md="5">
+              <p>
+                <b>Earning Name:</b>
+              </p>
+            </CCol>
+            <CCol md="6">
+              <p>Transportation Allowance</p>
+            </CCol>
+            <CCol md="1"></CCol>
+          </CRow>
+          <CRow>
+            <CCol md="5">
+              <p>
+                <b>Calculation Rule:</b>
+              </p>
+            </CCol>
+            <CCol md="6">
+              <p>Flat Amount</p>
+            </CCol>
+          </CRow>
+          <CRow>
+            <CCol md="5">
+              <p>
+                <b>Flat Amount:</b>
+              </p>
+            </CCol>
+            <CCol md="6">
+              <p>GH₵ 900.00</p>
+            </CCol>
+          </CRow>
+          <CRow>
+            <CCol md="5">
+              <p>
+                <b>Expiry Date:</b>
+              </p>
+            </CCol>
+            <CCol md="6">
+              <p>19/Aug/2021</p>
+            </CCol>
+          </CRow>
+        </CModalBody>
+        <CModalFooter>
+          <CButton color="secondary" onClick={() => setLarge(!large)}>
+            Close
+          </CButton>
+        </CModalFooter>
+      </CModal>
+
+      <CModal
+        show={showEmpModal}
+        onClose={() => setshowEmpModal(!showEmpModal)}
+        size="md"
+      >
+        <CModalHeader closeButton>
+          <CModalTitle>
+            <CSLab code={"HCM-N6EVCOP12K-LOLN"} />
+          </CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          <form>
+            <CRow>
+              <CCol md="12">
+                <CLabel htmlFor="appendedPrependedInput">
+                  Assign <b>{earningName}</b> to an employee
+                </CLabel>
+              </CCol>
+            </CRow>
+            <CRow>
+              <CCol md="12">
+                <CLabel htmlFor="employeeId">
+                  <CSLab code={"HCM-N6EVCOP12K-LOLN"} />
+                </CLabel>
+                <CSelect
+                  name="employeeId"
+                  value={data?.employeeId || -1}
+                  onChange={handleOnChange}
+                >
+                  {cmbEmployees.map((x, i) => (
+                    <option key={i} value={x.id}>
+                      {x.name}
+                    </option>
+                  ))}
+                </CSelect>
+              </CCol>
+            </CRow>
+
+            <CRow>
+              <CCol md="6">
+                <CLabel htmlFor="Period">
+                  <CSLab code={"HCM-HIE9Z3NNLN"} />
+                </CLabel>
+                <CSelect
+                  name="payPeriodId"
+                  value={data?.payPeriodId || -1}
+                  onChange={handleOnChange}
+                >
+                  {
+                    // payPeriod.map((x, i) => <option key={i} value={x.name}>{x.name}</option>)
+                  }
+                </CSelect>
+              </CCol>
+              <CCol md="6">
+                <CLabel htmlFor="unit">
+                  <CSLab code={"HCM-DHV9W3RF11D"} />
+                </CLabel>
+                <CInput
+                  placeholder="Enter unit"
+                  name="unit"
+                  id="unit"
+                  value={data?.unit || ""}
+                  onChange={handleOnChange}
+                  //  onKeyPress={(e) => handleNumberOnly(e)}
+                />
+              </CCol>
+            </CRow>
+            <CRow>
+              <CCol md="6">
+                <CLabel>
+                  <CSLab code={"HCM-8JZSECQCBTQ_LASN"} />
+                </CLabel>
+                <CSelect
+                  name="activityId"
+                  value={data?.activityId || -1}
+                  onChange={handleOnChange}
+                >
+                  {[
+                    "Select Activity ID",
+                    "Percentage of basic",
+                    "Flat Amount",
+                  ].map((x, i) => (
+                    <option key={i} value={x}>
+                      {x}
+                    </option>
+                  ))}
+                </CSelect>
+              </CCol>
+            </CRow>
+            <CRow>
+              <CCol md="6">
+                <CSCheckbox
+                  htmlFor="skipDateEntry"
+                  label={<CSLab code={"HCM-WMNWNWW83DS_LANG"} />}
+                  checked={data?.options?.skipDateEntry || false}
+                  name="skipDateEntry"
+                  onChange={handleCheckboxChange}
+                />
+              </CCol>
+              <CCol md="6">
+                <CSCheckbox
+                  htmlFor="skipGLAccountEntry"
+                  label={<CSLab code={"HCM-ZP7UU58NJBE_LOLN"} />}
+                  checked={data?.options?.skipGLAccountEntry || false}
+                  name="skipGLAccountEntry"
+                  onChange={handleCheckboxChanges}
+                />
+              </CCol>
+            </CRow>
+          </form>
+        </CModalBody>
+        <CModalFooter>
+          <CButton color="success" onClick={handleOnSubmit}>
+            <CSLab code={"HCM-TAAFD4M071D-HRPR"} />
+          </CButton>
+          <CButton
+            color="secondary"
+            onClick={() => {
+              setshowEmpModal(!showEmpModal);
+              handleReset();
+            }}
+          >
+            <CSLab code={"HCM-9E3ZC2E1S0N-LASN"} />
+          </CButton>
+        </CModalFooter>
+      </CModal>
     </>
   );
 };
 
-export default EmployeeDetail;
+export default NonRecurringEarningsByEarning;
