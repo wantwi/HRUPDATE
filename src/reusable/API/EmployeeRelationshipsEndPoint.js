@@ -22,3 +22,5 @@ export const PostEmployeeEmergencyContact =()=>`${BaseURL}EmployeeEmergencyConta
 export const GetBeneficiary  =(filter)=>`${BaseURL}EmployeeBeneficiary/${filter}`
 export const PostBeneficiary =()=>`${BaseURL}EmployeeBeneficiary`
 
+export const GetRelationTypes =() =>`${BaseURL}EmployeeFamily/RelationTypes/dropdown-types?companyReference=00001_A01`
+
