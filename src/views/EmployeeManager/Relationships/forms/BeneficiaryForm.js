@@ -126,7 +126,6 @@ function BeneficiaryForm({
               value={currentFormData?.percentage || ""}
             />
           </CCol>
-          
         </CRow>
       </CForm>
     </div>
