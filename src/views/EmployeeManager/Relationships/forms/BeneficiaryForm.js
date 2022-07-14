@@ -16,7 +16,7 @@ function BeneficiaryForm({
 }) {
   const [relationTypes, setRelationTypes] = useState([]);
   useEffect(() => {
-    setCurrentFormData({});
+    setCurrentFormData("");
   }, []);
 
   const MultipleGetRequests = async () => {

@@ -72,6 +72,7 @@ import {
   GetEmployeeGuarantor,
   GetRelationTypes,
   PostBeneficiary,
+  PostDependantDetails,
 } from "src/reusable/API/EmployeeRelationshipsEndPoint";
 import axios from "axios";
 import { RelationTypes } from "src/reusable/API/EmployeeFamilyEndPoint";
@@ -164,17 +165,6 @@ const editTemplate = (args) => {
     />
   );
   //(<CInput type='date' />)
-};
-
-const tem = (args) => {
-  console.log({ args });
-  return (
-    <select className="form-control">
-      <option>Item 101</option>
-      <option>Item 102</option>
-      <option>Item 103</option>
-    </select>
-  );
 };
 
 const EmployeeDetail = (props) => {
@@ -459,6 +449,10 @@ const EmployeeDetail = (props) => {
         toast.error("Please Enter Address!", toastWarning);
         return;
       }
+      if (!currentFormData?.percentage || submitData?.percentage === " ") {
+        toast.error("Please Enter Percentage!", toastWarning);
+        return;
+      }
       // console.log(submitData)
       let employeeId = handleId;
       //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
@@ -470,12 +464,62 @@ const EmployeeDetail = (props) => {
         employeeId,
       };
       console.log({ newData });
-      postEmployeeLanguage(newData);
+      postBeneficiary(newData);
+    }
+    if (activeKey === 2){
+      if (!currentFormData?.firstName || submitData?.firstName === "") {
+        toast.error("Please Enter First Name!", toastWarning);
+        return;
+      }
+      if (!currentFormData?.lastName || submitData?.lastName === " ") {
+        toast.error("Please Enter Last Name!", toastWarning);
+        return;
+      }
+
+      if (!currentFormData?.dateOfBirth || submitData?.dateOfBirth === " ") {
+        toast.error("Please Enter Date Of Birth!", toastWarning);
+        return;
+      }
+      if (!currentFormData?.address || submitData?.address === " ") {
+        toast.error("Please Enter Address!", toastWarning);
+        return;
+      }
+      if (!currentFormData?.relationTypeId || submitData?.relationTypeId === "-1") {
+        toast.error("Please Select Relation!", toastWarning);
+        return;
+      }
+      if (!currentFormData?.nationalityId || submitData?.nationalityId === "-1") {
+        toast.error("Please Select Nationality!", toastWarning);
+        return;
+      }
+      if (!currentFormData?.identityTypeId || submitData?.identityTypeId === "-1") {
+        toast.error("Please Select ID Type!", toastWarning);
+        return;
+      }
+      if (!currentFormData?.identityNumber || submitData?.identityNumber === " ") {
+        toast.error("Please Enter ID Number!", toastWarning);
+        return;
+      }if (!currentFormData?.dateOfExpiry || submitData?.dateOfExpiry === " ") {
+        toast.error("Please Enter Expiry Date!", toastWarning);
+        return;
+      }
+      // console.log(submitData)
+      let employeeId = handleId;
+      //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
+      let newData = {
+        ...currentFormData,
+        userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        userName: "string",
+        companyReference: "00001_A01",
+        employeeId,
+      };
+      console.log({ newData });
+      postDependant(newData);
     }
   };
-  //Post Employee Skill
-  function postEmployeeLanguage(data) {
-    console.log("post data", data);
+  //Post Employee Beneficiary
+  function postBeneficiary(data) {
+    //console.log("post data", data);
     PostRequest(PostBeneficiary(), { data: data })
       .then((response) => {
         response.text().then((data) => {
@@ -483,6 +527,7 @@ const EmployeeDetail = (props) => {
             toast.success("Employee Beneficiary Added Successfully!");
             console.log("success");
             MultipleGetRequests();
+            setCurrentFormData("")
           } else {
             try {
               data = JSON.parse(data);
@@ -506,7 +551,39 @@ const EmployeeDetail = (props) => {
         console.log("Done");
       });
   }
-
+  //post Dependant
+  function postDependant(data) {
+    console.log("post data", data);
+    PostRequest(PostDependantDetails(), { data: data })
+      .then((response) => {
+        response.text().then((data) => {
+          if ("" == data) {
+            toast.success("Employee Dependant Added Successfully!");
+            console.log("success");
+            MultipleGetRequests();
+          } else {
+            try {
+              data = JSON.parse(data);
+              toast.error(
+                data?.reason
+                  ? data?.reason
+                  : "Failed to Add Employee Dependant",
+                "error",
+                4000
+              );
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        });
+      })
+      .catch((err) => {
+        console.log({ err });
+      })
+      .finally(() => {
+        console.log("Done");
+      });
+  }
   const handleFormChange = (e) => {
     setCurrentFormData((prev) => ({
       ...prev,
