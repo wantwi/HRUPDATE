@@ -125,6 +125,7 @@ const EmployeeLanguage = () => {
   const [employeeLanguage, setEmployeelanguage] = useState([]);
   const [employeeLanguageType, setEmployeelanguageType] = useState([]);
   const [employeeName, setEmpDisplayName] = useState("");
+  const [readState, setReadState] = useState([]);
 
   const handleSearchResultSelect = (results) => {
     console.log("show results", results);
@@ -216,6 +217,7 @@ const EmployeeLanguage = () => {
 
   useEffect(() => {
     MultipleGetRequests();
+    change();
   }, []);
 
   //Handles Submit
@@ -296,9 +298,14 @@ const EmployeeLanguage = () => {
     });
   };
 
-  // console.log(" skiltype", skillType);
   // const canSave = [skill].every(Boolean);
-
+  const change = () => {
+    console.log("working");
+    viewinfo.map((x) => setReadState(x.read));
+  };
+  if (readState < 2) {
+    console.log({ readState });
+  }
   const TransLabelByCode = (name) => GetLabelByName(name, lan);
 
   return (
@@ -314,7 +321,7 @@ const EmployeeLanguage = () => {
         <CCol md="4">
           <CSAutoComplete
             filterUrl={SearchEmployees(searchInput)}
-            placeholder={"Search for employee by name or code"}
+            placeholder={GetLabelByName("HCM-6FKJ6FEGW7A-HRPR", lan)}
             handleSelect={handleSearchResultSelect}
             displayTextKey={"firstName"}
             setInput={setSearchInput}
@@ -410,13 +417,13 @@ const EmployeeLanguage = () => {
                   headerText={GetLabelByName("HCM-RN4OAN30KMI-KCMI", lan)}
                   width="100"
                 />
-                HCM-GOO3SSJSCG5_LANG
-                <ColumnDirective
+
+                {/* <ColumnDirective
                   commands={commandOptions}
                   headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
                   width="100"
                   textAlign="Center"
-                />
+                /> */}
               </ColumnsDirective>
               <Inject
                 services={[Page, Sort, Filter, Group, Edit, CommandColumn]}

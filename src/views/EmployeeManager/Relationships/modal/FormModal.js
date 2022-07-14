@@ -27,6 +27,15 @@ const FormModal = (props) => {
     if (activeKey === 2) {
       setFormTitle("Dependant");
     }
+    if (activeKey === 6) {
+      setFormTitle("Emergency Contact");
+    }
+    if (activeKey === 3) {
+      setFormTitle("Guarantor");
+    }
+    if (activeKey === 4) {
+      setFormTitle("Next Of Kin");
+    }
   }, [activeKey]);
 
   // let conten= null
@@ -58,10 +67,10 @@ const FormModal = (props) => {
             required
           </em>
         </p>
-        <CButton color="secondary">Close</CButton>
-        <CButton color="btn-success" onClick={submitBtn}>
-          Save
+        <CButton color="secondary" onClick={() => setShow(show)}>
+          Close
         </CButton>
+        <CButton color="btn-success">Save</CButton>
       </CModalFooter>
     </CModal>
   );

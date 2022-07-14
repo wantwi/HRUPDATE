@@ -1,9 +1,49 @@
 import { CCol, CForm, CInput, CLabel, CRow, CSelect } from "@coreui/react";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { CSLab, CSRequiredIndicator } from "src/reusable/components";
 import moment from "moment";
+import {
+  GetRelationTypes,
+  GetNationality,
+} from "src/reusable/API/EmployeeRelationshipsEndPoint";
+import { HttpAPIRequest } from "src/reusable/utils/helper";
 
-function GuarantorForm() {
+function GuarantorForm({
+  currentFormData,
+  handleFormChange,
+  setCurrentFormData,
+}) {
+  const [relationTypes, setRelationTypes] = useState([]);
+  const [nationality, setNationality] = useState([]);
+  // useEffect(() => {
+  //   setCurrentFormData("");
+  // }, []);
+
+  const MultipleGetRequests = async () => {
+    try {
+      let request = [
+        HttpAPIRequest("GET", GetRelationTypes()),
+        HttpAPIRequest("GET", GetNationality()),
+      ];
+      const multipleCall = await Promise.allSettled(request);
+      console.log(multipleCall[0].value);
+
+      setRelationTypes([
+        { id: "-1", name: `Select Relation` },
+        ...multipleCall[0].value,
+      ]);
+      setNationality([
+        { id: "-1", name: `Select Nationality` },
+        ...multipleCall[1].value,
+      ]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    MultipleGetRequests();
+  }, []);
   return (
     <div>
       <CForm>
@@ -16,13 +56,22 @@ function GuarantorForm() {
               name="firstName"
               type="text"
               placeholder="Enter First Name"
+              value={currentFormData?.firstName || ""}
+              onChange={handleFormChange}
             />
           </CCol>
           <CCol md="4">
             <CLabel htmlFor="lastName">
               <CSLab code="HCM-6CU7NZJCKLF" />
+              <CSRequiredIndicator />
             </CLabel>
-            <CInput name="lastName" type="text" placeholder="Enter Last Name" />
+            <CInput
+              name="lastName"
+              type="text"
+              placeholder="Enter Last Name"
+              value={currentFormData?.lastName || ""}
+              onChange={handleFormChange}
+            />
           </CCol>
           <CCol md="4">
             <CLabel htmlFor="phone">
@@ -32,6 +81,8 @@ function GuarantorForm() {
               name="phone"
               type="number"
               placeholder="Enter Phone Number"
+              value={currentFormData?.phone || ""}
+              onChange={handleFormChange}
             />
           </CCol>
         </CRow>
@@ -40,16 +91,26 @@ function GuarantorForm() {
             <CLabel htmlFor="address">
               <CSLab code="HCM-7WIK8PDIQOV-LOLN" /> <CSRequiredIndicator />
             </CLabel>
-            <CInput name="address" type="text" placeholder="Enter Address" />
+            <CInput
+              name="address"
+              type="text"
+              placeholder="Enter Address"
+              value={currentFormData?.address || ""}
+              onChange={handleFormChange}
+            />
           </CCol>
           <CCol md="4">
-            <CLabel htmlFor="relationTypeId">
+            <CLabel htmlFor="relationId">
               <CSLab code="HCM-RWMIP9K3NEH_HRPR" /> <CSRequiredIndicator />
             </CLabel>
-            <CSelect name="relationTypeId">
-              {["Select Relation", "Father", "Mother"].map((x, i) => (
-                <option key={i} value={x}>
-                  {x}
+            <CSelect
+              name="relationId"
+              value={currentFormData?.relationId || -1}
+              onChange={handleFormChange}
+            >
+              {relationTypes.map((x, i) => (
+                <option key={i} value={x.id}>
+                  {x.name}
                 </option>
               ))}
             </CSelect>
@@ -58,14 +119,17 @@ function GuarantorForm() {
             <CLabel htmlFor="nationalityId">
               <CSLab code="HCM-IM8I8SKJ1J9_KCMI" /> <CSRequiredIndicator />
             </CLabel>
-            <CSelect name="nationalityId">
-              {["Select Nationality", "Canadian", "South African"].map(
-                (x, i) => (
-                  <option key={i} value={x}>
-                    {x}
-                  </option>
-                )
-              )}
+            <CSelect
+              name="nationalityId"
+              value={currentFormData?.nationalityId || -1}
+              onChange={handleFormChange}
+              
+            >
+              {nationality.map((x, i) => (
+                <option key={i} value={x.id}>
+                  {x.name}
+                </option>
+              ))}
             </CSelect>
           </CCol>
         </CRow>
@@ -74,7 +138,13 @@ function GuarantorForm() {
             <CLabel htmlFor="email">
               <CSLab code="HCM-CXLK7IYZ9B9-KCMI" /> <CSRequiredIndicator />
             </CLabel>
-            <CInput name="email" type="text" placeholder="Enter Email" />
+            <CInput
+              name="email"
+              type="text"
+              placeholder="Enter Email"
+              value={currentFormData?.email || ""}
+              onChange={handleFormChange}
+            />
           </CCol>
           <CCol md="4">
             <CLabel htmlFor="occupation">
@@ -84,6 +154,8 @@ function GuarantorForm() {
               name="occupation"
               type="text"
               placeholder="Enter Occupation"
+              value={currentFormData?.occupation || ""}
+              onChange={handleFormChange}
             />
           </CCol>
           {/* <CCol md="4">

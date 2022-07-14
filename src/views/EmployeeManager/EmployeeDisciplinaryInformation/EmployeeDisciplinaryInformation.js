@@ -345,7 +345,7 @@ const EmployeeDisciplinaryInformation = (props) => {
             <CSAutoComplete
               filterUrl={SearchEmployees(searchInput)}
               //filterUrl=''            //filterUrl={SearchInternalCurrencies(searchInput)}
-              placeholder={"Search for employee by name or code"}
+              placeholder={GetLabelByName("HCM-6FKJ6FEGW7A-HRPR", lan)}
               handleSelect={handleSearchResultSelect}
               //onChange={()=>handleSearchResultSelect}
               displayTextKey={"firstName"}

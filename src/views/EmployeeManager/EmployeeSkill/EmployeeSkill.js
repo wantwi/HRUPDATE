@@ -221,9 +221,9 @@ const EmployeeSkill = (props) => {
       toast.error("Please Select a Skill Type!", toastWarning);
       return;
     }
-    if (!submitData?.description || submitData?.description === '') {
-        toast.error('Please Enter Description!', toastWarning);
-        return;
+    if (!submitData?.description || submitData?.description === "") {
+      toast.error("Please Enter Description!", toastWarning);
+      return;
     }
     // console.log(submitData)
     let employeeId = submitData.id;
@@ -246,16 +246,18 @@ const EmployeeSkill = (props) => {
     console.log("post data", data);
     PostRequest(PostEmployeeSkill(), { data: data })
       .then((response) => {
-        
         response.text().then((data) => {
-         
           if ("" == data) {
-            toast.success('Employee Skill Added Successfully!',);
+            toast.success("Employee Skill Added Successfully!");
             console.log("success");
           } else {
             try {
               data = JSON.parse(data);
-               toast.error(data?.reason ? data?.reason : "Failed to Add Employee Skill", 'error', 400);
+              toast.error(
+                data?.reason ? data?.reason : "Failed to Add Employee Skill",
+                "error",
+                400
+              );
             } catch (error) {
               console.log(error);
             }
@@ -299,7 +301,7 @@ const EmployeeSkill = (props) => {
             <CSAutoComplete
               filterUrl={SearchEmployees(searchInput)}
               //filterUrl=''            //filterUrl={SearchInternalCurrencies(searchInput)}
-              placeholder={"Search for employee by name or code"}
+              placeholder={GetLabelByName("HCM-6FKJ6FEGW7A-HRPR", lan)}
               handleSelect={handleSearchResultSelect}
               //onChange={()=>handleSearchResultSelect}
               displayTextKey={"firstName"}
@@ -319,7 +321,7 @@ const EmployeeSkill = (props) => {
               mode={mode}
               setMode={setMode}
               handleId={setHandleId}
-            // reset={handleReset}
+              // reset={handleReset}
             />
           </CFormGroup>
         </CCol>
@@ -361,7 +363,6 @@ const EmployeeSkill = (props) => {
                   </CButton>
                 </CCol>
               </CFormGroup>
-
             </CCardHeader>
 
             <CForm action="" method="post">
@@ -382,7 +383,12 @@ const EmployeeSkill = (props) => {
                     />
                     <ColumnDirective
                       field={"employee.firstName"}
-                      headerText={GetLabelByName("HCM-VD1B12NKKJ_LANG", lan)}
+                      headerText={GetLabelByName("HCM-KPH53NF08RG", lan)}
+                      width="100"
+                    />
+                    <ColumnDirective
+                      field={"employee.lastName"}
+                      headerText={GetLabelByName("HCM-6CU7NZJCKLF", lan)}
                       width="100"
                     />
 
@@ -391,27 +397,19 @@ const EmployeeSkill = (props) => {
                       headerText={GetLabelByName("HCM-P29OOIV9P7_PSLL", lan)}
                       width="100"
                     />
-                    <ColumnDirective
+                    {/* <ColumnDirective
                       commands={commandOptions}
                       headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
                       width="100"
                       textAlign="Center"
-                    />
+                    /> */}
                   </ColumnsDirective>
                   <Inject
-                    services={[
-                      Page,
-                      Sort,
-                      Filter,
-                      Group,
-                      Edit,
-                      CommandColumn,
-                    ]}
+                    services={[Page, Sort, Filter, Group, Edit, CommandColumn]}
                   />
                 </GridComponent>
               </>
             </CForm>
-
           </CCard>
         </CCol>
       </CRow>
@@ -544,7 +542,15 @@ const EmployeeSkill = (props) => {
           </CRow> */}
         </CModalBody>
         <CModalFooter>
-        <CSLab code="HCM-3KZ0O74GRZP-LOLN" style={{ marginRight: 215 }} />
+          <div style={{ fontSize: "10px", marginRight: "123px" }}>
+            <p>
+              <em>
+                All fields marked with asterisk (<CSRequiredIndicator />) are
+                required
+              </em>
+            </p>
+          </div>
+
           <CButton color="secondary" onClick={() => setVisible(false)}>
             <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
           </CButton>

@@ -1,12 +1,46 @@
 import { CCol, CForm, CInput, CLabel, CRow, CSelect } from "@coreui/react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { CSLab, CSRequiredIndicator } from "src/reusable/components";
+import { HttpAPIRequest } from "src/reusable/utils/helper";
+import {
+  GetRelationTypes,
+  GetNationality,
+  GetIdTypes,
+} from "src/reusable/API/EmployeeRelationshipsEndPoint";
 
+function NextOfKinForm({
+  currentFormData,
+  handleFormChange,
+  setCurrentFormData,
+}) {
+  const [relationTypes, setRelationTypes] = useState([]);
+  const [nationality, setNationality] = useState([]);
+  const [identityTypes, setIdentityTypes] = useState([]);
 
-function NextOfKinForm() {
+  const MultipleGetRequests = async () => {
+    try {
+      let request = [
+        HttpAPIRequest("GET", GetRelationTypes()),
+        HttpAPIRequest("GET", GetNationality()),
+      ];
+      const multipleCall = await Promise.allSettled(request);
+      console.log(multipleCall[0].value);
 
-
-
+      setRelationTypes([
+        { id: "-1", name: `Select Relation` },
+        ...multipleCall[0].value,
+      ]);
+      setNationality([
+        { id: "-1", name: `Select Nationality` },
+        ...multipleCall[1].value,
+      ]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    MultipleGetRequests();
+  }, []);
 
   return (
     <div>
@@ -15,82 +49,117 @@ function NextOfKinForm() {
           <CCol md="4">
             <CLabel htmlFor="firstName">
               <CSLab code="HCM-KPH53NF08RG" /> {""}
-             <CSRequiredIndicator/>
+              <CSRequiredIndicator />
             </CLabel>
             <CInput
               name="firstName"
               type="text"
               placeholder="Enter First Name"
+              value={currentFormData?.firstName || " "}
+              onChange={handleFormChange}
             />
           </CCol>
           <CCol md="4">
             <CLabel htmlFor="lastName">
               <CSLab code="HCM-6CU7NZJCKLF" /> {""}
-             <CSRequiredIndicator/>
+              <CSRequiredIndicator />
             </CLabel>
-            <CInput name="lastName" type="text" placeholder="Enter Last Name" />
+            <CInput
+              name="lastName"
+              type="text"
+              placeholder="Enter Last Name"
+              value={currentFormData?.lastName || " "}
+              onChange={handleFormChange}
+            />
           </CCol>
           <CCol md="4">
             <CLabel htmlFor="phone">
               <CSLab code="HCM-28JQRN57PA4-PSLL" /> {""}
-             <CSRequiredIndicator/>
+              <CSRequiredIndicator />
             </CLabel>
-            <CInput name="phone" type="text" placeholder="Enter Phone Number" />
+            <CInput
+              name="phone"
+              type="text"
+              placeholder="Enter Phone Number"
+              value={currentFormData?.phone || " "}
+              onChange={handleFormChange}
+            />
           </CCol>
         </CRow>
         <CRow>
           <CCol md="4">
             <CLabel htmlFor="otherPhone">
               <CSLab code="HCM-BIARUHXGKQ4-HRPR" /> {""}
-             <CSRequiredIndicator/>
+              <CSRequiredIndicator />
             </CLabel>
             <CInput
               name="otherPhone"
               type="text"
               placeholder="Enter Phone Number"
+              value={currentFormData?.otherPhone || " "}
+              onChange={handleFormChange}
             />
           </CCol>
           <CCol md="4">
             <CLabel htmlFor="address">
               <CSLab code="HCM-7WIK8PDIQOV-LOLN" /> {""}
-             <CSRequiredIndicator/>
+              <CSRequiredIndicator />
             </CLabel>
-            <CInput name="address" type="text" placeholder="Enter Address" />
+            <CInput
+              name="address"
+              type="text"
+              placeholder="Enter Address"
+              value={currentFormData?.address || " "}
+              onChange={handleFormChange}
+            />
           </CCol>
           <CCol md="4">
             <CLabel htmlFor="email">
-              <CSLab code="HCM-CXLK7IYZ9B9-KCMI" />{" "} <CSRequiredIndicator/>
+              <CSLab code="HCM-CXLK7IYZ9B9-KCMI" /> <CSRequiredIndicator />
             </CLabel>
-            <CInput name="email" type="text" placeholder="Enter Email" />
+            <CInput
+              name="email"
+              type="text"
+              placeholder="Enter Email"
+              value={currentFormData?.email || " "}
+              onChange={handleFormChange}
+            />
           </CCol>
         </CRow>
         <CRow>
           <CCol md="4">
             <CLabel htmlFor="relationId">
               <CSLab code="HCM-RWMIP9K3NEH_HRPR" /> {""}
-             <CSRequiredIndicator/>
+              <CSRequiredIndicator />
             </CLabel>
-            <CSelect name="relationId">
-              {["Select Relation", "Male", "Female"].map((x, i) => (
-                <option key={i} value={x}>
-                  {x}
+            <CSelect
+              name="relationId"
+              value={currentFormData?.relationId || -1}
+              onChange={handleFormChange}
+            >
+              {relationTypes.map((x, i) => (
+                <option key={i} value={x.id}>
+                  {x.name}
                 </option>
               ))}
             </CSelect>
           </CCol>
           <CCol md="4">
-            <CLabel htmlFor="nationalId">
-              <CSLab code="HCM-IM8I8SKJ1J9_KCMI" />{""}
-              <CSRequiredIndicator/>
+            <CLabel htmlFor="nationalityId">
+              <CSLab code="HCM-IM8I8SKJ1J9_KCMI" />
+              {""}
+              <CSRequiredIndicator />
             </CLabel>
-            <CSelect name="nationalId">
-              {["Select Nationality", "Canadian", "South African"].map(
-                (x, i) => (
-                  <option key={i} value={x}>
-                    {x}
-                  </option>
-                )
-              )}
+            <CSelect
+              name="nationalityId"
+              value={currentFormData?.nationalityId || -1}
+              onChange={handleFormChange}
+            >
+              {nationality.map((x, i) => (
+                <option key={i} value={x.id}>
+                  {x.name}
+                </option>
+              ))}
             </CSelect>
           </CCol>
         </CRow>

@@ -319,13 +319,16 @@ const EmployeeEducationInformation = (props) => {
           <CSAutoComplete
             filterUrl={SearchEmployees(searchInput)}
             //filterUrl=''            //filterUrl={SearchInternalCurrencies(searchInput)}
-            placeholder={"Search for employee by name or code"}
+            placeholder={GetLabelByName("HCM-6FKJ6FEGW7A-HRPR", lan)}
             handleSelect={handleSearchResultSelect}
             //onChange={()=>handleSearchResultSelect}
             displayTextKey={"firstName"}
             setInput={setSearchInput}
             input={searchInput}
-            emptySearchFieldMessage={`Please input 3 or more characters to search`}
+            emptySearchFieldMessage={GetLabelByName(
+              `HCM-HUI7EHKRJW5_LANG`,
+              lan
+            )}
             searchName={"Employee"}
             isPaginated={false}
             pageNumber={pageNumber}
@@ -401,6 +404,16 @@ const EmployeeEducationInformation = (props) => {
                       width="150"
                     />
                     <ColumnDirective
+                      field={"grade"}
+                      headerText="Grade"
+                      width="120"
+                    />
+                    <ColumnDirective
+                      field={"title.name"}
+                      headerText="Title"
+                      width="150"
+                    />
+                    <ColumnDirective
                       field={"educationType.name"}
                       headerText="Core Area"
                       width="150"
@@ -420,13 +433,13 @@ const EmployeeEducationInformation = (props) => {
                       format={"dd/MMM/yyyy"}
                     />
 
-                    <ColumnDirective
+                    {/* <ColumnDirective
                       commands={commandOptions}
                       color="primary"
                       headerText={"Action"}
                       width="50"
                       textAlign="Center"
-                    />
+                    /> */}
                   </ColumnsDirective>
                   <Inject
                     services={[
@@ -561,6 +574,7 @@ const EmployeeEducationInformation = (props) => {
                 name="grade"
                 value={data?.grade || ""}
                 onChange={handleOnChange}
+                placeholder={GetLabelByName("HCM-D5ABDMN6RNT_LANG", lan)}
               />
             </CCol>
             <CCol md="3">
@@ -576,6 +590,7 @@ const EmployeeEducationInformation = (props) => {
                 name="school"
                 value={data?.school || ""}
                 onChange={handleOnChange}
+                placeholder={GetLabelByName("HCM-TIUPTL2IYO9-KCMI", lan)}
               />
             </CCol>
           </CRow>
@@ -595,6 +610,15 @@ const EmployeeEducationInformation = (props) => {
           </CRow>
         </CModalBody>
         <CModalFooter>
+          <div style={{ marginRight: "350px" }}>
+            <p>
+              <em>
+                All fields marked with asterisk (<CSRequiredIndicator />) are
+                required
+              </em>
+            </p>
+          </div>
+
           <CButton color="secondary" onClick={() => setVisible(false)}>
             <CSLab code="HCM-9E3ZC2E1S0N-LASN" />
           </CButton>

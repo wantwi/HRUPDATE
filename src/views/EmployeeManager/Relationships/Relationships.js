@@ -73,6 +73,9 @@ import {
   GetRelationTypes,
   PostBeneficiary,
   PostDependantDetails,
+  PostEmployeeEmergencyContact,
+  PostEmployeeGuarantor,
+  PostEmployeeNextOfKin,
 } from "src/reusable/API/EmployeeRelationshipsEndPoint";
 import axios from "axios";
 import { RelationTypes } from "src/reusable/API/EmployeeFamilyEndPoint";
@@ -356,7 +359,7 @@ const EmployeeDetail = (props) => {
   };
 
   useEffect(() => {
-    if (handleId !== "") {
+    if (handleId) {
       handleNextOfKin();
     }
   }, [handleId]);
@@ -432,6 +435,7 @@ const EmployeeDetail = (props) => {
   // console.log({showTypes})
 
   const submitBtn = () => {
+    // Dependant
     if (activeKey === 1) {
       if (!currentFormData?.firstName || submitData?.firstName === "") {
         toast.error("Please Enter First Name!", toastWarning);
@@ -466,7 +470,8 @@ const EmployeeDetail = (props) => {
       console.log({ newData });
       postBeneficiary(newData);
     }
-    if (activeKey === 2){
+    //handle Beneficiary
+    if (activeKey === 2) {
       if (!currentFormData?.firstName || submitData?.firstName === "") {
         toast.error("Please Enter First Name!", toastWarning);
         return;
@@ -484,22 +489,32 @@ const EmployeeDetail = (props) => {
         toast.error("Please Enter Address!", toastWarning);
         return;
       }
-      if (!currentFormData?.relationTypeId || submitData?.relationTypeId === "-1") {
+      if (
+        !currentFormData?.relationTypeId ||
+        submitData?.relationTypeId === -1
+      ) {
         toast.error("Please Select Relation!", toastWarning);
         return;
       }
-      if (!currentFormData?.nationalityId || submitData?.nationalityId === "-1") {
+      if (!currentFormData?.nationalityId || submitData?.nationalityId === -1) {
         toast.error("Please Select Nationality!", toastWarning);
         return;
       }
-      if (!currentFormData?.identityTypeId || submitData?.identityTypeId === "-1") {
+      if (
+        !currentFormData?.identityTypeId ||
+        submitData?.identityTypeId === -1
+      ) {
         toast.error("Please Select ID Type!", toastWarning);
         return;
       }
-      if (!currentFormData?.identityNumber || submitData?.identityNumber === " ") {
+      if (
+        !currentFormData?.identityNumber ||
+        submitData?.identityNumber === " "
+      ) {
         toast.error("Please Enter ID Number!", toastWarning);
         return;
-      }if (!currentFormData?.dateOfExpiry || submitData?.dateOfExpiry === " ") {
+      }
+      if (!currentFormData?.dateOfExpiry || submitData?.dateOfExpiry === " ") {
         toast.error("Please Enter Expiry Date!", toastWarning);
         return;
       }
@@ -516,6 +531,142 @@ const EmployeeDetail = (props) => {
       console.log({ newData });
       postDependant(newData);
     }
+    //handle Emegency Contact
+    if (activeKey === 6) {
+      if (!currentFormData?.firstName || submitData?.firstName === "") {
+        toast.error("Please Enter First Name!", toastWarning);
+        return;
+      }
+      if (!currentFormData?.lastName || submitData?.lastName === " ") {
+        toast.error("Please Enter Last Name!", toastWarning);
+        return;
+      }
+
+      if (!currentFormData?.phone || submitData?.phone === " ") {
+        toast.error("Please Enter Phone Number!", toastWarning);
+        return;
+      }
+      if (!currentFormData?.address || submitData?.address === " ") {
+        toast.error("Please Enter Address!", toastWarning);
+        return;
+      }
+      if (!currentFormData?.email || submitData?.email === -1) {
+        toast.error("Please Enter Email!", toastWarning);
+        return;
+      }
+      // console.log(submitData)
+      let employeeId = handleId;
+      //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
+      let newData = {
+        ...currentFormData,
+        userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        userName: "string",
+        companyReference: "00001_A01",
+        employeeId,
+        name: `${currentFormData?.firstName} ${currentFormData?.lastName}`,
+      };
+      console.log({ newData });
+      postEmergencyContact(newData);
+    }
+    //handle Guarantor
+    if (activeKey === 3) {
+      if (!currentFormData?.firstName || submitData?.firstName === "") {
+        toast.error("Please Enter First Name!", toastWarning);
+        return;
+      }
+      if (!currentFormData?.lastName || submitData?.lastName === " ") {
+        toast.error("Please Enter Last Name!", toastWarning);
+        return;
+      }
+
+      if (!currentFormData?.phone || submitData?.phone === " ") {
+        toast.error("Please Enter Phone Number!", toastWarning);
+        return;
+      }
+      if (!currentFormData?.address || submitData?.address === " ") {
+        toast.error("Please Enter Address!", toastWarning);
+        return;
+      }
+      if (!currentFormData?.relationId || submitData?.relationId === -1) {
+        toast.error("Please Select Relation", toastWarning);
+        return;
+      }
+      if (!currentFormData?.email || submitData?.email === -1) {
+        toast.error("Please Enter Email!", toastWarning);
+        return;
+      }
+      if (
+        !currentFormData?.nationalityId ||
+        submitData?.nationalityId === "-1"
+      ) {
+        toast.error("Please Select Nationality", toastWarning);
+        return;
+      }
+      if (!currentFormData?.occupation || submitData?.occupation === "-1") {
+        toast.error("Please Enter Occupation", toastWarning);
+        return;
+      }
+
+      // console.log(submitData)
+      let employeeId = handleId;
+      //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
+      let newData = {
+        ...currentFormData,
+        userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        userName: "string",
+        companyReference: "00001_A01",
+        employeeId,
+        name: `${currentFormData?.firstName} ${currentFormData?.lastName}`,
+      };
+      console.log({ newData });
+      postGuarantor(newData);
+    }
+    //handle Next oF Kin
+    if (activeKey === 4) {
+      if (!currentFormData?.firstName || submitData?.firstName === "") {
+        toast.error("Please Enter First Name!", toastWarning);
+        return;
+      }
+      if (!currentFormData?.lastName || submitData?.lastName === " ") {
+        toast.error("Please Enter Last Name!", toastWarning);
+        return;
+      }
+
+      if (!currentFormData?.phone || submitData?.phone === " ") {
+        toast.error("Please Enter Phone Number!", toastWarning);
+        return;
+      }
+      if (!currentFormData?.address || submitData?.address === " ") {
+        toast.error("Please Enter Address!", toastWarning);
+        return;
+      }
+      if (!currentFormData?.relationId || submitData?.relationId === -1) {
+        toast.error("Please Select Relation", toastWarning);
+        return;
+      }
+      if (!currentFormData?.email || submitData?.email === "") {
+        toast.error("Please Enter Email!", toastWarning);
+        return;
+      }
+      if (!currentFormData?.nationalityId || submitData?.nationalityId === -1) {
+        toast.error("Please Select Nationality", toastWarning);
+        return;
+      }
+
+      // console.log(submitData)
+      let employeeId = handleId;
+      //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
+      let newData = {
+        ...currentFormData,
+        userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        userName: "string",
+        companyReference: "00001_A01",
+        employeeId,
+        name: `${currentFormData?.firstName} ${currentFormData?.lastName}`,
+      };
+      console.log({ newData });
+      postNextOfKin(newData);
+    }
   };
   //Post Employee Beneficiary
   function postBeneficiary(data) {
@@ -527,7 +678,7 @@ const EmployeeDetail = (props) => {
             toast.success("Employee Beneficiary Added Successfully!");
             console.log("success");
             MultipleGetRequests();
-            setCurrentFormData("")
+            setCurrentFormData("");
           } else {
             try {
               data = JSON.parse(data);
@@ -561,6 +712,7 @@ const EmployeeDetail = (props) => {
             toast.success("Employee Dependant Added Successfully!");
             console.log("success");
             MultipleGetRequests();
+            setCurrentFormData("");
           } else {
             try {
               data = JSON.parse(data);
@@ -584,6 +736,108 @@ const EmployeeDetail = (props) => {
         console.log("Done");
       });
   }
+  //Post Emergency Contact
+  function postEmergencyContact(data) {
+    console.log("post data", data);
+    PostRequest(PostEmployeeEmergencyContact(), { data: data })
+      .then((response) => {
+        response.text().then((data) => {
+          if ("" == data) {
+            toast.success("Emergency Contact Added Successfully!");
+            console.log("success");
+            MultipleGetRequests();
+            setCurrentFormData("");
+          } else {
+            try {
+              data = JSON.parse(data);
+              toast.error(
+                data?.reason ? data?.reason : "Failed to Add Emergency Contact",
+                "error",
+                4000
+              );
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        });
+      })
+      .catch((err) => {
+        console.log({ err });
+      })
+      .finally(() => {
+        console.log("Done");
+      });
+  }
+  // Post Guarantor
+  function postGuarantor(data) {
+    console.log("post data", data);
+    PostRequest(PostEmployeeGuarantor(), { data: data })
+      .then((response) => {
+        response.text().then((data) => {
+          if ("" == data) {
+            toast.success("Employee Guarantor Added Successfully!");
+            console.log("success");
+            MultipleGetRequests();
+            setCurrentFormData("");
+          } else {
+            try {
+              data = JSON.parse(data);
+              toast.error(
+                data?.reason
+                  ? data?.reason
+                  : "Failed to Add Employee Guarantor",
+                "error",
+                4000
+              );
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        });
+      })
+      .catch((err) => {
+        console.log({ err });
+      })
+      .finally(() => {
+        console.log("Done");
+      });
+  }
+  // Post Next Of Kin
+  function postNextOfKin(data) {
+    console.log("post data", data);
+    PostRequest(PostEmployeeNextOfKin(), { data: data })
+      .then((response) => {
+        response.text().then((data) => {
+          if ("" == data) {
+            toast.success("Employee Guarantor Added Successfully!");
+            console.log("success");
+            MultipleGetRequests();
+            handleNextOfKin();
+            setCurrentFormData("");
+          } else {
+            try {
+              data = JSON.parse(data);
+              toast.error(
+                data?.reason
+                  ? data?.reason
+                  : "Failed to Add Employee Guarantor",
+                "error",
+                4000
+              );
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        });
+      })
+      .catch((err) => {
+        console.log({ err });
+      })
+      .finally(() => {
+        console.log("Done");
+      });
+  }
+
   const handleFormChange = (e) => {
     setCurrentFormData((prev) => ({
       ...prev,
@@ -614,6 +868,7 @@ const EmployeeDetail = (props) => {
       <DependantForm
         currentFormData={currentFormData}
         handleFormChange={handleFormChange}
+        setCurrentFormData={setCurrentFormData}
       />
     );
   }
@@ -622,6 +877,7 @@ const EmployeeDetail = (props) => {
       <EmergencyContactForm
         currentFormData={currentFormData}
         handleFormChange={handleFormChange}
+        setCurrentFormData={setCurrentFormData}
       />
     );
   }
@@ -630,6 +886,7 @@ const EmployeeDetail = (props) => {
       <GuarantorForm
         currentFormData={currentFormData}
         handleFormChange={handleFormChange}
+        setCurrentFormData={setCurrentFormData}
       />
     );
   }
@@ -638,6 +895,7 @@ const EmployeeDetail = (props) => {
       <NextOfKinForm
         currentFormData={currentFormData}
         handleFormChange={handleFormChange}
+        setCurrentFormData={setCurrentFormData}
       />
     );
   }
