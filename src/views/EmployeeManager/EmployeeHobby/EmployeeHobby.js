@@ -404,7 +404,12 @@ const EmployeeHobby = (props) => {
                     />
                     <ColumnDirective
                       field={"employee.firstName"}
-                      headerText={GetLabelByName("HCM-FQYC4N0VN1W-HRPR", lan)}
+                      headerText={GetLabelByName("HCM-KPH53NF08RG", lan)}
+                      width="100"
+                    />
+                     <ColumnDirective
+                      field={"employee.lastName"}
+                      headerText={GetLabelByName("HCM-6CU7NZJCKLF", lan)}
                       width="100"
                     />
 
@@ -426,7 +431,7 @@ const EmployeeHobby = (props) => {
 
       <CModal
         show={visible}
-        size={"lg"}
+        size={"md"}
         onClose={() => setVisible(false)}
         closeOnBackdrop={false}
       >
@@ -440,8 +445,8 @@ const EmployeeHobby = (props) => {
           <CRow className={"bottom-spacing"}>
             <>
               <CCol md="6">
-                <CLabel htmlFor="Hobby">
-                  <CSLab name="hobby" code="HCM-7NAYG6MHKMA-KCMI" />
+                <CLabel htmlFor="hobbyTypeId">
+                  <CSLab name="hobbyTypeId" code="HCM-7NAYG6MHKMA-KCMI" />
                   <CSRequiredIndicator />
                 </CLabel>
 
@@ -468,7 +473,12 @@ const EmployeeHobby = (props) => {
           </CRow>
         </CModalBody>
         <CModalFooter>
-          <CSLab code="HCM-3KZ0O74GRZP-LOLN" style={{ marginRight: 215 }} />
+        <p style={{fontSize: "10px", marginRight: "215px", marginBottom: "-29px"}}>
+          <em>
+            All fields marked with asterisk (<CSRequiredIndicator />) are
+            required
+          </em>
+        </p>
           <CButton color="secondary" onClick={() => setVisible(false)}>
             <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
           </CButton>

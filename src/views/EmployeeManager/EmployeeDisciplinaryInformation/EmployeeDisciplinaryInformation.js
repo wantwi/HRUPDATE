@@ -411,7 +411,7 @@ const EmployeeDisciplinaryInformation = (props) => {
                 <GridComponent
                   dataSource={viewinfo}
                   allowPaging={true}
-                  pageSettings={{ pageSize: 6 }}
+                  pageSettings={{ pageSize: 10 }}
                   editSettings={editOptions}
                 >
                   <ColumnsDirective>
@@ -466,12 +466,12 @@ const EmployeeDisciplinaryInformation = (props) => {
                       headerText={GetLabelByName("HCM-9FY7YTVZ1I4", lan)}
                       width="100"
                     />
-                    <ColumnDirective
+                    {/* <ColumnDirective
                       commands={commandOptions}
                       headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
                       width="100"
                       textAlign="Center"
-                    />
+                    /> */}
                   </ColumnsDirective>
                   <Inject
                     services={[Page, Sort, Filter, Group, Edit, CommandColumn]}
@@ -503,11 +503,12 @@ const EmployeeDisciplinaryInformation = (props) => {
                 <CSRequiredIndicator />
               </CLabel>
               <CInput
-                className=""
+                
                 name="actionBy"
                 type="text"
                 value={data?.actionBy || " "}
                 onChange={handleOnChange}
+                placeholder={GetLabelByName("HCM-BLC5UYKD3GO-PSLL",lan)}
               />
             </CCol>
             <CCol md="4">
@@ -596,7 +597,12 @@ const EmployeeDisciplinaryInformation = (props) => {
           </CRow>
         </CModalBody>
         <CModalFooter>
-          <CSLab code="HCM-3KZ0O74GRZP-LOLN" style={{ marginRight: 215 }} />
+        <p style={{fontSize: "10px", marginRight: "380px"}}>
+          <em>
+            All fields marked with asterisk (<CSRequiredIndicator />) are
+            required
+          </em>
+        </p>
           <CButton color="secondary" onClick={() => setVisible(false)}>
             <CSLab code="HCM-9E3ZC2E1S0N-LASN" />
           </CButton>

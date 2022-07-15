@@ -450,7 +450,7 @@ const MedicalTransaction = () => {
         <CModalBody>
           <CRow className={"bottom-spacing"}>
             <>
-              <CCol md="4">
+              <CCol md="6">
                 <CLabel htmlFor="ailmentTypeId">
                   <CSLab code="HCM-QRFDOPK87VI_LASN" />
                   <CSRequiredIndicator />
@@ -467,7 +467,7 @@ const MedicalTransaction = () => {
                   ))}
                 </CSelect>
               </CCol>
-              <CCol md="4">
+              <CCol md="6">
                 <CLabel htmlFor="HealthCareProvider">
                   <CSLab code="HCM-D7HKVE8UGRI_LOLN" />
                   <CSRequiredIndicator />
@@ -488,9 +488,9 @@ const MedicalTransaction = () => {
           </CRow>
           <CRow className={"bottom-spacing"}>
             <>
-              <CCol md="4">
+              <CCol md="6">
                 <CLabel htmlFor="dateOfService">
-                  <CSLab code="HCM-I23QDSWPM1D_KCM" />
+                  <CSLab code="HCM-I23QDSWPM1D_KCMI" />
                   <CSRequiredIndicator />
                 </CLabel>
                 <CInput
@@ -503,7 +503,7 @@ const MedicalTransaction = () => {
                   max={moment().format("YYYY-MM-DD")}
                 />
               </CCol>
-              <CCol md="4">
+              <CCol md="6">
                 <CLabel htmlFor="Cost">
                   <CSLab code="HCM-3OZ72JARXE-KCMI" />
                   <CSRequiredIndicator />
@@ -511,7 +511,7 @@ const MedicalTransaction = () => {
                 <CInput
                   className=""
                   id="Cost"
-                  type="number"
+                  type="text"
                   name="cost"
                   value={data?.cost || ""}
                   onChange={handleOnChange}
@@ -520,7 +520,7 @@ const MedicalTransaction = () => {
             </>
           </CRow>
           <CRow className={"bottom-spacing"}>
-            <CCol md="8">
+            <CCol md="6">
               <CLabel htmlFor="Note">
                 <CSLab code="HCM-Z0FV0XJJ06" />
               </CLabel>
@@ -534,7 +534,12 @@ const MedicalTransaction = () => {
           </CRow>
         </CModalBody>
         <CModalFooter>
-          <CSLab code="HCM-3KZ0O74GRZP-LOLN" style={{ marginRight: 215 }} />
+          <p style={{fontSize: "10px", marginRight: "380px"}}>
+          <em>
+            All fields marked with asterisk (<CSRequiredIndicator />) are
+            required
+          </em>
+        </p>
           <CButton color="secondary" onClick={() => setVisible(false)}>
             <CSLab code="HCM-MELULU9B6R_KCMI" />
           </CButton>

@@ -954,7 +954,7 @@ const EmployeeDetail = (props) => {
                 <CButton color="primary" style={{ float: "right" }} onClick={() => setshowEmpModal1(!showEmpModal1)}>{"Add " + btnVals[activeKey]}</CButton>
               }
             </CCardHeader> */}
-            <CCardBody style={{ height: CardBodyHeight, overflowY: "auto" }}>
+            <CCardBody >
               <CFormGroup row>
                 <CCol md="4">
                   <b>Employee:</b>{" "}

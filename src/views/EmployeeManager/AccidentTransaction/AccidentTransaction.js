@@ -473,6 +473,7 @@ const AccidentTransaction = () => {
                   type="text"
                   value={data?.LocationofAccident || ""}
                   onChange={handleOnChange}
+                  placeholder={GetLabelByName("HCM-ZFA4W47NARI_KCMI", lan)}
                 ></CInput>
               </CCol>
             </>
@@ -514,10 +515,10 @@ const AccidentTransaction = () => {
           <CRow>
             <CCol md="6">
               <CLabel>
-                <CSLab code="HCM-8G6FY80Q2NM-HRPR" />
+                <CSLab code="HCM-Z0FV0XJJ06" />
               </CLabel>
               <CTextarea
-                id="Remarks"
+                id="note"
                 name="note"
                 value={data?.note || ""}
                 onChange={handleOnChange}
@@ -527,7 +528,12 @@ const AccidentTransaction = () => {
           </CRow>
         </CModalBody>
         <CModalFooter>
-          <CSLab code="HCM-3KZ0O74GRZP-LOLN" style={{ marginRight: 215 }} />
+        <p style={{fontSize: "10px", marginRight: "380px"}}>
+          <em>
+            All fields marked with asterisk (<CSRequiredIndicator />) are
+            required
+          </em>
+        </p>
           <CButton color="secondary" onClick={() => setVisible(false)}>
             <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
           </CButton>
