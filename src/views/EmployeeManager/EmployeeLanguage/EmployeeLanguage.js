@@ -127,6 +127,73 @@ const EmployeeLanguage = () => {
   const [employeeName, setEmpDisplayName] = useState("");
   const [readState, setReadState] = useState([]);
 
+  const reading = [
+    {
+      id: 1,
+      name: "Beginner",
+    },
+    {
+      id: 2,
+      name: "Intermediate",
+    },
+    {
+      id: 3,
+      name: "Advanced",
+    },
+    {
+      id: 4,
+      name: "Fluent",
+    },
+    {
+      id: 5,
+      name: "Native",
+    },
+  ];
+  const Writing = [
+    {
+      id: 1,
+      name: "Beginner",
+    },
+    {
+      id: 2,
+      name: "Intermediate",
+    },
+    {
+      id: 3,
+      name: "Advanced",
+    },
+    {
+      id: 4,
+      name: "Fluent",
+    },
+    {
+      id: 5,
+      name: "Native",
+    },
+  ];
+  const Speaking = [
+    {
+      id: 1,
+      name: "Beginner",
+    },
+    {
+      id: 2,
+      name: "Intermediate",
+    },
+    {
+      id: 3,
+      name: "Advanced",
+    },
+    {
+      id: 4,
+      name: "Fluent",
+    },
+    {
+      id: 5,
+      name: "Native",
+    },
+  ];
+
   const handleSearchResultSelect = (results) => {
     console.log("show results", results);
 
@@ -176,6 +243,14 @@ const EmployeeLanguage = () => {
         });
     }
   };
+  const renderViewInfor = (data) => {
+    return data.map((x) => ({
+      ...x,
+      write: reading.find((y) => y.id === x.write)?.name ||"Not set",
+      read: reading.find((y) => y.id === x.read)?.name  ||"Not set",
+      speak: reading.find((y) => y.id === x.speak)?.name  ||"Not set",
+    }));
+  };
 
   //Get employee skill details
   const getEmployeelanguage = async () => {
@@ -183,8 +258,9 @@ const EmployeeLanguage = () => {
       const request = await CustomAxios.get(`EmployeeLanguage/${handleId}`);
 
       const response = request.data;
-      console.log("emp response:", response);
-      setViewInfo((prevState) => response);
+
+      console.log("renderViewInfor",);
+      setViewInfo(renderViewInfor(response));
     } catch (error) {
       console.log({ error });
     }
@@ -266,6 +342,7 @@ const EmployeeLanguage = () => {
             toast.success("Employee Language Added Successfully!");
             console.log("success");
             getEmployeelanguage();
+            setVisible(false);
           } else {
             try {
               data = JSON.parse(data);
@@ -274,6 +351,7 @@ const EmployeeLanguage = () => {
                 "error",
                 400
               );
+              setVisible(true);
             } catch (error) {
               console.log(error);
             }
@@ -307,6 +385,22 @@ const EmployeeLanguage = () => {
     console.log({ readState });
   }
   const TransLabelByCode = (name) => GetLabelByName(name, lan);
+  console.log({ viewinfo });
+  // const check=()=>{
+  //   for (let i = 0; i < viewinfo.length; i++) {
+  //     if (viewinfo[i]) {
+  //       console.log({ i });
+  //     }
+  //   }
+  // }
+  useEffect(() => {
+    for (let i = 0; i < viewinfo.length; i++) {
+      if (viewinfo) {
+        let tryy = viewinfo[i].read;
+        // if(tryy === reading.id)
+      }
+    }
+  }, []);
 
   return (
     <>
@@ -480,17 +574,20 @@ const EmployeeLanguage = () => {
                   value={data?.read || -1}
                   onChange={handleOnChange}
                 >
-                  {/* {employeeLanguageType.map((x, i) => (
+                  <option value={-1} selected>
+                    Select Option
+                  </option>
+                  {reading.map((x, i) => (
                     <option key={i} value={x.id}>
                       {x.name}
                     </option>
-                  ))} */}
-                  <option value={-1}>Select Ability</option>
+                  ))}
+                  {/* <option value={-1}>Select Ability</option>
                   <option value={1}>Beginner</option>
                   <option value={2}>Intermediate</option>
                   <option value={3}>Advanced</option>
                   <option value={4}>Fluent</option>
-                  <option value={5}>Native</option>
+                  <option value={5}>Native</option> */}
                 </CSelect>
               </CCol>
               <CCol md="4">
@@ -502,17 +599,20 @@ const EmployeeLanguage = () => {
                   value={data?.write || -1}
                   onChange={handleOnChange}
                 >
-                  {/* {employeeLanguageType.map((x, i) => (
+                  <option value={-1} selected>
+                    Select Option
+                  </option>
+                  {Writing.map((x, i) => (
                     <option key={i} value={x.id}>
                       {x.name}
                     </option>
-                  ))} */}
-                  <option value={-1}>Select Ability</option>
+                  ))}
+                  {/* <option value={-1}>Select Ability</option>
                   <option value={1}>Beginner</option>
                   <option value={2}>Intermediate</option>
                   <option value={3}>Advanced</option>
                   <option value={4}>Fluent</option>
-                  <option value={5}>Native</option>
+                  <option value={5}>Native</option> */}
                 </CSelect>
               </CCol>
               <CCol md="4">
@@ -521,34 +621,45 @@ const EmployeeLanguage = () => {
                 </CLabel>
                 <CSelect
                   name="speak"
-                  value={data?.write || -1}
+                  value={data?.speak || -1}
                   onChange={handleOnChange}
                 >
-                  {/* {employeeLanguageType.map((x, i) => (
+                  <option value={-1} selected>
+                    Select Option
+                  </option>
+                  {Speaking.map((x, i) => (
                     <option key={i} value={x.id}>
                       {x.name}
                     </option>
-                  ))} */}
-                  <option value={-1}>Select Ability</option>
+                  ))}
+                  {/* <option value={-1}>Select Ability</option>
                   <option value={1}>Beginner</option>
                   <option value={2}>Intermediate</option>
                   <option value={3}>Advanced</option>
                   <option value={4}>Fluent</option>
-                  <option value={5}>Native</option>
+                  <option value={5}>Native</option> */}
                 </CSelect>
               </CCol>
             </>
           </CRow>
         </CModalBody>
         <CModalFooter>
-          <CSLab code="HCM-3KZ0O74GRZP-LOLN" style={{ marginRight: 215 }} />
+          <div style={{ fontSize: "10px", marginRight: "420px" }}>
+            <p>
+              <em>
+                All fields marked with asterisk (<CSRequiredIndicator />) are
+                required
+              </em>
+            </p>
+          </div>
+
           <CButton color="secondary" onClick={() => setVisible(false)}>
             <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
           </CButton>
           <CButton
             color="primary"
             onClick={() => {
-              setVisible(false);
+              // setVisible(false);
               handleOnSubmit();
             }}
           >

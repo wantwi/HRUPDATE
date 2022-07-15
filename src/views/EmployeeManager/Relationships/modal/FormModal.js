@@ -54,7 +54,7 @@ const FormModal = (props) => {
   // if(activeKey === 4){
   //   conten = <NextOfKinForm />
   // }
-  
+
   return (
     <CModal show={show} onClose={() => setShow(!show)} size={"lg"}>
       <CModalHeader closeButton>
@@ -62,16 +62,24 @@ const FormModal = (props) => {
       </CModalHeader>
       <CModalBody>{props.children}</CModalBody>
       <CModalFooter>
-        <p style={{fontSize: "10px", marginRight: "100px"}}>
+        <p style={{ fontSize: "10px", marginRight: "428px" }}>
           <em>
             All fields marked with asterisk (<CSRequiredIndicator />) are
             required
           </em>
         </p>
-        <CButton color="secondary" onClick={() => {setShow(false);setCurrentFormData(" ")}}>
+        <CButton
+          color="secondary"
+          onClick={() => {
+            setShow(false);
+            setCurrentFormData(" ");
+          }}
+        >
           Close
         </CButton>
-        <CButton color="btn-success" onClick={submitBtn}>Save</CButton>
+        <CButton color="btn-success" onClick={submitBtn}>
+          Save
+        </CButton>
       </CModalFooter>
     </CModal>
   );
