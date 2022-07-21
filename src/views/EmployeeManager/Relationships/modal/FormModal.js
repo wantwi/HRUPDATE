@@ -62,12 +62,13 @@ const FormModal = (props) => {
       </CModalHeader>
       <CModalBody>{props.children}</CModalBody>
       <CModalFooter>
-        <p style={{ fontSize: "10px", marginRight: "428px" }}>
-          <em>
-            All fields marked with asterisk (<CSRequiredIndicator />) are
-            required
-          </em>
-        </p>
+        <div style={{ fontSize: "10px", marginRight: "435px" }}>
+          <p>
+            <em>
+              <CSLab code="HCM-WKZ2Y0KPTT9-PSLL" /> (<CSRequiredIndicator />)
+            </em>
+          </p>
+        </div>
         <CButton
           color="secondary"
           onClick={() => {

@@ -26,8 +26,9 @@ import {
   CSelect,
   CTextarea,
   CCardHeader,
+  
 } from "@coreui/react";
-import { AiOutlinePlus } from "react-icons/ai";
+import { AiOutlinePlus,AiFillSave } from "react-icons/ai";
 
 import {
   ColumnDirective,
@@ -74,6 +75,9 @@ import {
   PostEmployeeLanguage,
   GetEmployeeLanguagesType,
 } from "src/reusable/API/EmployeeLanguage";
+import { IdNumberIcon } from "evergreen-ui";
+import { Dropdown } from "@coreui/coreui";
+// import { values } from "core-js/es7/array";
 
 const editOptions = {
   allowEditing: false,
@@ -125,7 +129,7 @@ const EmployeeLanguage = () => {
   const [employeeLanguage, setEmployeelanguage] = useState([]);
   const [employeeLanguageType, setEmployeelanguageType] = useState([]);
   const [employeeName, setEmpDisplayName] = useState("");
-  const [readState, setReadState] = useState([]);
+  const [checkedTypes, setCheckedTypes] = useState([]);
 
   const reading = [
     {
@@ -246,9 +250,9 @@ const EmployeeLanguage = () => {
   const renderViewInfor = (data) => {
     return data.map((x) => ({
       ...x,
-      write: reading.find((y) => y.id === x.write)?.name ||"Not set",
-      read: reading.find((y) => y.id === x.read)?.name  ||"Not set",
-      speak: reading.find((y) => y.id === x.speak)?.name  ||"Not set",
+      write: reading.find((y) => y.id === x.write)?.name || "Not set",
+      read: reading.find((y) => y.id === x.read)?.name || "Not set",
+      speak: reading.find((y) => y.id === x.speak)?.name || "Not set",
     }));
   };
 
@@ -259,7 +263,7 @@ const EmployeeLanguage = () => {
 
       const response = request.data;
 
-      console.log("renderViewInfor",);
+      // console.log("renderViewInfor");
       setViewInfo(renderViewInfor(response));
     } catch (error) {
       console.log({ error });
@@ -271,21 +275,18 @@ const EmployeeLanguage = () => {
     }
   }, [handleId]);
 
-  useEffect(() => {
-    console.log("check view info ", viewinfo);
-  });
+  // useEffect(() => {
+  //   console.log("check view info ", viewinfo);
+  // });
 
   //Drop down list for hobby types
   const MultipleGetRequests = async () => {
     try {
       let request = [HttpAPIRequest("GET", GetEmployeeLanguagesType())];
       const multipleCall = await Promise.allSettled(request);
-      console.log(multipleCall[0].value);
+      // console.log(multipleCall[0].value);
 
-      setEmployeelanguageType([
-        { id: "-1", name: `Select Language` },
-        ...multipleCall[0].value,
-      ]);
+      setEmployeelanguageType([...multipleCall[0].value]);
     } catch (error) {
       console.log(error);
     }
@@ -293,7 +294,7 @@ const EmployeeLanguage = () => {
 
   useEffect(() => {
     MultipleGetRequests();
-    change();
+    // change();
   }, []);
 
   //Handles Submit
@@ -326,10 +327,11 @@ const EmployeeLanguage = () => {
       CompanyReference: "00001_A01",
       employeeId,
     };
+    console.log(newData);
     //let finalData = JSON.stringify(newData)
     // console.log(finalData)
     // 'Add' === mode ? AddGLAccount(newData) : updateGLAccount(newData);
-    postEmployeeLanguage(newData);
+    // postEmployeeLanguage(newData);
   };
 
   //Post Employee Skill
@@ -343,6 +345,7 @@ const EmployeeLanguage = () => {
             console.log("success");
             getEmployeelanguage();
             setVisible(false);
+            setSubmitData("");
           } else {
             try {
               data = JSON.parse(data);
@@ -354,6 +357,7 @@ const EmployeeLanguage = () => {
               setVisible(true);
             } catch (error) {
               console.log(error);
+              toast.error(error.message);
             }
           }
         });
@@ -377,15 +381,15 @@ const EmployeeLanguage = () => {
   };
 
   // const canSave = [skill].every(Boolean);
-  const change = () => {
-    console.log("working");
-    viewinfo.map((x) => setReadState(x.read));
-  };
-  if (readState < 2) {
-    console.log({ readState });
-  }
+  // const change = () => {
+  //   console.log("working");
+  //   viewinfo.map((x) => setReadState(x.read));
+  // };
+  // if (readState < 2) {
+  //   console.log({ readState });
+  // }
   const TransLabelByCode = (name) => GetLabelByName(name, lan);
-  console.log({ viewinfo });
+  // console.log({ viewinfo });
   // const check=()=>{
   //   for (let i = 0; i < viewinfo.length; i++) {
   //     if (viewinfo[i]) {
@@ -393,15 +397,62 @@ const EmployeeLanguage = () => {
   //     }
   //   }
   // }
-  useEffect(() => {
-    for (let i = 0; i < viewinfo.length; i++) {
-      if (viewinfo) {
-        let tryy = viewinfo[i].read;
-        // if(tryy === reading.id)
+  var arr = [];
+  const DropDown = () => {
+    if (viewinfo.length > 0) {
+      for (let i = 0; i < viewinfo.length; i++) {
+        var obj = {};
+        obj = viewinfo[i].language;
+        arr.push(obj);
       }
-    }
-  }, []);
 
+      const newdata = employeeLanguageType.filter((val) => {
+        return !arr.find((arr) => {
+          console.log({ valueID: val.id + ": " + arr.id });
+          return val.id === arr.id;
+        });
+      });
+      setCheckedTypes(newdata);
+      console.log(newdata);
+    } else {
+      setCheckedTypes(employeeLanguageType);
+    }
+  };
+
+  useEffect(() => {
+    if (viewinfo.length > 0) {
+      DropDown();
+    }
+  }, [viewinfo]);
+
+  // const getSampleData = () => {
+  //   viewinfo.map((items) => setEmployeelanguage([items.language]));
+  //   console.log({view: viewinfo})
+  //   console.log({languages: employeeLanguageType})
+  //   let response = [];
+  //   if (employeeLanguage) {
+  //     //filter
+  //     const newdata = employeeLanguageType.filter((val) => {
+  //       return employeeLanguage.find((data) => {
+  //         console.log({ valueID: val.name + ":" + data.name });
+  //         return val.id == data.id;
+  //       });
+  //     });
+
+  //     setCheckedTypes(newdata);
+
+  //     response = newdata;
+  //   } else {
+  //     setCheckedTypes(employeeLanguageType);
+
+  //     response = employeeLanguage;
+  //   }
+
+  //   //setRecEarnings(response)
+
+  //   return response;
+  // };
+  console.log({ arr });
   return (
     <>
       <CRow>
@@ -411,31 +462,32 @@ const EmployeeLanguage = () => {
           </h5>
         </CCol>
       </CRow>
+      <CRow></CRow>
+      <CCol md="4" hidden={!show}>
+        <CSAutoComplete
+          filterUrl={SearchEmployees(searchInput)}
+          placeholder={GetLabelByName("HCM-6FKJ6FEGW7A-HRPR", lan)}
+          handleSelect={handleSearchResultSelect}
+          displayTextKey={"firstName"}
+          setInput={setSearchInput}
+          input={searchInput}
+          emptySearchFieldMessage={`Please input 3 or more characters to search`}
+          searchName={"Employee"}
+          isPaginated={false}
+          pageNumber={pageNumber}
+          setPageNumber={setPageNumber}
+          numberOfItems={numberOfItems}
+          setNumberOfItems={setNumberOfItems}
+          orderBy={orderBy}
+          setOrderBy={setOrderBy}
+          sortOrder={sortOrder}
+          setSortOrder={setSortOrder}
+          mode={mode}
+          setMode={setMode}
+          handleId={setHandleId}
+        />
+      </CCol>
       <CRow>
-        <CCol md="4">
-          <CSAutoComplete
-            filterUrl={SearchEmployees(searchInput)}
-            placeholder={GetLabelByName("HCM-6FKJ6FEGW7A-HRPR", lan)}
-            handleSelect={handleSearchResultSelect}
-            displayTextKey={"firstName"}
-            setInput={setSearchInput}
-            input={searchInput}
-            emptySearchFieldMessage={`Please input 3 or more characters to search`}
-            searchName={"Employee"}
-            isPaginated={false}
-            pageNumber={pageNumber}
-            setPageNumber={setPageNumber}
-            numberOfItems={numberOfItems}
-            setNumberOfItems={setNumberOfItems}
-            orderBy={orderBy}
-            setOrderBy={setOrderBy}
-            sortOrder={sortOrder}
-            setSortOrder={setSortOrder}
-            mode={mode}
-            setMode={setMode}
-            handleId={setHandleId}
-          />
-        </CCol>
         <CCol md="8" className="text-right"></CCol>
         <CCol xs="12" hidden={show}>
           <CCard>
@@ -449,7 +501,9 @@ const EmployeeLanguage = () => {
                       cursor: "pointer",
                     }}
                     type="button"
-                    onClick={() => setLarge(!large)}
+                    onClick={() => {
+                      setLarge(!large);
+                    }}
                     size="md"
                     color="primary"
                   >
@@ -466,7 +520,12 @@ const EmployeeLanguage = () => {
                     color="primary"
                     style={{ float: "right" }}
                     onClick={() => {
-                      setVisible(true);
+                      setTimeout(() => {
+                        setVisible(true);
+                      }, 500);
+
+                      DropDown();
+                      getEmployeelanguage();
                     }}
                   >
                     <AiOutlinePlus />
@@ -519,10 +578,13 @@ const EmployeeLanguage = () => {
                   textAlign="Center"
                 /> */}
               </ColumnsDirective>
+             
               <Inject
+              
                 services={[Page, Sort, Filter, Group, Edit, CommandColumn]}
               />
             </GridComponent>
+           
           </CCard>
         </CCol>
       </CRow>
@@ -551,7 +613,9 @@ const EmployeeLanguage = () => {
                   value={data?.languageId || ""}
                   onChange={handleOnChange}
                 >
-                  {employeeLanguageType.map((x, i) => (
+                  {" "}
+                  <option value={-1}>Select Language</option>
+                  {checkedTypes.map((x, i) => (
                     <option key={i} value={x.id}>
                       {x.name}
                     </option>
@@ -644,15 +708,15 @@ const EmployeeLanguage = () => {
           </CRow>
         </CModalBody>
         <CModalFooter>
-          <div style={{ fontSize: "10px", marginRight: "420px" }}>
-            <p>
-              <em>
-                All fields marked with asterisk (<CSRequiredIndicator />) are
-                required
-              </em>
-            </p>
+          <div
+            style={{
+              fontSize: "10px",
+              marginRight: "565px",
+              marginBottom: "-24px",
+            }}
+          >
+            <CSLab code="HCM-WKZ2Y0KPTT9-PSLL" /> (<CSRequiredIndicator />)
           </div>
-
           <CButton color="secondary" onClick={() => setVisible(false)}>
             <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
           </CButton>

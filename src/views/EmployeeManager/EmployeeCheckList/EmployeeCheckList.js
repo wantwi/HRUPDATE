@@ -19,6 +19,7 @@ import {
   CTextarea,
   CCardFooter,
   CSelect,
+  CCardHeader,
 } from "@coreui/react";
 import {
   AiOutlinePlus,
@@ -51,7 +52,7 @@ const EmployeeCheckList = () => {
   return (
     <>
       <CRow>
-        <CCol>
+        <CCol hidden={!show}>
           <h5>
             <CSLab code="HCM-ZN0HQXYQ7E9_HRPR" />{" "}
           </h5>
@@ -96,6 +97,15 @@ const EmployeeCheckList = () => {
       <CRow>
         <CCol xs="12" hidden={show}>
           <CCard>
+            <CCardHeader>
+              <CRow>
+                <CCol>
+                  <h5>
+                    <CSLab code="HCM-ZN0HQXYQ7E9_HRPR" />{" "}
+                  </h5>
+                </CCol>
+              </CRow>
+            </CCardHeader>
             <CCardBody style={{ height: CardBodyHeight, overflowY: "auto" }}>
               <CRow>
                 <CCol md="6">

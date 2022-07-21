@@ -528,12 +528,13 @@ const AccidentTransaction = () => {
           </CRow>
         </CModalBody>
         <CModalFooter>
-        <p style={{fontSize: "10px", marginRight: "380px"}}>
-          <em>
-            All fields marked with asterisk (<CSRequiredIndicator />) are
-            required
-          </em>
-        </p>
+          <div style={{ fontSize: "10px", marginRight: "425px" }}>
+            <p>
+              <em>
+                <CSLab code="HCM-WKZ2Y0KPTT9-PSLL" /> (<CSRequiredIndicator />)
+              </em>
+            </p>
+          </div>
           <CButton color="secondary" onClick={() => setVisible(false)}>
             <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
           </CButton>

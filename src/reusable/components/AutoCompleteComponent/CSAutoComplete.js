@@ -122,6 +122,7 @@ const CSAutoComplete = ({
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [employeeid, setEmployeeId] = useState("");
+  const [name, setName] = useState([]);
 
   //get user input
   const onChange = (e) => {
@@ -142,7 +143,7 @@ const CSAutoComplete = ({
       return (
         suggestion?.[displayTextKey]
           .toLowerCase()
-          .indexOf(userInput.toLowerCase()) > -1 ||
+          .indexOf(userInput?.toLowerCase()) > -1 ||
         suggestion?.[alternativeTextKey]
           .toLowerCase()
           .indexOf(userInput.toLowerCase()) > -1
@@ -215,7 +216,7 @@ const CSAutoComplete = ({
         .then((response) => {
           if (response.ok) {
             response.json().then((data) => {
-             // console.log({ data });
+              console.log({ data });
 
               if (
                 data.items &&
@@ -234,6 +235,7 @@ const CSAutoComplete = ({
                     toast.dismiss(toastId);
                     let values = data?.items || data?.data;
                     setSuggestions(values);
+
                     setTotalResults(data?.totalResults);
                     setTotalPages(data?.totalPages);
                     setCurrentPage(data?.currentPage);
@@ -323,6 +325,7 @@ const CSAutoComplete = ({
   //     runSearch(two);
   // }
   //console.log({ filteredSuggestions });
+
   const SuggestionsListComponent = () => {
     return filteredSuggestions.length ? (
       <div>
@@ -339,7 +342,9 @@ const CSAutoComplete = ({
                 onClick={onClick}
                 title={`Click to select `}
               >
-                {suggestion?.[displayTextKey]}
+                {[suggestion?.[displayTextKey], " ", suggestion?.lastName]}
+                {/* {suggestion?.[lastName]} */}
+                {console.log(suggestion?.[displayTextKey])}
               </li>
             );
           })}

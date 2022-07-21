@@ -676,7 +676,20 @@ const LeaveTypes = (props) => {
               </CRow>
             </CCardBody>
             <CCardFooter>
-              <CSLab code="HCM-3KZ0O74GRZP-LOLN" style={{ marginRight: 215 }} />
+              <div
+                style={{
+                  fontSize: "12px",
+                  marginRight: "439px",
+                  marginBottom: "-34px",
+                }}
+              >
+                <p>
+                  <em>
+                    <CSLab code="HCM-WKZ2Y0KPTT9-PSLL" /> (
+                    <CSRequiredIndicator />)
+                  </em>
+                </p>
+              </div>
               {"Update" === mode ? (
                 <CButton
                   style={{ marginRight: 5 }}

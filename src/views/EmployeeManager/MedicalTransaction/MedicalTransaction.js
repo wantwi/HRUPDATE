@@ -534,12 +534,13 @@ const MedicalTransaction = () => {
           </CRow>
         </CModalBody>
         <CModalFooter>
-          <p style={{fontSize: "10px", marginRight: "380px"}}>
-          <em>
-            All fields marked with asterisk (<CSRequiredIndicator />) are
-            required
-          </em>
-        </p>
+          <div style={{ fontSize: "10px", marginRight: "439px" }}>
+            <p>
+              <em>
+                <CSLab code="HCM-WKZ2Y0KPTT9-PSLL" /> (<CSRequiredIndicator />)
+              </em>
+            </p>
+          </div>
           <CButton color="secondary" onClick={() => setVisible(false)}>
             <CSLab code="HCM-MELULU9B6R_KCMI" />
           </CButton>

@@ -399,7 +399,7 @@ const EmployeeTrainingInformation = (props) => {
       </CRow>
       <CModal
         show={visible}
-        size={"lg"}
+        size={"md"}
         onClose={() => setVisible(false)}
         closeOnBackdrop={false}
       >
@@ -411,7 +411,7 @@ const EmployeeTrainingInformation = (props) => {
         </CModalHeader>
         <CModalBody>
           <CRow>
-            <CCol md="5">
+            <CCol md="6">
               <CLabel>
                 <CSLab code="HCM-B0VG88EHYDM_KCMI" />
                 <CSRequiredIndicator />
@@ -428,7 +428,7 @@ const EmployeeTrainingInformation = (props) => {
                 ))}
               </CSelect>
             </CCol>
-            <CCol md="5">
+            <CCol md="6">
               <CLabel>
                 <CSLab code="HCM-K85NF9HWVXC-LANG" />
                 <CSRequiredIndicator />
@@ -437,14 +437,14 @@ const EmployeeTrainingInformation = (props) => {
             </CCol>
           </CRow>
           <CRow>
-            <CCol md="5">
+            <CCol md="6">
               <CLabel>
                 <CSLab code="HCM-S4N9DCXVMJ" />
                 <CSRequiredIndicator />
               </CLabel>
               <CInput className="" name="endDate" type="date" />
             </CCol>
-            <CCol md="5">
+            <CCol md="6">
               <CLabel>
                 <CSLab code="HCM-EAHZHCC8S3F_LOLN" />
                 <CSRequiredIndicator />
@@ -454,7 +454,7 @@ const EmployeeTrainingInformation = (props) => {
           </CRow>
 
           <CRow>
-            <CCol md="10">
+            <CCol md="12">
               <CLabel>
                 <CSLab code="HCM-Z0FV0XJJ06" />
               </CLabel>
@@ -466,6 +466,14 @@ const EmployeeTrainingInformation = (props) => {
           </CRow>
         </CModalBody>
         <CModalFooter>
+          <div style={{ fontSize: "10px", marginRight: "135px" }}>
+            <p>
+              <em>
+                <CSLab code="HCM-WKZ2Y0KPTT9-PSLL" /> (<CSRequiredIndicator />)
+              </em>
+            </p>
+          </div>
+
           <CButton color="secondary" onClick={() => setVisible(false)}>
             <CSLab code="HCM-9E3ZC2E1S0N-LASN" />
           </CButton>

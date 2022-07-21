@@ -395,6 +395,33 @@ const EmployeeDetail = (props) => {
       min: 0,
     },
   };
+  var arr = [];
+  const DropDown = () => {
+    if (benefiaciary.length > 0) {
+      for (let i = 0; i < benefiaciary.length; i++) {
+        var obj = {};
+        obj = benefiaciary[i].relation;
+        arr.push(obj);
+      }
+
+      const newdata = relationTypes.filter((val) => {
+        return !arr.find((arr) => {
+          console.log({ valueID: val.id + ": " + arr.id });
+          return val.id === arr.id;
+        });
+      });
+      setRelationTypes(newdata);
+      console.log(newdata);
+    } else {
+      setRelationTypes(relationTypes);
+    }
+  };
+
+  useEffect(() => {
+    if (viewinfo.length > 0) {
+      DropDown();
+    }
+  }, [viewinfo]);
 
   useEffect(() => {
     if (handleId) {
@@ -902,6 +929,8 @@ const EmployeeDetail = (props) => {
   }
 
   console.log({ currentFormData });
+  console.log({ relationTypes });
+  console.log({ benefiaciary });
 
   return (
     <>
@@ -955,7 +984,7 @@ const EmployeeDetail = (props) => {
                 <CButton color="primary" style={{ float: "right" }} onClick={() => setshowEmpModal1(!showEmpModal1)}>{"Add " + btnVals[activeKey]}</CButton>
               }
             </CCardHeader> */}
-            <CCardBody >
+            <CCardBody>
               <CFormGroup row>
                 <CCol md="4">
                   <b>Employee:</b>{" "}

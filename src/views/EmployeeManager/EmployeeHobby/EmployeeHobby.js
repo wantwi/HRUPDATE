@@ -407,7 +407,7 @@ const EmployeeHobby = (props) => {
                       headerText={GetLabelByName("HCM-KPH53NF08RG", lan)}
                       width="100"
                     />
-                     <ColumnDirective
+                    <ColumnDirective
                       field={"employee.lastName"}
                       headerText={GetLabelByName("HCM-6CU7NZJCKLF", lan)}
                       width="100"
@@ -473,12 +473,17 @@ const EmployeeHobby = (props) => {
           </CRow>
         </CModalBody>
         <CModalFooter>
-        <p style={{fontSize: "10px", marginRight: "215px", marginBottom: "-29px"}}>
-          <em>
-            All fields marked with asterisk (<CSRequiredIndicator />) are
-            required
-          </em>
-        </p>
+          <p
+            style={{
+              fontSize: "10px",
+              marginRight: "291px",
+              marginBottom: "-34px",
+            }}
+          >
+            <em>
+              <CSLab code="HCM-LVXUVAB9G_KCMI" />( <CSRequiredIndicator />)
+            </em>
+          </p>
           <CButton color="secondary" onClick={() => setVisible(false)}>
             <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
           </CButton>

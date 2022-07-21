@@ -503,12 +503,11 @@ const EmployeeDisciplinaryInformation = (props) => {
                 <CSRequiredIndicator />
               </CLabel>
               <CInput
-                
                 name="actionBy"
                 type="text"
                 value={data?.actionBy || " "}
                 onChange={handleOnChange}
-                placeholder={GetLabelByName("HCM-BLC5UYKD3GO-PSLL",lan)}
+                placeholder={GetLabelByName("HCM-BLC5UYKD3GO-PSLL", lan)}
               />
             </CCol>
             <CCol md="4">
@@ -597,12 +596,20 @@ const EmployeeDisciplinaryInformation = (props) => {
           </CRow>
         </CModalBody>
         <CModalFooter>
-        <p style={{fontSize: "10px", marginRight: "380px"}}>
-          <em>
-            All fields marked with asterisk (<CSRequiredIndicator />) are
-            required
-          </em>
-        </p>
+          <div
+            style={{
+              fontSize: "12px",
+              marginRight: "400px",
+              marginBottom: "-24px",
+            }}
+          >
+            <p>
+              <em>
+                <CSLab code="HCM-WKZ2Y0KPTT9-PSLL" /> (
+                <CSRequiredIndicator />)
+              </em>
+            </p>
+          </div>
           <CButton color="secondary" onClick={() => setVisible(false)}>
             <CSLab code="HCM-9E3ZC2E1S0N-LASN" />
           </CButton>

@@ -610,11 +610,17 @@ const EmployeeEducationInformation = (props) => {
           </CRow>
         </CModalBody>
         <CModalFooter>
-          <div style={{ marginRight: "350px" }}>
+          <div
+            style={{
+              fontSize: "12px",
+              marginRight: "400px",
+              marginBottom: "-24px",
+            }}
+          >
             <p>
               <em>
-                All fields marked with asterisk (<CSRequiredIndicator />) are
-                required
+                <CSLab code="HCM-WKZ2Y0KPTT9-PSLL" /> (
+                <CSRequiredIndicator />)
               </em>
             </p>
           </div>

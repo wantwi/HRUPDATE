@@ -13164,5 +13164,45 @@
     "german": "",
     "status": 1,
     "type": "string"
+  },
+  "HCM-WKZ2Y0KPTT9-PSLL": {
+    "id": "c7a4207d-8175-4add-aa3c-ffabadf926df",
+    "en": "All fields marked with asterisk are required",
+    "fr": "Tous les champs marqués d'un astérisque sont obligatoires",
+    "spanish": "",
+    "portuguese": "",
+    "german": "",
+    "status": 1,
+    "type": "string"
+  },
+  "HCM-LVXUVAB9G_KCMI": {
+    "id": "c7a4207d-8175-4add-aa3c-ffabadf926df",
+    "en": "Field marked with asterisk is required",
+    "fr": " Le champ marqué d'un astérisque est obligatoire",
+    "spanish": "",
+    "portuguese": "",
+    "german": "",
+    "status": 1,
+    "type": "string"
+  },
+  "HCM-TIUPTL2IYO9-KCMI": {
+    "id": "c7a4207d-8175-4add-aa3c-ffabadf926df",
+    "en": "Enter school Name",
+    "fr": "Entrez le nom de l'école",
+    "spanish": "",
+    "portuguese": "",
+    "german": "",
+    "status": 1,
+    "type": "string"
+  },
+  "HCM-D5ABDMN6RNT_LANG": {
+    "id": "c7a4207d-8175-4add-aa3c-ffabadf926df",
+    "en": "Enter Grade",
+    "fr": "Entrez la note",
+    "spanish": "",
+    "portuguese": "",
+    "german": "",
+    "status": 1,
+    "type": "string"
   }
 }

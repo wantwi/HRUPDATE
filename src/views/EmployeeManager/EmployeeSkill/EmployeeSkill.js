@@ -542,15 +542,17 @@ const EmployeeSkill = (props) => {
           </CRow> */}
         </CModalBody>
         <CModalFooter>
-          <div style={{ fontSize: "10px", marginRight: "123px" }}>
-            <p>
-              <em>
-                All fields marked with asterisk (<CSRequiredIndicator />) are
-                required
-              </em>
-            </p>
-          </div>
-
+          <p
+            style={{
+              fontSize: "10px",
+              marginRight: "291px",
+              marginBottom: "-34px",
+            }}
+          >
+            <em>
+              <CSLab code="HCM-LVXUVAB9G_KCMI" />( <CSRequiredIndicator />)
+            </em>
+          </p>
           <CButton color="secondary" onClick={() => setVisible(false)}>
             <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
           </CButton>
