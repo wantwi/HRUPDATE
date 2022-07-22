@@ -228,6 +228,9 @@ const EmployeeDetail = (props) => {
   const fifthGrid = useRef(null);
   const [formTitle, setFormTitle] = useState("");
   const [currentFormData, setCurrentFormData] = useState({});
+  const [checkedTypes, setCheckedTypes] = useState([]);
+  const [checkedTypesGuarantor, setCheckedTypesGuarantor] = useState([]);
+  const [checkedTypesNextOfKin, setCheckedTypesNextOfKin] = useState({});
   // const submitBtn =  useRef(null)
 
   const actionBegin2 = () => {};
@@ -263,7 +266,7 @@ const EmployeeDetail = (props) => {
   const submitRequest = (args) => {
     if (firstGrid && args.item.id === "saveItems") {
       console.log("first");
-      let request = axios.post();
+
       console.log({ first: firstGrid?.current?.currentViewData });
     } else {
       console.log("ELSE");
@@ -396,71 +399,12 @@ const EmployeeDetail = (props) => {
     },
   };
   var arr = [];
-  const DropDown = () => {
-    if (benefiaciary.length > 0) {
-      for (let i = 0; i < benefiaciary.length; i++) {
-        var obj = {};
-        obj = benefiaciary[i].relation;
-        arr.push(obj);
-      }
-
-      const newdata = relationTypes.filter((val) => {
-        return !arr.find((arr) => {
-          console.log({ valueID: val.id + ": " + arr.id });
-          return val.id === arr.id;
-        });
-      });
-      setRelationTypes(newdata);
-      console.log(newdata);
-    } else {
-      setRelationTypes(relationTypes);
-    }
-  };
-
-  useEffect(() => {
-    if (viewinfo.length > 0) {
-      DropDown();
-    }
-  }, [viewinfo]);
 
   useEffect(() => {
     if (handleId) {
       MultipleGetRequests();
     }
   }, [handleId]);
-  // console.log({ emergency: emergencyContact });
-  // console.log({ guarant: guarantor });
-  // console.log({ benefits: benefiaciary });
-  // console.log({ dependands: dependant });
-  // console.log({ relation: relationTypes });
-
-  // const relationTs = () => {
-  //   const data = {
-  //     dataSource: new DataManager([HandleRelationTypes()]),
-  //     fields: { text: relationTypes.name, value: relationTypes.id },
-  //     query: new Query(),
-  //   };
-  // };
-
-  // const HandleRelationTypes = () => {
-  //   let request = axios
-  //     .get(RelationTypes())
-  //     .then((response) =>
-  //       setRelationTypes([
-  //         { id: "-1", name: `Select Relation Type` },
-  //         ...relationTypes.value,
-  //       ])
-  //     );
-  // };
-
-  //   setShowTypes(()=>{
-  //     HandleRelationTypes();
-  //   })
-  // }
-  // useEffect(() => {
-  //   showT()
-  // }, []);
-  // console.log({showTypes})
 
   const submitBtn = () => {
     // Dependant
@@ -875,6 +819,10 @@ const EmployeeDetail = (props) => {
 
   const ben_actionBegin = (args) => {
     console.log({ beneficiary: args });
+    checkRelationDependant();
+    checkRelationGuarantor();
+    checkRelationNextOfKin();
+
     if (args.requestType === "add") {
       args.cancel = true;
       setShowModal(true);
@@ -888,6 +836,7 @@ const EmployeeDetail = (props) => {
         currentFormData={currentFormData}
         handleFormChange={handleFormChange}
         setCurrentFormData={setCurrentFormData}
+        view={benefiaciary}
       />
     );
   }
@@ -897,6 +846,7 @@ const EmployeeDetail = (props) => {
         currentFormData={currentFormData}
         handleFormChange={handleFormChange}
         setCurrentFormData={setCurrentFormData}
+        view={checkedTypes}
       />
     );
   }
@@ -915,6 +865,7 @@ const EmployeeDetail = (props) => {
         currentFormData={currentFormData}
         handleFormChange={handleFormChange}
         setCurrentFormData={setCurrentFormData}
+        view={checkedTypesGuarantor}
       />
     );
   }
@@ -924,6 +875,7 @@ const EmployeeDetail = (props) => {
         currentFormData={currentFormData}
         handleFormChange={handleFormChange}
         setCurrentFormData={setCurrentFormData}
+        view={checkedTypesNextOfKin}
       />
     );
   }
@@ -931,6 +883,84 @@ const EmployeeDetail = (props) => {
   console.log({ currentFormData });
   console.log({ relationTypes });
   console.log({ benefiaciary });
+  var arr = [];
+
+  // checkRelation
+  const checkRelationDependant = () => {
+    if (dependant.length > 0) {
+      for (let i = 0; i < dependant.length; i++) {
+        var obj = {};
+        obj = dependant[i].relation;
+        arr.push(obj);
+      }
+
+      const newdata = relationTypes.filter((val) => {
+        return !arr.find((arr) => {
+          console.log({ valueID: val.id + ": " + arr.id });
+          return val.id === arr.id;
+        });
+      });
+      setCheckedTypes(newdata);
+      console.log(newdata);
+    } else {
+      setCheckedTypes(relationTypes);
+    }
+  };
+  // checkRelation
+  var temp = [];
+  const checkRelationGuarantor = () => {
+    if (guarantor.length > 0) {
+      for (let i = 0; i < guarantor.length; i++) {
+        var obj = {};
+        obj = guarantor[i].relation;
+        temp.push(obj);
+      }
+
+      const newdata = relationTypes.filter((val) => {
+        return !temp.find((arr) => {
+          console.log({ valueID: val.id + ": " + arr.id });
+          return val.id === arr.id;
+        });
+      });
+      setCheckedTypesGuarantor(newdata);
+      console.log(newdata);
+    } else {
+      setCheckedTypesGuarantor(relationTypes);
+    }
+  };
+
+  //Check Next Of Kin Relation
+  var arryKin = [];
+  const checkRelationNextOfKin = () => {
+    if (nextOfKin.length > 0) {
+      for (let i = 0; i < nextOfKin.length; i++) {
+        var obj = {};
+        obj = nextOfKin[0][i].relation;
+        arryKin.push(obj);
+        console.log({ Object: obj });
+      }
+      console.log({ arryKin });
+      const newdata = relationTypes.filter((val) => {
+        return !arryKin.find((arr) => {
+          console.log({ valueID: val.id + ": " + arr.id });
+          return val.id === arr.id;
+        });
+      });
+      setCheckedTypesNextOfKin(newdata);
+      console.log(newdata);
+    } else {
+      setCheckedTypesNextOfKin(relationTypes);
+    }
+  };
+
+  useEffect(() => {
+    checkRelationDependant();
+  }, [dependant]);
+  useEffect(() => {
+    checkRelationGuarantor();
+  }, [nextOfKin]);
+  console.log({ checkedTypesNextOfKin });
+  console.log({ nextOfKin });
 
   return (
     <>
@@ -1310,7 +1340,7 @@ const EmployeeDetail = (props) => {
                           field="name"
                           editType="text"
                           headerText={GetLabelByName(
-                            "HCM-RWMIP9K3NEH_HRPR",
+                            "HCM-DQLFZZ9A4F6-LASN",
                             lan
                           )}
                           width="70"
@@ -1319,7 +1349,7 @@ const EmployeeDetail = (props) => {
                         <ColumnDirective
                           field="email"
                           headerText={GetLabelByName(
-                            "HCM-RWMIP9K3NEH_HRPR",
+                            "HCM-CXLK7IYZ9B9-KCMI",
                             lan
                           )}
                           editType="text"
@@ -1490,6 +1520,15 @@ const EmployeeDetail = (props) => {
                         />
                         <ColumnDirective
                           field="name"
+                          editType="text"
+                          headerText={GetLabelByName(
+                            "HCM-DQLFZZ9A4F6-LASN",
+                            lan
+                          )}
+                          width="70"
+                        />
+                        <ColumnDirective
+                          field="relation.name"
                           editType="text"
                           headerText={GetLabelByName(
                             "HCM-RWMIP9K3NEH_HRPR",

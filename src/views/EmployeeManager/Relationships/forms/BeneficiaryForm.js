@@ -13,11 +13,13 @@ function BeneficiaryForm({
   currentFormData,
   handleFormChange,
   setCurrentFormData,
+  view,
 }) {
   const [relationTypes, setRelationTypes] = useState([]);
   useEffect(() => {
     setCurrentFormData("");
   }, []);
+  const [checkedTypes, setCheckedTypes] = useState([]);
 
   const MultipleGetRequests = async () => {
     try {
@@ -25,18 +27,45 @@ function BeneficiaryForm({
       const multipleCall = await Promise.allSettled(request);
       console.log(multipleCall[0].value);
 
-      setRelationTypes([
-        { id: "-1", name: `Select Relation` },
-        ...multipleCall[0].value,
-      ]);
+      setRelationTypes([...multipleCall[0].value]);
     } catch (error) {
       console.log(error);
+    }
+  };
+  var arr = [];
+  const DropDown = () => {
+    if (view.length > 0) {
+      for (let i = 0; i < view.length; i++) {
+        var obj = {};
+        obj = view[i].relation;
+        arr.push(obj);
+      }
+
+      const newdata = relationTypes.filter((val) => {
+        return !arr.find((arr) => {
+          console.log({ valueID: val.id + ": " + arr.id });
+          return val.id === arr.id;
+        });
+      });
+      setCheckedTypes(newdata);
+      console.log(newdata);
+    } else {
+      setCheckedTypes(relationTypes);
     }
   };
 
   useEffect(() => {
     MultipleGetRequests();
+    DropDown();
   }, []);
+  useEffect(() => {
+    if (view.length >= 0) {
+      DropDown();
+    }
+  }, [view]);
+  console.log({ view });
+  console.log({ relationTypes });
+  console.log({ checkedTypes });
 
   return (
     <div>
@@ -106,7 +135,11 @@ function BeneficiaryForm({
               value={currentFormData?.relationId || -1}
               onChange={handleFormChange}
             >
-              {relationTypes.map((x, i) => (
+              {" "}
+              <option value={-1} selected>
+                Select Relation
+              </option>
+              {checkedTypes.map((x, i) => (
                 <option key={i} value={x.id}>
                   {x.name}
                 </option>

@@ -12,6 +12,7 @@ function NextOfKinForm({
   currentFormData,
   handleFormChange,
   setCurrentFormData,
+  view,
 }) {
   const [relationTypes, setRelationTypes] = useState([]);
   const [nationality, setNationality] = useState([]);
@@ -24,12 +25,7 @@ function NextOfKinForm({
         HttpAPIRequest("GET", GetNationality()),
       ];
       const multipleCall = await Promise.allSettled(request);
-      console.log(multipleCall[0].value);
 
-      setRelationTypes([
-        { id: "-1", name: `Select Relation` },
-        ...multipleCall[0].value,
-      ]);
       setNationality([
         { id: "-1", name: `Select Nationality` },
         ...multipleCall[1].value,
@@ -42,6 +38,7 @@ function NextOfKinForm({
     MultipleGetRequests();
   }, []);
 
+  console.log({ NextOfKin: view });
   return (
     <div>
       <CForm>
@@ -137,7 +134,8 @@ function NextOfKinForm({
               value={currentFormData?.relationId || -1}
               onChange={handleFormChange}
             >
-              {relationTypes.map((x, i) => (
+              <option value={-1}>Selection Relation</option>
+              {view.map((x, i) => (
                 <option key={i} value={x.id}>
                   {x.name}
                 </option>

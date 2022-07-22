@@ -21,12 +21,14 @@ function DependantForm({
   currentFormData,
   handleFormChange,
   setCurrentFormData,
+  view,
 }) {
   const TransLabelByCode = (name) => GetLabelByName(name, lan);
   const lan = useSelector((state) => state.language);
   const [relationTypes, setRelationTypes] = useState([]);
   const [nationality, setNationality] = useState([]);
   const [identityTypes, setIdentityTypes] = useState([]);
+  const [checkedTypes, setCheckedTypes] = useState([]);
 
   const MultipleGetRequests = async () => {
     try {
@@ -38,10 +40,7 @@ function DependantForm({
       const multipleCall = await Promise.allSettled(request);
       console.log(multipleCall[0].value);
 
-      setRelationTypes([
-        { id: "-1", name: `Select Relation` },
-        ...multipleCall[0].value,
-      ]);
+      setRelationTypes([...multipleCall[0].value]);
       setNationality([
         { id: "-1", name: `Select Nationality` },
         ...multipleCall[1].value,
@@ -55,9 +54,13 @@ function DependantForm({
     }
   };
 
+  console.log({ Dependant: view });
+  // console.log({ Checked: checkedTypes });
+
   useEffect(() => {
     MultipleGetRequests();
   }, []);
+
   return (
     <div>
       <CForm>
@@ -122,7 +125,11 @@ function DependantForm({
               value={currentFormData?.relationTypeId || -1}
               onChange={handleFormChange}
             >
-              {relationTypes.map((x, i) => (
+              <option value={-1} selected>
+                {" "}
+                Select Relation
+              </option>
+              {view.map((x, i) => (
                 <option key={i} value={x.id}>
                   {x.name}
                 </option>

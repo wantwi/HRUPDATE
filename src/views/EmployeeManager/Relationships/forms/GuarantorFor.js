@@ -12,9 +12,12 @@ function GuarantorForm({
   currentFormData,
   handleFormChange,
   setCurrentFormData,
+  view,
 }) {
   const [relationTypes, setRelationTypes] = useState([]);
   const [nationality, setNationality] = useState([]);
+  const [checkedTypes, setCheckedTypes] = useState([]);
+
   // useEffect(() => {
   //   setCurrentFormData("");
   // }, []);
@@ -28,10 +31,7 @@ function GuarantorForm({
       const multipleCall = await Promise.allSettled(request);
       console.log(multipleCall[0].value);
 
-      setRelationTypes([
-        { id: "-1", name: `Select Relation` },
-        ...multipleCall[0].value,
-      ]);
+      setRelationTypes([...multipleCall[0].value]);
       setNationality([
         { id: "-1", name: `Select Nationality` },
         ...multipleCall[1].value,
@@ -41,9 +41,17 @@ function GuarantorForm({
     }
   };
 
+
   useEffect(() => {
     MultipleGetRequests();
   }, []);
+  // useEffect(() => {
+  //   if (view.length >= 0) {
+  //     DropDown();
+  //   }
+  // }, [view]);
+  console.log({ Guaranto: view });
+
   return (
     <div>
       <CForm>
@@ -108,7 +116,8 @@ function GuarantorForm({
               value={currentFormData?.relationId || -1}
               onChange={handleFormChange}
             >
-              {relationTypes.map((x, i) => (
+              <option value={-1}> Select Relation</option>
+              {view.map((x, i) => (
                 <option key={i} value={x.id}>
                   {x.name}
                 </option>
@@ -123,7 +132,6 @@ function GuarantorForm({
               name="nationalityId"
               value={currentFormData?.nationalityId || -1}
               onChange={handleFormChange}
-              
             >
               {nationality.map((x, i) => (
                 <option key={i} value={x.id}>

@@ -78,7 +78,7 @@ const FormModal = (props) => {
         >
           Close
         </CButton>
-        <CButton color="btn-success" onClick={submitBtn}>
+        <CButton color="primary" onClick={submitBtn}>
           Save
         </CButton>
       </CModalFooter>

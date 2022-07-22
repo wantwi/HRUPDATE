@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 //import { toast } from "react-toastify";
@@ -26,9 +26,8 @@ import {
   CSelect,
   CTextarea,
   CCardHeader,
-  
 } from "@coreui/react";
-import { AiOutlinePlus,AiFillSave } from "react-icons/ai";
+import { AiOutlinePlus, AiFillSave } from "react-icons/ai";
 
 import {
   ColumnDirective,
@@ -41,6 +40,7 @@ import {
   Sort,
   Edit,
   CommandColumn,
+  Toolbar,
 } from "@syncfusion/ej2-react-grids";
 
 import "../../../../node_modules/@syncfusion/ej2-base/styles/material.css";
@@ -81,7 +81,7 @@ import { Dropdown } from "@coreui/coreui";
 
 const editOptions = {
   allowEditing: false,
-  allowAdding: false,
+  allowAdding: true,
   allowDeleting: false,
   allowEditOnDblClick: false,
 };
@@ -130,6 +130,19 @@ const EmployeeLanguage = () => {
   const [employeeLanguageType, setEmployeelanguageType] = useState([]);
   const [employeeName, setEmpDisplayName] = useState("");
   const [checkedTypes, setCheckedTypes] = useState([]);
+  const firstGrid = useRef();
+
+  const toolbarOptions = [
+    "Add",
+    "Cancel",
+    // {
+    //   text: "Save",
+    //   tooltipText: "Save",
+    //   prefixIcon: "e-save",
+    //   id: "saveItems",
+    //   align: "Right",
+    // },
+  ];
 
   const reading = [
     {
@@ -256,12 +269,27 @@ const EmployeeLanguage = () => {
     }));
   };
 
+  // employee: {id: '514ba0ac-e65e-4d20-b553-4d61c5f52e9f', firstName: 'Michael', lastName: 'Ameyaw', staffId: 'PSL1002', status: false}
+  // id: "e4a87fe5-46b2-47c4-b96a-8f68705ceb0c"
+  // language: {id: '48f6ee0c-baae-4766-8601-1384ee2df0f4', code: 'LAN0003', name: 'Spanish'}
+  // read: "Advanced"
+  // speak: "Intermediate"
+  // write: "Advanced"
+
   //Get employee skill details
   const getEmployeelanguage = async () => {
     try {
       const request = await CustomAxios.get(`EmployeeLanguage/${handleId}`);
 
       const response = request.data;
+      const res = response.map((x) => ({
+        languageId: x.id,
+        read: x.read,
+        speak: x.speak,
+        write: x.write,
+      }));
+
+      console.log({ res });
 
       // console.log("renderViewInfor");
       setViewInfo(renderViewInfor(response));
@@ -291,7 +319,14 @@ const EmployeeLanguage = () => {
       console.log(error);
     }
   };
+  const submitRequest = (args) => {
+    if (firstGrid && args.item.id === "saveItems") {
+      console.log("first");
+      console.log({ value: firstGrid?.current?.currentViewData });
+    }
 
+    //console.log({ value: firstGrid });
+  };
   useEffect(() => {
     MultipleGetRequests();
     // change();
@@ -301,7 +336,7 @@ const EmployeeLanguage = () => {
   const handleOnSubmit = () => {
     console.log("submit data ", submitData);
 
-    if (!submitData?.languageId || submitData?.languageId === -1) {
+    if (!submitData?.languageId || submitData?.languageId == -1) {
       toast.error("Please Select a Language!", toastWarning);
       return;
     }
@@ -332,6 +367,17 @@ const EmployeeLanguage = () => {
     // console.log(finalData)
     // 'Add' === mode ? AddGLAccount(newData) : updateGLAccount(newData);
     // postEmployeeLanguage(newData);
+    let showGrid = {
+      language: {
+        code: submitData?.code || null,
+        id: submitData?.languageId,
+        name: submitData?.name,
+      },
+      read: submitData.read,
+      write: !submitData.write,
+      speak: submitData.speak,
+    };
+    console.log({ showGrid });
   };
 
   //Post Employee Skill
@@ -452,6 +498,7 @@ const EmployeeLanguage = () => {
 
   //   return response;
   // };
+  console.log({ viewinfo });
   console.log({ arr });
   return (
     <>
@@ -537,11 +584,12 @@ const EmployeeLanguage = () => {
             {/* style={{ height: CardBodyHeight, overflowY: "auto" }} */}
 
             <GridComponent
-              height={"500"}
+              height={"350"}
               dataSource={viewinfo}
               allowPaging={true}
               pageSettings={{ pageSize: 10 }}
               editSettings={editOptions}
+              toolbar={toolbarOptions}
             >
               <ColumnsDirective>
                 <ColumnDirective
@@ -571,20 +619,18 @@ const EmployeeLanguage = () => {
                   width="100"
                 />
 
-                {/* <ColumnDirective
+                <ColumnDirective
                   commands={commandOptions}
                   headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
                   width="100"
                   textAlign="Center"
-                /> */}
+                />
               </ColumnsDirective>
-             
+
               <Inject
-              
                 services={[Page, Sort, Filter, Group, Edit, CommandColumn]}
               />
             </GridComponent>
-           
           </CCard>
         </CCol>
       </CRow>
@@ -610,7 +656,7 @@ const EmployeeLanguage = () => {
                 </CLabel>
                 <CSelect
                   name="languageId"
-                  value={data?.languageId || ""}
+                  value={data?.languageId || -1}
                   onChange={handleOnChange}
                 >
                   {" "}
