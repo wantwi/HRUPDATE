@@ -19,6 +19,7 @@ import {
   CTextarea,
   CSelect,
   CCardHeader,
+  CCardFooter,
 } from "@coreui/react";
 import {
   ColumnDirective,
@@ -47,7 +48,7 @@ import {
   CSAutoComplete,
   CSRequiredIndicator,
 } from "../../../reusable/components";
-import { AiOutlinePlus } from "react-icons/ai";
+import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai";
 
 import {
   GetEmployee,
@@ -186,6 +187,16 @@ const EmployeeEducationInformation = (props) => {
         });
     }
   };
+  const searchReset = () => {
+    setShow(true);
+    setSearchInput("");
+
+    // const [grid,] = useState(null);
+
+    // const OnSaveContinueClick = () => {
+    //     console.log(grid);
+    // }
+  };
 
   const handleOnSubmit = () => {
     console.log(submitData);
@@ -314,7 +325,7 @@ const EmployeeEducationInformation = (props) => {
           </h5>
         </CCol>
       </CRow>
-      <CRow>
+      <CRow hidden={!show}>
         <CCol md="4">
           <CSAutoComplete
             filterUrl={SearchEmployees(searchInput)}
@@ -345,6 +356,8 @@ const EmployeeEducationInformation = (props) => {
             // reset={handleReset}
           />
         </CCol>
+      </CRow>
+      <CRow>
         <CCol md="8" className="text-right"></CCol>
         <CCol xs="12" hidden={show}>
           <CCard>
@@ -455,6 +468,20 @@ const EmployeeEducationInformation = (props) => {
                 </GridComponent>
               </CCol>
             </CRow>
+            <CCardFooter>
+              <CCol md="4">
+                <CButton
+                  style={{ marginRight: -960, float: "right", color: "white" }}
+                  onClick={() => searchReset()}
+                  type="button"
+                  size="sm"
+                  color="danger"
+                >
+                  <AiOutlineClose size={20} />
+                  <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
+                </CButton>
+              </CCol>
+            </CCardFooter>
           </CCard>
         </CCol>
       </CRow>

@@ -19,7 +19,6 @@ function BeneficiaryForm({
   useEffect(() => {
     setCurrentFormData("");
   }, []);
-  const [checkedTypes, setCheckedTypes] = useState([]);
 
   const MultipleGetRequests = async () => {
     try {
@@ -32,40 +31,38 @@ function BeneficiaryForm({
       console.log(error);
     }
   };
-  var arr = [];
-  const DropDown = () => {
-    if (view.length > 0) {
-      for (let i = 0; i < view.length; i++) {
-        var obj = {};
-        obj = view[i].relation;
-        arr.push(obj);
-      }
+  // var beneficiaryArr = [];
+  // const DropDown = () => {
+  //   if (view.length > 0) {
+  //     for (let i = 0; i < view.length; i++) {
+  //       var obj = {};
+  //       obj = view[i].relation;
+  //       beneficiaryArr.push(obj);
+  //     }
 
-      const newdata = relationTypes.filter((val) => {
-        return !arr.find((arr) => {
-          console.log({ valueID: val.id + ": " + arr.id });
-          return val.id === arr.id;
-        });
-      });
-      setCheckedTypes(newdata);
-      console.log(newdata);
-    } else {
-      setCheckedTypes(relationTypes);
-    }
-  };
+  //     const newdata = relationTypes.filter((val) => {
+  //       return !beneficiaryArr.find((arr) => {
+  //         console.log({ valueID: val.id + ": " + arr.id });
+  //         return (
+  //           (val.name === "Mother" && arr.name === "Mother") ||
+  //           (val.name === "Father" && arr.name === "Father")
+  //         );
+  //       });
+  //     });
+  //     setCheckedBeneficiaryTypes(newdata);
+  //     console.log(newdata);
+  //   } else {
+  //     setCheckedBeneficiaryTypes(relationTypes);
+  //   }
+  // };
 
   useEffect(() => {
     MultipleGetRequests();
-    DropDown();
   }, []);
-  useEffect(() => {
-    if (view.length >= 0) {
-      DropDown();
-    }
-  }, [view]);
-  console.log({ view });
-  console.log({ relationTypes });
-  console.log({ checkedTypes });
+
+  console.log({ Beneficiary: view });
+  // console.log({ relationTypes });
+  // console.log({ checkedBeneficiaryTypes });
 
   return (
     <div>
@@ -139,7 +136,7 @@ function BeneficiaryForm({
               <option value={-1} selected>
                 Select Relation
               </option>
-              {checkedTypes.map((x, i) => (
+              {view.map((x, i) => (
                 <option key={i} value={x.id}>
                   {x.name}
                 </option>

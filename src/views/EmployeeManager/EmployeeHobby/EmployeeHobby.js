@@ -25,8 +25,9 @@ import {
   CSelect,
   CTextarea,
   CCardHeader,
+  CCardFooter,
 } from "@coreui/react";
-import { AiOutlinePlus } from "react-icons/ai";
+import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai";
 import {
   GetRequest,
   HttpAPIRequest,
@@ -123,6 +124,7 @@ const EmployeeHobby = (props) => {
   const [hobbyTypes, setHobbyTypes] = useState([]);
   const [employeeHobbyId, setEmployeeHobbybyId] = useState([]);
   const [unitId, setUnitValue] = useState([]);
+  const [checkedHobby, setCheckedHobbyTypes] = useState();
 
   const handleSearchResultSelect = (results) => {
     console.log("show results", results);
@@ -173,6 +175,16 @@ const EmployeeHobby = (props) => {
         });
     }
   };
+  const searchReset = () => {
+    setShow(true);
+    setSearchInput("");
+
+    // const [grid,] = useState(null);
+
+    // const OnSaveContinueClick = () => {
+    //     console.log(grid);
+    // }
+  };
 
   // const getEmployyeHobbyById = async () => {
   //   try {
@@ -194,10 +206,7 @@ const EmployeeHobby = (props) => {
       const multipleCall = await Promise.allSettled(request);
       console.log(multipleCall[0].value);
 
-      setHobbyTypes([
-        { id: "-1", name: `Select Hobby` },
-        ...multipleCall[0].value,
-      ]);
+      setHobbyTypes([...multipleCall[0].value]);
     } catch (error) {
       console.log(error);
     }
@@ -307,6 +316,32 @@ const EmployeeHobby = (props) => {
     setUnitValue(Array.isArray(e) ? e.map((x) => x.id) : []);
   };
 
+  var hobbyDropDownArr = [];
+  const checkHobbyTypes = () => {
+    if (viewinfo.length > 0) {
+      for (let i = 0; i < viewinfo.length; i++) {
+        var obj = {};
+        obj = viewinfo[i].hobbyType;
+        hobbyDropDownArr.push(obj);
+      }
+
+      const newdata = hobbyTypes.filter((val) => {
+        return !hobbyDropDownArr.find((arr) => {
+          console.log({ valueID: val.id + "::: " + arr.id });
+          return val.id === arr.id;
+        });
+      });
+      if (newdata.length == 0) {
+        toast.error("All Employee Skills Have Been Selected");
+      } else {
+        setCheckedHobbyTypes(newdata);
+      }
+    } else {
+      setCheckedHobbyTypes(hobbyTypes);
+    }
+  };
+  console.log({ Checked: checkedHobby });
+
   return (
     <>
       <CRow>
@@ -316,7 +351,7 @@ const EmployeeHobby = (props) => {
           </h5>
         </CCol>
       </CRow>
-      <CRow>
+      <CRow hidden={!show}>
         <CCol md="4">
           <CFormGroup>
             <CSAutoComplete
@@ -346,6 +381,8 @@ const EmployeeHobby = (props) => {
             />
           </CFormGroup>
         </CCol>
+      </CRow>
+      <CRow>
         <CCol md="8" className="text-right"></CCol>
         <CCol xs="12" hidden={show}>
           <CCard>
@@ -377,6 +414,7 @@ const EmployeeHobby = (props) => {
                     style={{ float: "right" }}
                     onClick={() => {
                       setVisible(true);
+                      checkHobbyTypes();
                     }}
                   >
                     <AiOutlinePlus />
@@ -389,7 +427,7 @@ const EmployeeHobby = (props) => {
             <CForm action="" method="post">
               <>
                 <GridComponent
-                  height={500}
+                  height={350}
                   dataSource={viewinfo}
                   allowPaging={true}
                   pageSettings={{ pageSize: 10 }}
@@ -425,79 +463,97 @@ const EmployeeHobby = (props) => {
                 </GridComponent>
               </>
             </CForm>
+            <CCardFooter>
+              <CCol md="4">
+                <CButton
+                  style={{ marginRight: -960, float: "right", color: "white" }}
+                  onClick={() => searchReset()}
+                  type="button"
+                  size="sm"
+                  color="danger"
+                >
+                  <AiOutlineClose size={20} />
+                  <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
+                </CButton>
+              </CCol>
+            </CCardFooter>
           </CCard>
         </CCol>
       </CRow>
 
-      <CModal
-        show={visible}
-        size={"md"}
-        onClose={() => setVisible(false)}
-        closeOnBackdrop={false}
-      >
-        <CModalHeader style={{ position: "right" }}>
-          <CModalTitle>
-            {" "}
-            <CSLab code="HCM-S4GK0TDPEEG_PSLL" />{" "}
-          </CModalTitle>
-        </CModalHeader>
-        <CModalBody>
-          <CRow className={"bottom-spacing"}>
-            <>
-              <CCol md="6">
-                <CLabel htmlFor="hobbyTypeId">
-                  <CSLab name="hobbyTypeId" code="HCM-7NAYG6MHKMA-KCMI" />
-                  <CSRequiredIndicator />
-                </CLabel>
+      {checkedHobby && (
+        <CModal
+          show={visible}
+          size={"md"}
+          onClose={() => setVisible(false)}
+          closeOnBackdrop={false}
+        >
+          <CModalHeader style={{ position: "right" }}>
+            <CModalTitle>
+              {" "}
+              <CSLab code="HCM-S4GK0TDPEEG_PSLL" />{" "}
+            </CModalTitle>
+          </CModalHeader>
+          <CModalBody>
+            <CRow className={"bottom-spacing"}>
+              <>
+                <CCol md="12">
+                  <CLabel htmlFor="hobbyTypeId">
+                    <CSLab name="hobbyTypeId" code="HCM-7NAYG6MHKMA-KCMI" />
+                    <CSRequiredIndicator />
+                  </CLabel>
 
-                <Select
-                  //defaultValue={[colourOptions[2], colourOptions[3]]}
+                  <Select
+                    //defaultValue={[colourOptions[2], colourOptions[3]]}
 
-                  // onFocus={() => setIsDisabled(!isDisabled)}
+                    //onFocus={() => setIsDisabled(!isDisabled)}
 
-                  onChange={handleUnit}
-                  isMulti
-                  name="unit"
-                  options={hobbyTypes}
-                  getOptionLabel={(option) => option.name}
-                  getOptionValue={(option) => option.id}
-                  className="general-ledger-account-select"
-                  classNamePrefix="mySelect"
-                  value={hobbyTypes.filter((obj) => unitId.includes(obj.id))}
-                  components={{ MultiValue }}
-                  styles={customStyles}
-                  // placeholder={<CSLab code={"HCM-12HRKJ3VLGIH_HRPR"} />}
-                />
-              </CCol>
-            </>
-          </CRow>
-        </CModalBody>
-        <CModalFooter>
-          <p
-            style={{
-              fontSize: "10px",
-              marginRight: "291px",
-              marginBottom: "-34px",
-            }}
-          >
-            <em>
-              <CSLab code="HCM-LVXUVAB9G_KCMI" />( <CSRequiredIndicator />)
-            </em>
-          </p>
-          <CButton color="secondary" onClick={() => setVisible(false)}>
-            <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
-          </CButton>
-          <CButton
-            color="primary"
-            onClick={() => {
-              setVisible(false);
-              handleOnSubmit();
-            }}
-          >
-            <CSLab code="HCM-HGUHIR0OK6T" />
-          </CButton>
-        </CModalFooter>
-      </CModal>
+                    onChange={handleUnit}
+                    isMulti
+                    name="unit"
+                    options={checkedHobby}
+                    getOptionLabel={(option) => option.name}
+                    getOptionValue={(option) => option.id}
+                    className="general-ledger-account-select"
+                    classNamePrefix="mySelect"
+                    value={checkedHobby?.filter((obj) =>
+                      unitId.includes(obj.id)
+                    )}
+                    components={{ MultiValue }}
+                    styles={customStyles}
+                    placeholder={<CSLab code={"Select Hobby"} />}
+                  />
+                </CCol>
+              </>
+            </CRow>
+          </CModalBody>
+          <CModalFooter>
+            <p
+              style={{
+                fontSize: "10px",
+                marginRight: "291px",
+                marginBottom: "-34px",
+              }}
+            >
+              <em>
+                <CSLab code="HCM-LVXUVAB9G_KCMI" />( <CSRequiredIndicator />)
+              </em>
+            </p>
+            <CButton color="secondary" onClick={() => setVisible(false)}>
+              <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
+            </CButton>
+            <CButton
+              color="primary"
+              onClick={() => {
+                setVisible(false);
+                handleOnSubmit();
+              }}
+            >
+              <CSLab code="HCM-HGUHIR0OK6T" />
+            </CButton>
+          </CModalFooter>
+        </CModal>
+      )}
     </>
   );
 };

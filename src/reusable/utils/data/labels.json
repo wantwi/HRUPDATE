@@ -13204,5 +13204,15 @@
     "german": "",
     "status": 1,
     "type": "string"
+  },
+  "HCM-NH0G4VEHP5F-HRPR": {
+    "id": "c7a4207d-8175-4add-aa3c-ffabadf926df",
+    "en": "Days",
+    "fr": "Journées",
+    "spanish": "",
+    "portuguese": "",
+    "german": "",
+    "status": 1,
+    "type": "string"
   }
 }

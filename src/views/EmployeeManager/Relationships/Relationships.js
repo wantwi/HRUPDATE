@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { AiOutlinePlus } from "react-icons/ai";
+import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai";
 import { useSelector, useDispatch } from "react-redux";
 import { CustomAxios } from "src/reusable/API/CustomAxios";
 
@@ -231,6 +231,8 @@ const EmployeeDetail = (props) => {
   const [checkedTypes, setCheckedTypes] = useState([]);
   const [checkedTypesGuarantor, setCheckedTypesGuarantor] = useState([]);
   const [checkedTypesNextOfKin, setCheckedTypesNextOfKin] = useState({});
+  const [checkedBeneficiaryTypes, setCheckedBeneficiaryTypes] = useState([]);
+
   // const submitBtn =  useRef(null)
 
   const actionBegin2 = () => {};
@@ -252,6 +254,17 @@ const EmployeeDetail = (props) => {
   // const [large, setLarge] = useState(false);
 
   //relationTs();
+
+  const searchReset = () => {
+    setShow(true);
+    setSearchInput("");
+
+    // const [grid,] = useState(null);
+
+    // const OnSaveContinueClick = () => {
+    //     console.log(grid);
+    // }
+  };
 
   const onCompleteAction = (args) => {
     console.log(getValue("name", args));
@@ -822,7 +835,7 @@ const EmployeeDetail = (props) => {
     checkRelationDependant();
     checkRelationGuarantor();
     checkRelationNextOfKin();
-
+    checkBenefiary();
     if (args.requestType === "add") {
       args.cancel = true;
       setShowModal(true);
@@ -836,7 +849,7 @@ const EmployeeDetail = (props) => {
         currentFormData={currentFormData}
         handleFormChange={handleFormChange}
         setCurrentFormData={setCurrentFormData}
-        view={benefiaciary}
+        view={checkedBeneficiaryTypes}
       />
     );
   }
@@ -897,7 +910,10 @@ const EmployeeDetail = (props) => {
       const newdata = relationTypes.filter((val) => {
         return !arr.find((arr) => {
           console.log({ valueID: val.id + ": " + arr.id });
-          return val.id === arr.id;
+          return (
+            (val.name === "Mother" && arr.name === "Mother") ||
+            (val.name === "Father" && arr.name === "Father")
+          );
         });
       });
       setCheckedTypes(newdata);
@@ -919,7 +935,10 @@ const EmployeeDetail = (props) => {
       const newdata = relationTypes.filter((val) => {
         return !temp.find((arr) => {
           console.log({ valueID: val.id + ": " + arr.id });
-          return val.id === arr.id;
+          return (
+            (val.name === "Mother" && arr.name === "Mother") ||
+            (val.name === "Father" && arr.name === "Father")
+          );
         });
       });
       setCheckedTypesGuarantor(newdata);
@@ -943,13 +962,40 @@ const EmployeeDetail = (props) => {
       const newdata = relationTypes.filter((val) => {
         return !arryKin.find((arr) => {
           console.log({ valueID: val.id + ": " + arr.id });
-          return val.id === arr.id;
+          return (
+            (val.name === "Mother" && arr.name === "Mother") ||
+            (val.name === "Father" && arr.name === "Father")
+          );
         });
       });
       setCheckedTypesNextOfKin(newdata);
       console.log(newdata);
     } else {
       setCheckedTypesNextOfKin(relationTypes);
+    }
+  };
+  var beneficiaryArr = [];
+  const checkBenefiary = () => {
+    if (benefiaciary.length > 0) {
+      for (let i = 0; i < benefiaciary.length; i++) {
+        var obj = {};
+        obj = benefiaciary[i].relation;
+        beneficiaryArr.push(obj);
+      }
+
+      const newdata = relationTypes.filter((val) => {
+        return !beneficiaryArr.find((arr) => {
+          console.log({ valueID: val.id + ": " + arr.id });
+          return (
+            (val.name === "Mother" && arr.name === "Mother") ||
+            (val.name === "Father" && arr.name === "Father")
+          );
+        });
+      });
+      setCheckedBeneficiaryTypes(newdata);
+      console.log(newdata);
+    } else {
+      setCheckedBeneficiaryTypes(relationTypes);
     }
   };
 
@@ -959,6 +1005,9 @@ const EmployeeDetail = (props) => {
   useEffect(() => {
     checkRelationGuarantor();
   }, [nextOfKin]);
+  useEffect(() => {
+    checkBenefiary();
+  }, [benefiaciary]);
   console.log({ checkedTypesNextOfKin });
   console.log({ nextOfKin });
 
@@ -971,7 +1020,7 @@ const EmployeeDetail = (props) => {
           </h5>
         </CCol>
       </CRow>
-      <CRow>
+      <CRow hidden={!show}>
         <CCol md="4">
           <CFormGroup>
             <CSAutoComplete
@@ -1001,6 +1050,8 @@ const EmployeeDetail = (props) => {
             />
           </CFormGroup>
         </CCol>
+      </CRow>
+      <CRow>
         <CCol xs="12" hidden={show}>
           <CCard>
             {/* <CCardHeader hidden={show} className={""}>
@@ -1598,15 +1649,18 @@ const EmployeeDetail = (props) => {
               {/* <CButton onClick={submitRequest} style={{ marginRight: 5, float: "right" }} type="submit" size="sm" color="success" >
                 <CIcon name="cil-scrubber" /> Submit
               </CButton> */}
-              <CButton
-                onClick={refreshPage}
-                style={{ marginRight: 5, float: "right" }}
-                type="reset"
-                size="sm"
-                color="danger"
-              >
-                <CIcon name="cil-ban" /> <CSLab code="HCM-MELULU9B6R_KCMI" />
-              </CButton>
+              <CCol md="4">
+                <CButton
+                  style={{ marginRight: -960, float: "right", color: "white" }}
+                  onClick={() => searchReset()}
+                  type="button"
+                  size="sm"
+                  color="danger"
+                >
+                  <AiOutlineClose size={20} />
+                  <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
+                </CButton>
+              </CCol>
             </CCardFooter>
           </CCard>
         </CCol>

@@ -31,8 +31,9 @@ import {
   CLabel,
   CSelect,
   CTextarea,
+  CCardFooter,
 } from "@coreui/react";
-import { AiOutlinePlus } from "react-icons/ai";
+import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai";
 
 import {
   ColumnDirective,
@@ -166,6 +167,16 @@ const MedicalTransaction = () => {
           // toaster(toastId, "Failed to retrieve details", 'error', 4000);
         });
     }
+  };
+  const searchReset = () => {
+    setShow(true);
+    setSearchInput("");
+
+    // const [grid,] = useState(null);
+
+    // const OnSaveContinueClick = () => {
+    //     console.log(grid);
+    // }
   };
 
   // const getEmployyeHobbyById = async () => {
@@ -315,7 +326,7 @@ const MedicalTransaction = () => {
           </h5>
         </CCol>
       </CRow>
-      <CRow>
+      <CRow hidden={!show}>
         <CCol md="4">
           <CFormGroup>
             <CSAutoComplete
@@ -345,6 +356,8 @@ const MedicalTransaction = () => {
             />
           </CFormGroup>
         </CCol>
+      </CRow>
+      <CRow>
         <CCol md="8" className="text-right"></CCol>
         <CCol xs="12" hidden={show}>
           <CCard>
@@ -385,7 +398,7 @@ const MedicalTransaction = () => {
               </CFormGroup>
             </CCardHeader>
             <GridComponent
-              height={"500"}
+              height={"350"}
               dataSource={viewinfo}
               allowPaging={true}
               pageSettings={{ pageSize: 10 }}
@@ -417,7 +430,7 @@ const MedicalTransaction = () => {
                 />
                 <ColumnDirective
                   field={"cost"}
-                  headerText={GetLabelByName("HCM-7I262DWOU2R-LOLN", lan)}
+                  headerText={GetLabelByName("HCM-3OZ72JARXE-KCMI", lan)}
                   width="100"
                 />
                 <ColumnDirective
@@ -431,6 +444,20 @@ const MedicalTransaction = () => {
                 services={[Page, Sort, Filter, Group, Edit, CommandColumn]}
               />
             </GridComponent>
+            <CCardFooter>
+              <CCol md="4">
+                <CButton
+                  style={{ marginRight: -960, float: "right", color: "white" }}
+                  onClick={() => searchReset()}
+                  type="button"
+                  size="sm"
+                  color="danger"
+                >
+                  <AiOutlineClose size={20} />
+                  <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
+                </CButton>
+              </CCol>
+            </CCardFooter>
           </CCard>
         </CCol>
       </CRow>

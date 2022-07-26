@@ -26,8 +26,9 @@ import {
   CSelect,
   CTextarea,
   CCardHeader,
+  CCardFooter,
 } from "@coreui/react";
-import { AiOutlinePlus } from "react-icons/ai";
+import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai";
 
 import {
   ColumnDirective,
@@ -136,6 +137,16 @@ const AccidentTransaction = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+  const searchReset = () => {
+    setShow(true);
+    setSearchInput("");
+
+    // const [grid,] = useState(null);
+
+    // const OnSaveContinueClick = () => {
+    //     console.log(grid);
+    // }
   };
 
   useEffect(() => {
@@ -310,7 +321,7 @@ const AccidentTransaction = () => {
           </h5>
         </CCol>
       </CRow>
-      <CRow>
+      <CRow hidden={!show}>
         <CCol md="4">
           <CSAutoComplete
             filterUrl={SearchEmployees(searchInput)}
@@ -335,6 +346,8 @@ const AccidentTransaction = () => {
             handleId={setHandleId}
           />
         </CCol>
+      </CRow>
+      <CRow>
         <CCol md="8" className="text-right"></CCol>
         <CCol xs="12" hidden={show}>
           <CCard>
@@ -377,7 +390,7 @@ const AccidentTransaction = () => {
             {/* style={{ height: CardBodyHeight, overflowY: "auto" }} */}
 
             <GridComponent
-              height={"500"}
+              height={"350"}
               dataSource={getEmployeeAccident}
               allowPaging={true}
               pageSettings={{ pageSize: 10 }}
@@ -426,6 +439,20 @@ const AccidentTransaction = () => {
                 services={[Page, Sort, Filter, Group, Edit, CommandColumn]}
               />
             </GridComponent>
+            <CCardFooter>
+              <CCol md="4">
+                <CButton
+                  style={{ marginRight: -960, float: "right", color: "white" }}
+                  onClick={() => searchReset()}
+                  type="button"
+                  size="sm"
+                  color="danger"
+                >
+                  <AiOutlineClose size={20} />
+                  <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
+                </CButton>
+              </CCol>
+            </CCardFooter>
           </CCard>
         </CCol>
       </CRow>

@@ -187,13 +187,13 @@ const LeaveTypes = (props) => {
 
     // const [grid,] = useState(null);
 
-    const TransLabelByCode = (name) => GetLabelByName(name, lan);
+   
 
     // const OnSaveContinueClick = () => {
     //     console.log(grid);
     // }
   };
-
+  
   //Drop down list for hobby types
   const MultipleGetRequests = async () => {
     try {
@@ -656,10 +656,10 @@ const LeaveTypes = (props) => {
                       </CCol>
 
                       {isChecked && (
-                        <CCol md="6">
+                        <CCol md="5">
                           <CLabel>
                             {" "}
-                            <CSLab code="HCM-B5HI1B86NGK_HRPR" />{" "}
+                            <CSLab code="HCM-NH0G4VEHP5F-HRPR" />{" "}
                           </CLabel>
                           <CInput
                             style={{ width: "152px" }}

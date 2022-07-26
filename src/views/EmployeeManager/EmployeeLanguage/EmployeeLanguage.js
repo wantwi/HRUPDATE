@@ -26,8 +26,9 @@ import {
   CSelect,
   CTextarea,
   CCardHeader,
+  CCardFooter,
 } from "@coreui/react";
-import { AiOutlinePlus, AiFillSave } from "react-icons/ai";
+import { AiOutlinePlus, AiFillSave, AiOutlineClose } from "react-icons/ai";
 
 import {
   ColumnDirective,
@@ -130,6 +131,7 @@ const EmployeeLanguage = () => {
   const [employeeLanguageType, setEmployeelanguageType] = useState([]);
   const [employeeName, setEmpDisplayName] = useState("");
   const [checkedTypes, setCheckedTypes] = useState([]);
+  const [selectedName, setSelectedName] = useState("");
   const firstGrid = useRef();
 
   const toolbarOptions = [
@@ -260,12 +262,23 @@ const EmployeeLanguage = () => {
         });
     }
   };
+  const searchReset = () => {
+    setShow(true);
+    setSearchInput("");
+
+    // const [grid,] = useState(null);
+
+    // const OnSaveContinueClick = () => {
+    //     console.log(grid);
+    // }
+  };
+
   const renderViewInfor = (data) => {
     return data.map((x) => ({
       ...x,
-      write: reading.find((y) => y.id === x.write)?.name || "Not set",
-      read: reading.find((y) => y.id === x.read)?.name || "Not set",
-      speak: reading.find((y) => y.id === x.speak)?.name || "Not set",
+      write: reading.find((y) => y.id == x.write)?.name || "Not set",
+      read: reading.find((y) => y.id == x.read)?.name || "Not set",
+      speak: reading.find((y) => y.id == x.speak)?.name || "Not set",
     }));
   };
 
@@ -331,6 +344,16 @@ const EmployeeLanguage = () => {
     MultipleGetRequests();
     // change();
   }, []);
+  const GetColumnNames = () => {
+    setTimeout(() => {
+      console.log(submitData.languageId);
+      console.log(employeeLanguageType);
+      const name = employeeLanguageType?.find(
+        (x) => x.id === submitData?.languageId
+      );
+      setSelectedName(name.name);
+    }, 200);
+  };
 
   //Handles Submit
   const handleOnSubmit = () => {
@@ -362,21 +385,34 @@ const EmployeeLanguage = () => {
       CompanyReference: "00001_A01",
       employeeId,
     };
+
+    const getName = (id) => {
+      return reading.find((x) => x.id == id)?.name || "Not found";
+    };
     console.log(newData);
     //let finalData = JSON.stringify(newData)
     // console.log(finalData)
     // 'Add' === mode ? AddGLAccount(newData) : updateGLAccount(newData);
-    // postEmployeeLanguage(newData);
+    //postEmployeeLanguage(newData);
+
     let showGrid = {
+      employee: {
+        firstName: viewinfo.firstName,
+        id: handleId,
+        lastName: viewinfo.lastName,
+        staffId: viewinfo.staffId,
+      },
       language: {
         code: submitData?.code || null,
         id: submitData?.languageId,
-        name: submitData?.name,
+        name: selectedName,
       },
-      read: submitData.read,
-      write: !submitData.write,
-      speak: submitData.speak,
+      read: getName(submitData.read),
+      write: getName(submitData.write),
+      speak: getName(submitData.speak),
     };
+    setViewInfo((prevState) => [...prevState, showGrid]);
+    console.log(submitData.languageId);
     console.log({ showGrid });
   };
 
@@ -454,8 +490,8 @@ const EmployeeLanguage = () => {
 
       const newdata = employeeLanguageType.filter((val) => {
         return !arr.find((arr) => {
-          console.log({ valueID: val.id + ": " + arr.id });
-          return val.id === arr.id;
+          // console.log({ valueID: val.id + ": " + arr.id });
+          return val?.id === arr?.id;
         });
       });
       setCheckedTypes(newdata);
@@ -500,6 +536,7 @@ const EmployeeLanguage = () => {
   // };
   console.log({ viewinfo });
   console.log({ arr });
+  console.log({ selectedName });
   return (
     <>
       <CRow>
@@ -509,31 +546,33 @@ const EmployeeLanguage = () => {
           </h5>
         </CCol>
       </CRow>
-      <CRow></CRow>
-      <CCol md="4" hidden={!show}>
-        <CSAutoComplete
-          filterUrl={SearchEmployees(searchInput)}
-          placeholder={GetLabelByName("HCM-6FKJ6FEGW7A-HRPR", lan)}
-          handleSelect={handleSearchResultSelect}
-          displayTextKey={"firstName"}
-          setInput={setSearchInput}
-          input={searchInput}
-          emptySearchFieldMessage={`Please input 3 or more characters to search`}
-          searchName={"Employee"}
-          isPaginated={false}
-          pageNumber={pageNumber}
-          setPageNumber={setPageNumber}
-          numberOfItems={numberOfItems}
-          setNumberOfItems={setNumberOfItems}
-          orderBy={orderBy}
-          setOrderBy={setOrderBy}
-          sortOrder={sortOrder}
-          setSortOrder={setSortOrder}
-          mode={mode}
-          setMode={setMode}
-          handleId={setHandleId}
-        />
-      </CCol>
+      <CRow>
+        <CCol md="4" hidden={!show}>
+          <CSAutoComplete
+            filterUrl={SearchEmployees(searchInput)}
+            placeholder={GetLabelByName("HCM-6FKJ6FEGW7A-HRPR", lan)}
+            handleSelect={handleSearchResultSelect}
+            displayTextKey={"firstName"}
+            setInput={setSearchInput}
+            input={searchInput}
+            emptySearchFieldMessage={`Please input 3 or more characters to search`}
+            searchName={"Employee"}
+            isPaginated={false}
+            pageNumber={pageNumber}
+            setPageNumber={setPageNumber}
+            numberOfItems={numberOfItems}
+            setNumberOfItems={setNumberOfItems}
+            orderBy={orderBy}
+            setOrderBy={setOrderBy}
+            sortOrder={sortOrder}
+            setSortOrder={setSortOrder}
+            mode={mode}
+            setMode={setMode}
+            handleId={setHandleId}
+          />
+        </CCol>
+      </CRow>
+
       <CRow>
         <CCol md="8" className="text-right"></CCol>
         <CCol xs="12" hidden={show}>
@@ -626,11 +665,25 @@ const EmployeeLanguage = () => {
                   textAlign="Center"
                 />
               </ColumnsDirective>
-
+              <ColumnsDirective></ColumnsDirective>
               <Inject
                 services={[Page, Sort, Filter, Group, Edit, CommandColumn]}
               />
             </GridComponent>
+            <CCardFooter>
+              <CCol md="4">
+                <CButton
+                  style={{ marginRight: -960, float: "right", color: "white" }}
+                  onClick={() => searchReset()}
+                  type="button"
+                  size="sm"
+                  color="danger"
+                >
+                  <AiOutlineClose size={20} />
+                  <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
+                </CButton>
+              </CCol>
+            </CCardFooter>
           </CCard>
         </CCol>
       </CRow>
@@ -770,6 +823,7 @@ const EmployeeLanguage = () => {
             color="primary"
             onClick={() => {
               // setVisible(false);
+              GetColumnNames();
               handleOnSubmit();
             }}
           >

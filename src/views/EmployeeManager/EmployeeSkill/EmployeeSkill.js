@@ -32,8 +32,9 @@ import {
   CSelect,
   CTextarea,
   CCardHeader,
+  CCardFooter,
 } from "@coreui/react";
-import { AiOutlinePlus } from "react-icons/ai";
+import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai";
 
 import {
   ColumnDirective,
@@ -120,6 +121,7 @@ const EmployeeSkill = (props) => {
   const [handleId, setHandleId] = useState("");
   const [viewinfo, setViewInfo] = useState([]);
   const [skillType, setSkillType] = useState([]);
+  const [chekedSkillTypes, setCheckedSkillTypes] = useState([]);
 
   const handleSearchResultSelect = (results) => {
     console.log("show results", results);
@@ -170,7 +172,16 @@ const EmployeeSkill = (props) => {
         });
     }
   };
+  const searchReset = () => {
+    setShow(true);
+    setSearchInput("");
 
+    // const [grid,] = useState(null);
+
+    // const OnSaveContinueClick = () => {
+    //     console.log(grid);
+    // }
+  };
   //Get employee skill details
   const getEmployeeSkills = async () => {
     try {
@@ -179,6 +190,7 @@ const EmployeeSkill = (props) => {
       const response = request.data;
       console.log("emp response:", response);
       setViewInfo((prevState) => response);
+      checkBenefiary();
     } catch (error) {
       console.log({ error });
     }
@@ -200,10 +212,7 @@ const EmployeeSkill = (props) => {
       const multipleCall = await Promise.allSettled(request);
       console.log(multipleCall[0].value);
 
-      setSkillType([
-        { id: "-1", name: `Select Skill` },
-        ...multipleCall[0].value,
-      ]);
+      setSkillType([...multipleCall[0].value]);
     } catch (error) {
       console.log(error);
     }
@@ -286,6 +295,35 @@ const EmployeeSkill = (props) => {
   const canSave = [skill].every(Boolean);
 
   const TransLabelByCode = (name) => GetLabelByName(name, lan);
+
+  var skillDropDownArr = [];
+  const checkBenefiary = () => {
+    if (viewinfo.length > 0) {
+      for (let i = 0; i < viewinfo.length; i++) {
+        var obj = {};
+        obj = viewinfo[i].skillType;
+        skillDropDownArr.push(obj);
+      }
+
+      const newdata = skillType.filter((val) => {
+        return !skillDropDownArr.find((arr) => {
+          console.log({ valueID: val.id + "::: " + arr.id });
+          return val.id === arr.id;
+        });
+      });
+      setCheckedSkillTypes(newdata);
+      console.log(newdata);
+    } else {
+      setCheckedSkillTypes(skillType);
+    }
+  };
+  useEffect(() => {
+    if (viewinfo) {
+      checkBenefiary();
+    }
+  }, []);
+  console.log({ checked: chekedSkillTypes });
+  console.log({ skillType });
   return (
     <>
       <CRow>
@@ -295,7 +333,7 @@ const EmployeeSkill = (props) => {
           </h5>
         </CCol>
       </CRow>
-      <CRow>
+      <CRow hidden={!show}>
         <CCol md="4">
           <CFormGroup>
             <CSAutoComplete
@@ -325,6 +363,8 @@ const EmployeeSkill = (props) => {
             />
           </CFormGroup>
         </CCol>
+      </CRow>
+      <CRow>
         <CCol md="8" className="text-right"></CCol>
         <CCol xs="12" hidden={show}>
           <CCard>
@@ -368,7 +408,7 @@ const EmployeeSkill = (props) => {
             <CForm action="" method="post">
               <>
                 <GridComponent
-                  height={500}
+                  height={350}
                   dataSource={viewinfo}
                   allowPaging={true}
                   pageSettings={{ pageSize: 10 }}
@@ -410,6 +450,24 @@ const EmployeeSkill = (props) => {
                 </GridComponent>
               </>
             </CForm>
+
+            <CCardFooter>
+              {/* <CButton onClick={submitRequest} style={{ marginRight: 5, float: "right" }} type="submit" size="sm" color="success" >
+                <CIcon name="cil-scrubber" /> Submit
+              </CButton> */}
+              <CCol md="4">
+                <CButton
+                  style={{ marginRight: -960, float: "right", color: "white" }}
+                  onClick={() => searchReset()}
+                  type="button"
+                  size="sm"
+                  color="danger"
+                >
+                  <AiOutlineClose size={20} />
+                  <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
+                </CButton>
+              </CCol>
+            </CCardFooter>
           </CCard>
         </CCol>
       </CRow>
@@ -436,7 +494,7 @@ const EmployeeSkill = (props) => {
                 <CInput type="text" id="Name" />
               </CCol> */}
               <CCol md="12">
-                <CLabel htmlFor="Skiil">
+                <CLabel htmlFor="Skill">
                   <CSLab code="HCM-P29OOIV9P7_PSLL" />
                   <CSRequiredIndicator />
                 </CLabel>
@@ -445,7 +503,8 @@ const EmployeeSkill = (props) => {
                   value={data?.skillTypeId || -1}
                   onChange={handleOnChange}
                 >
-                  {skillType.map((x, i) => (
+                  <option value={-1}> Select Skill</option>
+                  {chekedSkillTypes.map((x, i) => (
                     <option key={i} value={x.id}>
                       {x.name}
                     </option>
