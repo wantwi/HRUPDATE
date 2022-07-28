@@ -83,7 +83,7 @@ import { Dropdown } from "@coreui/coreui";
 const editOptions = {
   allowEditing: false,
   allowAdding: true,
-  allowDeleting: false,
+  allowDeleting: true,
   allowEditOnDblClick: false,
 };
 
@@ -132,6 +132,8 @@ const EmployeeLanguage = () => {
   const [employeeName, setEmpDisplayName] = useState("");
   const [checkedTypes, setCheckedTypes] = useState([]);
   const [selectedName, setSelectedName] = useState("");
+  const [postEmployee, setPostEmployee] = useState([]);
+  const [newGridDta, setNewGridData] = useState([]);
   const firstGrid = useRef();
 
   const toolbarOptions = [
@@ -344,15 +346,14 @@ const EmployeeLanguage = () => {
     MultipleGetRequests();
     // change();
   }, []);
+
   const GetColumnNames = () => {
-    setTimeout(() => {
-      console.log(submitData.languageId);
-      console.log(employeeLanguageType);
-      const name = employeeLanguageType?.find(
-        (x) => x.id === submitData?.languageId
-      );
-      setSelectedName(name.name);
-    }, 200);
+    console.log(submitData.languageId);
+    console.log(employeeLanguageType);
+    const name = employeeLanguageType?.find(
+      (x) => x?.id === submitData?.languageId
+    );
+    setSelectedName(name?.name);
   };
 
   //Handles Submit
@@ -376,7 +377,7 @@ const EmployeeLanguage = () => {
       return;
     }
     // console.log(submitData)
-    let employeeId = submitData.id;
+    let employeeId = submitData?.id;
     //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
     let newData = {
       ...submitData,
@@ -390,30 +391,27 @@ const EmployeeLanguage = () => {
       return reading.find((x) => x.id == id)?.name || "Not found";
     };
     console.log(newData);
+    console.log(submitData?.id);
     //let finalData = JSON.stringify(newData)
     // console.log(finalData)
     // 'Add' === mode ? AddGLAccount(newData) : updateGLAccount(newData);
     //postEmployeeLanguage(newData);
-
-    let showGrid = {
+    setPostEmployee(newData);
+    setNewGridData({
       employee: {
-        firstName: viewinfo.firstName,
         id: handleId,
-        lastName: viewinfo.lastName,
-        staffId: viewinfo.staffId,
       },
       language: {
-        code: submitData?.code || null,
         id: submitData?.languageId,
         name: selectedName,
       },
       read: getName(submitData.read),
       write: getName(submitData.write),
       speak: getName(submitData.speak),
-    };
-    setViewInfo((prevState) => [...prevState, showGrid]);
+    });
+    setViewInfo((prevState) => [...prevState, newGridDta]);
     console.log(submitData.languageId);
-    console.log({ showGrid });
+    //  console.log({ showGrid });
   };
 
   //Post Employee Skill
@@ -506,7 +504,12 @@ const EmployeeLanguage = () => {
       DropDown();
     }
   }, [viewinfo]);
-
+  useEffect(() => {
+    if (submitData.languageId) {
+      GetColumnNames();
+    }
+  }, [submitData?.languageId]);
+  console.log({ newGridDta });
   // const getSampleData = () => {
   //   viewinfo.map((items) => setEmployeelanguage([items.language]));
   //   console.log({view: viewinfo})
@@ -537,6 +540,8 @@ const EmployeeLanguage = () => {
   console.log({ viewinfo });
   console.log({ arr });
   console.log({ selectedName });
+  console.log({ postEmployee });
+
   return (
     <>
       <CRow>
@@ -671,18 +676,25 @@ const EmployeeLanguage = () => {
               />
             </GridComponent>
             <CCardFooter>
-              <CCol md="4">
-                <CButton
-                  style={{ marginRight: -960, float: "right", color: "white" }}
-                  onClick={() => searchReset()}
-                  type="button"
-                  size="sm"
-                  color="danger"
-                >
-                  <AiOutlineClose size={20} />
-                  <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
-                </CButton>
-              </CCol>
+              <CButton
+                style={{ marginRight: 5, float: "right" }}
+                type="button"
+                size="sm"
+                color="success"
+                onClick={() => postEmployeeLanguage(postEmployee)}
+              >
+                <AiFillSave size={20} /> <CSLab code="HCM-HGUHIR0OK6T" />{" "}
+              </CButton>
+              <CButton
+                style={{ marginRight: 9, float: "right", color: "white" }}
+                onClick={() => searchReset()}
+                type="button"
+                size="sm"
+                color="danger"
+              >
+                <AiOutlineClose size={20} />
+                <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
+              </CButton>
             </CCardFooter>
           </CCard>
         </CCol>
@@ -816,18 +828,29 @@ const EmployeeLanguage = () => {
           >
             <CSLab code="HCM-WKZ2Y0KPTT9-PSLL" /> (<CSRequiredIndicator />)
           </div>
-          <CButton color="secondary" onClick={() => setVisible(false)}>
+
+          <CButton
+            color="secondary"
+            onClick={() => {
+              setVisible(false);
+              //setSubmitData(null);
+            }}
+          >
             <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
           </CButton>
+
           <CButton
             color="primary"
             onClick={() => {
               // setVisible(false);
+
+              setTimeout(() => {
+                handleOnSubmit();
+              }, 2000);
               GetColumnNames();
-              handleOnSubmit();
             }}
           >
-            <CSLab code="HCM-HGUHIR0OK6T" />
+            <CSLab code="HCM-TAAFD4M071D-HRPR" />
           </CButton>
         </CModalFooter>
       </CModal>
