@@ -355,6 +355,11 @@ const EmployeeLanguage = () => {
     );
     setSelectedName(name?.name);
   };
+  const GridAddDelay=()=>{
+    setTimeout(()=>{
+      handleOnSubmit()
+    },500)
+  }
 
   //Handles Submit
   const handleOnSubmit = () => {
@@ -386,7 +391,7 @@ const EmployeeLanguage = () => {
       CompanyReference: "00001_A01",
       employeeId,
     };
-
+    setViewInfo((prevState) => [...prevState,newGridDta]);
     const getName = (id) => {
       return reading.find((x) => x.id == id)?.name || "Not found";
     };
@@ -396,8 +401,8 @@ const EmployeeLanguage = () => {
     // console.log(finalData)
     // 'Add' === mode ? AddGLAccount(newData) : updateGLAccount(newData);
     //postEmployeeLanguage(newData);
-    setPostEmployee(newData);
-    setNewGridData({
+    setPostEmployee([newData]);
+    setNewGridData([{
       employee: {
         id: handleId,
       },
@@ -408,11 +413,14 @@ const EmployeeLanguage = () => {
       read: getName(submitData.read),
       write: getName(submitData.write),
       speak: getName(submitData.speak),
-    });
-    setViewInfo((prevState) => [...prevState, newGridDta]);
+    }]);
+  
     console.log(submitData.languageId);
     //  console.log({ showGrid });
   };
+  const SetViewGrid=(data)=>{
+    setViewInfo((prevState) => [...prevState,data]);
+  }
 
   //Post Employee Skill
   function postEmployeeLanguage(data) {
@@ -539,6 +547,7 @@ const EmployeeLanguage = () => {
   // };
   console.log({ viewinfo });
   console.log({ arr });
+  
   console.log({ selectedName });
   console.log({ postEmployee });
 
@@ -842,12 +851,12 @@ const EmployeeLanguage = () => {
           <CButton
             color="primary"
             onClick={() => {
-              // setVisible(false);
-
-              setTimeout(() => {
-                handleOnSubmit();
-              }, 2000);
+              //setVisible(false);
+              handleOnSubmit();
+                DropDown()
               GetColumnNames();
+              SetViewGrid(newGridDta)
+
             }}
           >
             <CSLab code="HCM-TAAFD4M071D-HRPR" />
