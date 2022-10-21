@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   CButton,
@@ -15,47 +15,75 @@ import {
   CRow
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
+import { userLogin } from 'src/auth/config'
+import Loader from 'src/Loader/Loader'
+
+
 
 const Login = () => {
+  const [isLoading, setisLoading] = useState(false)
+
+
+  const loginUser = async () => {
+
+    setisLoading(true)
+    const res = await userLogin()
+    if(res) {
+      setisLoading(false)
+    }
+
+  }
+  useEffect(() => {
+    
+    setisLoading(false)
+    return () => {
+      setisLoading(false)
+    }
+  }, [])
+
+
+  
+
   return (
     <div className="c-app c-default-layout flex-row align-items-center">
-      <CContainer>
+      {
+        isLoading ? <Loader/> : <CContainer>
         <CRow className="justify-content-center">
-          <CCol md="8">
+          <CCol md="12">
             <CCardGroup>
               <CCard className="p-4">
                 <CCardBody>
                   <CForm>
                     <h1>Login</h1>
-                    <p className="text-muted">Sign In to your account</p>
-                    <CInputGroup className="mb-3">
+                    <p className="text-muted">Sign In to your Personax Customer Admin account</p>
+                    {/* <CInputGroup className="mb-3">
                       <CInputGroupPrepend>
                         <CInputGroupText>
                           <CIcon name="cil-user" />
                         </CInputGroupText>
                       </CInputGroupPrepend>
                       <CInput type="text" placeholder="Username" autoComplete="username" />
-                    </CInputGroup>
-                    <CInputGroup className="mb-4">
+                    </CInputGroup> */}
+                    {/* <CInputGroup className="mb-4">
                       <CInputGroupPrepend>
                         <CInputGroupText>
                           <CIcon name="cil-lock-locked" />
                         </CInputGroupText>
                       </CInputGroupPrepend>
                       <CInput type="password" placeholder="Password" autoComplete="current-password" />
-                    </CInputGroup>
+                    </CInputGroup> */}
                     <CRow>
                       <CCol xs="6">
-                        <CButton color="primary" className="px-4">Login</CButton>
+                        <CButton color="primary" onClick={loginUser} className="px-4">Login</CButton>
                       </CCol>
-                      <CCol xs="6" className="text-right">
+                      {/* <CCol xs="6" className="text-right">
                         <CButton color="link" className="px-0">Forgot password?</CButton>
-                      </CCol>
+                      </CCol> */}
                     </CRow>
                   </CForm>
                 </CCardBody>
               </CCard>
-              <CCard className="text-white bg-primary py-5 d-md-down-none" style={{ width: '44%' }}>
+              {/* <CCard className="text-white bg-primary py-5 d-md-down-none" style={{ width: '44%' }}>
                 <CCardBody className="text-center">
                   <div>
                     <h2>Sign up</h2>
@@ -66,11 +94,13 @@ const Login = () => {
                     </Link>
                   </div>
                 </CCardBody>
-              </CCard>
+              </CCard> */}
             </CCardGroup>
           </CCol>
         </CRow>
       </CContainer>
+      }
+      
     </div>
   )
 }

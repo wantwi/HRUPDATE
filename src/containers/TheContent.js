@@ -7,12 +7,20 @@ import routes from '../routes';
 
 import Loader from 'src/Loader/Loader';
 
+import { ProtectedRoute } from 'src/ProtectedRoutes'
+const loading = (
+  <div className="pt-3 text-center">
+    <div className="sk-spinner sk-spinner-pulse"></div>
+  </div>
+)
+
 const TheContent = () => {
   return (
     <main className="c-main">
       <CContainer fluid>
-        <Suspense fallback={<Loader />}>
+        <Suspense fallback={loading}>
           <Switch>
+          <ProtectedRoute>
             {routes.map((route, idx) => {
               return route.component && (
                 <Route
@@ -28,6 +36,7 @@ const TheContent = () => {
               )
             })}
             <Redirect from="/" to="/dashboard" />
+            </ProtectedRoute>
           </Switch>
         </Suspense>
       </CContainer>

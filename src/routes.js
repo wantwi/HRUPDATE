@@ -1,4 +1,5 @@
 import React from "react";
+import Login from './templates/pages/login/Login';
 
 //import Dependant from "./views/EmployeeManager/Dependant/Dependant";
 import AccidentTransaction from "./views/EmployeeManager/AccidentTransaction/AccidentTransaction";
@@ -211,10 +212,11 @@ const Relationships = React.lazy(() =>
 );
 
 const routes = [
+
+  
   { path: "/", exact: true, name: "Home" },
   { path: "/dashboard", name: "Dashboard", component: Dashboard },
 
-  // Generic Parameters
   {
     path: "/genericparameter/department",
     name: "Department",

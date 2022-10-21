@@ -18,6 +18,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { GetRequest, isObject } from "src/reusable/utils/helper";
+import useFetch from "src/hooks/useFetch";
 
 const styles = {
   position: "absolute",
@@ -207,61 +208,112 @@ const CSAutoComplete = ({
     indexCount = 0;
     setShowSuggestions(false);
   };
+
+
+
+
+
+
+  const {setOptData, setUrl} =  useFetch("", (response,results) => {
+    const toastId = toast.loading("Searching ");
+    if (response) {
+      console.log(response);
+      if (
+        response.items &&
+        Array.isArray(response.items) &&
+        response.items.length > 0
+      ) {
+        toast.dismiss(toastId);
+        setSuggestions(response.items);
+        setFilteredSuggestions(response.items);
+        setShowSuggestions(true);
+      }
+      console.log({ test: response });
+      if (response && isObject(response)) {
+        if (response?.hasOwnProperty("empty")) {
+          if (!response?.empty) {
+            toast.dismiss(toastId);
+            let values = response?.items || response?.data;
+            setSuggestions(values);
+
+            setTotalResults(response?.totalResults);
+            setTotalPages(response?.totalPages);
+            setCurrentPage(response?.currentPage);
+            setFilteredSuggestions(values);
+            setShowSuggestions(true);
+            _currentPage = response?.currentPage;
+          } else {
+            toaster(toastId, `No records found`, "info", 3000);
+          }
+
+          // console.log("Paginated");
+        }
+      }
+
+      if (response && Array.isArray(response) && response.length === 0) {
+        toaster(toastId, `No records found`, "info", 2000);
+      }
+    }
+});
+
   //console.log(handleId);
   //console.log({ employeeid });
   const runSearch = (url) => {
-    const toastId = toast.loading("Searching ");
+    //const toastId = toast.loading("Searching ");
+ 
     if (input && input.length > 2) {
-      GetRequest(url, {})
-        .then((response) => {
-          if (response.ok) {
-            response.json().then((data) => {
-              console.log({ data });
+      setUrl(url)
+      // GetRequest(url, {})
+      //   .then((response) => {
+      //     if (response.ok) {
+      //       response.json().then((data) => {
+      //         console.log({ data });
 
-              if (
-                data.items &&
-                Array.isArray(data.items) &&
-                data.items.length > 0
-              ) {
-                toast.dismiss(toastId);
-                setSuggestions(data.items);
-                setFilteredSuggestions(data.items);
-                setShowSuggestions(true);
-              }
-              console.log({ test: data });
-              if (data && isObject(data)) {
-                if (data?.hasOwnProperty("empty")) {
-                  if (!data?.empty) {
-                    toast.dismiss(toastId);
-                    let values = data?.items || data?.data;
-                    setSuggestions(values);
+      //         if (
+      //           data.items &&
+      //           Array.isArray(data.items) &&
+      //           data.items.length > 0
+      //         ) {
+      //           toast.dismiss(toastId);
+      //           setSuggestions(data.items);
+      //           setFilteredSuggestions(data.items);
+      //           setShowSuggestions(true);
+      //         }
+      //         console.log({ test: data });
+      //         if (data && isObject(data)) {
+      //           if (data?.hasOwnProperty("empty")) {
+      //             if (!data?.empty) {
+      //               toast.dismiss(toastId);
+      //               let values = data?.items || data?.data;
+      //               setSuggestions(values);
 
-                    setTotalResults(data?.totalResults);
-                    setTotalPages(data?.totalPages);
-                    setCurrentPage(data?.currentPage);
-                    setFilteredSuggestions(values);
-                    setShowSuggestions(true);
-                    _currentPage = data?.currentPage;
-                  } else {
-                    toaster(toastId, `No records found`, "info", 3000);
-                  }
+      //               setTotalResults(data?.totalResults);
+      //               setTotalPages(data?.totalPages);
+      //               setCurrentPage(data?.currentPage);
+      //               setFilteredSuggestions(values);
+      //               setShowSuggestions(true);
+      //               _currentPage = data?.currentPage;
+      //             } else {
+      //               toaster(toastId, `No records found`, "info", 3000);
+      //             }
 
-                  // console.log("Paginated");
-                }
-              }
+      //             // console.log("Paginated");
+      //           }
+      //         }
 
-              if (data && Array.isArray(data) && data.length === 0) {
-                toaster(toastId, `No records found`, "info", 2000);
-              }
-            });
-          }
-        })
-        .catch((err) => {
-          toaster(toastId, "There was an error!", "error", 3000);
-          console.log(err);
-        });
+      //         if (data && Array.isArray(data) && data.length === 0) {
+      //           toaster(toastId, `No records found`, "info", 2000);
+      //         }
+      //       });
+      //     }
+      //   })
+      //   .catch((err) => {
+      //     toaster(toastId, "There was an error!", "error", 3000);
+      //     console.log(err);
+      //   });
+
     } else {
-      toaster(toastId, `${emptySearchFieldMessage}`, "info", 2000);
+       toaster( `${emptySearchFieldMessage}`, "info", 2000);
       //alert('Input to short');
     }
   };

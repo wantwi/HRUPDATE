@@ -5,17 +5,18 @@ import { BaseURL } from "./base";
  * @param Company Reference [required]
  * @returns urlpath
  */
- export const GetProfessionalTitles = () =>`${BaseURL}Titles/dropdown?companyReference=00001_A01`;
- export const GetQualificationTypes = () => `${BaseURL}EmployeeEducation/QualificationTypes/dropdown-types?companyReference=00001_A01`
- export const GetEducationCoreArea =() =>`${BaseURL}EmployeeEducation/Type/dropdown-types?companyReference=00001_A01`
- export const GetEmployeeEducationInfo=(filter)=>`${BaseURL}EmployeeEducation${filter}`
+ export const GetProfessionalTitles = () =>`Titles/dropdown?companyReference=00001_A01`;
+ export const GetQualificationTypes = () => `EmployeeEducation/QualificationTypes/dropdown-types?companyReference=00001_A01`
+ export const GetEducationCoreArea =() =>`EmployeeEducation/Type/dropdown-types?companyReference=00001_A01`
+ export const GetEmployeeEducationInfo=(filter)=>`EmployeeEducation${filter}`
+ export const GetEmployeeById=(handleId)=>`EmployeeEducation/${handleId}`
 
  /**
  * POST Employee Education
  * @param Company Reference [required]
  * @returns urlpath
  */
- export const PostEmployeeEducationInfos =() =>`${BaseURL}EmployeeEducation`
+ export const PostEmployeeEducationInfos =() =>`EmployeeEducation`
 
 
  

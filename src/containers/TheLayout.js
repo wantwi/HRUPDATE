@@ -1,11 +1,12 @@
 import React from 'react';
 
 import { TheContent, TheSidebar, TheFooter, TheHeader} from './index';
-
+import PersistLogin from 'src/PersistLogin'
 const TheLayout = () => {
 
   return (
-    <div className="c-app c-default-layout">
+    <PersistLogin>
+<div className="c-app c-default-layout">
       <TheSidebar />
       <div className="c-wrapper">
         <TheHeader />
@@ -15,6 +16,8 @@ const TheLayout = () => {
         <TheFooter />
       </div>
     </div>
+    </PersistLogin>
+    
   )
 }
 

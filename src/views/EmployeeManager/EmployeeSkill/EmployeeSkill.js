@@ -69,10 +69,14 @@ import {
   CSRequiredIndicator,
 } from "../../../reusable/components";
 import {
+  GetEmployeeById,
   GetEmployeeSkillsTypes,
   PostEmployeeSkill,
 } from "src/reusable/API/EmployeeSkillsEndPoints";
 import { CCardGroup } from "@coreui/bootstrap-react";
+import useMultiFetch from "src/hooks/useMultiFetch";
+import useFetch from "src/hooks/useFetch";
+import usePost from "src/hooks/usePost";
 
 const editOptions = {
   allowEditing: false,
@@ -123,6 +127,36 @@ const EmployeeSkill = (props) => {
   const [skillType, setSkillType] = useState([]);
   const [chekedSkillTypes, setCheckedSkillTypes] = useState([]);
 
+
+
+
+
+  const {setOptData, setUrl} =  useFetch("", (response,results) => {
+    if (response) {
+      if (response && Object.keys(response).length > 0) {
+        dispatch({ type: "set", data: { ...response } });
+        setSubmitData({ ...response });
+        setViewInfo(response);
+        // setDuplicateData({ ...response })
+        console.log({ response });
+
+        //let rates = response?.rates;
+
+        // setExchangeRate(rates);
+        setShow(false);
+       
+      } else {
+        setMode("Add");
+        setShow(false);
+        // dispatch({ type: 'set', data: { ...results, isHomeCurrency } });
+        // setSubmitData({ ...results, isHomeCurrency });
+      }
+    }
+});
+
+
+
+
   const handleSearchResultSelect = (results) => {
     console.log("show results", results);
 
@@ -134,42 +168,44 @@ const EmployeeSkill = (props) => {
     // return;
     setMode("Add");
     setShow(false);
-    dispatch({ type: "set", data: { ...results } });
+  //  dispatch({ type: "set", data: { ...results } });
     setSubmitData({ ...results });
 
-    if (results?.code) {
+    if (results?.id) {
       setSearchResult(results);
+      setUrl(GetEmployeeById(results.id))
+      // GetRequest(GetEmployeeById(results.id))
+      //   .then((response) => {
+      //     console.log(response)
+      //     // toast.dismiss(toastId);
+      //     if (response.ok) {
+      //       response.json().then((response) => {
+      //         // console.log({response});
+      //         if (response && Object.keys(response).length > 0) {
+      //           dispatch({ type: "set", data: { ...response } });
+      //           setSubmitData({ ...response });
+      //           setViewInfo(response);
+      //           // setDuplicateData({ ...response })
+      //           console.log({ response });
 
-      GetRequest()
-        .then((response) => {
-          // toast.dismiss(toastId);
-          if (response.ok) {
-            response.json().then((response) => {
-              // console.log({response});
-              if (response && Object.keys(response).length > 0) {
-                dispatch({ type: "set", data: { ...response } });
-                setSubmitData({ ...response });
-                // setDuplicateData({ ...response })
-                //console.log({ response });
+      //           //let rates = response?.rates;
 
-                //let rates = response?.rates;
-
-                // setExchangeRate(rates);
-                setShow(false);
-                setMode("Update");
-              } else {
-                setMode("Add");
-                setShow(false);
-                // dispatch({ type: 'set', data: { ...results, isHomeCurrency } });
-                // setSubmitData({ ...results, isHomeCurrency });
-              }
-            });
-          }
-        })
-        .catch((err) => {
-          // console.log(err);
-          // toaster(toastId, "Failed to retrieve details", 'error', 4000);
-        });
+      //           // setExchangeRate(rates);
+      //           setShow(false);
+               
+      //         } else {
+      //           setMode("Add");
+      //           setShow(false);
+      //           // dispatch({ type: 'set', data: { ...results, isHomeCurrency } });
+      //           // setSubmitData({ ...results, isHomeCurrency });
+      //         }
+      //       });
+      //     }
+      //   })
+      //   .catch((err) => {
+      //     // console.log(err);
+      //     // toaster(toastId, "Failed to retrieve details", 'error', 4000);
+      //   });
     }
   };
   const searchReset = () => {
@@ -183,44 +219,54 @@ const EmployeeSkill = (props) => {
     // }
   };
   //Get employee skill details
-  const getEmployeeSkills = async () => {
-    try {
-      const request = await CustomAxios.get(`EmployeeSkills/${handleId}`);
+  // const getEmployeeSkills = async () => {
+  //   try {
+  //     const request = await CustomAxios.get(`EmployeeSkills/${handleId}`);
 
-      const response = request.data;
-      console.log("emp response:", response);
-      setViewInfo((prevState) => response);
-      checkBenefiary();
-    } catch (error) {
-      console.log({ error });
-    }
-  };
-  useEffect(() => {
-    if (handleId !== "") {
-      getEmployeeSkills();
-    }
-  }, [handleId]);
+  //     const response = request.data;
+  //     console.log("emp response:", response);
+  //     setViewInfo((prevState) => response);
+  //     checkBenefiary();
+  //   } catch (error) {
+  //     console.log({ error });
+  //   }
+  // };
+  // useEffect(() => {
+  //   if (handleId !== "") {
+  //     getEmployeeSkills();
+  //   }
+  // }, [handleId]);
 
   useEffect(() => {
     console.log("check view info ", viewinfo);
   });
 
   //Drop down list for hobby types
-  const MultipleGetRequests = async () => {
-    try {
-      let request = [HttpAPIRequest("GET", GetEmployeeSkillsTypes())];
-      const multipleCall = await Promise.allSettled(request);
-      console.log(multipleCall[0].value);
+  // const MultipleGetRequests = async () => {
+  //   try {
+  //     let request = [HttpAPIRequest("GET", GetEmployeeSkillsTypes())];
+  //     const multipleCall = await Promise.allSettled(request);
+  //     console.log(multipleCall[0].value);
 
-      setSkillType([...multipleCall[0].value]);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //     setSkillType([...multipleCall[0].value]);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
-  useEffect(() => {
-    MultipleGetRequests();
-  }, []);
+  // useEffect(() => {
+  //   MultipleGetRequests();
+  // }, []);
+
+
+
+
+  const  {data:multicallData} =  useMultiFetch([ GetEmployeeSkillsTypes()], (results) => {
+    setSkillType([...results[0].data]);
+       
+  
+  })
+
 
   //Handles Submit
   const handleOnSubmit = () => {
@@ -247,8 +293,34 @@ const EmployeeSkill = (props) => {
     //let finalData = JSON.stringify(newData)
     // console.log(finalData)
     // 'Add' === mode ? AddGLAccount(newData) : updateGLAccount(newData);
-    postEmployeeSkill(newData);
+   // postEmployeeSkill(newData);
+    setPostUrl(PostEmployeeSkill())
+    setPostData(newData)
+
   };
+
+
+
+  const  {setData:setPostData, setUrl:setPostUrl} = usePost('', (response) => {
+    // console.log({location:response });
+    const {data} = response
+    if ("" === data) {
+      toast.success(GetLabelByName("HCM-HAGGXNJQW2B_HRPR", lan));
+    //  showToasts();
+      searchReset(2);
+    } else {
+      try {
+        data = JSON.parse(response);
+        let mdata = data.errors[0].message;
+        toast.error(`${mdata}`, toastWarning);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+  })
+
+
 
   //Post Employee Skill
   function postEmployeeSkill(data) {
@@ -282,6 +354,7 @@ const EmployeeSkill = (props) => {
   }
   const handleOnChange = (evnt) => {
     //console.log(evnt)
+    console.log(evnt?.target?.value)
     setSubmitData((data) => {
       return { ...data, [evnt?.target?.name]: evnt?.target?.value };
     });
@@ -298,17 +371,26 @@ const EmployeeSkill = (props) => {
 
   var skillDropDownArr = [];
   const checkBenefiary = () => {
+    
     if (viewinfo.length > 0) {
-      for (let i = 0; i < viewinfo.length; i++) {
+      console.log("Debug 1")
+      for (let i = 0; i <= viewinfo.length; i++) {
+        console.log("Debug 2")
         var obj = {};
-        obj = viewinfo[i].skillType;
+     
+        console.log(viewinfo[i]?.skillType)
+        obj = viewinfo[i]?.skillType;
         skillDropDownArr.push(obj);
+        console.log(obj);
       }
 
       const newdata = skillType.filter((val) => {
+  
+
         return !skillDropDownArr.find((arr) => {
-          console.log({ valueID: val.id + "::: " + arr.id });
-          return val.id === arr.id;
+          console.log(arr);
+          console.log({ valueID: val?.id + "::: " + arr?.id });
+          return val?.id === arr?.id;
         });
       });
       setCheckedSkillTypes(newdata);
@@ -318,12 +400,14 @@ const EmployeeSkill = (props) => {
     }
   };
   useEffect(() => {
-    if (viewinfo) {
+    if (viewinfo.length > 0) {
       checkBenefiary();
     }
-  }, []);
+  }, [viewinfo]);
   console.log({ checked: chekedSkillTypes });
-  console.log({ skillType });
+  console.log( chekedSkillTypes);
+  let forview = viewinfo[0]
+
   return (
     <>
       <CRow>
@@ -451,13 +535,13 @@ const EmployeeSkill = (props) => {
               </>
             </CForm>
 
-            <CCardFooter>
+            <CCardFooter style={{ position: 'relative;' }}>
               {/* <CButton onClick={submitRequest} style={{ marginRight: 5, float: "right" }} type="submit" size="sm" color="success" >
                 <CIcon name="cil-scrubber" /> Submit
               </CButton> */}
-              <CCol md="4">
+              
                 <CButton
-                  style={{ marginRight: -960, float: "right", color: "white" }}
+                 style={{ marginRight: 5, float: 'right', color: 'white' }}
                   onClick={() => searchReset()}
                   type="button"
                   size="sm"
@@ -466,7 +550,7 @@ const EmployeeSkill = (props) => {
                   <AiOutlineClose size={20} />
                   <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
                 </CButton>
-              </CCol>
+              
             </CCardFooter>
           </CCard>
         </CCol>

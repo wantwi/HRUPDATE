@@ -61,8 +61,12 @@ import {
   GetQualificationTypes,
   PostEmployeeEducationInfos,
   GetEmployeeEducationInfo,
+  GetEmployeeById,
 } from "src/reusable/API/EmployeeEducationEndpoints";
 import { GetEmployeeAccidentByEmployeeId } from "src/reusable/API/AccidentTransaction";
+import useMultiFetch from "src/hooks/useMultiFetch";
+import useFetch from "src/hooks/useFetch";
+import usePost from "src/hooks/usePost";
 
 //GetEducationCoreArea
 // HttpAPIRequest
@@ -106,38 +110,33 @@ const EmployeeEducationInformation = (props) => {
   const [qualification, setQualification] = useState([]);
   const [educationCore, setEducationCore] = useState([]);
   const [empDisplayName, setEmpDisplayName] = useState("");
+  const [post, setPost] =useState([])
   // const [postdetails,setPostDetails]= useState([{name:"",gender:""}])
 
-  const MultipleGetRequests = async () => {
-    try {
-      let request = [
-        HttpAPIRequest("GET", GetProfessionalTitles()),
-        HttpAPIRequest("GET", GetQualificationTypes()),
-        HttpAPIRequest("GET", GetEducationCoreArea()),
-      ];
-      const multipleCall = await Promise.allSettled(request);
-      //console.log(multipleCall[2].value)
 
+
+
+  const  {data:multicallData} =  useMultiFetch([  GetProfessionalTitles(), 
+    GetQualificationTypes(),GetEducationCoreArea()], (results) => {
       setProfessionalTitle([
         { id: "-1", name: `Select Title` },
-        ...multipleCall[0].value,
+        ...results[0].data,
       ]);
       setQualification([
         { id: "-1", name: `Select Qualification` },
-        ...multipleCall[1].value,
+        ...results[1].data,
       ]);
       setEducationCore([
         { id: "-1", name: `Select Education Core Area` },
-        ...multipleCall[2].value,
+        ...results[2].data,
       ]);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+      console.log(results[0].data)
+   
+  
+  })
 
-  useEffect(() => {
-    MultipleGetRequests();
-  }, []);
+
+
 
   const handleSearchResultSelect = (results) => {
     console.log("show results", results);
@@ -152,39 +151,10 @@ const EmployeeEducationInformation = (props) => {
     dispatch({ type: "set", data: { ...results } });
     setSubmitData({ ...results });
 
-    if (results?.code) {
+    if (results?.id) {
       setSearchResult(results);
-
-      GetRequest()
-        .then((response) => {
-          // toast.dismiss(toastId);
-          if (response.ok) {
-            response.json().then((response) => {
-              // console.log({response});
-              if (response && Object.keys(response).length > 0) {
-                dispatch({ type: "set", data: { ...response } });
-                setSubmitData({ ...response });
-                // setDuplicateData({ ...response })
-                //console.log({ response });
-
-                //let rates = response?.rates;
-
-                // setExchangeRate(rates);
-                setShow(false);
-                setMode("Update");
-              } else {
-                setMode("Add");
-                setShow(false);
-                // dispatch({ type: 'set', data: { ...results, isHomeCurrency } });
-                // setSubmitData({ ...results, isHomeCurrency });
-              }
-            });
-          }
-        })
-        .catch((err) => {
-          // console.log(err);
-          // toaster(toastId, "Failed to retrieve details", 'error', 4000);
-        });
+      setUrl(GetEmployeeById(results?.id))
+      
     }
   };
   const searchReset = () => {
@@ -237,21 +207,89 @@ const EmployeeEducationInformation = (props) => {
     //     //toast.error('Please select a pay period!', toastWarning);
     //     return;
     // }
-    // console.log(submitData)
+    console.log(submitData.id)
     let employeeId = submitData.id;
+    console.log(employeeId)
     //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
     let newData = {
+      
       ...submitData,
       userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
       userName: "string",
       CompanyReference: "00001_A01",
       employeeId,
+      status: true,
+      employeeId : searchResult.id,
+
     };
+
+
+
     //let finalData = JSON.stringify(newData)
     // console.log(finalData)
     // 'Add' === mode ? AddGLAccount(newData) : updateGLAccount(newData);
-    postEmployeeEducationInfo(newData);
+
+ console.log(searchResult)
+     
+   
+let forGrid =
+  {
+    
+    "grade": submitData?.grade,
+    "school": submitData?.school,
+    "startDate": submitData?.StartDate,
+    "endDate": submitData?.endDate,
+    "educationType": {
+      
+      "code": "string",
+      "name": getName(submitData?.educationTypeId,educationCore),
+      
+      "status": true
+    },
+    "title": {
+      "id": submitData?.titleId,
+      "name": getName(submitData?.titleId,titles)
+    },
+    "qualification": {
+      "id": submitData?.qualificationId,
+      "name": getName(submitData?.qualificationId,qualification)
+    }
+  }
+  setPost(newData)
+setViewInfo((prevState)=>[forGrid,...prevState])
+console.log(forGrid);
+   // postEmployeeEducationInfo(newData);
   };
+
+
+  const getName = (id, states) => {
+    return states.find((x) => x.id == id)?.name || "Not found";
+   };
+
+   const handlePost=()=>{
+    setPostUrl(PostEmployeeEducationInfos())
+     setPostData(post)
+   // console.log(post)
+   }
+
+   const  {setData:setPostData, setUrl:setPostUrl} = usePost('', (response) => {
+    // console.log({location:response });
+    const {data} = response
+    if ("" === data) {
+      toast.success(GetLabelByName("HCM-HAGGXNJQW2B_HRPR", lan));
+      //showToasts();
+      searchReset(2);
+    } else {
+      try {
+        data = JSON.parse(response);
+        let mdata = data.errors[0].message;
+        toast.error(`${mdata}`, toastWarning);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+  })
 
   function postEmployeeEducationInfo(data) {
     console.log(data);
@@ -261,7 +299,7 @@ const EmployeeEducationInformation = (props) => {
           if ("" === data) {
             toast.success("Employee Education Information Added Succesfully!");
             console.log("success");
-            getEmployeebyId();
+            getEmployeebyId(submitData.id);
           } else {
             try {
               data = JSON.parse(data);
@@ -286,24 +324,44 @@ const EmployeeEducationInformation = (props) => {
       });
   }
 
-  // console.log({ baseurl: process.env.REACT_APP_BASE_URL });
-  const getEmployeebyId = async () => {
-    try {
-      const request = await CustomAxios.get(`EmployeeEducation/${handleId}`);
 
-      const response = request.data;
-      setViewInfo((prevState) => response);
-    } catch (error) {
-      console.log({ error });
+  
+  const {setOptData, setUrl} =  useFetch("", (response,results) => {
+    if (response) {
+        if (response && Object.keys(response).length > 0) {
+            setSearchResult(results);
+            dispatch({ type: 'set', data: { ...response } });
+            setSubmitData({...response});
+            setViewInfo((prevState) => response);
+            setMode('Update');
+            setShow(false);
+        } else {
+            setMode('Add');
+            setShow(false);
+            dispatch({ type: 'set', data: { ...response } });
+            setSubmitData({ ...response });
+        }
     }
+});
+  // console.log({ baseurl: process.env.REACT_APP_BASE_URL });
+  const getEmployeebyId =(id) => {
+    setUrl(id)
+    // try {
+    //   const request = await CustomAxios.get(`EmployeeEducation/${handleId}`);
+
+    //   const response = request.data;
+    //   setViewInfo((prevState) => response);
+    // } catch (error) {
+    //   console.log({ error });
+    // }
   };
 
   // console.log("log", viewinfo);
-  useEffect(() => {
-    if (handleId !== "") {
-      getEmployeebyId();
-    }
-  }, [handleId]);
+  // useEffect(() => {
+  //   if (handleId !== "") {
+  //     getEmployeebyId();
+  //   }
+  // }, [handleId]);
 
   const handleOnChange = (evnt) => {
     //console.log(evnt)
@@ -318,7 +376,7 @@ const EmployeeEducationInformation = (props) => {
 
   return (
     <>
-      <CRow>
+      <CRow hidden={!show}>
         <CCol xs="12">
           <h5>
             <CSLab code="HCM-ZHMVWWTZ63B_KCMI" />
@@ -397,10 +455,10 @@ const EmployeeEducationInformation = (props) => {
                 </CCol>
               </CFormGroup>
             </CCardHeader>
-            <CRow style={{ height: CardBodyHeight, overflowY: "auto" }}>
+            <CRow style={{ overflowY: "auto" }}>
               <CCol md="12">
                 <GridComponent
-                  height={300}
+                  height={450}
                   allowPaging={true}
                   dataSource={viewinfo}
                   //toolbar={toolbarOptions}
@@ -468,10 +526,19 @@ const EmployeeEducationInformation = (props) => {
                 </GridComponent>
               </CCol>
             </CRow>
-            <CCardFooter>
-              <CCol md="4">
+            <CCardFooter style={{ position: 'relative;' }}>
+            <CButton
+                style={{ marginRight: 5, float: 'right', color: 'white' }}
+                  onClick={() => handlePost()}
+                  type="button"
+                  size="sm"
+                  color="info"
+                >
+                  <AiOutlineClose size={20} />
+                  <CSLab code="HCM-HGUHIR0OK6T" />
+                </CButton>
                 <CButton
-                  style={{ marginRight: -960, float: "right", color: "white" }}
+                style={{ marginRight: 5, float: 'right', color: 'white' }}
                   onClick={() => searchReset()}
                   type="button"
                   size="sm"
@@ -480,7 +547,8 @@ const EmployeeEducationInformation = (props) => {
                   <AiOutlineClose size={20} />
                   <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
                 </CButton>
-              </CCol>
+              
+           
             </CCardFooter>
           </CCard>
         </CCol>
@@ -636,22 +704,8 @@ const EmployeeEducationInformation = (props) => {
             </CCol>
           </CRow>
         </CModalBody>
-        <CModalFooter>
-          <div
-            style={{
-              fontSize: "12px",
-              marginRight: "400px",
-              marginBottom: "-24px",
-            }}
-          >
-            <p>
-              <em>
-                <CSLab code="HCM-WKZ2Y0KPTT9-PSLL" /> (
-                <CSRequiredIndicator />)
-              </em>
-            </p>
-          </div>
-
+        <CModalFooter style={{ position: 'relative;' }}>
+       <p style={{ position: "absolute", left: "20px" }}><em style={{ fontSize: "12px" }}><CSLab code="HCM-S6DELVG0IQS-HRPR" /> (<CSRequiredIndicator />)<CSLab code="HCM-H72Q4EB363H_PSLL" /></em></p>
           <CButton color="secondary" onClick={() => setVisible(false)}>
             <CSLab code="HCM-9E3ZC2E1S0N-LASN" />
           </CButton>

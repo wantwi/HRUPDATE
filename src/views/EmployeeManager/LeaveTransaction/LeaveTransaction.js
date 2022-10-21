@@ -34,6 +34,7 @@ import {
   CLabel,
   CTextarea,
   CInputRadio,
+  CCardHeader,
 } from "@coreui/react";
 import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai";
 import { AiFillSave, AiOutlineRedo } from "react-icons/ai";
@@ -297,7 +298,7 @@ const LeaveTransaction = (props) => {
 
   return (
     <>
-      <CRow>
+      <CRow hidden={!show}>
         <CCol xs="12">
           <h5>
             <CSLab code="HCM-I0ZV6XVP41I_LASN" />
@@ -354,14 +355,49 @@ const LeaveTransaction = (props) => {
         <CCol md="4" className="text-right"></CCol>
         <CCol xs="10" hidden={show}>
           <CCard>
+          <CCardHeader hidden={show} className={""}>
+              <CFormGroup row>
+                <CCol md="4">
+                <h5>
+            <CSLab code="HCM-I0ZV6XVP41I_LASN" />
+          </h5>{" "}
+                  <span
+                    style={{
+                      textDecoration: "underline dotted",
+                      cursor: "pointer",
+                    }}
+                    type="button"
+                    onClick={() => {
+                      setLarge(!large);
+                    }}
+                    size="md"
+                    color="primary"
+                  >
+                    {/* {employeeName} */}
+                  </span>
+                </CCol>
+                <CCol md="4">
+                  {/* <CTooltip content={`Click here to view Employees`} >
+                <CButton color="outline-primary"> <MdPeople /> 120 </CButton>
+                </CTooltip> */}
+                </CCol>
+                <CCol md="4">
+                  
+                </CCol>
+              </CFormGroup>
+            </CCardHeader>
             <CCardBody style={{ height: CardBodyHeight }}>
               {/* <CRow className={"bottom-spacing"}> */}
               {/* <CCol md="5"> */}
               {/* <CCol md="12">
                     <CSLineLabel name="HCM-5S2JSN34J47_LANG" />{" "}
                   </CCol> */}
-              <CRow>
-                <>
+
+
+                   <CCol >
+                   <CRow>
+                     <>
+               
                   <CCol md="2">
                     <CLabel>
                       {" "}
@@ -452,6 +488,8 @@ const LeaveTransaction = (props) => {
                   </CCol>
                 </CRow>
               </>
+            </CCol>     
+              
               <></>
               {/* </CCol> */}
 

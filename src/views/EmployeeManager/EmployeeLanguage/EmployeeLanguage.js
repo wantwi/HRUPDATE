@@ -67,7 +67,7 @@ import {
   HttpAPIRequest,
   PostRequest,
 } from "src/reusable/utils/helper";
-import { SearchEmployees } from "src/reusable/API/EmployeeEndpoints";
+import { GetEmployeeByID, SearchEmployees } from "src/reusable/API/EmployeeEndpoints";
 
 import { CustomAxios } from "src/reusable/API/CustomAxios";
 import { BaseURL } from "src/reusable/API/base";
@@ -78,6 +78,10 @@ import {
 } from "src/reusable/API/EmployeeLanguage";
 import { IdNumberIcon } from "evergreen-ui";
 import { Dropdown } from "@coreui/coreui";
+import useMultiFetch from "src/hooks/useMultiFetch";
+import usePost from "src/hooks/usePost";
+import useFetch from "src/hooks/useFetch";
+import { Log } from "oidc-client";
 // import { values } from "core-js/es7/array";
 
 const editOptions = {
@@ -133,7 +137,8 @@ const EmployeeLanguage = () => {
   const [checkedTypes, setCheckedTypes] = useState([]);
   const [selectedName, setSelectedName] = useState("");
   const [postEmployee, setPostEmployee] = useState([]);
-  const [newGridDta, setNewGridData] = useState([]);
+  const [post , setPost] =useState([])
+  //const [newGridDta, setNewGridData] = useState([]);
   const firstGrid = useRef();
 
   const toolbarOptions = [
@@ -215,53 +220,70 @@ const EmployeeLanguage = () => {
     },
   ];
 
+
+  const {setOptData, setUrl} =  useFetch("", (response,results) => {
+    if (response) {
+      console.log(response);
+      const request = response;
+      const res = request.map((x) => ({
+        languageId: x.id,
+        read: x.read,
+        speak: x.speak,
+        write: x.write,
+      }));
+
+      //console.log({ res });
+
+       
+      dispatch({ type: "set", data: { ...response } });
+      setViewInfo(renderViewInfor(request));
+
+    }
+});
+
+
+
+
   const handleSearchResultSelect = (results) => {
-    console.log("show results", results);
+
 
     //setting employee display name on select of suggested item
     setEmpDisplayName(
       (prevState) => `${results.firstName} ${results.lastName}`
     );
-    // testApi();
-    // return;
+  
     setMode("Add");
     setShow(false);
     dispatch({ type: "set", data: { ...results } });
     setSubmitData({ ...results });
-
-    if (results?.code) {
-      setSearchResult(results);
-
-      GetRequest()
-        .then((response) => {
-          // toast.dismiss(toastId);
-          if (response.ok) {
-            response.json().then((response) => {
-              // console.log({response});
-              if (response && Object.keys(response).length > 0) {
-                dispatch({ type: "set", data: { ...response } });
-                setSubmitData({ ...response });
-                // setDuplicateData({ ...response })
-                //console.log({ response });
-
-                //let rates = response?.rates;
-
-                // setExchangeRate(rates);
-                setShow(false);
-                setMode("Update");
-              } else {
-                setMode("Add");
-                setShow(false);
-                // dispatch({ type: 'set', data: { ...results, isHomeCurrency } });
-                // setSubmitData({ ...results, isHomeCurrency });
-              }
-            });
-          }
-        })
-        .catch((err) => {
-          // console.log(err);
-          // toaster(toastId, "Failed to retrieve details", 'error', 4000);
-        });
+console.log(results);
+     if (results?.id) {
+       setSearchResult(results);
+       getEmployeelanguage(results.id)
+    //   GetRequest()
+    //     .then((response) => {
+    //       // toast.dismiss(toastId);
+    //       if (response.ok) {
+    //         response.json().then((response) => {
+          
+    //           if (response && Object.keys(response).length > 0) {
+    //             dispatch({ type: "set", data: { ...response } });
+    //             setSubmitData({ ...response });
+              
+    //             setShow(false);
+    //             setMode("Update");
+    //           } else {
+    //             setMode("Add");
+    //             setShow(false);
+              
+    //           }
+    //         });
+    //       }
+    //     })
+    //     .catch((err) => {
+    //        console.log(err);
+    //       // toaster(toastId, "Failed to retrieve details", 'error', 4000);
+    //     });
     }
   };
   const searchReset = () => {
@@ -284,72 +306,33 @@ const EmployeeLanguage = () => {
     }));
   };
 
-  // employee: {id: '514ba0ac-e65e-4d20-b553-4d61c5f52e9f', firstName: 'Michael', lastName: 'Ameyaw', staffId: 'PSL1002', status: false}
-  // id: "e4a87fe5-46b2-47c4-b96a-8f68705ceb0c"
-  // language: {id: '48f6ee0c-baae-4766-8601-1384ee2df0f4', code: 'LAN0003', name: 'Spanish'}
-  // read: "Advanced"
-  // speak: "Intermediate"
-  // write: "Advanced"
 
   //Get employee skill details
-  const getEmployeelanguage = async () => {
-    try {
-      const request = await CustomAxios.get(`EmployeeLanguage/${handleId}`);
-
-      const response = request.data;
-      const res = response.map((x) => ({
-        languageId: x.id,
-        read: x.read,
-        speak: x.speak,
-        write: x.write,
-      }));
-
-      console.log({ res });
-
-      // console.log("renderViewInfor");
-      setViewInfo(renderViewInfor(response));
-    } catch (error) {
-      console.log({ error });
-    }
+  const getEmployeelanguage = (ID) => {
+    setUrl(GetEmployeeByID(ID))
+    console.log(ID)
+   
   };
-  useEffect(() => {
-    if (handleId !== "") {
-      getEmployeelanguage();
-    }
-  }, [handleId]);
 
-  // useEffect(() => {
-  //   console.log("check view info ", viewinfo);
-  // });
 
-  //Drop down list for hobby types
-  const MultipleGetRequests = async () => {
-    try {
-      let request = [HttpAPIRequest("GET", GetEmployeeLanguagesType())];
-      const multipleCall = await Promise.allSettled(request);
-      // console.log(multipleCall[0].value);
 
-      setEmployeelanguageType([...multipleCall[0].value]);
-    } catch (error) {
-      console.log(error);
-    }
-  };
   const submitRequest = (args) => {
     if (firstGrid && args.item.id === "saveItems") {
-      console.log("first");
-      console.log({ value: firstGrid?.current?.currentViewData });
+      // console.log("first");
+      // console.log({ value: firstGrid?.current?.currentViewData });
     }
-
-    //console.log({ value: firstGrid });
   };
-  useEffect(() => {
-    MultipleGetRequests();
-    // change();
-  }, []);
+
+
+//DROP DOWN FOR EMPLOYEE LANGUAGE
+  const  {data:multicallData} =  useMultiFetch([ GetEmployeeLanguagesType()], (results) => {
+    setEmployeelanguageType([...results[0].data]);
+  
+  })
+
 
   const GetColumnNames = () => {
-    console.log(submitData.languageId);
-    console.log(employeeLanguageType);
+   
     const name = employeeLanguageType?.find(
       (x) => x?.id === submitData?.languageId
     );
@@ -381,82 +364,117 @@ const EmployeeLanguage = () => {
       toast.error("Please Select Ability(Speaking)!", toastWarning);
       return;
     }
-    // console.log(submitData)
-    let employeeId = submitData?.id;
+     console.log(submitData)
+    let employeeId = searchResult?.id;
     //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
+
     let newData = {
       ...submitData,
       userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
       userName: "string",
       CompanyReference: "00001_A01",
-      employeeId,
+      employeeId: employeeId,
     };
-    setViewInfo((prevState) => [...prevState,newGridDta]);
+
+let newGridData ={
+  employee: {
+    id: handleId,
+  },
+  language: {
+    id: submitData?.languageId,
+    name: selectedName,
+  },
+  read: getName(submitData?.read),
+  write: getName(submitData?.write),
+  speak: getName(submitData?.speak),
+}
+
+  
+    console.log(newGridData);
+    setViewInfo((prevState) => [...prevState,newGridData]);
+    setPost(newData)
+
     const getName = (id) => {
       return reading.find((x) => x.id == id)?.name || "Not found";
     };
-    console.log(newData);
-    console.log(submitData?.id);
-    //let finalData = JSON.stringify(newData)
-    // console.log(finalData)
-    // 'Add' === mode ? AddGLAccount(newData) : updateGLAccount(newData);
-    //postEmployeeLanguage(newData);
-    setPostEmployee([newData]);
-    setNewGridData([{
-      employee: {
-        id: handleId,
-      },
-      language: {
-        id: submitData?.languageId,
-        name: selectedName,
-      },
-      read: getName(submitData.read),
-      write: getName(submitData.write),
-      speak: getName(submitData.speak),
-    }]);
-  
-    console.log(submitData.languageId);
-    //  console.log({ showGrid });
+    
+   // setPostEmployee([newData]);
+    setPostData(newData)
+     setPostUrl(PostEmployeeLanguage())
   };
-  const SetViewGrid=(data)=>{
-    setViewInfo((prevState) => [...prevState,data]);
-  }
+
+
+
+
+
+
+
+
+  // console.log(viewinfo);
+  // const SetViewGrid=(data)=>{
+  //   setViewInfo((prevState) => [...prevState,data]);
+  // }
+
+  const  {setData:setPostData, setUrl:setPostUrl} = usePost('', (response) => {
+    // console.log({location:response });
+    const {data} = response
+    if ("" === data) {
+      toast.success(GetLabelByName("HCM-HAGGXNJQW2B_HRPR", lan));
+      //showToasts();
+      searchReset();
+    } else {
+      try {
+        data = JSON.parse(response);
+        let mdata = data.errors[0].message;
+        toast.error(`${mdata}`, toastWarning);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+  })
+ 
+const handlePost=(post)=>{
+console.log(post)
+// setPostData(post)
+//  setPostUrl(PostEmployeeLanguage())
+}
 
   //Post Employee Skill
-  function postEmployeeLanguage(data) {
-    console.log("post data", data);
-    PostRequest(PostEmployeeLanguage(), { data: data })
-      .then((response) => {
-        response.text().then((data) => {
-          if ("" == data) {
-            toast.success("Employee Language Added Successfully!");
-            console.log("success");
-            getEmployeelanguage();
-            setVisible(false);
-            setSubmitData("");
-          } else {
-            try {
-              data = JSON.parse(data);
-              toast.error(
-                data?.reason ? data?.reason : "Failed to Add Employee Language",
-                "error",
-                400
-              );
-              setVisible(true);
-            } catch (error) {
-              console.log(error);
-              toast.error(error.message);
-            }
-          }
-        });
-      })
-      .catch((err) => {
-        console.log({ err });
-      })
-      .finally(() => {
-        console.log("Done");
-      });
-  }
+  // function postEmployeeLanguage(data) {
+  //   console.log("post data", data);
+  //   PostRequest(PostEmployeeLanguage(), { data: data })
+  //     .then((response) => {
+  //       response.text().then((data) => {
+  //         if ("" == data) {
+  //           toast.success("Employee Language Added Successfully!");
+  //           console.log("success");
+  //           getEmployeelanguage();
+  //           setVisible(false);
+  //           setSubmitData("");
+  //         } else {
+  //           try {
+  //             data = JSON.parse(data);
+  //             toast.error(
+  //               data?.reason ? data?.reason : "Failed to Add Employee Language",
+  //               "error",
+  //               400
+  //             );
+  //             setVisible(true);
+  //           } catch (error) {
+  //             console.log(error);
+  //             toast.error(error.message);
+  //           }
+  //         }
+  //       });
+  //     })
+  //     .catch((err) => {
+  //       console.log({ err });
+  //     })
+  //     .finally(() => {
+  //       console.log("Done");
+  //     });
+  // }
   const handleOnChange = (evnt) => {
     //console.log(evnt)
     setSubmitData((data) => {
@@ -468,23 +486,9 @@ const EmployeeLanguage = () => {
     });
   };
 
-  // const canSave = [skill].every(Boolean);
-  // const change = () => {
-  //   console.log("working");
-  //   viewinfo.map((x) => setReadState(x.read));
-  // };
-  // if (readState < 2) {
-  //   console.log({ readState });
-  // }
+
   const TransLabelByCode = (name) => GetLabelByName(name, lan);
-  // console.log({ viewinfo });
-  // const check=()=>{
-  //   for (let i = 0; i < viewinfo.length; i++) {
-  //     if (viewinfo[i]) {
-  //       console.log({ i });
-  //     }
-  //   }
-  // }
+
   var arr = [];
   const DropDown = () => {
     if (viewinfo.length > 0) {
@@ -501,7 +505,7 @@ const EmployeeLanguage = () => {
         });
       });
       setCheckedTypes(newdata);
-      console.log(newdata);
+      //console.log(newdata);
     } else {
       setCheckedTypes(employeeLanguageType);
     }
@@ -512,12 +516,15 @@ const EmployeeLanguage = () => {
       DropDown();
     }
   }, [viewinfo]);
+
+  
   useEffect(() => {
     if (submitData.languageId) {
       GetColumnNames();
     }
   }, [submitData?.languageId]);
-  console.log({ newGridDta });
+  
+  
   // const getSampleData = () => {
   //   viewinfo.map((items) => setEmployeelanguage([items.language]));
   //   console.log({view: viewinfo})
@@ -545,15 +552,15 @@ const EmployeeLanguage = () => {
 
   //   return response;
   // };
-  console.log({ viewinfo });
-  console.log({ arr });
+  //console.log({ viewinfo });
+  //console.log({ arr });
   
-  console.log({ selectedName });
-  console.log({ postEmployee });
+  console.log(viewinfo);
+  //console.log({ postEmployee });
 
   return (
     <>
-      <CRow>
+      <CRow hidden={!show}>
         <CCol xs="12">
           <h5>
             <CSLab code="HCM-2YN2O0KO4YX-LASN" />
@@ -625,7 +632,7 @@ const EmployeeLanguage = () => {
                       }, 500);
 
                       DropDown();
-                      getEmployeelanguage();
+                      //getEmployeelanguage();
                     }}
                   >
                     <AiOutlinePlus />
@@ -685,15 +692,16 @@ const EmployeeLanguage = () => {
               />
             </GridComponent>
             <CCardFooter>
-              <CButton
+              {/* <CButton
                 style={{ marginRight: 5, float: "right" }}
                 type="button"
                 size="sm"
                 color="success"
-                onClick={() => postEmployeeLanguage(postEmployee)}
+                // onClick={() => postEmployeeLanguage(postEmployee)}
+                onClick={}
               >
                 <AiFillSave size={20} /> <CSLab code="HCM-HGUHIR0OK6T" />{" "}
-              </CButton>
+              </CButton> */}
               <CButton
                 style={{ marginRight: 9, float: "right", color: "white" }}
                 onClick={() => searchReset()}
@@ -855,7 +863,7 @@ const EmployeeLanguage = () => {
               handleOnSubmit();
                 DropDown()
               GetColumnNames();
-              SetViewGrid(newGridDta)
+              // SetViewGrid(newGridDta)
 
             }}
           >
