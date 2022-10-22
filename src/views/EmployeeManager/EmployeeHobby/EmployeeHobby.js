@@ -70,12 +70,18 @@ import {
 import { CustomAxios } from "src/reusable/API/CustomAxios";
 import {
   PostEmployeeHobbies,
-  GetEmployeeHobbyTypes,
+  GetEmployeeHobbyTypes,GetEmployeeByid
 } from "src/reusable/API/EmployeeHobbyEndPoints";
 import Select from "react-select";
 
 import { MultiValue } from "src/templates/maxvalue/maxvalue";
 import { customStyles } from "src/templates/maxvalue/maxvalue";
+import useMultiFetch from "src/hooks/useMultiFetch";
+import useFetch from "src/hooks/useFetch";
+import usePost from "src/hooks/usePost";
+
+
+
 
 const editOptions = {
   allowEditing: false,
@@ -126,55 +132,13 @@ const EmployeeHobby = (props) => {
   const [unitId, setUnitValue] = useState([]);
   const [checkedHobby, setCheckedHobbyTypes] = useState();
 
-  const handleSearchResultSelect = (results) => {
-    console.log("show results", results);
 
-    //setting employee display name on select of suggested item
-    setEmpDisplayName(
-      (prevState) => `${results.firstName} ${results.lastName}`
-    );
-    // testApi();
-    // return;
-    setMode("Add");
-    setShow(false);
-    dispatch({ type: "set", data: { ...results } });
-    setSubmitData({ ...results });
 
-    if (results?.code) {
-      setSearchResult(results);
 
-      GetRequest()
-        .then((response) => {
-          // toast.dismiss(toastId);
-          if (response.ok) {
-            response.json().then((response) => {
-              // console.log({response});
-              if (response && Object.keys(response).length > 0) {
-                dispatch({ type: "set", data: { ...response } });
-                setSubmitData({ ...response });
-                // setDuplicateData({ ...response })
-                //console.log({ response });
 
-                //let rates = response?.rates;
 
-                // setExchangeRate(rates);
-                setShow(false);
-                setMode("Update");
-              } else {
-                setMode("Add");
-                setShow(false);
-                // dispatch({ type: 'set', data: { ...results, isHomeCurrency } });
-                // setSubmitData({ ...results, isHomeCurrency });
-              }
-            });
-          }
-        })
-        .catch((err) => {
-          // console.log(err);
-          // toaster(toastId, "Failed to retrieve details", 'error', 4000);
-        });
-    }
-  };
+
+ 
   const searchReset = () => {
     setShow(true);
     setSearchInput("");
@@ -186,41 +150,19 @@ const EmployeeHobby = (props) => {
     // }
   };
 
-  // const getEmployyeHobbyById = async () => {
-  //   try {
-  //     const request = await CustomAxios.get(
-  //       `${BaseURL}EmployeeAccident/${handleId}`
-  //     );
-  //     const respond = request.data;
-  //     setEmployeeHobbybyId([respond[0]]);
-  //     console.log("responds", respond);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
+  
   //Drop down list for hobby types
-  const MultipleGetRequests = async () => {
-    try {
-      let request = [HttpAPIRequest("GET", GetEmployeeHobbyTypes())];
-      const multipleCall = await Promise.allSettled(request);
-      console.log(multipleCall[0].value);
+  const  {data:multicallData} =  useMultiFetch([ GetEmployeeHobbyTypes()], (results) => {
+    setHobbyTypes([ ...results[0].data]);
+   
+  })
 
-      setHobbyTypes([...multipleCall[0].value]);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    MultipleGetRequests();
-  }, []);
   const handleOnSubmit = () => {
-    console.log("submit data ", submitData);
+    console.log("submit data ", unitId.length);
 
-    if (!submitData?.hobbyTypeId || submitData?.hobbyTypeId === -1) {
-      toast.error("Please Select Hobby Type!", toastWarning);
-      return;
+     if (unitId.length < 1) {
+       toast.error("Please Select Hobby Type!", toastWarning);
+       return;
     }
     // if (!submitData?.unit || submitData?.unit === '') {
     //    // toast.error('Please enter a value for unit!', toastWarning);
@@ -234,17 +176,42 @@ const EmployeeHobby = (props) => {
     let employeeId = submitData.id;
     //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
     let newData = {
-      ...submitData,
-      userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      userName: "string",
-      CompanyReference: "00001_A01",
-      employeeId,
+    
+      hobbyTypeId: `${unitId[0]}`,
+      employeeId: searchResult?.id,
+      companyReference: "00001_a01",
+      userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
     };
-    //let finalData = JSON.stringify(newData)
-    // console.log(finalData)
-    // 'Add' === mode ? AddGLAccount(newData) : updateGLAccount(newData);
-    postEmployeeHobby(newData);
+
+    
+    console.log(newData)
+
+    //postEmployeeHobby(newData);
+     setPostUrl(PostEmployeeHobbies())
+     setPostData(newData)
+
   };
+
+
+  const  {setData:setPostData, setUrl:setPostUrl} = usePost('', (response) => {
+    // console.log({location:response });
+    const {data} = response
+    if ("" === data) {
+      toast.success(GetLabelByName("HCM-HAGGXNJQW2B_HRPR", lan));
+      getEmployeeHobbybyId(searchResult?.id);
+    //  showToasts();
+      searchReset(2);
+    } else {
+      try {
+        data = JSON.parse(response);
+        let mdata = data.errors[0].message;
+        toast.error(`${mdata}`, toastWarning);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+  })
 
   //Post Employee Hobby
   function postEmployeeHobby(data) {
@@ -278,22 +245,63 @@ const EmployeeHobby = (props) => {
       });
   }
 
-  const getEmployeeHobbybyId = async () => {
-    try {
-      const request = await CustomAxios.get(`EmployeeHobbies/${handleId}`);
+  const handleSearchResultSelect = (results) => {
+    console.log("show results", results);
 
-      const response = request.data;
-      console.log("emp response:", response);
-      setViewInfo((prevState) => response);
-    } catch (error) {
-      console.log({ error });
+    //setting employee display name on select of suggested item
+    setEmpDisplayName(
+      (prevState) => `${results.firstName} ${results.lastName}`
+    );
+    // testApi();
+    // return;
+    setMode("Add");
+    setShow(false);
+    dispatch({ type: "set", data: { ...results } });
+    setSubmitData({ ...results });
+
+    if (results?.id) {
+      setSearchResult(results);
+      getEmployeeHobbybyId(results?.id)
     }
   };
-  useEffect(() => {
-    if (handleId !== "") {
-      getEmployeeHobbybyId();
+
+
+  const {setOptData, setUrl} =  useFetch("", (response,results) => {
+    if (response) {
+      console.log(response)
+        if (response && Object.keys(response).length > 0) {
+
+            dispatch({ type: 'set', data: { ...response } });
+            setSubmitData({...response});
+          setViewInfo(response)
+            setMode('Update');
+            setShow(false);
+        } else {
+            setMode('Add');
+            setShow(false);
+            dispatch({ type: 'set', data: { ...response } });
+            setSubmitData({response });
+        }
     }
-  }, [handleId]);
+});
+
+  const getEmployeeHobbybyId =  (id) => {
+    setUrl(GetEmployeeByid(id))
+    // try {
+    //   const request = await CustomAxios.get(`EmployeeHobbies/${handleId}`);
+
+    //   const response = request.data;
+    //   console.log("emp response:", response);
+    //   setViewInfo((prevState) => response);
+    // } catch (error) {
+    //   console.log({ error });
+    // }
+  };
+  // useEffect(() => {
+  //   if (handleId !== "") {
+  //     getEmployeeHobbybyId();
+  //   }
+  // }, [handleId]);
 
   useEffect(() => {
     console.log("check view info ", viewinfo);
@@ -313,7 +321,9 @@ const EmployeeHobby = (props) => {
   const TransLabelByCode = (name) => GetLabelByName(name, lan);
 
   const handleUnit = (e) => {
+    console.log(e);
     setUnitValue(Array.isArray(e) ? e.map((x) => x.id) : []);
+    
   };
 
   var hobbyDropDownArr = [];
@@ -340,7 +350,7 @@ const EmployeeHobby = (props) => {
       setCheckedHobbyTypes(hobbyTypes);
     }
   };
-  console.log({ Checked: checkedHobby });
+  console.log(viewinfo);
 
   return (
     <>
