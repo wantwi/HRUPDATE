@@ -35,6 +35,9 @@ import {
 } from "@coreui/react";
 import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai";
 
+import useMultiFetch from "src/hooks/useMultiFetch";
+import useFetch from "src/hooks/useFetch";
+import usePost from "src/hooks/usePost";
 import {
   ColumnDirective,
   ColumnsDirective,
@@ -119,6 +122,27 @@ const MedicalTransaction = () => {
   const [providerTypes, setProviderTypes] = useState([]);
   const [ailmentType, setAilmenentType] = useState([]);
 
+  
+  
+  const {setOptData, setUrl} =  useFetch("", (response,results) => {
+    if (response) {
+        if (response && Object.keys(response).length > 0) {
+            setSearchResult(results);
+            dispatch({ type: 'set', data: { ...response } });
+            setSubmitData(response);
+            //setDupData({...response})
+            setViewInfo(response)
+            setMode('Update');
+            setShow(false);
+        } else {
+            setMode('Add');
+            setShow(false);
+            dispatch({ type: 'set', data: { ...response } });
+            setSubmitData({ ...response });
+        }
+    }
+});
+  
   const handleSearchResultSelect = (results) => {
     console.log("show results", results);
 
@@ -133,39 +157,39 @@ const MedicalTransaction = () => {
     dispatch({ type: "set", data: { ...results } });
     setSubmitData({ ...results });
 
-    if (results?.code) {
+    if (results?.id) {
       setSearchResult(results);
+getEmployeeMedicalyById(results.id)
+      // GetRequest()
+      //   .then((response) => {
+      //     // toast.dismiss(toastId);
+      //     if (response.ok) {
+      //       response.json().then((response) => {
+      //         // console.log({response});
+      //         if (response && Object.keys(response).length > 0) {
+      //           dispatch({ type: "set", data: { ...response } });
+      //           setSubmitData({ ...response });
+      //           // setDuplicateData({ ...response })
+      //           //console.log({ response });
 
-      GetRequest()
-        .then((response) => {
-          // toast.dismiss(toastId);
-          if (response.ok) {
-            response.json().then((response) => {
-              // console.log({response});
-              if (response && Object.keys(response).length > 0) {
-                dispatch({ type: "set", data: { ...response } });
-                setSubmitData({ ...response });
-                // setDuplicateData({ ...response })
-                //console.log({ response });
+      //           //let rates = response?.rates;
 
-                //let rates = response?.rates;
-
-                // setExchangeRate(rates);
-                setShow(false);
-                setMode("Update");
-              } else {
-                setMode("Add");
-                setShow(false);
-                // dispatch({ type: 'set', data: { ...results, isHomeCurrency } });
-                // setSubmitData({ ...results, isHomeCurrency });
-              }
-            });
-          }
-        })
-        .catch((err) => {
-          // console.log(err);
-          // toaster(toastId, "Failed to retrieve details", 'error', 4000);
-        });
+      //           // setExchangeRate(rates);
+      //           setShow(false);
+      //           setMode("Update");
+      // //         } else {
+      //           setMode("Add");
+      //           setShow(false);
+      //           // dispatch({ type: 'set', data: { ...results, isHomeCurrency } });
+      //           // setSubmitData({ ...results, isHomeCurrency });
+      //         }
+      //       });
+      //     }
+      //   })
+      //   .catch((err) => {
+      //     // console.log(err);
+      //     // toaster(toastId, "Failed to retrieve details", 'error', 4000);
+      //   });
     }
   };
   const searchReset = () => {
@@ -179,45 +203,49 @@ const MedicalTransaction = () => {
     // }
   };
 
-  // const getEmployyeHobbyById = async () => {
+  
+
+  //Drop down list for hobby types
+  // const MultipleGetRequests = async () => {
   //   try {
-  //     const request = await CustomAxios.get(
-  //       `${BaseURL}EmployeeAccident/${handleId}`
-  //     );
-  //     const respond = request.data;
-  //     setEmployeeHobbybyId([respond[0]]);
-  //     console.log("responds", respond);
+  //     let request = [
+  //       HttpAPIRequest("GET", GetProviderTypes()),
+  //       HttpAPIRequest("GET", GetAilmentType()),
+  //     ];
+  //     const multipleCall = await Promise.allSettled(request);
+  //     console.log(multipleCall[0].value);
+
+  //     setProviderTypes([
+  //       { id: "-1", name: `Select Provider` },
+  //       ...multipleCall[0].value,
+  //     ]);
+  //     setAilmenentType([
+  //       { id: "-1", name: `Select Ailment` },
+  //       ...multipleCall[1].value,
+  //     ]);
   //   } catch (error) {
   //     console.log(error);
   //   }
   // };
 
-  //Drop down list for hobby types
-  const MultipleGetRequests = async () => {
-    try {
-      let request = [
-        HttpAPIRequest("GET", GetProviderTypes()),
-        HttpAPIRequest("GET", GetAilmentType()),
-      ];
-      const multipleCall = await Promise.allSettled(request);
-      console.log(multipleCall[0].value);
+  // useEffect(() => {
+  //   MultipleGetRequests();
+  // }, []);
 
+  const  {data:multicallData} =  useMultiFetch([GetProviderTypes(), 
+    GetAilmentType()], (results) => {
       setProviderTypes([
         { id: "-1", name: `Select Provider` },
-        ...multipleCall[0].value,
+        ...results[0].data,
       ]);
       setAilmenentType([
         { id: "-1", name: `Select Ailment` },
-        ...multipleCall[1].value,
+        ...results[1].data,
       ]);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  
+  })
 
-  useEffect(() => {
-    MultipleGetRequests();
-  }, []);
+
   const handleOnSubmit = () => {
     console.log("submit data ", submitData);
 
@@ -241,13 +269,34 @@ const MedicalTransaction = () => {
       userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
       userName: "string",
       CompanyReference: "00001_A01",
-      employeeId,
+      employeeId : searchResult?.id,
     };
     //let finalData = JSON.stringify(newData)
     // console.log(finalData)
     // 'Add' === mode ? AddGLAccount(newData) : updateGLAccount(newData);
-    postEmployeeMedical(newData);
+   // postEmployeeMedical(newData);
+    setPostData(newData)
+    setPostUrl(PostEmployeeMedical())
   };
+
+  const  {setData:setPostData, setUrl:setPostUrl} = usePost('', (response) => {
+    // console.log({location:response });
+    const {data} = response
+    if ("" === data) {
+      toast.success(GetLabelByName("HCM-HAGGXNJQW2B_HRPR", lan));
+      //showToasts();
+      searchReset(2);
+    } else {
+      try {
+        data = JSON.parse(response);
+        let mdata = data.errors[0].message;
+        toast.error(`${mdata}`, toastWarning);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+  })
 
   //Post Employee Hobby
   function postEmployeeMedical(data) {
@@ -283,22 +332,23 @@ const MedicalTransaction = () => {
       });
   }
 
-  const getEmployeeMedicalyById = async () => {
-    try {
-      const request = await CustomAxios.get(`EmployeeMedical/${handleId}`);
+  const getEmployeeMedicalyById =(id) => {
+    setUrl(GetEmployeeMedical(id))
+    // try {
+    //   const request = await CustomAxios.get(`EmployeeMedical/${handleId}`);
 
-      const response = request.data;
-      console.log("emp response:", response);
-      setViewInfo((prevState) => response);
-    } catch (error) {
-      console.log({ error });
-    }
+    //   const response = request.data;
+    //   console.log("emp response:", response);
+    //   setViewInfo((prevState) => response);
+    // } catch (error) {
+    //   console.log({ error });
+    // }
   };
-  useEffect(() => {
-    if (handleId !== "") {
-      getEmployeeMedicalyById();
-    }
-  }, [handleId]);
+  // useEffect(() => {
+  //   if (handleId !== "") {
+  //     getEmployeeMedicalyById();
+  //   }
+  // }, [handleId]);
 
   useEffect(() => {
     console.log("check view info ", viewinfo);
@@ -549,7 +599,7 @@ const MedicalTransaction = () => {
           <CRow className={"bottom-spacing"}>
             <CCol md="6">
               <CLabel htmlFor="Note">
-                <CSLab code="HCM-Z0FV0XJJ06" />
+                <CSLab code="HCM-Z0FV0XJJ06" />{" "} <CSRequiredIndicator />
               </CLabel>
               <CTextarea
                 name="note"
@@ -561,13 +611,7 @@ const MedicalTransaction = () => {
           </CRow>
         </CModalBody>
         <CModalFooter>
-          <div style={{ fontSize: "10px", marginRight: "439px" }}>
-            <p>
-              <em>
-                <CSLab code="HCM-WKZ2Y0KPTT9-PSLL" /> (<CSRequiredIndicator />)
-              </em>
-            </p>
-          </div>
+        <p style={{ position: "absolute", left: "20px" }}><em style={{ fontSize: "12px" }}><CSLab code="HCM-S6DELVG0IQS-HRPR" /> (<CSRequiredIndicator />)<CSLab code="HCM-H72Q4EB363H_PSLL" /></em></p>
           <CButton color="secondary" onClick={() => setVisible(false)}>
             <CSLab code="HCM-MELULU9B6R_KCMI" />
           </CButton>

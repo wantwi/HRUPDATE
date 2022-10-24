@@ -4,7 +4,9 @@ import { toast } from "react-toastify";
 import { toastWarning } from "src/toasters/Toaster";
 import { CustomAxios } from "src/reusable/API/CustomAxios";
 import moment from "moment";
-
+import useMultiFetch from "src/hooks/useMultiFetch";
+import useFetch from "src/hooks/useFetch";
+import usePost from "src/hooks/usePost";
 import {
   GetRequest,
   HttpAPIRequest,
@@ -58,6 +60,7 @@ import { SearchEmployees } from "src/reusable/API/EmployeeEndpoints";
 import { LessThanIcon } from "evergreen-ui";
 import { BaseURL } from "src/reusable/API/base";
 import {
+  GetEmployeeOffenceById,
   GetOffenceCategory,
   GetOffenceCategoryRule,
   PostEmployeeDisciplinaryInfo,
@@ -114,10 +117,18 @@ const EmployeeDisciplinaryInformation = (props) => {
   const [offenceCategoryType, setOffenceCategoryType] = useState([]);
   const [offenceCategoryRuleType, setOffenceCategoryRuleType] = useState([]);
   const [handleCategoryTypeID, setHandleCategoryTypeID] = useState("");
+const[value, setValueid] =useState("")
+
+
+
+
+
+
+
 
   const handleSearchResultSelect = (results) => {
     console.log("show results", results);
-
+//setSearchResult(results)
     //setting employee display name on select of suggested item
     setEmpDisplayName(
       (prevState) => `${results.firstName} ${results.lastName}`
@@ -131,37 +142,37 @@ const EmployeeDisciplinaryInformation = (props) => {
 
     if (results?.code) {
       setSearchResult(results);
-
-      GetRequest()
-        .then((response) => {
-          // toast.dismiss(toastId);
-          if (response.ok) {
-            response.json().then((response) => {
+getEmployeeOffence(results.id)
+      // GetRequest()
+      //   .then((response) => {
+      //     // toast.dismiss(toastId);
+      //     if (response.ok) {
+      //       response.json().then((response) => {
               // console.log({response});
-              if (response && Object.keys(response).length > 0) {
-                dispatch({ type: "set", data: { ...response } });
-                setSubmitData({ ...response });
-                // setDuplicateData({ ...response })
-                //console.log({ response });
+            //   if (response && Object.keys(response).length > 0) {
+            //     dispatch({ type: "set", data: { ...response } });
+            //     setSubmitData({ ...response });
+            //     // setDuplicateData({ ...response })
+            //     //console.log({ response });
 
-                //let rates = response?.rates;
+            //     //let rates = response?.rates;
 
-                // setExchangeRate(rates);
-                setShow(false);
-                setMode("Update");
-              } else {
-                setMode("Add");
-                setShow(false);
-                // dispatch({ type: 'set', data: { ...results, isHomeCurrency } });
-                // setSubmitData({ ...results, isHomeCurrency });
-              }
-            });
-          }
-        })
-        .catch((err) => {
-          // console.log(err);
-          // toaster(toastId, "Failed to retrieve details", 'error', 4000);
-        });
+            //     // setExchangeRate(rates);
+            //     setShow(false);
+            //     setMode("Update");
+            //   } else {
+            //     setMode("Add");
+            //     setShow(false);
+            //     // dispatch({ type: 'set', data: { ...results, isHomeCurrency } });
+            //     // setSubmitData({ ...results, isHomeCurrency });
+            //   }
+            // });
+        //   }
+        // })
+        // .catch((err) => {
+        //   // console.log(err);
+        //   // toaster(toastId, "Failed to retrieve details", 'error', 4000);
+        // });
     }
   };
   let uniqueIdKey = uniqueIdKey || "id";
@@ -192,6 +203,7 @@ const EmployeeDisciplinaryInformation = (props) => {
     }
   };
 
+
   //Handles category Type Rule
 
   const handleNewId = async (value) => {
@@ -211,6 +223,14 @@ const EmployeeDisciplinaryInformation = (props) => {
     }
   };
 
+  const  {data:multicallData} =  useMultiFetch([ GetOffenceCategory(), 
+    GetOffenceCategoryRule(value)], (results) => {
+      setOffenceCategoryType([
+        { id: "-1", name: `Select Offence Category` },
+        ...results[0].data,
+      ]);
+  
+  })
   console.log("ID", handleCategoryTypeID);
 
   useEffect(() => {
@@ -218,22 +238,44 @@ const EmployeeDisciplinaryInformation = (props) => {
   }, []);
 
   //Get employee skill details
-  const getEmployeeOffence = async () => {
-    try {
-      const request = await CustomAxios.get(`EmployeeOffence/${handleId}`);
 
-      const response = request.data;
-      console.log("emp response:", response);
-      setViewInfo((prevState) => response);
-    } catch (error) {
-      console.log({ error });
+
+  const {setOptData, setUrl} =  useFetch("", (response,results) => {
+    if (response) {
+        if (response && Object.keys(response).length > 0) {
+            setSearchResult(results);
+            dispatch({ type: 'set', data: { ...response } });
+            setSubmitData({...response});
+            setViewInfo((prevState) => response);
+            //setDupData({...response})
+            setMode('Update');
+            setShow(false);
+        } else {
+            setMode('Add');
+            setShow(false);
+            dispatch({ type: 'set', data: { ...response } });
+            setSubmitData({ ...response });
+        }
     }
+});
+
+  const getEmployeeOffence =(id) => {
+    setUrl(GetEmployeeOffenceById(id))
+    // try {
+    //   const request = await CustomAxios.get(`EmployeeOffence/${handleId}`);
+
+    //   const response = request.data;
+    //   console.log("emp response:", response);
+    //   setViewInfo((prevState) => response);
+    // } catch (error) {
+    //   console.log({ error });
+    // }
   };
-  useEffect(() => {
-    if (handleId !== "") {
-      getEmployeeOffence();
-    }
-  }, [handleId]);
+  // useEffect(() => {
+  //   if (handleId !== "") {
+  //     getEmployeeOffence();
+  //   }
+  // }, [handleId]);
 
   //.console.log(offenceType);
 
@@ -280,12 +322,34 @@ const EmployeeDisciplinaryInformation = (props) => {
       userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
       userName: "string",
       CompanyReference: "00001_A01",
-      employeeId,
+      employeeId: searchResult?.id,
     };
-    postEmployeeDisciplinaryInfo(newData);
+    setPostUrl(PostEmployeeDisciplinaryInfo())
+    setPostData(newData)
+    //postEmployeeDisciplinaryInfo(newData);
   };
 
   //Post Employee Skill
+
+  const  {setData:setPostData, setUrl:setPostUrl} = usePost('', (response) => {
+    // console.log({location:response });
+    const {data} = response
+    if ("" === data) {
+      toast.success(GetLabelByName("HCM-HAGGXNJQW2B_HRPR", lan));
+     // showToasts();
+      
+    } else {
+      try {
+        data = JSON.parse(response);
+        let mdata = data.errors[0].message;
+        toast.error(`${mdata}`, toastWarning);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+  })
+
   function postEmployeeDisciplinaryInfo(data) {
     console.log("post data", data);
     PostRequest(PostEmployeeDisciplinaryInfo(), { data: data })
@@ -320,7 +384,8 @@ const EmployeeDisciplinaryInformation = (props) => {
   }
   const handleOnChange = (evnt) => {
     if (evnt?.target?.name === "offenceCategoryId") {
-      handleNewId(evnt?.target?.value);
+      //handleNewId(evnt?.target?.value);
+      setValueid(evnt?.target?.value)
     }
     setSubmitData((data) => {
       return { ...data, [evnt?.target?.name]: evnt?.target?.value };

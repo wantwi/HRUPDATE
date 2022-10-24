@@ -6,4 +6,5 @@ export const GetOffenceCategory = () =>
   export const GetOffenceCategoryRule = (filter) => `${BaseURL}EmployeeOffence/OffenceCategoryRuleByCatId/${filter}`
 
 //export const GetEmployeeHobbyTypes = ()=> `${BaseURL}EmployeeHobbies/Type/dropdown-types?companyReference=00001_a01`
-export const PostEmployeeDisciplinaryInfo = () => `${BaseURL}EmployeeOffence`;
+export const PostEmployeeDisciplinaryInfo = () => `EmployeeOffence`;
+export const GetEmployeeOffenceById =(handleId)=>`EmployeeOffence/${handleId}`

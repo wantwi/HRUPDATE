@@ -53,6 +53,10 @@ import "../../../../node_modules/@syncfusion/ej2-popups/styles/material.css";
 import "../../../../node_modules/@syncfusion/ej2-splitbuttons/styles/material.css";
 import "../../../../node_modules/@syncfusion/ej2-react-grids/styles/material.css";
 
+import useMultiFetch from "src/hooks/useMultiFetch";
+import useFetch from "src/hooks/useFetch";
+import usePost from "src/hooks/usePost";
+
 import { GetLabelByName } from "src/reusable/configs/config";
 import {
   CSLab,
@@ -124,20 +128,20 @@ const AccidentTransaction = () => {
   const [getEmployeeAccident, setEmployeeAccident] = useState([]);
 
   //fucntion for multiple get (dropDown list in the form)
-  const MultipleGetRequests = async () => {
-    try {
-      let request = [HttpAPIRequest("GET", GetAccidentTypes())];
-      const multipleCall = await Promise.allSettled(request);
-      console.log(multipleCall[0].value);
+  // const MultipleGetRequests = async () => {
+  //   try {
+  //     let request = [HttpAPIRequest("GET", GetAccidentTypes())];
+  //     const multipleCall = await Promise.allSettled(request);
+  //     console.log(multipleCall[0].value);
 
-      setAccidentTypes([
-        { id: "-1", name: `Select Accident Type` },
-        ...multipleCall[0].value,
-      ]);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //     setAccidentTypes([
+  //       { id: "-1", name: `Select Accident Type` },
+  //       ...multipleCall[0].value,
+  //     ]);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
   const searchReset = () => {
     setShow(true);
     setSearchInput("");
@@ -148,23 +152,48 @@ const AccidentTransaction = () => {
     //     console.log(grid);
     // }
   };
+  const  {data:multicallData} =  useMultiFetch([ GetAccidentTypes()], (results) => {
+    setAccidentTypes([{ id: "-1", name: `Select Accident Type` }, ...results[0].data]);
+   
+  })
 
-  useEffect(() => {
-    MultipleGetRequests();
-  }, []);
+  // useEffect(() => {
+  //   MultipleGetRequests();
+  // }, []);
 
-  // get employee by id for grid view
-  const getEmployyeAccidentById = async () => {
-    try {
-      const request = await CustomAxios.get(
-        `${BaseURL}EmployeeAccident/${handleId}`
-      );
-      const respond = request.data;
-      setEmployeeAccident(respond);
-      console.log("responds", respond);
-    } catch (error) {
-      console.log(error);
+
+  const {setOptData, setUrl} =  useFetch("", (response,results) => {
+    if (response) {
+        if (response && Object.keys(response).length > 0) {
+            setSearchResult(results);
+            dispatch({ type: 'set', data: { ...response } });
+            setSubmitData({...response});
+           
+           setEmployeeAccident(response);
+            setMode('Update');
+            setShow(false);
+        } else {
+            setMode('Add');
+            setShow(false);
+            dispatch({ type: 'set', data: { ...response } });
+            setSubmitData({ ...response });
+        }
     }
+});
+  
+  // get employee by id for grid view
+  const getEmployyeAccidentById =  () => {
+    setUrl(GetEmployeeAccidentByEmployeeId())
+    // try {
+    //   const request = await CustomAxios.get(
+    //     `${BaseURL}EmployeeAccident/${handleId}`
+    //   );
+    //   const respond = request.data;
+      
+    //   console.log("responds", respond);
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   //handles form submit
@@ -205,9 +234,31 @@ const AccidentTransaction = () => {
       CompanyReference: "00001_A01",
       employeeId,
     };
-
-    postAccidentTrans(newData);
+    setPostData(newData)
+    setPostUrl(PostAccidentTransaction())
+  
+    // postAccidentTrans(newData);
   };
+
+  const  {setData:setPostData, setUrl:setPostUrl} = usePost('', (response) => {
+    // console.log({location:response });
+    const {data} = response
+    if ("" === data) {
+      toast.success(GetLabelByName("HCM-HAGGXNJQW2B_HRPR", lan));
+    //  showToasts();
+      searchReset(2);
+    } else {
+      try {
+        data = JSON.parse(response);
+        let mdata = data.errors[0].message;
+        toast.error(`${mdata}`, toastWarning);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+  })
+
 
   //funtion to handle post
   function postAccidentTrans(data) {
@@ -555,13 +606,7 @@ const AccidentTransaction = () => {
           </CRow>
         </CModalBody>
         <CModalFooter>
-          <div style={{ fontSize: "10px", marginRight: "425px" }}>
-            <p>
-              <em>
-                <CSLab code="HCM-WKZ2Y0KPTT9-PSLL" /> (<CSRequiredIndicator />)
-              </em>
-            </p>
-          </div>
+        <p style={{ position: "absolute", left: "20px" }}><em style={{ fontSize: "12px" }}><CSLab code="HCM-S6DELVG0IQS-HRPR" /> (<CSRequiredIndicator />)<CSLab code="HCM-H72Q4EB363H_PSLL" /></em></p>
           <CButton color="secondary" onClick={() => setVisible(false)}>
             <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
           </CButton>
