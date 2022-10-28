@@ -71,6 +71,8 @@ import {
   GetEmployeeDependant,
   GetEmployeeEmergencyContact,
   GetEmployeeGuarantor,
+  GetIdTypes,
+  GetNationality,
   GetRelationTypes,
   PostBeneficiary,
   PostDependantDetails,
@@ -88,6 +90,9 @@ import DependantForm from "./forms/DependantForm";
 import BeneficiaryForm from "./forms/BeneficiaryForm";
 import EmergencyContactForm from "./forms/EmergencyContact";
 import NextOfKinForm from "./forms/NextOfKinForm";
+import useMultiFetch from "src/hooks/useMultiFetch";
+import useFetch from "src/hooks/useFetch";
+import usePost from "src/hooks/usePost";
 
 const commandOptions = [
   {
@@ -218,7 +223,7 @@ const EmployeeDetail = (props) => {
   const [relationTypes, setRelationTypes] = useState([]);
   const [showTypes, setShowTypes] = useState([]);
   const [showModal, setShowModal] = useState(false);
-
+  const [nationality, setNationality] = useState([]);
   const canSave = [fname, lname, relation, phone, address].every(Boolean);
 
   const firstGrid = useRef(null);
@@ -232,6 +237,7 @@ const EmployeeDetail = (props) => {
   const [checkedTypesGuarantor, setCheckedTypesGuarantor] = useState([]);
   const [checkedTypesNextOfKin, setCheckedTypesNextOfKin] = useState({});
   const [checkedBeneficiaryTypes, setCheckedBeneficiaryTypes] = useState([]);
+  const [identityTypes, setIdentityTypes] = useState([]);
 
   // const submitBtn =  useRef(null)
 
@@ -258,6 +264,8 @@ const EmployeeDetail = (props) => {
   const searchReset = () => {
     setShow(true);
     setSearchInput("");
+    setCurrentFormData("")
+  
 
     // const [grid,] = useState(null);
 
@@ -312,6 +320,33 @@ const EmployeeDetail = (props) => {
     console.log("on command click");
     onCompleteAction(args);
   };
+
+
+
+const  {data:multicallData, setUrls} =  useMultiFetch([], (results) => {
+      
+  setGetBenefiary([...results[0].data]);
+  setDependant([...results[1].data]);
+  setEmergencyContact([...results[2].data]);
+  setGetGuarantor([...results[3].data]);
+  setRelationTypes([...results[4].data]);
+
+})
+
+useEffect(() => {
+
+setUrls([GetBeneficiary(handleId), 
+  GetEmployeeDependant(handleId), GetEmployeeEmergencyContact(handleId), 
+  GetEmployeeGuarantor(handleId),RelationTypes()])
+return () => {
+  
+}
+}, [handleId,setUrls])
+
+
+
+
+
   const handleSearchResultSelect = (results) => {
     console.log("show results", results);
 
@@ -326,39 +361,44 @@ const EmployeeDetail = (props) => {
     dispatch({ type: "set", data: { ...results } });
     setSubmitData({ ...results });
 
-    if (results?.code) {
+    if (results?.id) {
       setSearchResult(results);
+      // setUrl(GetBeneficiary(results?.id))
+      // getEmployeeDepndnt(GetEmployeeDependant(results?.id))
+      //GetEmployeeEmergencyContact(handleId)
 
-      GetRequest()
-        .then((response) => {
-          // toast.dismiss(toastId);
-          if (response.ok) {
-            response.json().then((response) => {
-              // console.log({response});
-              if (response && Object.keys(response).length > 0) {
-                dispatch({ type: "set", data: { ...response } });
-                setSubmitData({ ...response });
-                // setDuplicateData({ ...response })
-                //console.log({ response });
 
-                //let rates = response?.rates;
+      
+      // GetRequest()
+      //   .then((response) => {
+      //     // toast.dismiss(toastId);
+      //     if (response.ok) {
+      //       response.json().then((response) => {
+      //         // console.log({response});
+      //         if (response && Object.keys(response).length > 0) {
+      //           dispatch({ type: "set", data: { ...response } });
+      //           setSubmitData({ ...response });
+      //           // setDuplicateData({ ...response })
+      //           //console.log({ response });
 
-                // setExchangeRate(rates);
-                setShow(false);
-                setMode("Update");
-              } else {
-                setMode("Add");
-                setShow(false);
-                // dispatch({ type: 'set', data: { ...results, isHomeCurrency } });
-                // setSubmitData({ ...results, isHomeCurrency });
-              }
-            });
-          }
-        })
-        .catch((err) => {
-          // console.log(err);
-          // toaster(toastId, "Failed to retrieve details", 'error', 4000);
-        });
+      //           //let rates = response?.rates;
+
+      //           // setExchangeRate(rates);
+      //           setShow(false);
+      //           setMode("Update");
+      //         } else {
+      //           setMode("Add");
+      //           setShow(false);
+      //           // dispatch({ type: 'set', data: { ...results, isHomeCurrency } });
+      //           // setSubmitData({ ...results, isHomeCurrency });
+      //         }
+      //       });
+      //     }
+      //   })
+      //   .catch((err) => {
+      //     // console.log(err);
+      //     // toaster(toastId, "Failed to retrieve details", 'error', 4000);
+      //   });
     }
   };
 
@@ -383,27 +423,27 @@ const EmployeeDetail = (props) => {
   //  console.log(nextOfKin);
   //console.log(handleId);
 
-  const MultipleGetRequests = async () => {
-    try {
-      let request = [
-        HttpAPIRequest("GET", GetBeneficiary(handleId)),
-        HttpAPIRequest("GET", GetEmployeeDependant(handleId)),
-        HttpAPIRequest("GET", GetEmployeeEmergencyContact(handleId)),
-        HttpAPIRequest("GET", GetEmployeeGuarantor(handleId)),
-        HttpAPIRequest("GET", RelationTypes()),
-      ];
-      const multipleCall = await Promise.allSettled(request);
-      console.log(multipleCall[0].value);
+  // const MultipleGetRequests = async () => {
+  //   try {
+  //     let request = [
+  //       HttpAPIRequest("GET", GetBeneficiary(handleId)),
+  //       HttpAPIRequest("GET", GetEmployeeDependant(handleId)),
+  //       HttpAPIRequest("GET", GetEmployeeEmergencyContact(handleId)),
+  //       HttpAPIRequest("GET", GetEmployeeGuarantor(handleId)),
+  //       HttpAPIRequest("GET", RelationTypes()),
+  //     ];
+  //     const multipleCall = await Promise.allSettled(request);
+  //     console.log(multipleCall[0].value);
 
-      setGetBenefiary([...multipleCall[0].value]);
-      setDependant([...multipleCall[1].value]);
-      setEmergencyContact([...multipleCall[2].value]);
-      setGetGuarantor([...multipleCall[3].value]);
-      setRelationTypes([...multipleCall[4].value]);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //     setGetBenefiary([...multipleCall[0].value]);
+  //     setDependant([...multipleCall[1].value]);
+  //     setEmergencyContact([...multipleCall[2].value]);
+  //     setGetGuarantor([...multipleCall[3].value]);
+  //     setRelationTypes([...multipleCall[4].value]);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
   const integerParams = {
     params: {
       // decimals: 1,
@@ -413,14 +453,85 @@ const EmployeeDetail = (props) => {
   };
   var arr = [];
 
-  useEffect(() => {
-    if (handleId) {
-      MultipleGetRequests();
+
+//Beneficiary
+  const  {setData:setPostData, setUrl:setPostUrl} = usePost('', (response) => {
+    // console.log({location:response });
+    const {data} = response
+    if ("" === data) {
+      toast.success(GetLabelByName("HCM-HAGGXNJQW2B_HRPR", lan));
+      //showToasts();
+      //handleReset(2);
+      searchReset()
+    } else {
+      try {
+        data = JSON.parse(response);
+        let mdata = data.errors[0].message;
+        toast.error(`${mdata}`, toastWarning);
+      } catch (error) {
+        console.log(error);
+      }
     }
-  }, [handleId]);
+
+  })
+  const  {setData:setDependantPostData, setUrl:setDependentPostUrl} = usePost('', (response) => {
+    // console.log({location:response });
+    const {data} = response
+    if ("" === data) {
+      toast.success(GetLabelByName("HCM-HAGGXNJQW2B_HRPR", lan));
+      //showToasts();
+      searchReset()
+    } else {
+      try {
+        data = JSON.parse(response);
+        let mdata = data.errors[0].message;
+        toast.error(`${mdata}`, toastWarning);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+  })
+  const  {setData:setEmegencyContactPostData, setUrl:setEmegencyContactPostUrl} = usePost('', (response) => {
+    // console.log({location:response });
+    const {data} = response
+    if ("" === data) {
+      toast.success(GetLabelByName("HCM-HAGGXNJQW2B_HRPR", lan));
+      //showToasts();
+      searchReset()
+    } else {
+      try {
+        data = JSON.parse(response);
+        let mdata = data.errors[0].message;
+        toast.error(`${mdata}`, toastWarning);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+  })
+  const  {setData:setPostGuarrantorData, setUrl:setGuarrantorPostUrl} = usePost('', (response) => {
+    // console.log({location:response });
+    const {data} = response
+    if ("" === data) {
+      toast.success(GetLabelByName("HCM-HAGGXNJQW2B_HRPR", lan));
+      //showToasts();
+      searchReset()
+    } else {
+      try {
+        data = JSON.parse(response);
+        let mdata = data.errors[0].message;
+        toast.error(`${mdata}`, toastWarning);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+  })
+  
 
   const submitBtn = () => {
-    // Dependant
+    // Beneficiary
     if (activeKey === 1) {
       if (!currentFormData?.firstName || submitData?.firstName === "") {
         toast.error("Please Enter First Name!", toastWarning);
@@ -442,6 +553,12 @@ const EmployeeDetail = (props) => {
         toast.error("Please Enter Percentage!", toastWarning);
         return;
       }
+      if (!currentFormData?.relationId || submitData?.relationId == -1) {
+        toast.error("Please Select a Relation!", toastWarning);
+        return;
+      }
+
+     
       // console.log(submitData)
       let employeeId = handleId;
       //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
@@ -452,10 +569,13 @@ const EmployeeDetail = (props) => {
         CompanyReference: "00001_A01",
         employeeId,
       };
-      console.log({ newData });
-      postBeneficiary(newData);
+      //console.log({ newData });
+      // postBeneficiary(newData);
+      setPostData(newData)
+      setPostUrl(PostBeneficiary())
+      
     }
-    //handle Beneficiary
+    //HANDLE DEPENDANT
     if (activeKey === 2) {
       if (!currentFormData?.firstName || submitData?.firstName === "") {
         toast.error("Please Enter First Name!", toastWarning);
@@ -514,7 +634,9 @@ const EmployeeDetail = (props) => {
         employeeId,
       };
       console.log({ newData });
-      postDependant(newData);
+   //   postDependant(newData);
+      setDependentPostUrl(PostDependantDetails())
+      setDependantPostData(newData)
     }
     //handle Emegency Contact
     if (activeKey === 6) {
@@ -551,7 +673,10 @@ const EmployeeDetail = (props) => {
         name: `${currentFormData?.firstName} ${currentFormData?.lastName}`,
       };
       console.log({ newData });
-      postEmergencyContact(newData);
+      // postEmergencyContact(newData);
+      
+      setEmegencyContactPostUrl(PostEmployeeEmergencyContact())
+      setEmegencyContactPostData(newData)
     }
     //handle Guarantor
     if (activeKey === 3) {
@@ -603,8 +728,10 @@ const EmployeeDetail = (props) => {
         employeeId,
         name: `${currentFormData?.firstName} ${currentFormData?.lastName}`,
       };
-      console.log({ newData });
-      postGuarantor(newData);
+     // console.log({ newData });
+      //postGuarantor(newData);
+      setGuarrantorPostUrl(PostEmployeeGuarantor())
+      setPostGuarrantorData(newData)
     }
     //handle Next oF Kin
     if (activeKey === 4) {
@@ -653,6 +780,10 @@ const EmployeeDetail = (props) => {
       postNextOfKin(newData);
     }
   };
+
+
+
+
   //Post Employee Beneficiary
   function postBeneficiary(data) {
     //console.log("post data", data);
@@ -662,7 +793,7 @@ const EmployeeDetail = (props) => {
           if ("" == data) {
             toast.success("Employee Beneficiary Added Successfully!");
             console.log("success");
-            MultipleGetRequests();
+          //  MultipleGetRequests();
             setCurrentFormData("");
           } else {
             try {
@@ -696,7 +827,7 @@ const EmployeeDetail = (props) => {
           if ("" == data) {
             toast.success("Employee Dependant Added Successfully!");
             console.log("success");
-            MultipleGetRequests();
+            //MultipleGetRequests();
             setCurrentFormData("");
           } else {
             try {
@@ -730,7 +861,7 @@ const EmployeeDetail = (props) => {
           if ("" == data) {
             toast.success("Emergency Contact Added Successfully!");
             console.log("success");
-            MultipleGetRequests();
+           // MultipleGetRequests();
             setCurrentFormData("");
           } else {
             try {
@@ -762,7 +893,7 @@ const EmployeeDetail = (props) => {
           if ("" == data) {
             toast.success("Employee Guarantor Added Successfully!");
             console.log("success");
-            MultipleGetRequests();
+          //  MultipleGetRequests();
             setCurrentFormData("");
           } else {
             try {
@@ -796,7 +927,7 @@ const EmployeeDetail = (props) => {
           if ("" == data) {
             toast.success("Employee Guarantor Added Successfully!");
             console.log("success");
-            MultipleGetRequests();
+            //MultipleGetRequests();
             handleNextOfKin();
             setCurrentFormData("");
           } else {
@@ -829,6 +960,26 @@ const EmployeeDetail = (props) => {
       [e.target.name]: e.target.value,
     }));
   };
+  const  {data:multical} =  useMultiFetch([ 
+    GetNationality(),GetIdTypes()], (results) => {
+
+
+    console.log(results);
+
+      // setRelationTypes([...results[0].data]);
+      setNationality([
+        { id: "-1", name: `Select Nationality` },
+        ...results[0].data,
+      ]);
+      setIdentityTypes([
+        { id: "-1", name: `Select ID Type` },
+        ...results[1].data,
+      ]);
+
+
+        
+  
+  })
 
   const ben_actionBegin = (args) => {
     console.log({ beneficiary: args });
@@ -860,6 +1011,10 @@ const EmployeeDetail = (props) => {
         handleFormChange={handleFormChange}
         setCurrentFormData={setCurrentFormData}
         view={checkedTypes}
+        nationality={nationality}
+        id={identityTypes}
+
+
       />
     );
   }
@@ -879,6 +1034,8 @@ const EmployeeDetail = (props) => {
         handleFormChange={handleFormChange}
         setCurrentFormData={setCurrentFormData}
         view={checkedTypesGuarantor}
+        nationality={nationality}
+        id={identityTypes}
       />
     );
   }
@@ -1009,6 +1166,10 @@ const EmployeeDetail = (props) => {
     checkBenefiary();
   }, [benefiaciary]);
   console.log({ checkedTypesNextOfKin });
+  console.log({ nextOfKin });
+  console.log({ nextOfKin });
+  console.log({ nextOfKin });
+  console.log({ nextOfKin });
   console.log({ nextOfKin });
 
   return (
@@ -1644,14 +1805,9 @@ const EmployeeDetail = (props) => {
                 </CTabContent>
               </CTabs>
             </CCardBody>
-
             <CCardFooter>
-              {/* <CButton onClick={submitRequest} style={{ marginRight: 5, float: "right" }} type="submit" size="sm" color="success" >
-                <CIcon name="cil-scrubber" /> Submit
-              </CButton> */}
-              <CCol md="4">
                 <CButton
-                  style={{ marginRight: -960, float: "right", color: "white" }}
+                 style={{ marginRight: 9, float: "right", color: "white" }}
                   onClick={() => searchReset()}
                   type="button"
                   size="sm"
@@ -1660,7 +1816,7 @@ const EmployeeDetail = (props) => {
                   <AiOutlineClose size={20} />
                   <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
                 </CButton>
-              </CCol>
+              
             </CCardFooter>
           </CCard>
         </CCol>

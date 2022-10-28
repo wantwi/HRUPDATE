@@ -7,44 +7,58 @@ import {
   GetNationality,
 } from "src/reusable/API/EmployeeRelationshipsEndPoint";
 import { HttpAPIRequest } from "src/reusable/utils/helper";
+import useMultiFetch from "src/hooks/useMultiFetch";
 
 function GuarantorForm({
   currentFormData,
   handleFormChange,
   setCurrentFormData,
   view,
+  nationality,
+  id
 }) {
   const [relationTypes, setRelationTypes] = useState([]);
-  const [nationality, setNationality] = useState([]);
+  //const [nationality, setNationality] = useState([]);
   const [checkedTypes, setCheckedTypes] = useState([]);
 
   // useEffect(() => {
   //   setCurrentFormData("");
   // }, []);
 
-  const MultipleGetRequests = async () => {
-    try {
-      let request = [
-        HttpAPIRequest("GET", GetRelationTypes()),
-        HttpAPIRequest("GET", GetNationality()),
-      ];
-      const multipleCall = await Promise.allSettled(request);
-      console.log(multipleCall[0].value);
+  // const MultipleGetRequests = async () => {
+  //   try {
+  //     let request = [
+  //       //HttpAPIRequest("GET", GetRelationTypes()),
+  //       HttpAPIRequest("GET", GetNationality()),
+  //     ];
+  //     const multipleCall = await Promise.allSettled(request);
+  //     console.log(multipleCall[0].value);
 
-      setRelationTypes([...multipleCall[0].value]);
-      setNationality([
-        { id: "-1", name: `Select Nationality` },
-        ...multipleCall[1].value,
-      ]);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //     setRelationTypes([...multipleCall[0].value]);
+  //     setNationality([
+  //       { id: "-1", name: `Select Nationality` },
+  //       ...multipleCall[1].value,
+  //     ]);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
 
-  useEffect(() => {
-    MultipleGetRequests();
-  }, []);
+  // useEffect(() => {
+  //   MultipleGetRequests();
+  // }, []);
+
+
+
+  // const  {data:multicallData} =  useMultiFetch([GetNationality()], (results) => {
+  //   setNationality([
+  //     { id: "-1", name: `Select Nationality` },
+  //     ...results[1].data,
+  //   ]);
+  
+  // })
+
   // useEffect(() => {
   //   if (view.length >= 0) {
   //     DropDown();
@@ -87,7 +101,7 @@ function GuarantorForm({
             </CLabel>
             <CInput
               name="phone"
-              type="number"
+              type="text"
               placeholder="Enter Phone Number"
               value={currentFormData?.phone || ""}
               onChange={handleFormChange}

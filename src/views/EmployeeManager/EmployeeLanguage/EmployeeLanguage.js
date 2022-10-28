@@ -259,7 +259,8 @@ const EmployeeLanguage = () => {
 console.log(results);
      if (results?.id) {
        setSearchResult(results);
-       getEmployeelanguage(results.id)
+      //  getEmployeelanguage(results.id)
+       setUrl(GetEmployeeByID(results?.id))
     //   GetRequest()
     //     .then((response) => {
     //       // toast.dismiss(toastId);
@@ -289,7 +290,7 @@ console.log(results);
   const searchReset = () => {
     setShow(true);
     setSearchInput("");
-
+    setVisible(false)
     // const [grid,] = useState(null);
 
     // const OnSaveContinueClick = () => {
@@ -346,6 +347,8 @@ console.log(results);
 
   //Handles Submit
   const handleOnSubmit = () => {
+    DropDown()
+              GetColumnNames();
     console.log("submit data ", submitData);
 
     if (!submitData?.languageId || submitData?.languageId == -1) {
@@ -391,19 +394,24 @@ let newGridData ={
 
   
     console.log(newGridData);
-    setViewInfo((prevState) => [...prevState,newGridData]);
-    setPost(newData)
-
-    const getName = (id) => {
-      return reading.find((x) => x.id == id)?.name || "Not found";
-    };
-    
-   // setPostEmployee([newData]);
+    setViewInfo((prevState) => [newGridData,...prevState]);
+   
     setPostData(newData)
      setPostUrl(PostEmployeeLanguage())
+
+   // setPostEmployee([newData]);
+
   };
 
 
+  const getName = (id) => {
+    return reading.find((x) => x.id == id)?.name || "Not found";
+  };
+  
+
+const trials=()=>{
+alert("Clicked")
+}
 
 
 
@@ -435,7 +443,7 @@ let newGridData ={
   })
  
 const handlePost=(post)=>{
-console.log(post)
+console.log(viewinfo)
 // setPostData(post)
 //  setPostUrl(PostEmployeeLanguage())
 }
@@ -836,15 +844,7 @@ console.log(post)
           </CRow>
         </CModalBody>
         <CModalFooter>
-          <div
-            style={{
-              fontSize: "10px",
-              marginRight: "565px",
-              marginBottom: "-24px",
-            }}
-          >
-            <CSLab code="HCM-WKZ2Y0KPTT9-PSLL" /> (<CSRequiredIndicator />)
-          </div>
+        <p style={{ position: "absolute", left: "20px" }}><em style={{ fontSize: "12px" }}><CSLab code="HCM-S6DELVG0IQS-HRPR" /> (<CSRequiredIndicator />)<CSLab code="HCM-H72Q4EB363H_PSLL" /></em></p>
 
           <CButton
             color="secondary"
@@ -859,12 +859,8 @@ console.log(post)
           <CButton
             color="primary"
             onClick={() => {
-              //setVisible(false);
               handleOnSubmit();
-                DropDown()
-              GetColumnNames();
-              // SetViewGrid(newGridDta)
-
+              // trials()
             }}
           >
             <CSLab code="HCM-TAAFD4M071D-HRPR" />

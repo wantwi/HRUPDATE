@@ -500,11 +500,9 @@ const CSAutoComplete = ({
         <CInputGroup>
           <CInput
             type="text"
-            disabled={mode === "Update"}
+            // disabled={mode === "Update"}
             className={
-              mode === "Update"
-                ? "disabled-search-input border-left-curve"
-                : "border-left-curve"
+                 "border-left-curve"
             }
             onChange={onChange}
             onKeyDown={onChange}
@@ -514,18 +512,16 @@ const CSAutoComplete = ({
           <CInputGroupAppend>
             <CButton
               className="border-right-curve"
-              color={mode === "Update" ? "danger" : "primary"}
+              color={ "primary"}
               onClick={() =>
                 handleSearchInput(
-                  mode === "Update" ? "enable-search" : "search"
+                  
                 )
               }
             >
-              {mode === "Update" ? (
-                <AiFillCloseCircle size={20} />
-              ) : (
+             
                 <CIcon name={"cil-magnifying-glass"} />
-              )}
+              
             </CButton>
           </CInputGroupAppend>
         </CInputGroup>

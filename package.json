@@ -3,7 +3,6 @@
   "version": "3.2.1",
   "description": "Standard version of the hr appication for",
   "main": "index.js",
-  "homepage": "/hr-standard",
   "license": "MIT",
   "private": true,
   "repository": {
@@ -88,5 +87,6 @@
   "engines": {
     "node": ">=10",
     "npm": ">=6"
-  }
+  },
+  "homepage": "/"
 }

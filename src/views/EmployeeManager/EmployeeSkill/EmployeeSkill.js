@@ -136,7 +136,7 @@ const EmployeeSkill = (props) => {
       if (response && Object.keys(response).length > 0) {
         dispatch({ type: "set", data: { ...response } });
         setSubmitData({ ...response });
-        setViewInfo(response);
+        setViewInfo( response );
         // setDuplicateData({ ...response })
         console.log({ response });
 
@@ -262,6 +262,7 @@ const EmployeeSkill = (props) => {
 
 
   const  {data:multicallData} =  useMultiFetch([ GetEmployeeSkillsTypes()], (results) => {
+    console.log(results[0].data);
     setSkillType([...results[0].data]);
        
   
@@ -368,17 +369,20 @@ const EmployeeSkill = (props) => {
   const canSave = [skill].every(Boolean);
 
   const TransLabelByCode = (name) => GetLabelByName(name, lan);
-
+console.log(viewinfo)
   var skillDropDownArr = [];
+
+
+
   const checkBenefiary = () => {
-    
+    console.log("Checking...");
     if (viewinfo.length > 0) {
-      console.log("Debug 1")
+    //  console.log("Debug 1")
       for (let i = 0; i <= viewinfo.length; i++) {
-        console.log("Debug 2")
+     
         var obj = {};
      
-        console.log(viewinfo[i]?.skillType)
+       // console.log(viewinfo[i]?.skillType)
         obj = viewinfo[i]?.skillType;
         skillDropDownArr.push(obj);
         console.log(obj);
@@ -397,17 +401,26 @@ const EmployeeSkill = (props) => {
       console.log(newdata);
     } else {
       setCheckedSkillTypes(skillType);
+     
     }
   };
+
+
   useEffect(() => {
     if (viewinfo.length > 0) {
       checkBenefiary();
     }
-  }, [viewinfo]);
-  console.log({ checked: chekedSkillTypes });
-  console.log( chekedSkillTypes);
+
+    console.log(skillType);
+
+  }, []);
+
+
+
   let forview = viewinfo[0]
 
+  console.log(viewinfo);
+console.log(chekedSkillTypes);
   return (
     <>
       <CRow>
@@ -480,6 +493,7 @@ const EmployeeSkill = (props) => {
                     style={{ float: "right" }}
                     onClick={() => {
                       setVisible(true);
+                      checkBenefiary();
                     }}
                   >
                     <AiOutlinePlus />

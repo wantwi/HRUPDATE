@@ -115,20 +115,20 @@ const EmployeeEducationInformation = (props) => {
 
 
 
-
-  const  {data:multicallData} =  useMultiFetch([  GetProfessionalTitles(), 
+  // GetProfessionalTitles()
+  const  {data:multicallData} =  useMultiFetch([    
     GetQualificationTypes(),GetEducationCoreArea()], (results) => {
-      setProfessionalTitle([
-        { id: "-1", name: `Select Title` },
-        ...results[0].data,
-      ]);
+      // setProfessionalTitle([
+      //   { id: "-1", name: `Select Title` },
+      //   ...results[0].data,
+      // ]);
       setQualification([
         { id: "-1", name: `Select Qualification` },
-        ...results[1].data,
+        ...results[0].data,
       ]);
       setEducationCore([
         { id: "-1", name: `Select Education Core Area` },
-        ...results[2].data,
+        ...results[1].data,
       ]);
       console.log(results[0].data)
    

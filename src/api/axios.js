@@ -21,7 +21,7 @@ const {REACT_APP_BASE_URL} = process.env
 
 console.log(REACT_APP_BASE_URL);
 const CustomAxios = axios.create({
-    baseURL: "http://psl-linux:5100/",
+    baseURL: REACT_APP_BASE_URL,
     headers: {
         Accept: "application/json",
         "Content-Type": "application/json",

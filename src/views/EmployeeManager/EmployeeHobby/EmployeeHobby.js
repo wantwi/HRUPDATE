@@ -354,7 +354,7 @@ const EmployeeHobby = (props) => {
 
   return (
     <>
-      <CRow>
+      <CRow hidden={!show}>
         <CCol xs="12">
           <h5>
             <CSLab code="HCM-DXF3IK0PP9V-HRPR" />
@@ -474,18 +474,10 @@ const EmployeeHobby = (props) => {
               </>
             </CForm>
             <CCardFooter>
-              <CCol md="4">
-                <CButton
-                  style={{ marginRight: -960, float: "right", color: "white" }}
-                  onClick={() => searchReset()}
-                  type="button"
-                  size="sm"
-                  color="danger"
-                >
-                  <AiOutlineClose size={20} />
-                  <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
-                </CButton>
-              </CCol>
+              
+              <CButton name='Cancel'  style={{ marginRight: 5, float: 'right', color: 'white' }} onClick={() => searchReset()} type="button" size="sm" color='danger' ><AiOutlineClose size={20} /><CSLab code = 'HCM-V3SL5X7PJ9C-LANG' /></CButton>
+
+          
             </CCardFooter>
           </CCard>
         </CCol>

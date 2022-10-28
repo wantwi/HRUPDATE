@@ -182,7 +182,7 @@ const AccidentTransaction = () => {
 });
   
   // get employee by id for grid view
-  const getEmployyeAccidentById =  () => {
+  const getEmployyeAccidentById =  (id) => {
     setUrl(GetEmployeeAccidentByEmployeeId())
     // try {
     //   const request = await CustomAxios.get(
@@ -269,7 +269,7 @@ const AccidentTransaction = () => {
           if ("" === data) {
             toast.success("Accident Transaction Added Successfully!");
             console.log("success");
-            getEmployyeAccidentById();
+           // getEmployyeAccidentById();
           } else {
             try {
               data = JSON.parse(data);
@@ -302,51 +302,51 @@ const AccidentTransaction = () => {
     dispatch({ type: "set", data: { ...results } });
     setSubmitData({ ...results });
 
-    if (results?.code) {
+    if (results?.id) {
       setSearchResult(results);
+      getEmployyeAccidentById(results.id)
+    //   GetRequest()
+    //     .then((response) => {
+    //       // toast.dismiss(toastId);
+    //       if (response.ok) {
+    //         response.json().then((response) => {
+    //           if (response && Object.keys(response).length > 0) {
+    //             dispatch({ type: "set", data: { ...response } });
+    //             setSubmitData({ ...response });
 
-      GetRequest()
-        .then((response) => {
-          // toast.dismiss(toastId);
-          if (response.ok) {
-            response.json().then((response) => {
-              if (response && Object.keys(response).length > 0) {
-                dispatch({ type: "set", data: { ...response } });
-                setSubmitData({ ...response });
-
-                setShow(false);
-                setMode("Update");
-              } else {
-                setMode("Add");
-                setShow(false);
-              }
-            });
-          }
-        })
-        .catch((err) => {});
+    //             setShow(false);
+    //             setMode("Update");
+    //           } else {
+    //             setMode("Add");
+    //             setShow(false);
+    //           }
+    //         });
+    //       }
+    //     })
+    //     .catch((err) => {});
     }
   };
-  const testApi = async () => {
-    try {
-      const request = await CustomAxios.get(
-        `http://192.168.0.48:5100/EmployeeBio/${handleId}`
-      );
+  // const testApi = async () => {
+  //   try {
+  //     const request = await CustomAxios.get(
+  //       `http://192.168.0.48:5100/EmployeeBio/${handleId}`
+  //     );
 
-      const res = request.data;
+  //     const res = request.data;
 
-      setViewInfo([res]);
-    } catch (error) {
-      console.log({ error });
-    }
-  };
+  //     setViewInfo([res]);
+  //   } catch (error) {
+  //     console.log({ error });
+  //   }
+  // };
 
-  useEffect(() => {
-    if (handleId !== "") {
-      testApi();
-      getEmployyeAccidentById();
-      console.log(viewinfo);
-    }
-  }, [handleId]);
+  // useEffect(() => {
+  //   if (handleId !== "") {
+  //     testApi();
+  //     // getEmployyeAccidentById();
+  //     console.log(viewinfo);
+  //   }
+  // }, [handleId]);
   const employeeName = viewinfo.map((x) => x.firstName + " " + x.lastName);
   const TransLabelByCode = (name) => GetLabelByName(name, lan);
 

@@ -16,50 +16,77 @@ import {
   GetNationality,
   GetIdTypes,
 } from "src/reusable/API/EmployeeRelationshipsEndPoint";
+import useMultiFetch from "src/hooks/useMultiFetch";
 
 function DependantForm({
   currentFormData,
   handleFormChange,
   setCurrentFormData,
   view,
+  id,
+  nationality
 }) {
   const TransLabelByCode = (name) => GetLabelByName(name, lan);
   const lan = useSelector((state) => state.language);
   const [relationTypes, setRelationTypes] = useState([]);
-  const [nationality, setNationality] = useState([]);
+  //const [nationality, setNationality] = useState([]);
   const [identityTypes, setIdentityTypes] = useState([]);
   const [checkedTypes, setCheckedTypes] = useState([]);
 
-  const MultipleGetRequests = async () => {
-    try {
-      let request = [
-        HttpAPIRequest("GET", GetRelationTypes()),
-        HttpAPIRequest("GET", GetNationality()),
-        HttpAPIRequest("GET", GetIdTypes()),
-      ];
-      const multipleCall = await Promise.allSettled(request);
-      console.log(multipleCall[0].value);
+  // const MultipleGetRequests = async () => {
+  //   try {
+  //     let request = [
+  //       HttpAPIRequest("GET", GetRelationTypes()),
+  //       HttpAPIRequest("GET", GetNationality()),
+  //       HttpAPIRequest("GET", GetIdTypes()),
+  //     ];
+  //     const multipleCall = await Promise.allSettled(request);
+  //     console.log(multipleCall[0].value);
 
-      setRelationTypes([...multipleCall[0].value]);
-      setNationality([
-        { id: "-1", name: `Select Nationality` },
-        ...multipleCall[1].value,
-      ]);
-      setIdentityTypes([
-        { id: "-1", name: `Select ID Type` },
-        ...multipleCall[2].value,
-      ]);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //     setRelationTypes([...multipleCall[0].value]);
+  //     setNationality([
+  //       { id: "-1", name: `Select Nationality` },
+  //       ...multipleCall[1].value,
+  //     ]);
+  //     setIdentityTypes([
+  //       { id: "-1", name: `Select ID Type` },
+  //       ...multipleCall[2].value,
+  //     ]);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
-  console.log({ Dependant: view });
-  // console.log({ Checked: checkedTypes });
 
-  useEffect(() => {
-    MultipleGetRequests();
-  }, []);
+
+  // const  {data:multicallData} =  useMultiFetch([ GetRelationTypes, 
+  //   GetNationality(),GetIdTypes()], (results) => {
+
+
+  //   console.log(results);
+
+  //     setRelationTypes([...results[0].data]);
+  //     setNationality([
+  //       { id: "-1", name: `Select Nationality` },
+  //       ...results[1].data,
+  //     ]);
+  //     setIdentityTypes([
+  //       { id: "-1", name: `Select ID Type` },
+  //       ...results[2].data,
+  //     ]);
+
+
+        
+  
+  // })
+
+
+   console.log(relationTypes);
+  // // console.log({ Checked: checkedTypes });
+
+  // useEffect(() => {
+  //   MultipleGetRequests();
+  // }, []);
 
   return (
     <div>
@@ -163,7 +190,7 @@ function DependantForm({
               value={currentFormData?.identityTypeId || -1}
               onChange={handleFormChange}
             >
-              {identityTypes.map((x, i) => (
+              {id.map((x, i) => (
                 <option key={i} value={x.id}>
                   {x.name}
                 </option>

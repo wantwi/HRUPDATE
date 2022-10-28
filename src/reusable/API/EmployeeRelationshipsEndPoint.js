@@ -1,32 +1,85 @@
 import { BaseURL } from "./base";
 
 export const GetEmployeeDependant = (filter) =>
-  `${BaseURL}EmployeeDependant/${filter}`;
+  `EmployeeDependant/${filter}`;
+
+
+  // export const GetEmployeeDependant = (filter) =>
+  // `${BaseURL}EmployeeDependant/${filter}`;
+
+
 export const GetDependantNationality = () =>
-  `${BaseURL}EmployeeDependant/Nationalities/dropdown-types?companyReference=00001_A01`;
-export const PostDependantDetails = () => `${BaseURL}EmployeeDependant`;
+  `EmployeeDependant/Nationalities/dropdown-types?companyReference=00001_A01`;
+
+  // export const GetDependantNationality = () =>
+  // `${BaseURL}EmployeeDependant/Nationalities/dropdown-types?companyReference=00001_A01`;
+
+
+
+export const PostDependantDetails = () => `EmployeeDependant`;
 
 export const GetEmployeeGuarantor = (filter) =>
-  `${BaseURL}EmployeeGuarantor/${filter}`;
-export const PostEmployeeGuarantor = () => `${BaseURL}EmployeeGuarantor
-`;
+  `EmployeeGuarantor/${filter}`;
 
-export const GetEmployeeNextOfKin = () => `${BaseURL}EmployeeNextofKin`;
-export const PostEmployeeNextOfKin = () => `${BaseURL}EmployeeNextofKin`;
 
-export const GetEmployeeEmergencyContact = (filter) =>
-  `${BaseURL}EmployeeEmergencyContact/${filter}`;
+  // export const GetEmployeeGuarantor = (filter) =>
+  // `${BaseURL}EmployeeGuarantor/${filter}`;
+
+export const PostEmployeeGuarantor = () => `EmployeeGuarantor`;
+//export const PostEmployeeGuarantor = () => `${BaseURL}EmployeeGuarantor`;
+
+
+//export const GetEmployeeNextOfKin = () => `${BaseURL}EmployeeNextofKin`;
+export const GetEmployeeNextOfKin = (id) => `EmployeeNextofKin/${id}`;
+
+
+//export const PostEmployeeNextOfKin = () => `${BaseURL}EmployeeNextofKin`;
+export const PostEmployeeNextOfKin = () => `EmployeeNextofKin`;
+
+// export const GetEmployeeNextOfKin
+
+
+
+export const GetEmployeeEmergencyContact = (filter) =>`EmployeeEmergencyContact/${filter}`;
+
+  // export const GetEmployeeEmergencyContact = (filter) =>
+  // `${BaseURL}EmployeeEmergencyContact/${filter}`;
+
+
+
+//export const PostEmployeeEmergencyContact = () =>
+//  `${BaseURL}EmployeeEmergencyContact`;
+
 export const PostEmployeeEmergencyContact = () =>
-  `${BaseURL}EmployeeEmergencyContact`;
+  `EmployeeEmergencyContact`;
 
 export const GetBeneficiary = (filter) =>
-  `${BaseURL}EmployeeBeneficiary/${filter}`;
-export const PostBeneficiary = () => `${BaseURL}EmployeeBeneficiary`;
+  `EmployeeBeneficiary/${filter}`;
+
+  // export const GetBeneficiary = (filter) =>
+  // `${BaseURL}EmployeeBeneficiary/${filter}`;
+
+
+export const PostBeneficiary = () => `EmployeeBeneficiary`;
+//export const PostBeneficiary = () => `${BaseURL}EmployeeBeneficiary`;
+
+
 
 //Dropdown
 export const GetRelationTypes = () =>
-  `${BaseURL}EmployeeFamily/RelationTypes/dropdown-types?companyReference=00001_A01`;
-export const GetNationality = () =>
-  `${BaseURL}EmployeeDependant/Nationalities/dropdown-types?companyReference=00001_A01`;
+  `EmployeeFamily/RelationTypes/dropdown-types?companyReference=00001_A01`;
+
+  // export const GetRelationTypes = () =>
+  // `${BaseURL}EmployeeFamily/RelationTypes/dropdown-types?companyReference=00001_A01`;
+
+
+export const GetNationality = () =>`EmployeeDependant/Nationalities/dropdown-types?companyReference=00001_a01`;
+
+  // export const GetNationality = () =>
+  // `${BaseURL}EmployeeDependant/Nationalities/dropdown-types?companyReference=00001_A01`;
+
 export const GetIdTypes = () =>
-  `${BaseURL}EmployeeDependant/IdentityTypes/dropdown-types?companyReference=00001_A01`;
+  `EmployeeDependant/IdentityTypes/dropdown-types?companyReference=00001_A01`;
+
+  // export const GetIdTypes = () =>
+  // `${BaseURL}EmployeeDependant/IdentityTypes/dropdown-types?companyReference=00001_A01`;

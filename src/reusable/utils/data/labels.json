@@ -13241,8 +13241,18 @@
     "german": "",
     "status": 1,
     "type": "string"
+  },"HCM-ZFA4W47NARI_KCMI": {
+    "id": "c7a4207d-8175-4add-aa3c-ffabadf926df",
+    "en": "Enter Accident Location",
+    "fr": "Entrer le lieu de l'accident",
+    "spanish": "",
+    "portuguese": "",
+    "german": "",
+    "status": 1,
+    "type": "string"
   }
 }
+
 
 
 

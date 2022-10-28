@@ -5,9 +5,9 @@ import { BaseURL } from "./base";
  * @param Company Reference [required]
  * @returns urlpath
  */
- export const GetProfessionalTitles = () =>`Titles/dropdown?companyReference=00001_A01`;
- export const GetQualificationTypes = () => `EmployeeEducation/QualificationTypes/dropdown-types?companyReference=00001_A01`
- export const GetEducationCoreArea =() =>`EmployeeEducation/Type/dropdown-types?companyReference=00001_A01`
+ export const GetProfessionalTitles = () =>`Titles/dropdown?companyReference=00001_a01`;
+ export const GetQualificationTypes = () => `EmployeeEducation/QualificationTypes/dropdown-types?companyReference=00001_a01`
+ export const GetEducationCoreArea =() =>`EmployeeEducation/Type/dropdown-types?companyReference=00001_a01`
  export const GetEmployeeEducationInfo=(filter)=>`EmployeeEducation${filter}`
  export const GetEmployeeById=(handleId)=>`EmployeeEducation/${handleId}`
 

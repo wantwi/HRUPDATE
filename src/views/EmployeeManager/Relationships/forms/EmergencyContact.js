@@ -41,7 +41,7 @@ function EmergencyContactForm({
             </CLabel>
             <CInput
               name="phone"
-              type="number"
+              type="text"
               placeholder="Enter Phone Number"
               value={currentFormData?.phone || " "}
               onChange={handleFormChange}

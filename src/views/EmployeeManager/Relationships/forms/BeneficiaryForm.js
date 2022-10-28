@@ -8,6 +8,7 @@ import {
   PostRequest,
 } from "src/reusable/utils/helper";
 import { GetRelationTypes } from "src/reusable/API/EmployeeRelationshipsEndPoint";
+import useMultiFetch from "src/hooks/useMultiFetch";
 
 function BeneficiaryForm({
   currentFormData,
@@ -59,6 +60,11 @@ function BeneficiaryForm({
   useEffect(() => {
     MultipleGetRequests();
   }, []);
+  const  {data:multicallData} =  useMultiFetch([ GetRelationTypes(), ], (results) => {
+    setRelationTypes([ ...results[0].data]);
+       
+  
+  })
 
   console.log({ Beneficiary: view });
   // console.log({ relationTypes });
