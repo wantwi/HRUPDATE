@@ -1,12 +1,17 @@
 import { CCol, CForm, CInput, CLabel, CRow, CSelect } from "@coreui/react";
 import React from "react";
+import { useSelector } from "react-redux";
 import { CSLab, CSRequiredIndicator } from "src/reusable/components";
+import { GetLabelByName } from "src/reusable/configs/config";
 
 function EmergencyContactForm({
   currentFormData,
   handleFormChange,
   setCurrentFormData,
 }) {
+
+  const lan = useSelector((state) => state.language);
+
   return (
     <div>
       <CForm>
@@ -18,10 +23,11 @@ function EmergencyContactForm({
             <CInput
               name="firstName"
               type="text"
-              placeholder="Enter First Name"
-              value={currentFormData?.firstName || " "}
+              placeholder={GetLabelByName("HCM-M45LNYXVT6_LASN",lan)}
+              value={currentFormData?.firstName || ""}
               onChange={handleFormChange}
             />
+             
           </CCol>
           <CCol md="4">
             <CLabel htmlFor="lastName">
@@ -30,8 +36,8 @@ function EmergencyContactForm({
             <CInput
               name="lastName"
               type="text"
-              placeholder="Enter Last Name"
-              value={currentFormData?.lastName || " "}
+              placeholder={GetLabelByName("HCM-B6FYFT3XE6S_HRPR",lan)}
+              value={currentFormData?.lastName || ""}
               onChange={handleFormChange}
             />
           </CCol>
@@ -42,8 +48,8 @@ function EmergencyContactForm({
             <CInput
               name="phone"
               type="text"
-              placeholder="Enter Phone Number"
-              value={currentFormData?.phone || " "}
+              placeholder={GetLabelByName("HCM-4WKQXVS3API_LOLN",lan)}
+              value={currentFormData?.phone || ""}
               onChange={handleFormChange}
             />
           </CCol>
@@ -56,12 +62,12 @@ function EmergencyContactForm({
             <CInput
               name="address"
               type="text"
-              placeholder="Enter Address"
-              value={currentFormData?.address || " "}
+              placeholder={GetLabelByName("HCM-AF2ZPOUARPA-PSLL",lan)}
+              value={currentFormData?.address || ""}
               onChange={handleFormChange}
             />
           </CCol>
-
+          
           <CCol md="4">
             <CLabel htmlFor="email">
               <CSLab code="HCM-CXLK7IYZ9B9-KCMI" /> <CSRequiredIndicator />
@@ -69,8 +75,8 @@ function EmergencyContactForm({
             <CInput
               name="email"
               type="text"
-              placeholder="Enter Email"
-              value={currentFormData?.email || " "}
+              placeholder={GetLabelByName("HCM-61522DCMNA-LANG",lan)}
+              value={currentFormData?.email || ""}
               onChange={handleFormChange}
             />
           </CCol>

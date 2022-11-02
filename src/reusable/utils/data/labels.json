@@ -11177,7 +11177,7 @@
 
   "HCM-GONEVWTZH4G-PSLL": {
     "id": "cc706c13-77ae-4889-b2d5-db9eae7616b6",
-    "en": "                                                            <CLabel><CSLab code={'Frequency' }, /></CLabel><CSRequiredIndicator />",
+    "en": "  ",                             
     "fr": "",
     "spanish": "",
     "portuguese": "",
@@ -13250,7 +13250,137 @@
     "german": "",
     "status": 1,
     "type": "string"
-  }
+  },
+  "HCM-M45LNYXVT6_LASN": {
+    "id": "c7a4207d-8175-4add-aa3c-ffabadf926df",
+    "en": "Enter First Name",
+    "fr": "Entrez votre prénom",
+    "spanish": "",
+    "portuguese": "",
+    "german": "",
+    "status": 1,
+    "type": "string"
+  },
+  "HCM-B6FYFT3XE6S_HRPR": {
+    "id": "c7a4207d-8175-4add-aa3c-ffabadf926df",
+    "en": "Enter Last Name",
+    "fr": "Entrer le nom de famille",
+    "spanish": "",
+    "portuguese": "",
+    "german": "",
+    "status": 1,
+    "type": "string"
+  },
+  "HCM-4WKQXVS3API_LOLN": {
+    "id": "c7a4207d-8175-4add-aa3c-ffabadf926df",
+    "en": "Enter Phone Number",
+    "fr": "Entrez le numéro de téléphone",
+    "spanish": "",
+    "portuguese": "",
+    "german": "",
+    "status": 1,
+    "type": "string"
+  } ,
+   "HCM-AF2ZPOUARPA-PSLL": {
+    "id": "c7a4207d-8175-4add-aa3c-ffabadf926df",
+    "en": "Enter Home Address",
+    "fr": "Entrez l'adresse du domicile",
+    "spanish": "",
+    "portuguese": "",
+    "german": "",
+    "status": 1,
+    "type": "string"
+  } ,
+  "HCM-61522DCMNA-LANG": {
+   "id": "c7a4207d-8175-4add-aa3c-ffabadf926df",
+   "en": "Enter Email Address",
+   "fr": "Entrer l'adresse e-mail",
+   "spanish": "",
+   "portuguese": "",
+   "german": "",
+   "status": 1,
+   "type": "string"
+ } ,
+  "HCM-4NXC09IAZ2V-HRPR": {
+   "id": "c7a4207d-8175-4add-aa3c-ffabadf926df",
+   "en": "Enter Occupation",
+   "fr": "Entrez la profession",
+   "spanish": "",
+   "portuguese": "",
+   "german": "",
+   "status": 1,
+   "type": "string"
+ },
+ "HCM-L61W6YKKCF-HRPR": {
+  "id": "c7a4207d-8175-4add-aa3c-ffabadf926df",
+  "en": "Enter Percentage",
+  "fr": " Entrez le pourcentage",
+  "spanish": "",
+  "portuguese": "",
+  "german": "",
+  "status": 1,
+  "type": "string"
+},
+"HCM-A0B8SHDK6DI_LASN": {
+ "id": "c7a4207d-8175-4add-aa3c-ffabadf926df",
+ "en": "Employee Hometown",
+ "fr": "Ville natale de l'employé",
+ "spanish": "",
+ "portuguese": "",
+ "german": "",
+ "status": 1,
+ "type": "string"
+},
+"HCM-Q2KYSG4U96_LOLN": {
+ "id": "c7a4207d-8175-4add-aa3c-ffabadf926df",
+ "en": "Add Employee Hometown",
+ "fr": "Ajouter la ville natale de l'employé",
+ "spanish": "",
+ "portuguese": "",
+ "german": "",
+ "status": 1,
+ "type": "string"
+},
+"HCM-8VMMSBPPZRJ-KCMI": {
+ "id": "c7a4207d-8175-4add-aa3c-ffabadf926df",
+ "en": "Enter Hometown",
+ "fr": "Entrez la ville natale",
+ "spanish": "",
+ "portuguese": "",
+ "german": "",
+ "status": 1,
+ "type": "string"
+},
+"HCM-BFCF6D9NBVN_LASN": {
+ "id": "c7a4207d-8175-4add-aa3c-ffabadf926df",
+ "en": "Employee Family",
+ "fr": "Famille de l'employé",
+ "spanish": "",
+ "portuguese": "",
+ "german": "",
+ "status": 1,
+ "type": "string"
+},
+"HCM-Z3BWHGKCFE_PSLL": {
+ "id": "c7a4207d-8175-4add-aa3c-ffabadf926df",
+ "en": "Add Employee Family",
+ "fr": " Ajouter une famille d'employés",
+ "spanish": "",
+ "portuguese": "",
+ "german": "",
+ "status": 1,
+ "type": "string"
+},
+"HCM-W4TEXTQO7M9_LOLN": {
+ "id": "c7a4207d-8175-4add-aa3c-ffabadf926df",
+ "en": "Enter Name",
+ "fr": "Entrez le nom",
+ "spanish": "",
+ "portuguese": "",
+ "german": "",
+ "status": 1,
+ "type": "string"
+}
 }
 
 

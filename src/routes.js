@@ -1,3 +1,4 @@
+/* eslint-disable no-sparse-arrays */
 import React from "react";
 import Login from './templates/pages/login/Login';
 
@@ -88,7 +89,10 @@ const EmployeeSkill = React.lazy(() =>
 const LeaveTransaction = React.lazy(() =>
   import("./views/EmployeeManager/LeaveTransaction/LeaveTransaction")
 );
-const EmployeeLanguage = React.lazy(() => import("./views/EmployeeManager/EmployeeLanguage/EmployeeLanguage"))
+const EmployeeLanguage = React.lazy(() => import("./views/EmployeeManager/EmployeeLanguage/EmployeeLanguage"));
+const EmployeeHomeTown = React.lazy(()=>import("./views/EmployeeManager/EmployeeHomeTown/EmployeeHomeTown"))
+const EmployeeFamily = React.lazy(()=>import ("./views/EmployeeManager/EmployeeFamily/EmployeeFamily"))
+
 
 // Position Manager
 const EmployeeMovement = React.lazy(() =>
@@ -385,8 +389,16 @@ const routes = [
     name: "Employee Language",
     component: EmployeeLanguage,
   },
-,
-,
+  {
+    path: "/employeemanager/employeehometown",
+    name: "Employee Hometown",
+    component: EmployeeHomeTown,
+  }, 
+   {
+    path: "/employeemanager/employeefamily",
+    name: "Employee Family",
+    component: EmployeeFamily,
+  },
 
   // Bank Information
   {

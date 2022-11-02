@@ -9,6 +9,8 @@ import {
 } from "src/reusable/utils/helper";
 import { GetRelationTypes } from "src/reusable/API/EmployeeRelationshipsEndPoint";
 import useMultiFetch from "src/hooks/useMultiFetch";
+import { GetLabelByName } from "src/reusable/configs/config";
+import { useSelector } from "react-redux";
 
 function BeneficiaryForm({
   currentFormData,
@@ -16,6 +18,8 @@ function BeneficiaryForm({
   setCurrentFormData,
   view,
 }) {
+  const lan = useSelector((state) => state.language);
+
   const [relationTypes, setRelationTypes] = useState([]);
   useEffect(() => {
     setCurrentFormData("");
@@ -82,7 +86,7 @@ function BeneficiaryForm({
             <CInput
               name="firstName"
               type="text"
-              placeholder="Enter First Name"
+              placeholder={GetLabelByName("HCM-M45LNYXVT6_LASN",lan)}
               value={currentFormData?.firstName || ""}
               onChange={handleFormChange}
             />
@@ -95,7 +99,7 @@ function BeneficiaryForm({
             <CInput
               name="lastName"
               type="text"
-              placeholder="Enter Last Name"
+              placeholder={GetLabelByName("HCM-B6FYFT3XE6S_HRPR",lan)}
               value={currentFormData?.lastName || ""}
               onChange={handleFormChange}
             />
@@ -108,7 +112,7 @@ function BeneficiaryForm({
             <CInput
               name="phone"
               type="text"
-              placeholder="Enter Phone Number"
+              placeholder={GetLabelByName("HCM-4WKQXVS3API_LOLN",lan)}
               value={currentFormData?.phone || ""}
               onChange={handleFormChange}
             />
@@ -123,7 +127,7 @@ function BeneficiaryForm({
             <CInput
               name="address"
               type="text"
-              placeholder="Enter Address"
+              placeholder={GetLabelByName("HCM-AF2ZPOUARPA-PSLL",lan)}
               value={currentFormData?.address || ""}
               onChange={handleFormChange}
             />
@@ -156,8 +160,8 @@ function BeneficiaryForm({
             </CLabel>
             <CInput
               name="percentage"
-              type="number"
-              placeholder="Enter Percentage"
+              type="number"   
+              placeholder={GetLabelByName("HCM-L61W6YKKCF-HRPR",lan)}
               onChange={handleFormChange}
               value={currentFormData?.percentage || ""}
             />

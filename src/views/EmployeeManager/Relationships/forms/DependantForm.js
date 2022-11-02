@@ -2,9 +2,8 @@ import { CCol, CForm, CInput, CLabel, CRow, CSelect } from "@coreui/react";
 import React, { useEffect, useState } from "react";
 import { CSLab, CSRequiredIndicator } from "src/reusable/components";
 import moment from "moment";
-import { GetLabelByName } from "src/reusable/configs/config";
 import { useSelector } from "react-redux";
-
+import { GetLabelByName } from "src/reusable/configs/config";
 import {
   CardBodyHeight,
   GetRequest,
@@ -26,7 +25,6 @@ function DependantForm({
   id,
   nationality
 }) {
-  const TransLabelByCode = (name) => GetLabelByName(name, lan);
   const lan = useSelector((state) => state.language);
   const [relationTypes, setRelationTypes] = useState([]);
   //const [nationality, setNationality] = useState([]);
@@ -99,11 +97,12 @@ function DependantForm({
             <CInput
               name="firstName"
               type="text"
-              value={currentFormData?.firstName || " "}
+              value={currentFormData?.firstName || ""}
+              placeholder={GetLabelByName("HCM-M45LNYXVT6_LASN",lan)}
               onChange={handleFormChange}
               // placeholder="First Name"
-              placeholder={"hellooo"}
             />
+            
           </CCol>
           <CCol md="4">
             <CLabel htmlFor="lastName">
@@ -112,8 +111,8 @@ function DependantForm({
             <CInput
               name="lastName"
               type="text"
-              placeholder="Enter Last Name"
-              value={currentFormData?.lastName || " "}
+              placeholder={GetLabelByName("HCM-B6FYFT3XE6S_HRPR",lan)}
+              value={currentFormData?.lastName || ""}
               onChange={handleFormChange}
             />
           </CCol>
@@ -124,7 +123,7 @@ function DependantForm({
             <CInput
               name="dateOfBirth"
               type="date"
-              value={currentFormData?.dateOfBirth || " "}
+              value={currentFormData?.dateOfBirth || ""}
               onChange={handleFormChange}
               max={moment().format("YYYY-MM-DD")}
             />
@@ -138,8 +137,8 @@ function DependantForm({
             <CInput
               name="address"
               type="text"
-              placeholder="Enter Address"
-              value={currentFormData?.address || " "}
+              placeholder={GetLabelByName("HCM-AF2ZPOUARPA-PSLL",lan)}
+              value={currentFormData?.address || ""}
               onChange={handleFormChange}
             />
           </CCol>
@@ -204,8 +203,8 @@ function DependantForm({
             <CInput
               name="identityNumber"
               type="text"
-              placeholder="Enter ID Number"
-              value={currentFormData?.identityNumber || " "}
+              placeholder={GetLabelByName("HCM-WJ7T6PUPMYD-LASN",lan)}
+              value={currentFormData?.identityNumber || ""}
               onChange={handleFormChange}
             />
           </CCol>
@@ -216,7 +215,7 @@ function DependantForm({
             <CInput
               name="dateOfExpiry"
               type="date"
-              value={currentFormData?.dateOfExpiry || " "}
+              value={currentFormData?.dateOfExpiry || ""}
               onChange={handleFormChange}
             />
           </CCol>

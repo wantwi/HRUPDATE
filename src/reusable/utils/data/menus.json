@@ -132,6 +132,17 @@
           "_tag": "CSidebarNavItem",
           "name": "Employee Language",
           "to": "/employeemanager/employeelanguage"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Hometown",
+          "to": "/employeemanager/employeehometown"
+        }
+        ,
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Family",
+          "to": "/employeemanager/employeefamily"
         }
       ]
     },

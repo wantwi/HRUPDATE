@@ -53,10 +53,17 @@ const FormModal = (props) => {
   // }
   // if(activeKey === 4){
   //   conten = <NextOfKinForm />
+
   // }
+  const handleReset=()=>{
+   
+    setCurrentFormData(" ");
+    console.log(show);
+  }
+  console.log(show);
 
   return (
-    <CModal show={show} onClose={() => setShow(!show)} size={"lg"}>
+    <CModal show={show} onClose={() => setShow(false)} size={"lg"}>
       <CModalHeader closeButton>
         <CModalTitle>Add {formTitle}</CModalTitle>
       </CModalHeader>
@@ -73,7 +80,7 @@ const FormModal = (props) => {
           color="secondary"
           onClick={() => {
             setShow(false);
-            setCurrentFormData(" ");
+            handleReset()
           }}
         >
           Close

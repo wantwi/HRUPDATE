@@ -656,8 +656,8 @@ console.log(viewinfo)
               dataSource={viewinfo}
               allowPaging={true}
               pageSettings={{ pageSize: 10 }}
-              editSettings={editOptions}
-              toolbar={toolbarOptions}
+              // editSettings={editOptions}
+              // toolbar={toolbarOptions}
             >
               <ColumnsDirective>
                 <ColumnDirective
@@ -687,12 +687,12 @@ console.log(viewinfo)
                   width="100"
                 />
 
-                <ColumnDirective
+                {/* <ColumnDirective
                   commands={commandOptions}
                   headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
                   width="100"
                   textAlign="Center"
-                />
+                /> */}
               </ColumnsDirective>
               <ColumnsDirective></ColumnsDirective>
               <Inject
@@ -863,7 +863,9 @@ console.log(viewinfo)
               // trials()
             }}
           >
-            <CSLab code="HCM-TAAFD4M071D-HRPR" />
+            {/* <CSLab code="HCM-TAAFD4M071D-HRPR" /> */}
+            <CSLab code="HCM-HGUHIR0OK6T" />
+           
           </CButton>
         </CModalFooter>
       </CModal>

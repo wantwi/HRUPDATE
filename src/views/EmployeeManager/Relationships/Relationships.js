@@ -457,6 +457,7 @@ return () => {
 //Beneficiary
   const  {setData:setPostData, setUrl:setPostUrl} = usePost('', (response) => {
     // console.log({location:response });
+    setShow(false);
     const {data} = response
     if ("" === data) {
       toast.success(GetLabelByName("HCM-HAGGXNJQW2B_HRPR", lan));
@@ -476,6 +477,7 @@ return () => {
   })
   const  {setData:setDependantPostData, setUrl:setDependentPostUrl} = usePost('', (response) => {
     // console.log({location:response });
+    setShow(false);
     const {data} = response
     if ("" === data) {
       toast.success(GetLabelByName("HCM-HAGGXNJQW2B_HRPR", lan));
@@ -494,6 +496,7 @@ return () => {
   })
   const  {setData:setEmegencyContactPostData, setUrl:setEmegencyContactPostUrl} = usePost('', (response) => {
     // console.log({location:response });
+    setShow(false);
     const {data} = response
     if ("" === data) {
       toast.success(GetLabelByName("HCM-HAGGXNJQW2B_HRPR", lan));
@@ -512,6 +515,7 @@ return () => {
   })
   const  {setData:setPostGuarrantorData, setUrl:setGuarrantorPostUrl} = usePost('', (response) => {
     // console.log({location:response });
+    setShow(false);
     const {data} = response
     if ("" === data) {
       toast.success(GetLabelByName("HCM-HAGGXNJQW2B_HRPR", lan));
@@ -716,7 +720,7 @@ return () => {
         toast.error("Please Enter Occupation", toastWarning);
         return;
       }
-
+      setShow(false);
       // console.log(submitData)
       let employeeId = handleId;
       //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
@@ -783,7 +787,7 @@ return () => {
 
 
 
-
+console.log(show);
   //Post Employee Beneficiary
   function postBeneficiary(data) {
     //console.log("post data", data);

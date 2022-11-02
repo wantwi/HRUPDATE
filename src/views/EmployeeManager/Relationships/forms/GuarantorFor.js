@@ -8,6 +8,8 @@ import {
 } from "src/reusable/API/EmployeeRelationshipsEndPoint";
 import { HttpAPIRequest } from "src/reusable/utils/helper";
 import useMultiFetch from "src/hooks/useMultiFetch";
+import { GetLabelByName } from "src/reusable/configs/config";
+import { useSelector } from "react-redux";
 
 function GuarantorForm({
   currentFormData,
@@ -17,6 +19,8 @@ function GuarantorForm({
   nationality,
   id
 }) {
+  const lan = useSelector((state) => state.language);
+
   const [relationTypes, setRelationTypes] = useState([]);
   //const [nationality, setNationality] = useState([]);
   const [checkedTypes, setCheckedTypes] = useState([]);
@@ -77,7 +81,7 @@ function GuarantorForm({
             <CInput
               name="firstName"
               type="text"
-              placeholder="Enter First Name"
+              placeholder={GetLabelByName("HCM-M45LNYXVT6_LASN",lan)}
               value={currentFormData?.firstName || ""}
               onChange={handleFormChange}
             />
@@ -90,7 +94,7 @@ function GuarantorForm({
             <CInput
               name="lastName"
               type="text"
-              placeholder="Enter Last Name"
+              placeholder={GetLabelByName("HCM-B6FYFT3XE6S_HRPR",lan)}
               value={currentFormData?.lastName || ""}
               onChange={handleFormChange}
             />
@@ -102,7 +106,7 @@ function GuarantorForm({
             <CInput
               name="phone"
               type="text"
-              placeholder="Enter Phone Number"
+              placeholder={GetLabelByName("HCM-4WKQXVS3API_LOLN",lan)}
               value={currentFormData?.phone || ""}
               onChange={handleFormChange}
             />
@@ -116,7 +120,7 @@ function GuarantorForm({
             <CInput
               name="address"
               type="text"
-              placeholder="Enter Address"
+              placeholder={GetLabelByName("HCM-AF2ZPOUARPA-PSLL",lan)}
               value={currentFormData?.address || ""}
               onChange={handleFormChange}
             />
@@ -163,7 +167,7 @@ function GuarantorForm({
             <CInput
               name="email"
               type="text"
-              placeholder="Enter Email"
+              placeholder={GetLabelByName("HCM-61522DCMNA-LANG",lan)}
               value={currentFormData?.email || ""}
               onChange={handleFormChange}
             />
@@ -175,7 +179,7 @@ function GuarantorForm({
             <CInput
               name="occupation"
               type="text"
-              placeholder="Enter Occupation"
+              placeholder={GetLabelByName("HCM-4NXC09IAZ2V-HRPR",lan)}
               value={currentFormData?.occupation || ""}
               onChange={handleFormChange}
             />
