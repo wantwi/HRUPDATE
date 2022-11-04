@@ -379,6 +379,7 @@ console.log(results);
       employeeId: employeeId,
     };
 
+
 let newGridData ={
   employee: {
     id: handleId,
@@ -391,13 +392,12 @@ let newGridData ={
   write: getName(submitData?.write),
   speak: getName(submitData?.speak),
 }
-
+setPost(newData)
   
     console.log(newGridData);
     setViewInfo((prevState) => [newGridData,...prevState]);
    
-    setPostData(newData)
-     setPostUrl(PostEmployeeLanguage())
+  
 
    // setPostEmployee([newData]);
 
@@ -408,6 +408,14 @@ let newGridData ={
     return reading.find((x) => x.id == id)?.name || "Not found";
   };
   
+ 
+  const handlePost=()=>{
+    console.log(post)
+    setPostData(post)
+     setPostUrl(PostEmployeeLanguage())
+    }
+
+
 
 const trials=()=>{
 alert("Clicked")
@@ -441,12 +449,7 @@ alert("Clicked")
     }
 
   })
- 
-const handlePost=(post)=>{
-console.log(viewinfo)
-// setPostData(post)
-//  setPostUrl(PostEmployeeLanguage())
-}
+
 
   //Post Employee Skill
   // function postEmployeeLanguage(data) {
@@ -700,16 +703,16 @@ console.log(viewinfo)
               />
             </GridComponent>
             <CCardFooter>
-              {/* <CButton
+              <CButton
                 style={{ marginRight: 5, float: "right" }}
                 type="button"
                 size="sm"
                 color="success"
                 // onClick={() => postEmployeeLanguage(postEmployee)}
-                onClick={}
+                onClick={()=>handlePost()}
               >
                 <AiFillSave size={20} /> <CSLab code="HCM-HGUHIR0OK6T" />{" "}
-              </CButton> */}
+              </CButton>
               <CButton
                 style={{ marginRight: 9, float: "right", color: "white" }}
                 onClick={() => searchReset()}

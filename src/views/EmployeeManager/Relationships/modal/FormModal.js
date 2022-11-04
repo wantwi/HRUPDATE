@@ -27,13 +27,13 @@ const FormModal = (props) => {
     if (activeKey === 2) {
       setFormTitle("Dependant");
     }
-    if (activeKey === 6) {
+    if (activeKey === 3) {
       setFormTitle("Emergency Contact");
     }
-    if (activeKey === 3) {
+    if (activeKey === 4) {
       setFormTitle("Guarantor");
     }
-    if (activeKey === 4) {
+    if (activeKey === 5) {
       setFormTitle("Next Of Kin");
     }
   }, [activeKey]);
@@ -83,10 +83,10 @@ const FormModal = (props) => {
             handleReset()
           }}
         >
-          Close
+        <CSLab code={"HCM-9E3ZC2E1S0N-LASN"}/>
         </CButton>
         <CButton color="primary" onClick={submitBtn}>
-          Save
+         <CSLab code={"HCM-TAAFD4M071D-HRPR"}/>
         </CButton>
       </CModalFooter>
     </CModal>

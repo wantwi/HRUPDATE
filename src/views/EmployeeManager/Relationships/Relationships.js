@@ -176,6 +176,20 @@ const editTemplate = (args) => {
   //(<CInput type='date' />)
 };
 
+
+const toolbarOptions = [
+  "Add",
+  {
+    text: "Save",
+    tooltipText: "Save",
+    prefixIcon: "e-save",
+    id: "saveItems",
+    align: "Right",
+  },
+];
+
+
+
 const EmployeeDetail = (props) => {
   // const [showEmpModal, setshowEmpModal] = useState(false);
   // const [showEmpModal1, setshowEmpModal1] = useState(false);
@@ -239,21 +253,29 @@ const EmployeeDetail = (props) => {
   const [checkedBeneficiaryTypes, setCheckedBeneficiaryTypes] = useState([]);
   const [identityTypes, setIdentityTypes] = useState([]);
 
+const [postbene, setPostBene]=useState([])
+const [postDep, setPostDep]=useState([])
+const [postEmerg,setPostEmerg]=useState([])
+const [postGua,setPostGuar]= useState([])
+const [postNxtofK, setPostNxtofK]=useState([])
   // const submitBtn =  useRef(null)
+
+
+
 
   const actionBegin2 = () => {};
 
   const toolbarOptions = [
     "Add",
-    "Cancel",
-    // {
-    //   text: "Save",
-    //   tooltipText: "Save",
-    //   prefixIcon: "e-save",
-    //   id: "saveItems",
-    //   align: "Right",
-    // },
+    {
+      text: "Save",
+      tooltipText: "Save",
+      prefixIcon: "e-save",
+      id: "saveItems",
+      align: "Right",
+    },
   ];
+
   console.log({ types });
   const [activeKey, setActiveKey] = useState(1);
 
@@ -285,10 +307,38 @@ const EmployeeDetail = (props) => {
   };
 
   const submitRequest = (args) => {
-    if (firstGrid && args.item.id === "saveItems") {
-      console.log("first");
+    if ( args.item.id === "saveItems") {
+      console.log(activeKey)
+      if(activeKey === 1){
+        console.log(postbene);
+            setPostData(postbene)
+   setPostUrl(PostBeneficiary())
+      }
+      if(activeKey === 2){
+        console.log(activeKey);
+       //console.log(postDep);
+         setDependentPostUrl(PostDependantDetails())
+         setDependantPostData(postDep)
+      }
+      if(activeKey === 3){
+        console.log(activeKey);
+        setEmegencyContactPostUrl(PostEmployeeEmergencyContact())
+         setEmegencyContactPostData(postEmerg)
+//console.log(postEmerg);
+      }
+      if(activeKey === 4){
+        console.log(activeKey);
+       setGuarrantorPostUrl(PostEmployeeGuarantor())
+        setPostGuarrantorData(postGua)
+      }
+      if(activeKey === 5 ){
+        console.log(activeKey);
+      }
 
-      console.log({ first: firstGrid?.current?.currentViewData });
+    
+
+
+      
     } else {
       console.log("ELSE");
     }
@@ -532,7 +582,9 @@ return () => {
     }
 
   })
-  
+  let getName=(data,id)=>{
+    return data.find(x=>x.id=== id)?.name || "Not Found"
+  }
 
   const submitBtn = () => {
     // Beneficiary
@@ -566,6 +618,13 @@ return () => {
       // console.log(submitData)
       let employeeId = handleId;
       //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
+
+
+      
+
+
+
+
       let newData = {
         ...currentFormData,
         userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
@@ -573,14 +632,24 @@ return () => {
         CompanyReference: "00001_A01",
         employeeId,
       };
-      //console.log({ newData });
-      // postBeneficiary(newData);
-      setPostData(newData)
-      setPostUrl(PostBeneficiary())
+      console.log(currentFormData);
+      let benefiaciaryGridData={
+      
+        ...currentFormData,
+        relation : {
+          name: getName(relationTypes,currentFormData?.relationId)
+        },
+        
+      }
+      console.log(benefiaciaryGridData);
+     setGetBenefiary((prevState)=>[benefiaciaryGridData,...prevState])
+     setPostBene(newData)
+    
       
     }
     //HANDLE DEPENDANT
     if (activeKey === 2) {
+      console.log(submitData);
       if (!currentFormData?.firstName || submitData?.firstName === "") {
         toast.error("Please Enter First Name!", toastWarning);
         return;
@@ -637,13 +706,39 @@ return () => {
         companyReference: "00001_A01",
         employeeId,
       };
+
+
+
       console.log({ newData });
-   //   postDependant(newData);
-      setDependentPostUrl(PostDependantDetails())
-      setDependantPostData(newData)
+      let posting= {
+       ...currentFormData,
+         firstName: currentFormData?.firstName,
+         lastName: currentFormData?.lastName,
+         dateOfBirth:  currentFormData?.dateOfBirth,
+         address: currentFormData?.address,
+       dateOfExpiry:  currentFormData?.dateOfExpiry,
+         identityType: {
+            
+             name: getName(identityTypes,currentFormData?.identityTypeId)
+         },
+         relation: {
+           
+            
+             name: getName(checkedTypes,currentFormData?.relationTypeId)
+         },
+         "nationality": {
+            
+          
+             "name": getName(nationality,currentFormData?.nationalityId)
+         },
+        
+    }
+    console.log(posting);
+ setDependant((prevState)=>[posting,...prevState])
+   setPostDep(newData)
     }
     //handle Emegency Contact
-    if (activeKey === 6) {
+    if (activeKey === 3) {
       if (!currentFormData?.firstName || submitData?.firstName === "") {
         toast.error("Please Enter First Name!", toastWarning);
         return;
@@ -676,14 +771,23 @@ return () => {
         employeeId,
         name: `${currentFormData?.firstName} ${currentFormData?.lastName}`,
       };
+
+      let posting=  {
+       
+        name: `${currentFormData?.firstName} ${currentFormData?.lastName}`,
+        email : currentFormData?.email,
+        phone : currentFormData?.phone,
+        address : currentFormData?.address,
+      
+      }
       console.log({ newData });
       // postEmergencyContact(newData);
+      setPostEmerg(newData)
+      setEmergencyContact((prevState)=>[posting, ...prevState])
       
-      setEmegencyContactPostUrl(PostEmployeeEmergencyContact())
-      setEmegencyContactPostData(newData)
     }
     //handle Guarantor
-    if (activeKey === 3) {
+    if (activeKey === 4) {
       if (!currentFormData?.firstName || submitData?.firstName === "") {
         toast.error("Please Enter First Name!", toastWarning);
         return;
@@ -732,13 +836,30 @@ return () => {
         employeeId,
         name: `${currentFormData?.firstName} ${currentFormData?.lastName}`,
       };
-     // console.log({ newData });
-      //postGuarantor(newData);
-      setGuarrantorPostUrl(PostEmployeeGuarantor())
-      setPostGuarrantorData(newData)
+
+      let posting=  {
+        
+        name: `${currentFormData?.firstName} ${currentFormData?.lastName}`,
+        phone: currentFormData?.phone,
+        occupation: currentFormData?.occupation,
+        address: currentFormData?.address,
+       
+        nationality: {
+          
+          name: getName(nationality,currentFormData?.nationalityId )
+        },
+        relation: {
+         
+          name: getName(checkedTypesGuarantor,currentFormData?.relationId)
+        }
+      }
+      setPostGuar(newData)
+      setGetGuarantor((prevState)=>[posting,...prevState])
+
+   
     }
     //handle Next oF Kin
-    if (activeKey === 4) {
+    if (activeKey === 5) {
       if (!currentFormData?.firstName || submitData?.firstName === "") {
         toast.error("Please Enter First Name!", toastWarning);
         return;
@@ -968,7 +1089,6 @@ console.log(show);
     GetNationality(),GetIdTypes()], (results) => {
 
 
-    console.log(results);
 
       // setRelationTypes([...results[0].data]);
       setNationality([
@@ -1022,7 +1142,7 @@ console.log(show);
       />
     );
   }
-  if (activeKey === 6) {
+  if (activeKey === 3) {
     content = (
       <EmergencyContactForm
         currentFormData={currentFormData}
@@ -1031,7 +1151,7 @@ console.log(show);
       />
     );
   }
-  if (activeKey === 3) {
+  if (activeKey === 4) {
     content = (
       <GuarantorForm
         currentFormData={currentFormData}
@@ -1043,7 +1163,7 @@ console.log(show);
       />
     );
   }
-  if (activeKey === 4) {
+  if (activeKey === 5) {
     content = (
       <NextOfKinForm
         currentFormData={currentFormData}
@@ -1054,9 +1174,9 @@ console.log(show);
     );
   }
 
-  console.log({ currentFormData });
-  console.log({ relationTypes });
-  console.log({ benefiaciary });
+  // console.log({ currentFormData });
+  // console.log({ relationTypes });
+  // console.log({ benefiaciary });
   var arr = [];
 
   // checkRelation
@@ -1170,15 +1290,11 @@ console.log(show);
     checkBenefiary();
   }, [benefiaciary]);
   console.log({ checkedTypesNextOfKin });
-  console.log({ nextOfKin });
-  console.log({ nextOfKin });
-  console.log({ nextOfKin });
-  console.log({ nextOfKin });
-  console.log({ nextOfKin });
+
 
   return (
     <>
-      <CRow>
+      <CRow hidden={!show}>
         <CCol xs="12">
           <h5>
             <CSLab code="HCM-ETP5RDAYHNK_LANG" />
@@ -1277,19 +1393,10 @@ console.log(show);
                   <CNavItem>
                     <CNavLink
                       href="#"
-                      active={activeKey === 6}
-                      onClick={() => setActiveKey(6)}
-                    >
-                      <CSLab code="HCM-C7C1XLFCOS5-LANG" />
-                    </CNavLink>
-                  </CNavItem>
-                  <CNavItem>
-                    <CNavLink
-                      href="#"
                       active={activeKey === 3}
                       onClick={() => setActiveKey(3)}
                     >
-                      <CSLab code="HCM-2VDPTKA7U9T-LOLN" />
+                      <CSLab code="HCM-C7C1XLFCOS5-LANG" />
                     </CNavLink>
                   </CNavItem>
                   <CNavItem>
@@ -1298,114 +1405,131 @@ console.log(show);
                       active={activeKey === 4}
                       onClick={() => setActiveKey(4)}
                     >
+                      <CSLab code="HCM-2VDPTKA7U9T-LOLN" />
+                    </CNavLink>
+                  </CNavItem>
+                  <CNavItem>
+                    <CNavLink
+                      href="#"
+                      active={activeKey === 5}
+                      onClick={() => setActiveKey(5)}
+                    >
                       Next of Kin
                     </CNavLink>
                   </CNavItem>
                 </CNav>
                 <CTabContent>
+                  
+                    
                   <CTabPane visible={activeKey === 1 ? "true" : "false"}>
-                    <GridComponent
-                      height={300}
-                      actionComplete={actionComplete}
-                      dataSource={benefiaciary}
-                      allowPaging={true}
-                      pageSettings={{ pageSize: 8 }}
-                      editSettings={editOptions}
-                      ref={firstGrid}
-                      toolbar={toolbarOptions}
-                      toolbarClick={submitRequest}
-                      actionBegin={ben_actionBegin}
-                    >
-                      <ColumnsDirective>
-                        <ColumnDirective
-                          field="id"
-                          headerText="ID"
-                          width="100"
-                          visible={false}
-                          isPrimaryKey={true}
-                        />
-                        <ColumnDirective
-                          field="firstName"
-                          editType="text"
-                          headerText={GetLabelByName("HCM-KPH53NF08RG", lan)}
-                          width="100"
+               
+                   <GridComponent
+                     height={300}
+                     actionComplete={actionComplete}
+                     dataSource={benefiaciary}
+                     allowPaging={true}
+                     pageSettings={{ pageSize: 8 }}
+                     editSettings={editOptions}
+                     ref={firstGrid}
+                     toolbar={toolbarOptions}
+                     toolbarClick={submitRequest}
+                     actionBegin={ben_actionBegin}
+                   >
+                     
+                     <ColumnsDirective>
+                    
+                       <ColumnDirective
+                         field="id"
+                         headerText="ID"
+                         width="100"
+                         visible={false}
+                         isPrimaryKey={true}
+                       />
+                       <ColumnDirective
+                         field="firstName"
+                         editType="text"
+                         headerText={GetLabelByName("HCM-KPH53NF08RG", lan)}
+                         width="100"
 
-                          //onChange={(e) => setfname(e.target.value)}
-                        />
-                        <ColumnDirective
-                          field="lastName"
-                          headerText={GetLabelByName("HCM-ZYCFSGCKMC", lan)}
-                          editType="text"
-                          width="100"
-                          textAlign="Center"
-                          // name="lname"
-                          // value={lname}
-                          // onChange={(e) => setlname(e.target.value)}
-                        />
-                        <ColumnDirective
-                          field="relation.name"
-                          //   edit={relationTypes}
-                          headerText={GetLabelByName(
-                            "HCM-RWMIP9K3NEH_HRPR",
-                            lan
-                          )}
-                          editType="dropdownedit"
-                          width="100"
-                          textAlign="Center"
-                          // template={tem}
-                        />
+                         //onChange={(e) => setfname(e.target.value)}
+                       />
+                       <ColumnDirective
+                         field="lastName"
+                         headerText={GetLabelByName("HCM-ZYCFSGCKMC", lan)}
+                         editType="text"
+                         width="100"
+                         textAlign="Center"
+                         // name="lname"
+                         // value={lname}
+                         // onChange={(e) => setlname(e.target.value)}
+                       />
+                       <ColumnDirective
+                         field="relation.name"
+                         //   edit={relationTypes}
+                         headerText={GetLabelByName(
+                           "HCM-RWMIP9K3NEH_HRPR",
+                           lan
+                         )}
+                         editType="dropdownedit"
+                         width="100"
+                         textAlign="Center"
+                         // template={tem}
+                       />
 
-                        <ColumnDirective
-                          field="address"
-                          headerText={GetLabelByName(
-                            "HCM-7WIK8PDIQOV-LOLN",
-                            lan
-                          )}
-                          editType="text"
-                          width="100"
-                          textAlign="Center"
-                          name="address"
-                          // value={address}
-                          // onChange={(e) => setAddress(e.target.value)}
-                        />
-                        {/* <ColumnDirective
-                          field="relation"
-                          headerText={GetLabelByName(
-                            "HCM-RWMIP9K3NEH_HRPR",
-                            lan
-                          )}
-                          editType="text"
-                          width="100"
-                          textAlign="Center"
-                          // name="relation"
-                          // value={relation}
-                          // onChange ={(e)=>setRelation(e.target.value)}
-                        /> */}
-                        <ColumnDirective
-                          field="percentage"
-                          headerText={GetLabelByName(
-                            "HCM-HB5MNHJGQE5-HRPR",
-                            lan
-                          )}
-                          editType="numericedit"
-                          edit={integerParams}
-                          width="100"
-                          textAlign="Center"
-                        />
-                      </ColumnsDirective>
-                      <Inject
-                        services={[
-                          Page,
-                          Sort,
-                          Filter,
-                          Group,
-                          Edit,
-                          CommandColumn,
-                          Toolbar,
-                        ]}
-                      />
-                    </GridComponent>
-                  </CTabPane>
+                       <ColumnDirective
+                         field="address"
+                         headerText={GetLabelByName(
+                           "HCM-7WIK8PDIQOV-LOLN",
+                           lan
+                         )}
+                         editType="text"
+                         width="100"
+                         textAlign="Center"
+                         name="address"
+                         // value={address}
+                         // onChange={(e) => setAddress(e.target.value)}
+                       />
+                       {/* <ColumnDirective
+                         field="relation"
+                         headerText={GetLabelByName(
+                           "HCM-RWMIP9K3NEH_HRPR",
+                           lan
+                         )}
+                         editType="text"
+                         width="100"
+                         textAlign="Center"
+                         // name="relation"
+                         // value={relation}
+                         // onChange ={(e)=>setRelation(e.target.value)}
+                       /> */}
+                       <ColumnDirective
+                         field="percentage"
+                         headerText={GetLabelByName(
+                           "HCM-HB5MNHJGQE5-HRPR",
+                           lan
+                         )}
+                         editType="numericedit"
+                         edit={integerParams}
+                         width="100"
+                         textAlign="Center"
+                       />
+                     </ColumnsDirective>
+                     <Inject
+                       services={[
+                         Page,
+                         Sort,
+                         Filter,
+                         Group,
+                         Edit,
+                         CommandColumn,
+                         Toolbar,
+                       ]}
+                     />
+                   </GridComponent>
+                 </CTabPane>
+                  
+              
+                  
                   <CTabPane visible={activeKey === 2 ? "true" : "false"}>
                     <GridComponent
                       dataSource={dependant}
@@ -1617,10 +1741,12 @@ console.log(show);
                       ref={fourthGrid}
                       commandClick={onCommandClick}
                       toolbar={toolbarOptions}
+                      toolbarClick={submitRequest}
                       actionBegin={ben_actionBegin}
                       // actionBegin={actionBegin}
                       // toolbarClick={submitRequest}
                     >
+                        
                       <ColumnsDirective>
                         <ColumnDirective
                           field="id"
