@@ -7,36 +7,43 @@ import {
   GetNationality,
   GetIdTypes,
 } from "src/reusable/API/EmployeeRelationshipsEndPoint";
+import { useSelector } from "react-redux";
+import { GetLabelByName } from "src/reusable/configs/config";
 
 function NextOfKinForm({
+ 
+
   currentFormData,
   handleFormChange,
   setCurrentFormData,
   view,
+  nationality,
+  id
 }) {
+  const lan = useSelector((state) => state.language);
   const [relationTypes, setRelationTypes] = useState([]);
-  const [nationality, setNationality] = useState([]);
+  // const [nationality, setNationality] = useState([]);
   const [identityTypes, setIdentityTypes] = useState([]);
 
-  const MultipleGetRequests = async () => {
-    try {
-      let request = [
-        HttpAPIRequest("GET", GetRelationTypes()),
-        HttpAPIRequest("GET", GetNationality()),
-      ];
-      const multipleCall = await Promise.allSettled(request);
+  // const MultipleGetRequests = async () => {
+  //   try {
+  //     let request = [
+  //       HttpAPIRequest("GET", GetRelationTypes()),
+  //       HttpAPIRequest("GET", GetNationality()),
+  //     ];
+  //     const multipleCall = await Promise.allSettled(request);
 
-      setNationality([
-        { id: "-1", name: `Select Nationality` },
-        ...multipleCall[1].value,
-      ]);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  useEffect(() => {
-    MultipleGetRequests();
-  }, []);
+  //     setNationality([
+  //       { id: "-1", name: `Select Nationality` },
+  //       ...multipleCall[1].value,
+  //     ]);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+  // useEffect(() => {
+  //   MultipleGetRequests();
+  // }, []);
 
   console.log({ NextOfKin: view });
   return (
@@ -51,8 +58,8 @@ function NextOfKinForm({
             <CInput
               name="firstName"
               type="text"
-              placeholder="Enter First Name"
-              value={currentFormData?.firstName || " "}
+              placeholder={GetLabelByName("HCM-M45LNYXVT6_LASN",lan)}
+              value={currentFormData?.firstName || ""}
               onChange={handleFormChange}
             />
           </CCol>
@@ -64,8 +71,8 @@ function NextOfKinForm({
             <CInput
               name="lastName"
               type="text"
-              placeholder="Enter Last Name"
-              value={currentFormData?.lastName || " "}
+              placeholder={GetLabelByName("HCM-B6FYFT3XE6S_HRPR",lan)}
+              value={currentFormData?.lastName || ""}
               onChange={handleFormChange}
             />
           </CCol>
@@ -77,8 +84,8 @@ function NextOfKinForm({
             <CInput
               name="phone"
               type="text"
-              placeholder="Enter Phone Number"
-              value={currentFormData?.phone || " "}
+              placeholder={GetLabelByName("HCM-4WKQXVS3API_LOLN",lan)}
+              value={currentFormData?.phone || ""}
               onChange={handleFormChange}
             />
           </CCol>
@@ -87,13 +94,13 @@ function NextOfKinForm({
           <CCol md="4">
             <CLabel htmlFor="otherPhone">
               <CSLab code="HCM-BIARUHXGKQ4-HRPR" /> {""}
-              <CSRequiredIndicator />
+      
             </CLabel>
             <CInput
               name="otherPhone"
               type="text"
               placeholder="Enter Phone Number"
-              value={currentFormData?.otherPhone || " "}
+              value={currentFormData?.otherPhone || ""}
               onChange={handleFormChange}
             />
           </CCol>
@@ -105,20 +112,20 @@ function NextOfKinForm({
             <CInput
               name="address"
               type="text"
-              placeholder="Enter Address"
-              value={currentFormData?.address || " "}
+              placeholder={GetLabelByName("HCM-AF2ZPOUARPA-PSLL",lan)}
+              value={currentFormData?.address || ""}
               onChange={handleFormChange}
             />
           </CCol>
           <CCol md="4">
             <CLabel htmlFor="email">
-              <CSLab code="HCM-CXLK7IYZ9B9-KCMI" /> <CSRequiredIndicator />
+              <CSLab code="HCM-CXLK7IYZ9B9-KCMI" /> 
             </CLabel>
             <CInput
               name="email"
               type="text"
-              placeholder="Enter Email"
-              value={currentFormData?.email || " "}
+              placeholder={GetLabelByName("HCM-61522DCMNA-LANG",lan)}
+              value={currentFormData?.email || ""}
               onChange={handleFormChange}
             />
           </CCol>

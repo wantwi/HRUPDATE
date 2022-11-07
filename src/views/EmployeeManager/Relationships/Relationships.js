@@ -71,6 +71,7 @@ import {
   GetEmployeeDependant,
   GetEmployeeEmergencyContact,
   GetEmployeeGuarantor,
+  GetEmployeeNextOfKin,
   GetIdTypes,
   GetNationality,
   GetRelationTypes,
@@ -249,7 +250,7 @@ const EmployeeDetail = (props) => {
   const [currentFormData, setCurrentFormData] = useState({});
   const [checkedTypes, setCheckedTypes] = useState([]);
   const [checkedTypesGuarantor, setCheckedTypesGuarantor] = useState([]);
-  const [checkedTypesNextOfKin, setCheckedTypesNextOfKin] = useState({});
+  const [checkedTypesNextOfKin, setCheckedTypesNextOfKin] = useState([]);
   const [checkedBeneficiaryTypes, setCheckedBeneficiaryTypes] = useState([]);
   const [identityTypes, setIdentityTypes] = useState([]);
 
@@ -333,6 +334,8 @@ const [postNxtofK, setPostNxtofK]=useState([])
       }
       if(activeKey === 5 ){
         console.log(activeKey);
+        setNOKPostUrl(PostEmployeeNextOfKin())
+        setPostNOK(postNxtofK)
       }
 
     
@@ -380,14 +383,14 @@ const  {data:multicallData, setUrls} =  useMultiFetch([], (results) => {
   setEmergencyContact([...results[2].data]);
   setGetGuarantor([...results[3].data]);
   setRelationTypes([...results[4].data]);
-
+  setGetNextOfKin([...results[5].data])
 })
 
 useEffect(() => {
 
 setUrls([GetBeneficiary(handleId), 
   GetEmployeeDependant(handleId), GetEmployeeEmergencyContact(handleId), 
-  GetEmployeeGuarantor(handleId),RelationTypes()])
+  GetEmployeeGuarantor(handleId),RelationTypes(),GetEmployeeNextOfKin(handleId)])
 return () => {
   
 }
@@ -413,87 +416,10 @@ return () => {
 
     if (results?.id) {
       setSearchResult(results);
-      // setUrl(GetBeneficiary(results?.id))
-      // getEmployeeDepndnt(GetEmployeeDependant(results?.id))
-      //GetEmployeeEmergencyContact(handleId)
-
-
-      
-      // GetRequest()
-      //   .then((response) => {
-      //     // toast.dismiss(toastId);
-      //     if (response.ok) {
-      //       response.json().then((response) => {
-      //         // console.log({response});
-      //         if (response && Object.keys(response).length > 0) {
-      //           dispatch({ type: "set", data: { ...response } });
-      //           setSubmitData({ ...response });
-      //           // setDuplicateData({ ...response })
-      //           //console.log({ response });
-
-      //           //let rates = response?.rates;
-
-      //           // setExchangeRate(rates);
-      //           setShow(false);
-      //           setMode("Update");
-      //         } else {
-      //           setMode("Add");
-      //           setShow(false);
-      //           // dispatch({ type: 'set', data: { ...results, isHomeCurrency } });
-      //           // setSubmitData({ ...results, isHomeCurrency });
-      //         }
-      //       });
-      //     }
-      //   })
-      //   .catch((err) => {
-      //     // console.log(err);
-      //     // toaster(toastId, "Failed to retrieve details", 'error', 4000);
-      //   });
+     
     }
   };
 
-  const handleNextOfKin = async () => {
-    try {
-      const request = await CustomAxios.get(`EmployeeNextofKin/${handleId}`);
-
-      const response = request.data;
-      console.log("emp response:", response);
-      console.log({ response });
-      setGetNextOfKin([response]);
-    } catch (error) {
-      console.log({ error });
-    }
-  };
-
-  useEffect(() => {
-    if (handleId) {
-      handleNextOfKin();
-    }
-  }, [handleId]);
-  //  console.log(nextOfKin);
-  //console.log(handleId);
-
-  // const MultipleGetRequests = async () => {
-  //   try {
-  //     let request = [
-  //       HttpAPIRequest("GET", GetBeneficiary(handleId)),
-  //       HttpAPIRequest("GET", GetEmployeeDependant(handleId)),
-  //       HttpAPIRequest("GET", GetEmployeeEmergencyContact(handleId)),
-  //       HttpAPIRequest("GET", GetEmployeeGuarantor(handleId)),
-  //       HttpAPIRequest("GET", RelationTypes()),
-  //     ];
-  //     const multipleCall = await Promise.allSettled(request);
-  //     console.log(multipleCall[0].value);
-
-  //     setGetBenefiary([...multipleCall[0].value]);
-  //     setDependant([...multipleCall[1].value]);
-  //     setEmergencyContact([...multipleCall[2].value]);
-  //     setGetGuarantor([...multipleCall[3].value]);
-  //     setRelationTypes([...multipleCall[4].value]);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
   const integerParams = {
     params: {
       // decimals: 1,
@@ -525,6 +451,8 @@ return () => {
     }
 
   })
+
+  //HANDLE DEPENDANT POST
   const  {setData:setDependantPostData, setUrl:setDependentPostUrl} = usePost('', (response) => {
     // console.log({location:response });
     setShow(false);
@@ -544,6 +472,8 @@ return () => {
     }
 
   })
+
+  //HANDLE EMERGENCY CONTACT 
   const  {setData:setEmegencyContactPostData, setUrl:setEmegencyContactPostUrl} = usePost('', (response) => {
     // console.log({location:response });
     setShow(false);
@@ -563,6 +493,8 @@ return () => {
     }
 
   })
+
+  //HANDLE GUARANTOR POST
   const  {setData:setPostGuarrantorData, setUrl:setGuarrantorPostUrl} = usePost('', (response) => {
     // console.log({location:response });
     setShow(false);
@@ -582,6 +514,29 @@ return () => {
     }
 
   })
+
+  //HANDLE NEXT OF KIN POST
+  const  {setData:setPostNOK, setUrl:setNOKPostUrl} = usePost('', (response) => {
+    // console.log({location:response });
+    setShow(false);
+    const {data} = response
+    if ("" === data) {
+      toast.success(GetLabelByName("HCM-HAGGXNJQW2B_HRPR", lan));
+      //showToasts();
+      searchReset()
+    } else {
+      try {
+        data = JSON.parse(response);
+        let mdata = data.errors[0].message;
+        toast.error(`${mdata}`, toastWarning);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+  })
+
+
   let getName=(data,id)=>{
     return data.find(x=>x.id=== id)?.name || "Not Found"
   }
@@ -901,12 +856,35 @@ return () => {
         employeeId,
         name: `${currentFormData?.firstName} ${currentFormData?.lastName}`,
       };
-      console.log({ newData });
-      postNextOfKin(newData);
+      
+      // postNextOfKin(newData);
+
+let handleGrid=  {
+ 
+  "name": `${currentFormData?.firstName} ${currentFormData?.lastName}`,
+  "email": currentFormData?.email,
+  "relationId": currentFormData?.relationId ,
+  "phone": submitData?.phone,
+
+  "address": currentFormData?.address,
+ 
+  "relation": {
+    "id": currentFormData?.relationId ,
+   
+    "name": getName(relationTypes,currentFormData?.relationId)
+  },
+  "nationality": {
+    "id": currentFormData?.nationalityId ,
+    "name": getName(nationality,currentFormData?.nationalityId)
+  }
+}
+
+      setGetNextOfKin((prevState)=>[handleGrid,...prevState])
+      setPostNxtofK(newData)
     }
   };
 
-
+console.log(submitData?.relationId);
 
 console.log(show);
   //Post Employee Beneficiary
@@ -1053,7 +1031,7 @@ console.log(show);
             toast.success("Employee Guarantor Added Successfully!");
             console.log("success");
             //MultipleGetRequests();
-            handleNextOfKin();
+            // handleNextOfKin();
             setCurrentFormData("");
           } else {
             try {
@@ -1084,6 +1062,10 @@ console.log(show);
       ...prev,
       [e.target.name]: e.target.value,
     }));
+
+    setSubmitData((data) => {
+      return { ...data, [e?.target?.name]: e?.target?.value };
+    }); 
   };
   const  {data:multical} =  useMultiFetch([ 
     GetNationality(),GetIdTypes()], (results) => {
@@ -1170,6 +1152,7 @@ console.log(show);
         handleFormChange={handleFormChange}
         setCurrentFormData={setCurrentFormData}
         view={checkedTypesNextOfKin}
+        nationality={nationality}
       />
     );
   }
@@ -1235,7 +1218,7 @@ console.log(show);
     if (nextOfKin.length > 0) {
       for (let i = 0; i < nextOfKin.length; i++) {
         var obj = {};
-        obj = nextOfKin[0][i].relation;
+        obj = nextOfKin[i].relation;
         arryKin.push(obj);
         console.log({ Object: obj });
       }
@@ -1289,7 +1272,8 @@ console.log(show);
   useEffect(() => {
     checkBenefiary();
   }, [benefiaciary]);
-  console.log({ checkedTypesNextOfKin });
+
+  console.log( relationTypes);
 
 
   return (
@@ -1841,7 +1825,7 @@ console.log(show);
                   </CTabPane>
                   <CTabPane visible={activeKey === 5 ? "true" : "false"}>
                     <GridComponent
-                      dataSource={nextOfKin[0]}
+                      dataSource={nextOfKin}
                       height={300}
                       allowPaging={true}
                       pageSettings={{ pageSize: 10 }}

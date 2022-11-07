@@ -123,7 +123,7 @@ const AccidentTransaction = () => {
   const [searchResult, setSearchResult] = useState(null);
   const [viewinfo, setViewInfo] = useState([]);
   const [handleId, setHandleId] = useState("");
-  const [titles, setProfessionalTitle] = useState([]);
+  const [transactionData, setTransactionData] = useState([]);
   const [accidentTypes, setAccidentTypes] = useState([]);
   const [getEmployeeAccident, setEmployeeAccident] = useState([]);
 
@@ -145,7 +145,8 @@ const AccidentTransaction = () => {
   const searchReset = () => {
     setShow(true);
     setSearchInput("");
-
+    dispatch({ type: 'set', data: {  } });
+    setSubmitData("");
     // const [grid,] = useState(null);
 
     // const OnSaveContinueClick = () => {
@@ -183,7 +184,7 @@ const AccidentTransaction = () => {
   
   // get employee by id for grid view
   const getEmployyeAccidentById =  (id) => {
-    setUrl(GetEmployeeAccidentByEmployeeId())
+    setUrl(GetEmployeeAccidentByEmployeeId(id))
     // try {
     //   const request = await CustomAxios.get(
     //     `${BaseURL}EmployeeAccident/${handleId}`
@@ -226,19 +227,46 @@ const AccidentTransaction = () => {
 
     // console.log(submitData)
 
-    let employeeId = submitData.id;
+    // let employeeId = submitData.id;
     let newData = {
       ...submitData,
       userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
       userName: "string",
-      CompanyReference: "00001_A01",
-      employeeId,
+      CompanyReference: "00001_a01",
+      employeeId : searchResult?.id
     };
-    setPostData(newData)
-    setPostUrl(PostAccidentTransaction())
+
+    let postin = 
+    {
+      
+      "locationOfAccident": "string",
+    
+    
+      "dateOfAccident":  submitData?.DateofAccident,
+      "dateInformed": submitData?.DateInformed,
+      "accidentTypesDto": {
+        "id": submitData?.accidentTypeId,
+        
+        "name" : getName(accidentTypes,submitData?.accidentTypeId),
+        
+      },
+     
+    }
+    setTransactionData(newData)
+    setEmployeeAccident((prevState)=>[postin,...prevState])
+
+
+   
   
     // postAccidentTrans(newData);
   };
+
+
+const handlePost =()=>{
+ setPostData(transactionData)
+    setPostUrl(PostAccidentTransaction())
+}
+
 
   const  {setData:setPostData, setUrl:setPostUrl} = usePost('', (response) => {
     // console.log({location:response });
@@ -258,7 +286,9 @@ const AccidentTransaction = () => {
     }
 
   })
-
+const getName=(data,id)=>{
+return data.find(x=>x.id === id)?.name || "Not Found"
+}
 
   //funtion to handle post
   function postAccidentTrans(data) {
@@ -305,25 +335,7 @@ const AccidentTransaction = () => {
     if (results?.id) {
       setSearchResult(results);
       getEmployyeAccidentById(results.id)
-    //   GetRequest()
-    //     .then((response) => {
-    //       // toast.dismiss(toastId);
-    //       if (response.ok) {
-    //         response.json().then((response) => {
-    //           if (response && Object.keys(response).length > 0) {
-    //             dispatch({ type: "set", data: { ...response } });
-    //             setSubmitData({ ...response });
-
-    //             setShow(false);
-    //             setMode("Update");
-    //           } else {
-    //             setMode("Add");
-    //             setShow(false);
-    //           }
-    //         });
-    //       }
-    //     })
-    //     .catch((err) => {});
+    
     }
   };
   // const testApi = async () => {
@@ -491,9 +503,12 @@ const AccidentTransaction = () => {
               />
             </GridComponent>
             <CCardFooter>
-              <CCol md="4">
+            <CButton onClick={handlePost} style={{ marginRight: 5, float: "right" }} type="submit" size="sm" color="success" >
+                <CIcon name="cil-scrubber" /> Submit
+              </CButton>
+              
                 <CButton
-                  style={{ marginRight: -960, float: "right", color: "white" }}
+                 style={{ marginRight: 5, float: 'right', color: 'white' }}
                   onClick={() => searchReset()}
                   type="button"
                   size="sm"
@@ -502,7 +517,6 @@ const AccidentTransaction = () => {
                   <AiOutlineClose size={20} />
                   <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
                 </CButton>
-              </CCol>
             </CCardFooter>
           </CCard>
         </CCol>
@@ -567,7 +581,7 @@ const AccidentTransaction = () => {
                   className=""
                   id="DateofAccident"
                   name="DateofAccident"
-                  value={data?.DateofAccident || -1}
+                  value={data?.DateofAccident || ""}
                   type="date"
                   onChange={handleOnChange}
                   max={moment().format("YYYY-MM-DD")}
@@ -583,7 +597,7 @@ const AccidentTransaction = () => {
                   id="DateInformed"
                   type="date"
                   name="DateInformed"
-                  value={data?.DateInformed || -1}
+                  value={data?.DateInformed || ""}
                   onChange={handleOnChange}
                   max={moment().format("YYYY-MM-DD")}
                 />

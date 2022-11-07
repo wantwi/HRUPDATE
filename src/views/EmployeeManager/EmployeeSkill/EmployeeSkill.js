@@ -103,6 +103,7 @@ const commandOptions = [
     buttonOption: { iconCss: "e-icons e-cancel-icon", cssClass: "e-flat" },
   },
 ];
+const companyReference = "00001_a01"
 
 const EmployeeSkill = (props) => {
   const lan = useSelector((state) => state.language);
@@ -283,17 +284,25 @@ const EmployeeSkill = (props) => {
       return;
     }
     // console.log(submitData)
-    let employeeId = submitData.id;
+   
     //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
+
+let temps = {
+  ...submitData[0]
+}
     let newData = {
-      ...submitData,
-      userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      userName: "string",
-      CompanyReference: "00001_A01",
-      employeeId,
+      
+        "employeeId": temps?.employee
+        .id,
+        "companyReference": companyReference,
+        "description":  submitData?.description,
+        "skillTypeId": submitData?.skillTypeId,
+        "status": true,
+        "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+      
     }
     setSkillPost(newData)
-
+console.log({submit : temps});
    let gridView= {
      
       employee: {

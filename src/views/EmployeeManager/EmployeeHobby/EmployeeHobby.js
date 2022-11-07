@@ -128,7 +128,7 @@ const EmployeeHobby = (props) => {
   const [handleId, setHandleId] = useState("");
   const [viewinfo, setViewInfo] = useState([]);
   const [hobbyTypes, setHobbyTypes] = useState([]);
-  const [employeeHobbyId, setEmployeeHobbybyId] = useState([]);
+  const [employeeHobby, setEmployeeHobbyby] = useState([]);
   const [unitId, setUnitValue] = useState([]);
   const [checkedHobby, setCheckedHobbyTypes] = useState();
 
@@ -164,15 +164,7 @@ const EmployeeHobby = (props) => {
        toast.error("Please Select Hobby Type!", toastWarning);
        return;
     }
-    // if (!submitData?.unit || submitData?.unit === '') {
-    //    // toast.error('Please enter a value for unit!', toastWarning);
-    //     return;
-    // }
-    // if (!submitData?.payPeriodId || submitData?.payPeriodId === '') {
-    //     //toast.error('Please select a pay period!', toastWarning);
-    //     return;
-    // }
-    // console.log(submitData)
+   
     let employeeId = submitData.id;
     //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
     let newData = {
@@ -182,25 +174,48 @@ const EmployeeHobby = (props) => {
       companyReference: "00001_a01",
       userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
     };
-
-    
-    console.log(newData)
+    let gridView= {
+      
+      "hobbyType": {
+        "id": `${unitId[0]}`,
+        
+        "name": getName(hobbyTypes,`${unitId[0]}`),
+       
+      },
+      "employee": {
+        
+        "firstName": searchResult?.firstName,
+        "lastName": searchResult?.lastName,
+       
+      }
+    }
+setEmployeeHobbyby(newData)
+    setViewInfo((prevState)=>[gridView,...prevState])
+    //console.log(gridView)
 
     //postEmployeeHobby(newData);
-     setPostUrl(PostEmployeeHobbies())
-     setPostData(newData)
+
 
   };
 
 
+const handlePost=()=>{
+       setPostUrl(PostEmployeeHobbies())
+     setPostData(employeeHobby)
+}
+
+
+const getName=(data,id)=>{
+  return data.find(x=>x.id === id)?.name || "Not Found"
+}
   const  {setData:setPostData, setUrl:setPostUrl} = usePost('', (response) => {
     // console.log({location:response });
     const {data} = response
     if ("" === data) {
       toast.success(GetLabelByName("HCM-HAGGXNJQW2B_HRPR", lan));
-      getEmployeeHobbybyId(searchResult?.id);
+      // getEmployeeHobbybyId(searchResult?.id);
     //  showToasts();
-      searchReset(2);
+      searchReset();
     } else {
       try {
         data = JSON.parse(response);
@@ -474,7 +489,9 @@ const EmployeeHobby = (props) => {
               </>
             </CForm>
             <CCardFooter>
-              
+            <CButton onClick={handlePost} style={{ marginRight: 5, float: "right" }} type="submit" size="sm" color="success" >
+                <CIcon name="cil-scrubber" /> Submit
+              </CButton>
               <CButton name='Cancel'  style={{ marginRight: 5, float: 'right', color: 'white' }} onClick={() => searchReset()} type="button" size="sm" color='danger' ><AiOutlineClose size={20} /><CSLab code = 'HCM-V3SL5X7PJ9C-LANG' /></CButton>
 
           
@@ -551,7 +568,7 @@ const EmployeeHobby = (props) => {
                 handleOnSubmit();
               }}
             >
-              <CSLab code="HCM-HGUHIR0OK6T" />
+              <CSLab code="HCM-TAAFD4M071D-HRPR" />
             </CButton>
           </CModalFooter>
         </CModal>
