@@ -77,6 +77,7 @@ import { CCardGroup } from "@coreui/bootstrap-react";
 import useMultiFetch from "src/hooks/useMultiFetch";
 import useFetch from "src/hooks/useFetch";
 import usePost from "src/hooks/usePost";
+import getClassName from "ui-box/dist/src/get-class-name";
 
 const editOptions = {
   allowEditing: false,
@@ -120,7 +121,7 @@ const EmployeeSkill = (props) => {
   const [large, setLarge] = useState(false);
   const [mode, setMode] = useState("");
   const [searchResult, setSearchResult] = useState(null);
-  const [educationCore, setEducationCore] = useState([]);
+  const [skillPost, setSkillPost] = useState([]);
   const [empDisplayName, setEmpDisplayName] = useState("");
   const [handleId, setHandleId] = useState("");
   const [viewinfo, setViewInfo] = useState([]);
@@ -290,17 +291,45 @@ const EmployeeSkill = (props) => {
       userName: "string",
       CompanyReference: "00001_A01",
       employeeId,
-    };
+    }
+    setSkillPost(newData)
+
+   let gridView= {
+     
+      employee: {
+         
+          "firstName": searchResult?.firstName,
+          "lastName": searchResult?.lastName ,
+   
+          
+      },
+      skillType: {
+         
+          "name": getName(skillType,submitData?.skillTypeId),
+         id: submitData?.skillTypeId
+      }
+  
+  }
+  setSubmitData("")
+  dispatch({ type: "set", data: {} });
+  console.log(gridView);
+
     //let finalData = JSON.stringify(newData)
     // console.log(finalData)
     // 'Add' === mode ? AddGLAccount(newData) : updateGLAccount(newData);
    // postEmployeeSkill(newData);
-    setPostUrl(PostEmployeeSkill())
-    setPostData(newData)
-
+   setViewInfo((prevState)=>[gridView, ...prevState])
+   
   };
 
+const handlePost=()=>{
+  setPostUrl(PostEmployeeSkill())
+  setPostData(skillPost)
 
+}
+const getName=(data,id)=>{
+return data.find(x=> x.id === id)?.name || "Not Found"
+}
 
   const  {setData:setPostData, setUrl:setPostUrl} = usePost('', (response) => {
     // console.log({location:response });
@@ -382,7 +411,7 @@ console.log(viewinfo)
      
         var obj = {};
      
-       // console.log(viewinfo[i]?.skillType)
+       console.log("Debug 1")
         obj = viewinfo[i]?.skillType;
         skillDropDownArr.push(obj);
         console.log(obj);
@@ -413,7 +442,7 @@ console.log(viewinfo)
 
     console.log(skillType);
 
-  }, []);
+  }, [viewinfo]);
 
 
 
@@ -550,9 +579,9 @@ console.log(chekedSkillTypes);
             </CForm>
 
             <CCardFooter style={{ position: 'relative;' }}>
-              {/* <CButton onClick={submitRequest} style={{ marginRight: 5, float: "right" }} type="submit" size="sm" color="success" >
+              <CButton onClick={handlePost} style={{ marginRight: 5, float: "right" }} type="submit" size="sm" color="success" >
                 <CIcon name="cil-scrubber" /> Submit
-              </CButton> */}
+              </CButton>
               
                 <CButton
                  style={{ marginRight: 5, float: 'right', color: 'white' }}
@@ -722,7 +751,7 @@ console.log(chekedSkillTypes);
             }}
             color="primary"
           >
-            <CSLab code="HCM-HGUHIR0OK6T" />
+            <CSLab code="HCM-TAAFD4M071D-HRPR" />
           </CButton>
         </CModalFooter>
       </CModal>
