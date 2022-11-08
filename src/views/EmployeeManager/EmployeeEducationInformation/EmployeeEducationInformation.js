@@ -48,7 +48,7 @@ import {
   CSAutoComplete,
   CSRequiredIndicator,
 } from "../../../reusable/components";
-import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai";
+import { AiOutlinePlus, AiOutlineClose, AiFillSave } from "react-icons/ai";
 
 import {
   GetEmployee,
@@ -116,19 +116,19 @@ const EmployeeEducationInformation = (props) => {
 
 
   // GetProfessionalTitles()
-  const  {data:multicallData} =  useMultiFetch([    
+  const  {data:multicallData} =  useMultiFetch([  GetProfessionalTitles(),  
     GetQualificationTypes(),GetEducationCoreArea()], (results) => {
-      // setProfessionalTitle([
-      //   { id: "-1", name: `Select Title` },
-      //   ...results[0].data,
-      // ]);
+      setProfessionalTitle([
+        { id: "-1", name: `Select Title` },
+        ...results[0].data,
+      ]);
       setQualification([
         { id: "-1", name: `Select Qualification` },
-        ...results[0].data,
+        ...results[1].data,
       ]);
       setEducationCore([
         { id: "-1", name: `Select Education Core Area` },
-        ...results[1].data,
+        ...results[2].data,
       ]);
       console.log(results[0].data)
    
@@ -160,6 +160,8 @@ const EmployeeEducationInformation = (props) => {
   const searchReset = () => {
     setShow(true);
     setSearchInput("");
+setViewInfo("")
+dispatch({ type: 'set', data: { } });
 
     // const [grid,] = useState(null);
 
@@ -169,7 +171,7 @@ const EmployeeEducationInformation = (props) => {
   };
 
   const handleOnSubmit = () => {
-    console.log(submitData);
+
 
     if (!submitData?.StartDate || submitData?.StartDate === -1) {
       toast.error("Please Select Start Date!", toastWarning);
@@ -203,14 +205,10 @@ const EmployeeEducationInformation = (props) => {
       toast.error("Please Enter School!", toastWarning);
       return;
     }
-    // if (!submitData?.payPeriodId || submitData?.payPeriodId === '') {
-    //     //toast.error('Please select a pay period!', toastWarning);
-    //     return;
-    // }
-    console.log(submitData.id)
-    let employeeId = submitData.id;
+ 
+  
+    let employeeId = submitData?.id;
     console.log(employeeId)
-    //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
     let newData = {
       
       ...submitData,
@@ -219,18 +217,12 @@ const EmployeeEducationInformation = (props) => {
       CompanyReference: "00001_A01",
       employeeId,
       status: true,
-      employeeId : searchResult.id,
+      employeeId : searchResult?.id,
 
     };
 
 
-
-    //let finalData = JSON.stringify(newData)
-    // console.log(finalData)
-    // 'Add' === mode ? AddGLAccount(newData) : updateGLAccount(newData);
-
  console.log(searchResult)
-     
    
 let forGrid =
   {
@@ -329,7 +321,7 @@ console.log(forGrid);
   const {setOptData, setUrl} =  useFetch("", (response,results) => {
     if (response) {
         if (response && Object.keys(response).length > 0) {
-            setSearchResult(results);
+            // setSearchResult(results);
             dispatch({ type: 'set', data: { ...response } });
             setSubmitData({...response});
             setViewInfo((prevState) => response);
@@ -531,10 +523,10 @@ console.log(forGrid);
                 style={{ marginRight: 5, float: 'right', color: 'white' }}
                   onClick={() => handlePost()}
                   type="button"
-                  size="sm"
-                  color="info"
+                  size="sm" 
+                  color="success"
                 >
-                  <AiOutlineClose size={20} />
+                  <AiFillSave size={20} /> 
                   <CSLab code="HCM-HGUHIR0OK6T" />
                 </CButton>
                 <CButton
@@ -710,7 +702,7 @@ console.log(forGrid);
             <CSLab code="HCM-9E3ZC2E1S0N-LASN" />
           </CButton>
           <CButton color="primary">
-            <CSLab code="HCM-HGUHIR0OK6T" onClick={handleOnSubmit} />
+            <CSLab code="HCM-TAAFD4M071D-HRPR" onClick={()=>handleOnSubmit()} />
           </CButton>
         </CModalFooter>
       </CModal>

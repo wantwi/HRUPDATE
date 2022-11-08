@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import CIcon from "@coreui/icons-react";
 import {
@@ -17,23 +17,160 @@ import {
   CSelect,
   CTextarea,
 } from "@coreui/react";
-import { AiFillSave, AiOutlineRedo } from "react-icons/ai";
+import { AiFillSave, AiOutlineClose, AiOutlineRedo } from "react-icons/ai";
 import { CardBodyHeight } from "src/reusable/utils/helper";
 import { GetLabelByName } from "src/reusable/configs/config";
-import { CSDivider, CSLab, CSLineLabel } from "../../../reusable/components";
+import { CSAutoComplete, CSDivider, CSLab, CSLineLabel } from "../../../reusable/components";
 import "../../../scss/_custom_table.scss";
+import { GetEmployeeByID, SearchEmployees } from "src/reusable/API/EmployeeEndpoints";
+import useFetch from "src/hooks/useFetch";
+import useMultiFetch from "src/hooks/useMultiFetch";
+import usePost from "src/hooks/usePost";
+import { toast } from "react-toastify";
+import { toastWarning } from "src/toasters/Toaster";
 
 const EmployeeMovement = (props) => {
   const lan = useSelector((state) => state.language);
-
+  const [searchInput, setSearchInput] = useState("");
+  const [pageNumber, setPageNumber] = useState(1);
+  const [numberOfItems, setNumberOfItems] = useState(10);
+  const [orderBy, setOrderBy] = useState("");
+  const [submitData, setSubmitData] = useState({});
+  const [sortOrder, setSortOrder] = useState("");
+  const [large, setLarge] = useState(false);
+  const [mode, setMode] = useState("");
   const [show, setShow] = useState(true);
   // const [grid,] = useState(null);
-
-  const TransLabelByCode = (name) => GetLabelByName(name, lan);
+  const [searchResult, setSearchResult] = useState(null);
+const [empDisplayName, setEmpDisplayName] = useState("");
+const dispatch = useDispatch();
+const [viewinfo, setViewInfo] = useState([]);
+const [handleId, setHandleId] = useState("");
+const data = useSelector((state) => state.data);
 
   // const OnSaveContinueClick = () => {
   //     console.log(grid);
   // }
+
+  const {setOptData, setUrl} =  useFetch("", (response,results) => {
+    if (response) {
+      if (response && Object.keys(response).length > 0) {
+        dispatch({ type: "set", data: { ...response } });
+        setSubmitData({ ...response });
+        setViewInfo( response );
+        // setDuplicateData({ ...response })
+        console.log({ response });
+
+        //let rates = response?.rates;
+
+        // setExchangeRate(rates);
+        setShow(false);
+       
+      } else {
+        setMode("Add");
+        setShow(false);
+        // dispatch({ type: 'set', data: { ...results, isHomeCurrency } });
+        // setSubmitData({ ...results, isHomeCurrency });
+      }
+    }
+});
+const searchReset = () => {
+  setShow(true);
+  setSearchInput("");
+
+};
+const  {data:multicallData} =  useMultiFetch([ ], (results) => {
+  console.log(results[0].data);
+  // setSkillType([...results[0].data]);
+     
+
+})
+const  {setData:setPostData, setUrl:setPostUrl} = usePost('', (response) => {
+  // console.log({location:response });
+  const {data} = response
+  if ("" === data) {
+    toast.success(GetLabelByName("HCM-HAGGXNJQW2B_HRPR", lan));
+  //  showToasts();
+    searchReset(2);
+  } else {
+    try {
+      data = JSON.parse(response);
+      let mdata = data.errors[0].message;
+      toast.error(`${mdata}`, toastWarning);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+})
+  const handleSearchResultSelect = (results) => {
+    console.log("show results", results);
+
+    //setting employee display name on select of suggested item
+    setEmpDisplayName(
+      (prevState) => `${results.firstName} ${results.lastName}`
+    );
+    // testApi();
+    // return;
+    setMode("Add");
+    setShow(false);
+  //  dispatch({ type: "set", data: { ...results } });
+    setSubmitData({ ...results });
+
+    if (results?.id) {
+      setSearchResult(results);
+      setUrl(GetEmployeeByID(results.id))
+      // GetRequest(GetEmployeeById(results.id))
+      //   .then((response) => {
+      //     console.log(response)
+      //     // toast.dismiss(toastId);
+      //     if (response.ok) {
+      //       response.json().then((response) => {
+      //         // console.log({response});
+      //         if (response && Object.keys(response).length > 0) {
+      //           dispatch({ type: "set", data: { ...response } });
+      //           setSubmitData({ ...response });
+      //           setViewInfo(response);
+      //           // setDuplicateData({ ...response })
+      //           console.log({ response });
+
+      //           //let rates = response?.rates;
+
+      //           // setExchangeRate(rates);
+      //           setShow(false);
+               
+      //         } else {
+      //           setMode("Add");
+      //           setShow(false);
+      //           // dispatch({ type: 'set', data: { ...results, isHomeCurrency } });
+      //           // setSubmitData({ ...results, isHomeCurrency });
+      //         }
+      //       });
+      //     }
+      //   })
+      //   .catch((err) => {
+      //     // console.log(err);
+      //     // toaster(toastId, "Failed to retrieve details", 'error', 4000);
+      //   });
+    }
+  };
+  const handleOnChange = (evnt) => {
+    //console.log(evnt)
+    console.log(evnt?.target?.value)
+    setSubmitData((data) => {
+      return { ...data, [evnt?.target?.name]: evnt?.target?.value };
+    });
+    dispatch({
+      type: "set",
+      data: { ...data, [evnt?.target?.name]: evnt?.target?.value },
+    });
+  };
+const handlePost=()=>{
+  
+  setPostUrl()
+  setPostData()
+}
+
 
   return (
     <>
@@ -46,26 +183,32 @@ const EmployeeMovement = (props) => {
       </CRow>
       <CRow>
         <CCol md="4">
-          <CFormGroup>
-            <CInputGroup>
-              <CInput
-                className="border-left-curve"
-                type="text"
-                id="username3"
-                name="username3"
-                autoComplete="name"
-                placeholder={TransLabelByCode("HCM-6FKJ6FEGW7A-HRPR")}
-              />
-              <CInputGroupAppend>
-                <CButton
-                  onClick={() => setShow(!show)}
-                  className="border-right-curve"
-                  color="primary"
-                >
-                  <CIcon name="cil-magnifying-glass" />
-                </CButton>
-              </CInputGroupAppend>
-            </CInputGroup>
+        <CFormGroup>
+            <CSAutoComplete
+              filterUrl={SearchEmployees(searchInput)}
+              //filterUrl=''            //filterUrl={SearchInternalCurrencies(searchInput)}
+              placeholder={GetLabelByName("HCM-6FKJ6FEGW7A-HRPR", lan)}
+              handleSelect={handleSearchResultSelect}
+              //onChange={()=>handleSearchResultSelect}
+              displayTextKey={"firstName"}
+              setInput={setSearchInput}
+              input={searchInput}
+              emptySearchFieldMessage={`Please input 3 or more characters to search`}
+              searchName={"Employee"}
+              isPaginated={false}
+              pageNumber={pageNumber}
+              setPageNumber={setPageNumber}
+              numberOfItems={numberOfItems}
+              setNumberOfItems={setNumberOfItems}
+              orderBy={orderBy}
+              setOrderBy={setOrderBy}
+              sortOrder={sortOrder}
+              setSortOrder={setSortOrder}
+              mode={mode}
+              setMode={setMode}
+              handleId={setHandleId}
+              // reset={handleReset}
+            />
           </CFormGroup>
         </CCol>
         <CCol md="8" className="text-right"></CCol>
@@ -380,7 +523,7 @@ const EmployeeMovement = (props) => {
               </CRow>
             </CCardBody>
             <CCardFooter>
-              <CButton
+              {/* <CButton
                 style={{ marginRight: 5 }}
                 type="button"
                 size="sm"
@@ -388,12 +531,13 @@ const EmployeeMovement = (props) => {
               >
                 <CIcon name="cil-scrubber" />{" "}
                 <CSLab code="HCM-ZIRH5SVBDUF_LANG" />{" "}
-              </CButton>
+              </CButton> */}
               <CButton
                 style={{ marginRight: 5, float: "right" }}
                 type="button"
                 size="sm"
                 color="success"
+                onClick={()=>handlePost()}
               >
                 <AiFillSave size={20} /> <CSLab code="HCM-HGUHIR0OK6T" />{" "}
               </CButton>
@@ -402,8 +546,9 @@ const EmployeeMovement = (props) => {
                 type="button"
                 size="sm"
                 color="danger"
+                onClick={()=>searchReset()}
               >
-                <AiOutlineRedo size={20} />{" "}
+              <AiOutlineClose size={20} />{" "}
                 <CSLab code="HCM-V3SL5X7PJ9C-LANG" />{" "}
               </CButton>
             </CCardFooter>

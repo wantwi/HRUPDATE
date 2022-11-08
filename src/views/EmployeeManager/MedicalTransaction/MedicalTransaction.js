@@ -75,6 +75,7 @@ import {
   PostEmployeeMedical,
 } from "src/reusable/API/MedicalTransactionsEndPoints";
 import { CCardHeader } from "@coreui/bootstrap-react";
+import getClassName from "ui-box/dist/src/get-class-name";
 
 const editOptions = {
   allowEditing: false,
@@ -121,13 +122,13 @@ const MedicalTransaction = () => {
   const [viewinfo, setViewInfo] = useState([]);
   const [providerTypes, setProviderTypes] = useState([]);
   const [ailmentType, setAilmenentType] = useState([]);
-
+const [post,setPost]=useState([])
   
   
   const {setOptData, setUrl} =  useFetch("", (response,results) => {
     if (response) {
         if (response && Object.keys(response).length > 0) {
-            setSearchResult(results);
+            // setSearchResult(results);
             dispatch({ type: 'set', data: { ...response } });
             setSubmitData(response);
             //setDupData({...response})
@@ -145,7 +146,7 @@ const MedicalTransaction = () => {
   
   const handleSearchResultSelect = (results) => {
     console.log("show results", results);
-
+   
     //setting employee display name on select of suggested item
     setEmpDisplayName(
       (prevState) => `${results.firstName} ${results.lastName}`
@@ -156,82 +157,23 @@ const MedicalTransaction = () => {
     setShow(false);
     dispatch({ type: "set", data: { ...results } });
     setSubmitData({ ...results });
-
+    setSearchResult(results);
     if (results?.id) {
-      setSearchResult(results);
+
 getEmployeeMedicalyById(results.id)
-      // GetRequest()
-      //   .then((response) => {
-      //     // toast.dismiss(toastId);
-      //     if (response.ok) {
-      //       response.json().then((response) => {
-      //         // console.log({response});
-      //         if (response && Object.keys(response).length > 0) {
-      //           dispatch({ type: "set", data: { ...response } });
-      //           setSubmitData({ ...response });
-      //           // setDuplicateData({ ...response })
-      //           //console.log({ response });
-
-      //           //let rates = response?.rates;
-
-      //           // setExchangeRate(rates);
-      //           setShow(false);
-      //           setMode("Update");
-      // //         } else {
-      //           setMode("Add");
-      //           setShow(false);
-      //           // dispatch({ type: 'set', data: { ...results, isHomeCurrency } });
-      //           // setSubmitData({ ...results, isHomeCurrency });
-      //         }
-      //       });
-      //     }
-      //   })
-      //   .catch((err) => {
-      //     // console.log(err);
-      //     // toaster(toastId, "Failed to retrieve details", 'error', 4000);
-      //   });
+     
     }
   };
   const searchReset = () => {
     setShow(true);
     setSearchInput("");
-
-    // const [grid,] = useState(null);
-
-    // const OnSaveContinueClick = () => {
-    //     console.log(grid);
-    // }
+    setViewInfo("")
+    dispatch({ type: "set", data: {} });
   };
 
+
+
   
-
-  //Drop down list for hobby types
-  // const MultipleGetRequests = async () => {
-  //   try {
-  //     let request = [
-  //       HttpAPIRequest("GET", GetProviderTypes()),
-  //       HttpAPIRequest("GET", GetAilmentType()),
-  //     ];
-  //     const multipleCall = await Promise.allSettled(request);
-  //     console.log(multipleCall[0].value);
-
-  //     setProviderTypes([
-  //       { id: "-1", name: `Select Provider` },
-  //       ...multipleCall[0].value,
-  //     ]);
-  //     setAilmenentType([
-  //       { id: "-1", name: `Select Ailment` },
-  //       ...multipleCall[1].value,
-  //     ]);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   MultipleGetRequests();
-  // }, []);
-
   const  {data:multicallData} =  useMultiFetch([GetProviderTypes(), 
     GetAilmentType()], (results) => {
       setProviderTypes([
@@ -262,7 +204,7 @@ getEmployeeMedicalyById(results.id)
       return;
     }
     // console.log(submitData)
-    let employeeId = submitData.id;
+    // let employeeId = submitData.id;
     //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
     let newData = {
       ...submitData,
@@ -272,11 +214,33 @@ getEmployeeMedicalyById(results.id)
       employeeId : searchResult?.id,
     };
     //let finalData = JSON.stringify(newData)
-    // console.log(finalData)
+    console.log(newData)
     // 'Add' === mode ? AddGLAccount(newData) : updateGLAccount(newData);
    // postEmployeeMedical(newData);
-    setPostData(newData)
-    setPostUrl(PostEmployeeMedical())
+let handleNewGridData=
+{
+ 
+  "providorTypesDto": {
+    "id": submitData?.providorTypeId,
+  
+    "name": getName(providerTypes,submitData?.providorTypeId ),
+   
+  },
+  "cost": submitData?.cost,
+  "dateOfService": submitData?.dateOfService,
+  "ailmentTypesDto": {
+    "id": submitData?.ailmentTypeId,
+    
+    "name": getName(ailmentType,submitData?.ailmentTypeId),
+   
+  },
+ 
+
+}
+
+   setViewInfo((prevState)=>[handleNewGridData,...prevState])
+   setPost(newData)
+   
   };
 
   const  {setData:setPostData, setUrl:setPostUrl} = usePost('', (response) => {
@@ -298,6 +262,15 @@ getEmployeeMedicalyById(results.id)
 
   })
 
+const getName=(data, id)=>{
+return data.find(x=>x.id=== id)?.name || "Not Found"
+}
+  
+  const handlePost=()=>{
+    setPostData(post)
+    setPostUrl(PostEmployeeMedical())
+  }
+  
   //Post Employee Hobby
   function postEmployeeMedical(data) {
     console.log("post data", data);
@@ -369,7 +342,7 @@ getEmployeeMedicalyById(results.id)
   const TransLabelByCode = (name) => GetLabelByName(name, lan);
   return (
     <>
-      <CRow>
+      <CRow hidden={!show}>
         <CCol xs="12">
           <h5>
             <CSLab code="Medical Transaction" />
@@ -495,9 +468,12 @@ getEmployeeMedicalyById(results.id)
               />
             </GridComponent>
             <CCardFooter>
-              <CCol md="4">
+            <CButton onClick={handlePost} style={{ marginRight: 5, float: "right" }} type="submit" size="sm" color="success" >
+                <CIcon name="cil-scrubber" /> Submit
+              </CButton>
+              
                 <CButton
-                  style={{ marginRight: -960, float: "right", color: "white" }}
+                 style={{ marginRight: 5, float: 'right', color: 'white' }}
                   onClick={() => searchReset()}
                   type="button"
                   size="sm"
@@ -505,8 +481,7 @@ getEmployeeMedicalyById(results.id)
                 >
                   <AiOutlineClose size={20} />
                   <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
-                </CButton>
-              </CCol>
+                </CButton>  
             </CCardFooter>
           </CCard>
         </CCol>

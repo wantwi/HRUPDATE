@@ -313,7 +313,7 @@ const CSAutoComplete = ({
       //   });
 
     } else {
-       toaster( `${emptySearchFieldMessage}`, "info", 2000);
+       toast.error(`${emptySearchFieldMessage}`, "info", 2000);
       //alert('Input to short');
     }
   };

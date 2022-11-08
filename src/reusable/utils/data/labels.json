@@ -13380,8 +13380,49 @@
  "german": "",
  "status": 1,
  "type": "string"
+},
+"HCM-M7JNZHXNTT-KCMI": {
+ "id": "c7a4207d-8175-4add-aa3c-ffabadf926df",
+ "en": "Update Employee Details",
+ "fr": "Mettre à jour les détails de l'employé",
+ "spanish": "",
+ "portuguese": "",
+ "german": "",
+ "status": 1,
+ "type": "string"
+},
+"HCM-6QY4DPP3GS_LANG": {
+ "id": "c7a4207d-8175-4add-aa3c-ffabadf926df",
+ "en": "Percentage Of Basic Salary",
+ "fr": "Pourcentage du salaire de base",
+ "spanish": "",
+ "portuguese": "",
+ "german": "",
+ "status": 1,
+ "type": "string"
+},
+"HCM-4OJ0M8OPPGO-PSLL": {
+ "id": "c7a4207d-8175-4add-aa3c-ffabadf926df",
+ "en": "Pay-slip Note",
+ "fr": "Bulletin de paie",
+ "spanish": "",
+ "portuguese": "",
+ "german": "",
+ "status": 1,
+ "type": "string"
+},
+"HCM-8HQGFGIAVIC_LANG": {
+ "id": "c7a4207d-8175-4add-aa3c-ffabadf926df",
+ "en": "Service Provider ",
+ "fr": "Fournisseur de services",
+ "spanish": "",
+ "portuguese": "",
+ "german": "",
+ "status": 1,
+ "type": "string"
 }
 }
+
 
 
 
