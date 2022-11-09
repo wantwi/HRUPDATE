@@ -5,13 +5,13 @@ export const GetYearBasis = () =>
   `${BaseURL}EmployeeLeave/YearEndBasis/dropdown-types?companyReference=00001_A01`;
 
 export const GetAllowedDayBasis = () =>
-  `${BaseURL}EmployeeLeave/AllowedDayBasis/dropdown-types?companyReference=00001_a01`;
+  `EmployeeLeave/AllowedDayBasis/dropdown-types?companyReference=00001_a01`;
 
 export const GetAvailableDayBasis = () =>
-  `${BaseURL}EmployeeLeave/AvailableDayBasis/dropdown-types?companyReference=00001_a01`;
+  `$EmployeeLeave/AvailableDayBasis/dropdown-types?companyReference=00001_a01`;
 
 export const GetLeaveTypes = () =>
-  `${BaseURL}EmployeeLeave/LeaveType/dropdown-types?companyReference=00001_a01`;
+  `EmployeeLeave/LeaveType/dropdown-types?companyReference=00001_a01`;
 
 export const PostEmployeeLeave = () => `${BaseURL}EmployeeLeave/LeaveType`;
 

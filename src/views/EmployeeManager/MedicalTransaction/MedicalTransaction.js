@@ -588,7 +588,7 @@ return data.find(x=>x.id=== id)?.name || "Not Found"
         <CModalFooter>
         <p style={{ position: "absolute", left: "20px" }}><em style={{ fontSize: "12px" }}><CSLab code="HCM-S6DELVG0IQS-HRPR" /> (<CSRequiredIndicator />)<CSLab code="HCM-H72Q4EB363H_PSLL" /></em></p>
           <CButton color="secondary" onClick={() => setVisible(false)}>
-            <CSLab code="HCM-MELULU9B6R_KCMI" />
+            <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
           </CButton>
           <CButton
             color="primary"
@@ -597,7 +597,7 @@ return data.find(x=>x.id=== id)?.name || "Not Found"
               handleOnSubmit();
             }}
           >
-            <CSLab code="HCM-HGUHIR0OK6T" />
+            <CSLab code="HCM-TAAFD4M071D-HRPR" />
           </CButton>
         </CModalFooter>
       </CModal>

@@ -541,6 +541,9 @@ return () => {
     return data.find(x=>x.id=== id)?.name || "Not Found"
   }
 
+
+
+
   const submitBtn = () => {
     // Beneficiary
     if (activeKey === 1) {
@@ -569,17 +572,10 @@ return () => {
         return;
       }
 
-     
+    
       // console.log(submitData)
       let employeeId = handleId;
-      //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
-
-
-      
-
-
-
-
+      //  let newData = { ...submitData, option: options, companyId: TestCompanyId }
       let newData = {
         ...currentFormData,
         userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
@@ -599,7 +595,7 @@ return () => {
       console.log(benefiaciaryGridData);
      setGetBenefiary((prevState)=>[benefiaciaryGridData,...prevState])
      setPostBene(newData)
-    
+     checkBenefiary();
       
     }
     //HANDLE DEPENDANT
@@ -691,6 +687,8 @@ return () => {
     console.log(posting);
  setDependant((prevState)=>[posting,...prevState])
    setPostDep(newData)
+
+   checkRelationDependant();
     }
     //handle Emegency Contact
     if (activeKey === 3) {
@@ -810,7 +808,7 @@ return () => {
       }
       setPostGuar(newData)
       setGetGuarantor((prevState)=>[posting,...prevState])
-
+      checkRelationGuarantor();
    
     }
     //handle Next oF Kin
@@ -881,6 +879,7 @@ let handleGrid=  {
 
       setGetNextOfKin((prevState)=>[handleGrid,...prevState])
       setPostNxtofK(newData)
+      checkRelationNextOfKin();
     }
   };
 
@@ -1273,7 +1272,7 @@ console.log(show);
     checkBenefiary();
   }, [benefiaciary]);
 
-  console.log( relationTypes);
+  console.log( checkedTypes);
 
 
   return (
