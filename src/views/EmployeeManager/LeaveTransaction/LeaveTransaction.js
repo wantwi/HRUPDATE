@@ -35,6 +35,11 @@ import {
   CTextarea,
   CInputRadio,
   CCardHeader,
+  CModalFooter,
+  CModal,
+  CModalHeader,
+  CModalTitle,
+  CModalBody,
 } from "@coreui/react";
 import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai";
 import { AiFillSave, AiOutlineRedo } from "react-icons/ai";
@@ -375,7 +380,7 @@ const LeaveTransaction = (props) => {
 
   return (
     <>
-      <CRow hidden={!show}>
+      <CRow >
         <CCol xs="12">
           <h5>
             <CSLab code="HCM-I0ZV6XVP41I_LASN" />
@@ -433,8 +438,9 @@ const LeaveTransaction = (props) => {
         <CCol xs="10" hidden={show}>
           <CCard>
           <CCardHeader>
+
               <CFormGroup row>
-                <CCol md="4">
+                <CCol md="2">
                 <CCol md="4" className="text-right"></CCol>
                   <b>Employee:</b>{" "}
                   <span
@@ -448,6 +454,54 @@ const LeaveTransaction = (props) => {
                     color="primary"
                   >
                     {employeeName}
+                  </span>
+                </CCol>
+                   <CCol md="2">
+                <CCol md="4" className="text-right"></CCol>
+                  <b>Department:</b>{" "}
+                  <span
+                    style={{
+                      textDecoration: "underline dotted",
+                      cursor: "pointer",
+                    }}
+                    type="button"
+                    onClick={() => setLarge(!large)}
+                    size="md"
+                    color="primary"
+                  >
+                    Software Dept.
+                  </span>
+                </CCol>
+                <CCol md="2">
+                <CCol md="4" className="text-right"></CCol>
+                  <b>Position:</b>{" "}
+                  <span
+                    style={{
+                      textDecoration: "underline dotted",
+                      cursor: "pointer",
+                    }}
+                    type="button"
+                    onClick={() => setLarge(!large)}
+                    size="md"
+                    color="primary"
+                  >
+                    Software Eng.
+                  </span>
+                </CCol>
+                <CCol md="2">
+                <CCol md="4" className="text-right"></CCol>
+                  <b>Hire Date:</b>{" "}
+                  <span
+                    style={{
+                      textDecoration: "underline dotted",
+                      cursor: "pointer",
+                    }}
+                    type="button"
+                    onClick={() => setLarge(!large)}
+                    size="md"
+                    color="primary"
+                  >
+                    10-Nov-2022
                   </span>
                 </CCol>
                 <CCol md="4">
@@ -574,19 +628,20 @@ const LeaveTransaction = (props) => {
             </CCol>      */}
                     <CRow>
                                         <CCol md='3'></CCol>
-                                        <CCol md="6">
+                                        <CCol md="8">
                                             <CRow>
                                                 {/* <CCol md="4">
                                                     <CLabel> <CSLab code="HCM-FQYC4N0VN1W-HRPR" />{" "}</CLabel> <CSRequiredIndicator />
                                                     <CSelect  name="employeename"  value={data?.employeename || ""}  onChange={handleOnChange}  >
                                                       </CSelect>
                                                 </CCol> */}
-                                                <CCol md="4"><CLabel> <CSLab code="HCM-5S2JSN34J47_LANG" />{" "}</CLabel> <CSRequiredIndicator />
+                                                <CCol md="2"><CLabel> <CSLab code="HCM-5S2JSN34J47_LANG" />{" "}</CLabel> <CSRequiredIndicator />
                                                 <CSelect
                                                     name="leaveType"
                                                     value={data?.leaveType || -1}
                                                     onChange={handleOnChange}
                                                   >
+                                                    <option value={-1} key="1"> Select Type</option>
                                                     {leaveType.map((x, i) => (
                                                       <option key={i} value={x.id}>
                                                         {x.name}
@@ -594,40 +649,53 @@ const LeaveTransaction = (props) => {
                                                     ))}
                                                   </CSelect>
                                                 </CCol>
-                                                <CCol md="4">
+                                                <CCol md="2">
                                                     <CLabel>
                                                       {" "}
-                                                      <CSLab code="HCM-SFIO9LH60UG-KCMI" />{" "}</CLabel> <CSRequiredIndicator />
+                                                      <CSLab code="HCM-MELS9L6AGFI-LASN" />{" "}</CLabel> <CSRequiredIndicator />
+                                             
+                                                    <CInput
+                                                      name="leaveTaken"
+                                                      value={data?.leaveTaken || ""}
+                                                      onChange={handleOnChange}
+                                                      disabled
+                                                    />
+                                                       
+                                                    
+                                                </CCol>
+                                                <CCol md="2">
+                                                    <CLabel>
+                                                      {" "}
+                                                      <CSLab code="HCM-3JPHHVBOVEN-PSLL" />{" "}</CLabel> <CSRequiredIndicator />
                                              
                                                     <CInput
                                                       name="leaveBalance"
                                                       value={data?.leaveBalance || ""}
                                                       onChange={handleOnChange}
+                                                      disabled
                                                     />
                                                        
                                                     
                                                 </CCol>
-                                                <CCol md="4">
-                                            <CLabel>
-                                              {" "}
-                                              <CSLab code="HCM-LFITDP0PORN_KCMI" />{" "}
-                                            </CLabel>
-                                            <CSelect
-                                              name="allowedDayBasisId"
-                                              value={data?.allowedDayBasisId || -1}
-                                            >
-                                              {allowedDayBasis.map((x, i) => (
-                                                <option key={i} value={x.id}>
-                                                  {x.name}
-                                                </option>
-                                              ))}
-                                            </CSelect>
-                                          </CCol>
+                                                <CCol md="2">
+                                                    <CLabel>
+                                                      {" "}
+                                                      <CSLab code="HCM-KK6462TLSXH-LOLN" />{" "}</CLabel> <CSRequiredIndicator />
+                                             
+                                                    <CInput
+                                                      name="leaveRemaining"
+                                                      value={data?.leaveBalance || ""}
+                                                      onChange={handleOnChange}
+                                                      disabled
+                                                    />
+                                                       
+                                                    
+                                                </CCol>
                                             </CRow>
                                             <CRow className={'bottom-spacing'}>
+                                            
                                               
-                                              
-                                          <CCol md="4"><CLabel> <CSLab code="HCM-D0U4M0L8TNH-KCMI" />{" "}</CLabel> <CSRequiredIndicator />
+                                          {/* <CCol md="4"><CLabel> <CSLab code="HCM-D0U4M0L8TNH-KCMI" />{" "}</CLabel> <CSRequiredIndicator />
                                                 <CSelect
                                                     name="leaveReason"
                                                     value={data?.leaveReason || -1}
@@ -639,21 +707,32 @@ const LeaveTransaction = (props) => {
                                                       </option>
                                                     ))}
                                                   </CSelect>
-                                                </CCol>
-                                                <CCol md="4">
-                                                    <CLabel> <CSLab code="HCM-CB5DPYLHZEL_HRPR" />{" "}</CLabel> <CSRequiredIndicator />
+                                                </CCol> */}
+                                                <CCol md="2">
+                                                    <CLabel> <CSLab code="HCM-K85NF9HWVXC-LANG" />{" "}</CLabel> <CSRequiredIndicator />
                                                     <CInput type="date" name="leaveStartDate"  value={data?.leaveStartDate || ""}  onChange={handleOnChange} />
                                                 </CCol>
-                                                <CCol md="4">
-                                                    <CLabel> <CSLab code="HCM-8BEYTBMRP2W_LASN" />{" "}</CLabel> <CSRequiredIndicator />
+                                                <CCol md="2">
+                                                    <CLabel> <CSLab code="HCM-S4N9DCXVMJ" />{" "}</CLabel> <CSRequiredIndicator />
                                                     <CInput type="date" name="leaveEndDate"  value={data?.leaveEndDate || ""}  onChange={handleOnChange} />
                                                 </CCol>
+                                                <CCol md="2">
+                                                    <CLabel>
+                                                      {" "}
+                                                      <CSLab code="Number Of Days" />{" "}</CLabel> <CSRequiredIndicator />
+                                                    <CInput
+                                                      name="leaveBalance"
+                                                      value={data?.leaveBalance || ""}
+                                                      onChange={handleOnChange}
+                                               disabled
+                                                    />
+                                                       
+                                                    
+                                                </CCol>
+                                                
                                             </CRow>
                                             <CRow>
-                                           
-                                            </CRow>
-                                            <CRow>
-                                            <CCol md="8">
+                                            <CCol md="6">
                                               <CLabel>
                                                 {" "}
                                                 <CSLab code="HCM-Z0FV0XJJ06" />{" "}
@@ -666,6 +745,20 @@ const LeaveTransaction = (props) => {
                                               ></CTextarea>
                                             </CCol>
                                             </CRow>
+                                            {/* <CRow>
+                                            <CCol md="8">
+                                              <CLabel>
+                                                {" "}
+                                                <CSLab code="HCM-Z0FV0XJJ06" />{" "}
+                                              </CLabel>
+                                              <CTextarea
+                                                name="description"
+                                                value={data?.description || ""}
+                                                onChange={handleOnChange}
+                                                style={{ height: "80px", resize: "none" }}
+                                              ></CTextarea>
+                                            </CCol>
+                                            </CRow> */}
                                         </CCol>                                 
                                         <CCol md='3'></CCol>
                                     </CRow>
@@ -722,6 +815,50 @@ const LeaveTransaction = (props) => {
           </CCard>
         </CCol>
       </CRow>
+      
+      {/* <CModal
+        closeOnBackdrop={false}
+        show={large}
+        onClose={() => setLarge(!large)}
+        size="sm"
+      >
+        <CModalHeader closeButton>
+          <CModalTitle>Employee Details</CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          <CRow>
+            <CCol md="12">
+              <CLabel>Department</CLabel>
+              <CInput value={"Software Department"} disabled={true} />
+            </CCol>
+           
+          </CRow>
+          <CRow>
+          <CCol md="12">
+              <CLabel>Position</CLabel>
+              <CInput value={"Software Dev."} disabled={true} />
+            </CCol>
+          </CRow>
+          <CRow>
+            <CCol md="12">
+              <CLabel> Hire Date </CLabel>
+              <CInput
+                style={{ textAlign: "left" }}
+                value={"10-11-2022"}
+                disabled={true}
+              />
+            </CCol>
+           
+          </CRow>
+         
+
+        </CModalBody>
+        <CModalFooter>
+          <CButton color='warning' onClick={() => setLarge(!large)}>
+            Close
+          </CButton>
+        </CModalFooter>
+      </CModal> */}
     </>
   );
 };

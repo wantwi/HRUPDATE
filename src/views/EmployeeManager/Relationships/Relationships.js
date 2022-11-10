@@ -288,7 +288,7 @@ const [postNxtofK, setPostNxtofK]=useState([])
     setShow(true);
     setSearchInput("");
     setCurrentFormData("")
-  
+  setSubmitData("")
 
     // const [grid,] = useState(null);
 
@@ -337,10 +337,6 @@ const [postNxtofK, setPostNxtofK]=useState([])
         setNOKPostUrl(PostEmployeeNextOfKin())
         setPostNOK(postNxtofK)
       }
-
-    
-
-
       
     } else {
       console.log("ELSE");
@@ -601,6 +597,7 @@ return () => {
     //HANDLE DEPENDANT
     if (activeKey === 2) {
       console.log(submitData);
+      checkRelationDependant();
       if (!currentFormData?.firstName || submitData?.firstName === "") {
         toast.error("Please Enter First Name!", toastWarning);
         return;
@@ -687,8 +684,8 @@ return () => {
     console.log(posting);
  setDependant((prevState)=>[posting,...prevState])
    setPostDep(newData)
-
-   checkRelationDependant();
+   setCurrentFormData("")
+  
     }
     //handle Emegency Contact
     if (activeKey === 3) {

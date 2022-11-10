@@ -13420,6 +13420,36 @@
  "german": "",
  "status": 1,
  "type": "string"
+},
+"HCM-KK6462TLSXH-LOLN": {
+ "id": "c7a4207d-8175-4add-aa3c-ffabadf926df",
+ "en": "Remaining",
+ "fr": "Restante",
+ "spanish": "",
+ "portuguese": "",
+ "german": "",
+ "status": 1,
+ "type": "string"
+},
+"HCM-MELS9L6AGFI-LASN": {
+ "id": "c7a4207d-8175-4add-aa3c-ffabadf926df",
+ "en": "Taken",
+ "fr": "Pris",
+ "spanish": "",
+ "portuguese": "",
+ "german": "",
+ "status": 1,
+ "type": "string"
+},
+"HCM-3JPHHVBOVEN-PSLL": {
+ "id": "c7a4207d-8175-4add-aa3c-ffabadf926df",
+ "en": "Balance",
+ "fr": "Solde",
+ "spanish": "",
+ "portuguese": "",
+ "german": "",
+ "status": 1,
+ "type": "string"
 }
 }
 
