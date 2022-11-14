@@ -80,6 +80,8 @@ const LeaveTypes = React.lazy(() =>
   import("./views/EmployeeManager/LeaveTypes/LeaveTypes")
 );
 
+const Report = React.lazy(() => import('./views/Report/Report'))
+
 const EmployeeHobby = React.lazy(() =>
   import("./views/EmployeeManager/EmployeeHobby/EmployeeHobby")
 );
@@ -531,6 +533,8 @@ const routes = [
   //Tax Manager
   { path: "/taxmanager/taxtable", name: "Tax Table", component: TaxTable },
   { path: "/taxmanager/taxrelief", name: "Tax Relief", component: TaxRelief },
+
+  { path: '/report', name: 'Report', component: Report },
 ];
 
 export default routes;
