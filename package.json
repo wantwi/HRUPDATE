@@ -10,6 +10,7 @@
     "url": "http://psl-tfs-vm2:8082/tfs/defaultcollection/PersonaX_CustomerAdmin_Standard"
   },
   "dependencies": {
+    "@boldreports/react-reporting-components": "^4.2.56",
     "@coreui/bootstrap-react": "^1.0.0-beta.0",
     "@coreui/chartjs": "^2.0.0",
     "@coreui/coreui": "^3.4.0",
@@ -25,6 +26,7 @@
     "axios": "^0.27.2",
     "classnames": "^2.2.6",
     "core-js": "^3.9.1",
+    "create-react-class": "^15.7.0",
     "enzyme": "^3.11.0",
     "evergreen-ui": "^6.9.6",
     "moment": "^2.29.4",

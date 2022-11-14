@@ -7,6 +7,7 @@ import Loader from './reusable/components/LoaderComponent/LoaderComponent';
 
 // import Loader from "./Loader/Loader";
 import UserConfirmation from "./reusable/utils/UserConfirmation";
+import ReportViewerPage from "./views/Report/ReportViewerPage";
 
 const loading = (
   <div className="pt-3 text-center">
@@ -66,6 +67,7 @@ class App extends Component {
               name="Page 500"
               render={(props) => <Page500 {...props} />}
             />
+             <Route exact path="/report-view/:reportname" name="Report View" render={props => <ReportViewerPage {...props} />} />
             <Route
               path="/"
               name="Home"
