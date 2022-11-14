@@ -542,6 +542,7 @@ return () => {
 
   const submitBtn = () => {
     // Beneficiary
+    
     if (activeKey === 1) {
       if (!currentFormData?.firstName || submitData?.firstName === "") {
         toast.error("Please Enter First Name!", toastWarning);
@@ -671,7 +672,7 @@ return () => {
          },
          relation: {
            
-            
+          id:currentFormData?.relationTypeId,
              name: getName(checkedTypes,currentFormData?.relationTypeId)
          },
          "nationality": {
@@ -1236,13 +1237,14 @@ console.log(show);
   };
   var beneficiaryArr = [];
   const checkBenefiary = () => {
+    console.log("Called once");
     if (benefiaciary.length > 0) {
       for (let i = 0; i < benefiaciary.length; i++) {
         var obj = {};
         obj = benefiaciary[i].relation;
         beneficiaryArr.push(obj);
       }
-
+;console.log("Called twice")
       const newdata = relationTypes.filter((val) => {
         return !beneficiaryArr.find((arr) => {
           console.log({ valueID: val.id + ": " + arr.id });
@@ -1253,8 +1255,9 @@ console.log(show);
         });
       });
       setCheckedBeneficiaryTypes(newdata);
-      console.log(newdata);
+      console.log({newFiltere: newdata});
     } else {
+      console.log("Called thrice")
       setCheckedBeneficiaryTypes(relationTypes);
     }
   };
@@ -1267,7 +1270,7 @@ console.log(show);
   }, [nextOfKin]);
   useEffect(() => {
     checkBenefiary();
-  }, [benefiaciary]);
+  }, [currentFormData?.relationId]);
 
   console.log( checkedTypes);
 

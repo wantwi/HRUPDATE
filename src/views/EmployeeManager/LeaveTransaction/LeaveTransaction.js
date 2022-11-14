@@ -628,14 +628,14 @@ const LeaveTransaction = (props) => {
             </CCol>      */}
                     <CRow>
                                         <CCol md='3'></CCol>
-                                        <CCol md="8">
-                                            <CRow>
+                                        <CCol md="4">
+                                            <CRow >
                                                 {/* <CCol md="4">
                                                     <CLabel> <CSLab code="HCM-FQYC4N0VN1W-HRPR" />{" "}</CLabel> <CSRequiredIndicator />
                                                     <CSelect  name="employeename"  value={data?.employeename || ""}  onChange={handleOnChange}  >
                                                       </CSelect>
                                                 </CCol> */}
-                                                <CCol md="2"><CLabel> <CSLab code="HCM-5S2JSN34J47_LANG" />{" "}</CLabel> <CSRequiredIndicator />
+                                                <CCol md="4"><CLabel> <CSLab code="HCM-5S2JSN34J47_LANG" />{" "}</CLabel> <CSRequiredIndicator />
                                                 <CSelect
                                                     name="leaveType"
                                                     value={data?.leaveType || -1}
@@ -663,7 +663,7 @@ const LeaveTransaction = (props) => {
                                                        
                                                     
                                                 </CCol>
-                                                <CCol md="2">
+                                                <CCol md="3">
                                                     <CLabel>
                                                       {" "}
                                                       <CSLab code="HCM-3JPHHVBOVEN-PSLL" />{" "}</CLabel> <CSRequiredIndicator />
@@ -677,7 +677,7 @@ const LeaveTransaction = (props) => {
                                                        
                                                     
                                                 </CCol>
-                                                <CCol md="2">
+                                                <CCol md="3">
                                                     <CLabel>
                                                       {" "}
                                                       <CSLab code="HCM-KK6462TLSXH-LOLN" />{" "}</CLabel> <CSRequiredIndicator />
@@ -708,15 +708,15 @@ const LeaveTransaction = (props) => {
                                                     ))}
                                                   </CSelect>
                                                 </CCol> */}
-                                                <CCol md="2">
+                                                <CCol md="4">
                                                     <CLabel> <CSLab code="HCM-K85NF9HWVXC-LANG" />{" "}</CLabel> <CSRequiredIndicator />
                                                     <CInput type="date" name="leaveStartDate"  value={data?.leaveStartDate || ""}  onChange={handleOnChange} />
                                                 </CCol>
-                                                <CCol md="2">
+                                                <CCol md="4">
                                                     <CLabel> <CSLab code="HCM-S4N9DCXVMJ" />{" "}</CLabel> <CSRequiredIndicator />
                                                     <CInput type="date" name="leaveEndDate"  value={data?.leaveEndDate || ""}  onChange={handleOnChange} />
                                                 </CCol>
-                                                <CCol md="2">
+                                                <CCol md="4 ">
                                                     <CLabel>
                                                       {" "}
                                                       <CSLab code="Number Of Days" />{" "}</CLabel> <CSRequiredIndicator />
@@ -732,7 +732,7 @@ const LeaveTransaction = (props) => {
                                                 
                                             </CRow>
                                             <CRow>
-                                            <CCol md="6">
+                                            <CCol md="12">
                                               <CLabel>
                                                 {" "}
                                                 <CSLab code="HCM-Z0FV0XJJ06" />{" "}
