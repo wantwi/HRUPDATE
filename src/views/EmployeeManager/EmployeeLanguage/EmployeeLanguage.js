@@ -82,6 +82,8 @@ import useMultiFetch from "src/hooks/useMultiFetch";
 import usePost from "src/hooks/usePost";
 import useFetch from "src/hooks/useFetch";
 import { Log } from "oidc-client";
+import useDelete from "src/hooks/useDelete";
+import SweetAlert from "react-bootstrap-sweetalert";
 // import { values } from "core-js/es7/array";
 
 const editOptions = {
@@ -92,10 +94,10 @@ const editOptions = {
 };
 
 const commandOptions = [
-  {
-    type: "Edit",
-    buttonOption: { iconCss: " e-icons e-edit", cssClass: "e-flat" },
-  },
+  // {
+  //   type: "Edit",
+  //   buttonOption: { iconCss: " e-icons e-edit", cssClass: "e-flat" },
+  // },
   {
     type: "Delete",
     buttonOption: { iconCss: "e-icons e-delete", cssClass: "e-flat" },
@@ -138,6 +140,9 @@ const EmployeeLanguage = () => {
   const [selectedName, setSelectedName] = useState("");
   const [postEmployee, setPostEmployee] = useState([]);
   const [post , setPost] =useState([])
+  const [delEmployeeName,setDelEmployeeName]=useState("")
+const[isActive,setIsActive]=useState(false)
+const[delEmployeeID,setDelEmployeeID]=useState("")
   //const [newGridDta, setNewGridData] = useState([]);
   const firstGrid = useRef();
 
@@ -535,7 +540,93 @@ alert("Clicked")
     }
   }, [submitData?.languageId]);
   
+  const onConfirm = () => {
+
+    handleDeleteItem();
+
+  };
+
+  const onCancel = () => {
+
+    setIsActive(false);
   
+  };
+  
+  const onCommandClick = (args) => {
+  console.log(args);
+  // onCompleteAction(args);
+  
+  };
+  
+  
+  
+  
+  const onCompleteAction = (args) => {
+  
+    if (args.commandColumn.type === 'Delete') {
+  
+      args.cancel = true;
+  
+      setIsActive(true)
+  
+      setDelEmployeeName(`${args?.rowData?.employee?.firstName
+      } ${args?.rowData?.employee?.lastName
+      }`)
+  
+      setDelEmployeeID(args.rowData.id)
+  
+    }
+  
+  };
+  
+  const handleDeleteItem = async () => {
+  
+    let deleteData = {
+  
+      earningId: "",
+  
+      employeeId: delEmployeeID,
+  
+      userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  
+      accountReference: "string"
+  
+    }
+  
+    setDeletUrl("")
+  
+    setDeleteData({ data: deleteData })
+  
+  
+  
+  };
+  const { setData: setDeleteData, setUrl: setDeletUrl } = useDelete('', (response) => {
+  
+    // console.log({location:response });
+  
+    const { data } = response
+  
+    if (response.status === 200 || response.status === 204) {
+  
+      toast.success('Employee Language Deleted Successfully!',);
+  
+      setIsActive(false);
+  
+      // GetPreviousData(nonCashId);
+  
+    } else {
+  
+      toast.error('Transaction Failed, Please try agin later!', toastWarning);
+  
+    }
+  
+  
+  
+  })
+  
+
+
+
   // const getSampleData = () => {
   //   viewinfo.map((items) => setEmployeelanguage([items.language]));
   //   console.log({view: viewinfo})
@@ -571,6 +662,17 @@ alert("Clicked")
 
   return (
     <>
+     <SweetAlert
+ warning
+showCancel
+ confirmBtnText="Yes, delete it!"
+confirmBtnBsStyle="danger"
+title={`${GetLabelByName("HCM-IIQS2WWFTPP_KCMI", lan)} ${GetLabelByName("HCM-2YN2O0KO4YX-LASN", lan)} ${GetLabelByName("HCM-SF00RQBW0XB_PSLL", lan)} ${delEmployeeName}?`}
+ onConfirm={onConfirm}
+ onCancel={onCancel}
+ focusCancelBtn
+show={isActive}
+></SweetAlert>
       <CRow hidden={!show}>
         <CCol xs="12">
           <h5>
@@ -659,6 +761,7 @@ alert("Clicked")
               dataSource={viewinfo}
               allowPaging={true}
               pageSettings={{ pageSize: 10 }}
+              commandClick={onCommandClick}
               // editSettings={editOptions}
               // toolbar={toolbarOptions}
             >
@@ -690,12 +793,12 @@ alert("Clicked")
                   width="100"
                 />
 
-                {/* <ColumnDirective
+                <ColumnDirective
                   commands={commandOptions}
                   headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
                   width="100"
                   textAlign="Center"
-                /> */}
+                />
               </ColumnsDirective>
               <ColumnsDirective></ColumnsDirective>
               <Inject

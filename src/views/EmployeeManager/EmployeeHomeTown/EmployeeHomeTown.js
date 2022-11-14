@@ -78,6 +78,8 @@ import useMultiFetch from "src/hooks/useMultiFetch";
 import useFetch from "src/hooks/useFetch";
 import usePost from "src/hooks/usePost";
 import { GetEmployeeHometownId, PostEmployeeHometown } from "src/reusable/API/EmployeeHometownEndpoints";
+import useDelete from "src/hooks/useDelete";
+import SweetAlert from "react-bootstrap-sweetalert";
 
 const editOptions = {
   allowEditing: false,
@@ -86,10 +88,10 @@ const editOptions = {
   allowEditOnDblClick: false,
 };
 const commandOptions = [
-  {
-    type: "Edit",
-    buttonOption: { iconCss: " e-icons e-edit", cssClass: "e-flat" },
-  },
+  // {
+  //   type: "Edit",
+  //   buttonOption: { iconCss: " e-icons e-edit", cssClass: "e-flat" },
+  // },
   {
     type: "Delete",
     buttonOption: { iconCss: "e-icons e-delete", cssClass: "e-flat" },
@@ -128,7 +130,9 @@ const EmployeeHomeTown = (props) => {
   const [skillType, setSkillType] = useState([]);
   const [chekedSkillTypes, setCheckedSkillTypes] = useState([]);
 const[post,setPost]=useState([])
-
+const [delEmployeeName,setDelEmployeeName]=useState("")
+const[isActive,setIsActive]=useState(false)
+const[delEmployeeID,setDelEmployeeID]=useState("")
 
 
 
@@ -377,8 +381,106 @@ console.log(viewinfo)
 
   console.log(viewinfo);
 console.log(chekedSkillTypes);
+const onConfirm = () => {
+
+  handleDeleteItem();
+
+};
+
+const onCancel = () => {
+
+  setIsActive(false);
+
+};
+
+const onCommandClick = (args) => {
+// console.log(args);
+ onCompleteAction(args);
+
+};
+
+
+
+
+const onCompleteAction = (args) => {
+
+  if (args.commandColumn.type === 'Delete') {
+
+    args.cancel = true;
+
+    setIsActive(true)
+
+    setDelEmployeeName(empDisplayName)
+
+    setDelEmployeeID(args.rowData.id)
+
+  }
+
+};
+
+const handleDeleteItem = async () => {
+
+  let deleteData = {
+
+    earningId: "",
+
+    employeeId: delEmployeeID,
+
+    userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+
+    accountReference: "string"
+
+  }
+
+  setDeletUrl("")
+
+  setDeleteData({ data: deleteData })
+
+
+
+};
+const { setData: setDeleteData, setUrl: setDeletUrl } = useDelete('', (response) => {
+
+  // console.log({location:response });
+
+  const { data } = response
+
+  if (response.status === 200 || response.status === 204) {
+
+    toast.success('Employee Hometown Deleted Successfully!',);
+
+    setIsActive(false);
+
+    // GetPreviousData(nonCashId);
+
+  } else {
+
+    toast.error('Transaction Failed, Please try agin later!', toastWarning);
+
+  }
+
+
+
+})
+
+
+
   return (
     <>
+    <SweetAlert
+ warning
+showCancel
+ confirmBtnText="Yes, delete it!"
+confirmBtnBsStyle="danger"
+title={`${GetLabelByName("HCM-IIQS2WWFTPP_KCMI", lan)} ${GetLabelByName("HCM-A0B8SHDK6DI_LASN", lan)} ${GetLabelByName("HCM-SF00RQBW0XB_PSLL", lan)} ${delEmployeeName}?`}
+
+ onConfirm={onConfirm}
+ onCancel={onCancel}
+ focusCancelBtn
+show={isActive}
+>
+ <CSLab code='HCM-7KY656PSXDB-LASN' />
+ </SweetAlert>
       <CRow hidden={!show}>
         <CCol xs="12">
           <h5>
@@ -467,6 +569,7 @@ console.log(chekedSkillTypes);
                   allowPaging={true}
                   pageSettings={{ pageSize: 10 }}
                   editSettings={editOptions}
+                  commandClick={onCommandClick}
                 >
                   <ColumnsDirective>
                     <ColumnDirective
@@ -491,12 +594,12 @@ console.log(chekedSkillTypes);
                       headerText={GetLabelByName("HCM-UVUQH81OLB8-LASN", lan)}
                       width="100"
                     />
-                    {/* <ColumnDirective
+                    <ColumnDirective
                       commands={commandOptions}
                       headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
                       width="100"
                       textAlign="Center"
-                    /> */}
+                    />
                   </ColumnsDirective>
                   <Inject
                     services={[Page, Sort, Filter, Group, Edit, CommandColumn]}
