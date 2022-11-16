@@ -74,6 +74,7 @@ import {
   PostAccidentTransaction,
   GetAccidentTypes,
   GetEmployeeAccidentByEmployeeId,
+  DeleteAccidentTransaction,
 } from "src/reusable/API/AccidentTransaction";
 import { CustomAxios } from "src/reusable/API/CustomAxios";
 import { BaseURL } from "src/reusable/API/base";
@@ -131,6 +132,7 @@ const AccidentTransaction = () => {
   const [delEmployeeName,setDelEmployeeName]=useState("")
 const[isActive,setIsActive]=useState(false)
 const[delEmployeeID,setDelEmployeeID]=useState("")
+const[AccidentTransactionChildren, setAccidentTransactionChildren]=useState([])
 
   //fucntion for multiple get (dropDown list in the form)
   // const MultipleGetRequests = async () => {
@@ -233,13 +235,13 @@ const[delEmployeeID,setDelEmployeeID]=useState("")
     // console.log(submitData)
 
     // let employeeId = submitData.id;
-    let newData = {
-      ...submitData,
-      userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      userName: "string",
-      CompanyReference: "00001_a01",
-      employeeId : searchResult?.id
-    };
+    // let newData = {
+    //   ...submitData,
+    //   userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    //   userName: "string",
+    //   CompanyReference: "00001_a01",
+    //   employeeId : searchResult?.id
+    // };
 
     let postin = 
     {
@@ -257,7 +259,8 @@ const[delEmployeeID,setDelEmployeeID]=useState("")
       },
      
     }
-    setTransactionData(newData)
+    setAccidentTransactionChildren((prev)=>[...prev,submitData])
+    // setTransactionData(newData)
     setEmployeeAccident((prevState)=>[postin,...prevState])
 
 
@@ -268,7 +271,13 @@ const[delEmployeeID,setDelEmployeeID]=useState("")
 
 
 const handlePost =()=>{
- setPostData(transactionData)
+  let postBody={
+    employeeId: handleId,
+    companyReference: "00001_a01",
+    "createEmployeeAccidentChildren": AccidentTransactionChildren,
+    "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+  }
+ setPostData(postBody)
     setPostUrl(PostAccidentTransaction())
 }
 
@@ -343,27 +352,7 @@ return data.find(x=>x.id === id)?.name || "Not Found"
     
     }
   };
-  // const testApi = async () => {
-  //   try {
-  //     const request = await CustomAxios.get(
-  //       `http://192.168.0.48:5100/EmployeeBio/${handleId}`
-  //     );
 
-  //     const res = request.data;
-
-  //     setViewInfo([res]);
-  //   } catch (error) {
-  //     console.log({ error });
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (handleId !== "") {
-  //     testApi();
-  //     // getEmployyeAccidentById();
-  //     console.log(viewinfo);
-  //   }
-  // }, [handleId]);
   const employeeName = viewinfo.map((x) => x.firstName + " " + x.lastName);
   const TransLabelByCode = (name) => GetLabelByName(name, lan);
 
@@ -393,7 +382,7 @@ return data.find(x=>x.id === id)?.name || "Not Found"
   };
   
   const onCommandClick = (args) => {
-   console.log(args);
+   //console.log(args);
    onCompleteAction(args);
   
   };
@@ -425,15 +414,14 @@ return data.find(x=>x.id === id)?.name || "Not Found"
   
       earningId: "",
   
-      employeeId: delEmployeeID,
+      transactionsId: delEmployeeID,
   
       userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
   
       accountReference: "string"
   
     }
-  
-    setDeletUrl("")
+    setDeletUrl(DeleteAccidentTransaction())
   
     setDeleteData({ data: deleteData })
   
@@ -451,7 +439,9 @@ return data.find(x=>x.id === id)?.name || "Not Found"
       toast.success('Employee Language Deleted Successfully!',);
   
       setIsActive(false);
-  
+    setEmployeeAccident("")
+
+      getEmployyeAccidentById(handleId)
       // GetPreviousData(nonCashId);
   
     } else {

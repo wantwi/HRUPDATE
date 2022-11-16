@@ -416,6 +416,8 @@ return data.find(x=>x.id=== id)?.name || "Not Found"
       toast.success('Employee Language Deleted Successfully!',);
   
       setIsActive(false);
+      setViewInfo("")
+      getEmployeeMedicalyById(handleId)
   
       // GetPreviousData(nonCashId);
   

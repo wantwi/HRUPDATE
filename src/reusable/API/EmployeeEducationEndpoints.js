@@ -11,13 +11,14 @@ import { BaseURL } from "./base";
  export const GetEmployeeEducationInfo=(filter)=>`EmployeeEducation${filter}`
  export const GetEmployeeById=(handleId)=>`EmployeeEducation/${handleId}`
 
+
  /**
  * POST Employee Education
  * @param Company Reference [required]
  * @returns urlpath
  */
  export const PostEmployeeEducationInfos =() =>`EmployeeEducation`
-
+ export const DeleteEmployeeEducationInfos =() =>`EmployeeEducation`
 
  
 

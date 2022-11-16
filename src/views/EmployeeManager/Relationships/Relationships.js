@@ -136,7 +136,6 @@ const getAllTypes = () => {
   });
 };
 getAllTypes();
-console.log({ relationTs });
 setTimeout(() => {}, 2000);
 
 //onClick={handleOnSubmit}
@@ -158,14 +157,11 @@ setTimeout(() => {}, 2000);
 //     query: new Query(),
 //   },
 // };
-// console.log("trials", earnings.params.fields);
 //HandleRelationTypes();
 let types;
 HandleRelationTypes().then((response) => {
-  console.log(response);
   types = response;
 });
-console.log({ HandleRelationTypes: HandleRelationTypes() });
 
 function refreshPage() {
   window.location.reload(false);
@@ -293,7 +289,6 @@ const [postNxtofK, setPostNxtofK]=useState([])
     },
   ];
 
-  console.log({ types });
   const [activeKey, setActiveKey] = useState(1);
 
   // const [large, setLarge] = useState(false);
@@ -398,7 +393,6 @@ const [postNxtofK, setPostNxtofK]=useState([])
 
   const submitRequest = (args) => {
     if ( args.item.id === "saveItems") {
-      console.log(activeKey)
       if(activeKey === 1){
         let PostBody={
           employeeId:handleId,
@@ -411,8 +405,7 @@ const [postNxtofK, setPostNxtofK]=useState([])
    setPostUrl(PostBeneficiary())
       }
       if(activeKey === 2){
-        console.log(activeKey);
-       //console.log(postDep);
+       
        let postBody  ={
         employeeId: handleId,
         userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
@@ -425,7 +418,6 @@ const [postNxtofK, setPostNxtofK]=useState([])
          setDependantPostData(postBody)
       }
       if(activeKey === 3){
-        console.log(activeKey);
         let Emergency= {
           employeeId:handleId,
           createEmployeeEmergencyContactChildren: EmployeeEmerGencyContactChildrenList,
@@ -435,10 +427,8 @@ const [postNxtofK, setPostNxtofK]=useState([])
         }
         setEmegencyContactPostUrl(PostEmployeeEmergencyContact())
          setEmegencyContactPostData(Emergency)
-//console.log(postEmerg);
       }
       if(activeKey === 4){
-        console.log(activeKey);
         let postbody=   {
           employeeId: handleId,
             "createEmployeeGuarantorChildren": EmployeerGurrantoContactChildrenList,
@@ -465,7 +455,6 @@ const [postNxtofK, setPostNxtofK]=useState([])
       console.log("ELSE");
     }
 
-    //console.log({ value: firstGrid });
   };
 
   const actionComplete = (args) => {
@@ -478,7 +467,6 @@ const [postNxtofK, setPostNxtofK]=useState([])
       // setRecEarnings(firstGrid.current.currentViewData)
       let currentData = firstGrid.current.currentViewData;
       //console.log(sampleData)
-      console.log(currentData);
       // getSampleData(currentData);
 
       // console.log(newdata)
@@ -489,7 +477,6 @@ const [postNxtofK, setPostNxtofK]=useState([])
   var values = ColumnDirective.getValue;
 
   const onCommandClick = (args) => {
-    console.log(args);
     onCompleteAction(args);
   };
 
@@ -497,7 +484,6 @@ const [postNxtofK, setPostNxtofK]=useState([])
 
 const  {data:multicallData, setUrls} =  useMultiFetch([], (results) => {
 
-      console.log(results);
 
   setGetBenefiary([...results[0].data]);
   setDependant([...results[1].data]);
@@ -520,14 +506,12 @@ return () => {
 
 
 useEffect(() => {
-  console.log("XXX:", EmployeeDependantChildrenList)
 }, [EmployeeDependantChildrenList])
 
 
 
 
   const handleSearchResultSelect = (results) => {
-    console.log("show results", results);
 
     //setting employee display name on select of suggested item
     setEmpDisplayName(
@@ -580,7 +564,6 @@ useEffect(() => {
 
   //HANDLE DEPENDANT POST
   const  {setData:setDependantPostData, setUrl:setDependentPostUrl} = usePost('', (response) => {
-    // console.log({location:response });
     setShow(false);
     const {data} = response
     if ("" === data) {
@@ -995,9 +978,7 @@ setEmployeeNextOfKinChildrenList((prev)=>[...prev,currentFormData])
     }
   };
 
-console.log(submitData?.relationId);
 
-console.log(show);
   //Post Employee Beneficiary
   function postBeneficiary(data) {
     //console.log("post data", data);
@@ -1006,7 +987,6 @@ console.log(show);
         response.text().then((data) => {
           if ("" == data) {
             toast.success("Employee Beneficiary Added Successfully!");
-            console.log("success");
           //  MultipleGetRequests();
             setCurrentFormData("");
           } else {
@@ -1268,9 +1248,7 @@ console.log(show);
     );
   }
 
-  // console.log({ currentFormData });
-  // console.log({ relationTypes });
-  // console.log({ benefiaciary });
+
   var arr = [];
 
   // checkRelation
@@ -1386,36 +1364,69 @@ console.log(show);
     checkBenefiary();
   }, [currentFormData?.relationId]);
 
-  console.log( checkedTypes);
 
+  //Fetch used for calling data after deleting
+  const {setOptData, setUrl} =  useFetch("", (response,results) => {
+    if (response) {
+        if (response && Object.keys(response).length > 0) {
+            // setSearchResult(results);
+            dispatch({ type: 'set', data: { ...response } });
+            setSubmitData(response);
+            //setDupData({...response})
+            setViewInfo(response)
+            setMode('Update');
+            setShow(false);
+            if(activeKey === 1){
+              setGetBenefiary(response)
+              }
+            if(activeKey === 2){
+              setDependant(response)
+             }
+            if(activeKey === 3){
+              setEmergencyContact(response)
+            }
+            if(activeKey === 4){
+              setGetGuarantor(response)
+            }
+            if(activeKey === 5 ){
+            setGetNextOfKin(response)
+            }
+        } else {
+            setMode('Add');
+            setShow(false);
+            dispatch({ type: 'set', data: { ...response } });
+            setSubmitData({ ...response });
+        }
+    }
+});
+  
+//FUNCTION USED TO CHECK ACTIVE TAB AND SET URL FOR FETCH
+  const showNewData=()=>{
+    console.log("Called new data");
+if(activeKey===1){
+  setGetBenefiary("")
+  setUrl(GetBeneficiary(handleId))
+  console.log(activeKey);
+}
+if(activeKey===2){
+  setDependant("")
+  setUrl(GetEmployeeDependant(handleId))
+  console.log(activeKey);
+}
+if(activeKey===3){
+  setUrl(GetEmployeeEmergencyContact(handleId))
+  console.log(activeKey);
+}
+if(activeKey===4){
+  setUrl(GetEmployeeGuarantor(handleId))
+  console.log(activeKey);
+}
+if(activeKey===5){
+  setUrl(GetEmployeeNextOfKin(handleId))
+  console.log(activeKey);
+}
 
-
-//   const showNewData=()=>{
-//     console.log("Called new data");
-// if(activeKey===1){
-//   setGetBenefiary("")
-//   setUrl(GetBeneficiary(handleId))
-//   console.log(activeKey);
-// }
-// if(activeKey===2){
-//   setDependant("")
-//   setUrl(GetEmployeeDependant(handleId))
-//   console.log(activeKey);
-// }
-// if(activeKey===3){
-//   setUrl(GetEmployeeEmergencyContact(handleId))
-//   console.log(activeKey);
-// }
-// if(activeKey===4){
-//   setUrl(GetEmployeeGuarantor(handleId))
-//   console.log(activeKey);
-// }
-// if(activeKey===5){
-//   setUrl(GetEmployeeNextOfKin(handleId))
-//   console.log(activeKey);
-// }
-
-//   }
+  }
   const handleDeleteItem = async () => {
   
     if(activeKey===1){
@@ -1423,7 +1434,7 @@ console.log(show);
  
         earningId: "",
         transactionsId: delEmployeeID,
-        employeeId: delEmployeeID,
+      
     
         userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     
@@ -1441,7 +1452,6 @@ console.log(show);
         earningId: "",
         transactionsId: delEmployeeID,
     
-        employeeId: delEmployeeID,
     
         userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     
@@ -1459,7 +1469,7 @@ console.log(show);
         earningId: "",
         transactionsId: delEmployeeID,
     
-        employeeId: delEmployeeID,
+       
     
         userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     
@@ -1477,8 +1487,7 @@ console.log(show);
         earningId: "",
         transactionsId: delEmployeeID,
     
-        employeeId: delEmployeeID,
-        transactionsId: delEmployeeID,
+     
     
         userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     
@@ -1496,7 +1505,7 @@ console.log(show);
         earningId: "",
         transactionsId: delEmployeeID,
     
-        employeeId: delEmployeeID,
+    
     
         userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     
@@ -1523,10 +1532,10 @@ console.log(show);
     setIsActive(false);
   
   };
-
+  
+// AXIOS FUNCTION FOR DELETE
   const { setData: setDeleteData, setUrl: setDeletUrl } = useDelete('', (response) => {
   
-    // console.log({location:response });
   
     const { data } = response
   
@@ -1535,8 +1544,35 @@ console.log(show);
       toast.success('Employee Language Deleted Successfully!',);
   
       setIsActive(false);
-      // showNewData()
+       
       // GetPreviousData(nonCashId);
+      if(activeKey === 1){
+        setGetBenefiary("")
+        showNewData()
+        }
+           
+     
+      if(activeKey === 2){
+        setDependant("")
+        showNewData()
+        
+       }
+        
+     
+      if(activeKey === 3){
+        setEmergencyContact("")
+        showNewData()
+      }
+      if(activeKey === 4){
+        setGetGuarantor("")
+        showNewData()
+       
+      }
+      if(activeKey === 5 ){
+      setGetNextOfKin("")
+      showNewData()
+       
+      }
   
     } else {
   
@@ -1548,7 +1584,6 @@ console.log(show);
   
   })
 
-console.log(relationTypes);
   return (
     <>
      <SweetAlert

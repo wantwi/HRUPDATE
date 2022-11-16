@@ -62,6 +62,7 @@ import {
   PostEmployeeEducationInfos,
   GetEmployeeEducationInfo,
   GetEmployeeById,
+  DeleteEmployeeEducationInfos,
 } from "src/reusable/API/EmployeeEducationEndpoints";
 import { GetEmployeeAccidentByEmployeeId } from "src/reusable/API/AccidentTransaction";
 import useMultiFetch from "src/hooks/useMultiFetch";
@@ -116,6 +117,7 @@ const EmployeeEducationInformation = (props) => {
   const [delEmployeeName,setDelEmployeeName]=useState("")
 const[isActive,setIsActive]=useState(false)
 const[delEmployeeID,setDelEmployeeID]=useState("")
+const [EmployeeEduInfoChildren,setEmployeeEduInfoChildren]=useState([])
   // const [postdetails,setPostDetails]= useState([{name:"",gender:""}])
 
 
@@ -253,6 +255,7 @@ let forGrid =
     }
   }
   setPost(newData)
+  setEmployeeEduInfoChildren((prev)=>[...prev, submitData])
 setViewInfo((prevState)=>[forGrid,...prevState])
 console.log(forGrid);
    // postEmployeeEducationInfo(newData);
@@ -264,8 +267,14 @@ console.log(forGrid);
    };
 
    const handlePost=()=>{
+    let postHobby={
+      employeeId: handleId,
+      "createEmployeeEducationChildren": EmployeeEduInfoChildren,
+      "companyReference": "00001_a01",
+      "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+    }
     setPostUrl(PostEmployeeEducationInfos())
-     setPostData(post)
+     setPostData(postHobby)
    // console.log(post)
    }
 
@@ -342,7 +351,8 @@ console.log(forGrid);
 });
   // console.log({ baseurl: process.env.REACT_APP_BASE_URL });
   const getEmployeebyId =(id) => {
-    setUrl(id)
+    setUrl(GetEmployeeById(id))
+      
     // try {
     //   const request = await CustomAxios.get(`EmployeeEducation/${handleId}`);
 
@@ -416,7 +426,7 @@ console.log(forGrid);
   
       earningId: "",
   
-      employeeId: delEmployeeID,
+      transactionsId: delEmployeeID,
   
       userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
   
@@ -424,7 +434,7 @@ console.log(forGrid);
   
     }
   
-    setDeletUrl("")
+    setDeletUrl(DeleteEmployeeEducationInfos())
   
     setDeleteData({ data: deleteData })
   
@@ -442,8 +452,10 @@ console.log(forGrid);
       toast.success('Employee Language Deleted Successfully!',);
   
       setIsActive(false);
-  
+      setViewInfo("")
+      getEmployeebyId(handleId)
       // GetPreviousData(nonCashId);
+      getEmployeebyId(handleId)
   
     } else {
   

@@ -70,7 +70,7 @@ import {
 import { CustomAxios } from "src/reusable/API/CustomAxios";
 import {
   PostEmployeeHobbies,
-  GetEmployeeHobbyTypes,GetEmployeeByid
+  GetEmployeeHobbyTypes,GetEmployeeByid, DeleteEmployeeHobbies
 } from "src/reusable/API/EmployeeHobbyEndPoints";
 import Select from "react-select";
 
@@ -136,6 +136,8 @@ const EmployeeHobby = (props) => {
   const [delEmployeeName,setDelEmployeeName]=useState("")
   const[isActive,setIsActive]=useState(false)
   const[delEmployeeID,setDelEmployeeID]=useState("")
+  const[EmployeeHobbyChildren,setEmployeeHobbyChildren]=useState([])
+  
 
 
 
@@ -171,9 +173,10 @@ const EmployeeHobby = (props) => {
    
     let employeeId = submitData.id;
     //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
+    
     let newData = {
     
-      hobbyTypeId: `${unitId[0]}`,
+      hobbyTypeId: `${unitId[0]}  `,
       employeeId: searchResult?.id,
       companyReference: "00001_a01",
       userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
@@ -181,9 +184,9 @@ const EmployeeHobby = (props) => {
     let gridView= {
       
       "hobbyType": {
-        "id": `${unitId[0]}`,
+        "id": `${unitId.map((x)=> x)}`,
         
-        "name": getName(hobbyTypes,`${unitId[0]}`),
+        "name": getName(hobbyTypes,`${unitId.map((x)=>x)}`),
        
       },
       "employee": {
@@ -193,19 +196,34 @@ const EmployeeHobby = (props) => {
        
       }
     }
+
+
+    setEmployeeHobbyChildren((prev)=>[...prev, gridView?.hobbyType?.id])
 setEmployeeHobbyby(newData)
     setViewInfo((prevState)=>[gridView,...prevState])
     //console.log(gridView)
 
     //postEmployeeHobby(newData);
-
-
+    fanf()
+console.log(unitId);
   };
 
 
+const fanf=()=>{
+  unitId.map((x)=> console.log(x))
+}
+
+
+
 const handlePost=()=>{
+  let postBody={
+    employeeId: handleId,
+    "createEmployeeHobbyChildren": EmployeeHobbyChildren,
+    "companyReference": "00001_a01",
+    "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+  }
        setPostUrl(PostEmployeeHobbies())
-     setPostData(employeeHobby)
+     setPostData(postBody)
 }
 
 
@@ -417,7 +435,7 @@ const getName=(data,id)=>{
   
       earningId: "",
   
-      employeeId: delEmployeeID,
+      transactionId: delEmployeeID,
   
       userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
   
@@ -425,7 +443,7 @@ const getName=(data,id)=>{
   
     }
   
-    setDeletUrl("")
+    setDeletUrl(DeleteEmployeeHobbies())
   
     setDeleteData({ data: deleteData })
   
@@ -443,7 +461,9 @@ const getName=(data,id)=>{
       toast.success('Employee Language Deleted Successfully!',);
   
       setIsActive(false);
-  
+      setViewInfo("")
+      getEmployeeHobbybyId(handleId)
+    
       // GetPreviousData(nonCashId);
   
     } else {
@@ -455,7 +475,7 @@ const getName=(data,id)=>{
   
   
   })
-
+console.log(educationCore);
   return (
     <>
     
