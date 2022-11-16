@@ -77,7 +77,7 @@ import { CCardGroup } from "@coreui/bootstrap-react";
 import useMultiFetch from "src/hooks/useMultiFetch";
 import useFetch from "src/hooks/useFetch";
 import usePost from "src/hooks/usePost";
-import { GetEmployeeHometownId, PostEmployeeHometown } from "src/reusable/API/EmployeeHometownEndpoints";
+import { DeleteEmployeeHometown, GetEmployeeHometownId, PostEmployeeHometown } from "src/reusable/API/EmployeeHometownEndpoints";
 import useDelete from "src/hooks/useDelete";
 import SweetAlert from "react-bootstrap-sweetalert";
 
@@ -133,6 +133,7 @@ const[post,setPost]=useState([])
 const [delEmployeeName,setDelEmployeeName]=useState("")
 const[isActive,setIsActive]=useState(false)
 const[delEmployeeID,setDelEmployeeID]=useState("")
+const [EmployeeHomeTownChildrenList, setEmployeeHomeTownChildrenList]= useState([])
 
 
 
@@ -177,8 +178,8 @@ const[delEmployeeID,setDelEmployeeID]=useState("")
     setSubmitData({ ...results });
 
     if (results?.id) {
+      HandleGet(results?.id)
       setSearchResult(results);
-      setUrl(GetEmployeeHometownId(results.id))
       // GetRequest(GetEmployeeById(results.id))
       //   .then((response) => {
       //     console.log(response)
@@ -213,6 +214,10 @@ const[delEmployeeID,setDelEmployeeID]=useState("")
       //   });
     }
   };
+  const HandleGet=(id)=>{
+   
+      setUrl(GetEmployeeHometownId(id))
+  }
   const searchReset = () => {
     setShow(true);
     setSearchInput("");
@@ -256,15 +261,17 @@ const[delEmployeeID,setDelEmployeeID]=useState("")
     // console.log(submitData)
     let employeeId = submitData.id;
     //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
-    let newData = {
-      ...submitData,
-      userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      userName: "string",
-      CompanyReference: "00001_A01",
-      employeeId: searchResult?.id,
-    };
+    // let newData = {
+    //   ...submitData,
+    //   userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    //   userName: "string",
+    //   CompanyReference: "00001_A01",
+    //   employeeId: searchResult?.id,
+    // };
 // console.log(submitData);
-setPost(newData)
+setEmployeeHomeTownChildrenList((prev)=>[...prev,submitData ])
+
+
 let postData={
   
     
@@ -286,9 +293,15 @@ let postData={
   };
 
 const handleposting=()=>{
-   setPostUrl(PostEmployeeHometown())
-   setPostData(post)
-  console.log(post);
+   
+ let postBody=  {
+    employeeId: searchResult?.id,
+    createEmployeeHomeTownChildren: EmployeeHomeTownChildrenList,
+    "companyReference": "00001_a01",
+    "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+  }
+  setPostUrl(PostEmployeeHometown())
+   setPostData(postBody)
 }
 
   const  {setData:setPostData, setUrl:setPostUrl} = usePost('', (response) => {
@@ -424,7 +437,7 @@ const handleDeleteItem = async () => {
 
     earningId: "",
 
-    employeeId: delEmployeeID,
+    transactionsId: delEmployeeID,
 
     userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
 
@@ -432,7 +445,7 @@ const handleDeleteItem = async () => {
 
   }
 
-  setDeletUrl("")
+  setDeletUrl(DeleteEmployeeHometown())
 
   setDeleteData({ data: deleteData })
 
@@ -450,7 +463,8 @@ const { setData: setDeleteData, setUrl: setDeletUrl } = useDelete('', (response)
     toast.success('Employee Hometown Deleted Successfully!',);
 
     setIsActive(false);
-
+    setViewInfo("")
+    HandleGet(handleId)
     // GetPreviousData(nonCashId);
 
   } else {
@@ -479,7 +493,7 @@ title={`${GetLabelByName("HCM-IIQS2WWFTPP_KCMI", lan)} ${GetLabelByName("HCM-A0B
  focusCancelBtn
 show={isActive}
 >
- <CSLab code='HCM-7KY656PSXDB-LASN' />
+ 
  </SweetAlert>
       <CRow hidden={!show}>
         <CCol xs="12">

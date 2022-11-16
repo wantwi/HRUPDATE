@@ -75,6 +75,7 @@ import { toast } from "react-toastify";
 import {
   PostEmployeeLanguage,
   GetEmployeeLanguagesType,
+  DeleteEmployeeLanguage,
 } from "src/reusable/API/EmployeeLanguage";
 import { IdNumberIcon } from "evergreen-ui";
 import { Dropdown } from "@coreui/coreui";
@@ -143,6 +144,8 @@ const EmployeeLanguage = () => {
   const [delEmployeeName,setDelEmployeeName]=useState("")
 const[isActive,setIsActive]=useState(false)
 const[delEmployeeID,setDelEmployeeID]=useState("")
+const [EmployeeLanguageChildrenList, setEmployeeLanguageChildrenList]= useState([])
+
   //const [newGridDta, setNewGridData] = useState([]);
   const firstGrid = useRef();
 
@@ -315,6 +318,8 @@ console.log(results);
 
   //Get employee skill details
   const getEmployeelanguage = (ID) => {
+
+
     setUrl(GetEmployeeByID(ID))
     console.log(ID)
    
@@ -376,14 +381,14 @@ console.log(results);
     let employeeId = searchResult?.id;
     //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
 
-    let newData = {
-      ...submitData,
-      userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      userName: "string",
-      CompanyReference: "00001_A01",
-      employeeId: employeeId,
-    };
-
+    // let newData = {
+    //   ...submitData,
+    //   userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    //   userName: "string",
+    //   CompanyReference: "00001_A01",
+    //   employeeId: employeeId,
+    // };
+    setEmployeeLanguageChildrenList((prev)=>[...prev, submitData])
 
 let newGridData ={
   employee: {
@@ -397,7 +402,7 @@ let newGridData ={
   write: getName(submitData?.write),
   speak: getName(submitData?.speak),
 }
-setPost(newData)
+// setPost(newData)
   
     console.log(newGridData);
     setViewInfo((prevState) => [newGridData,...prevState]);
@@ -416,7 +421,14 @@ setPost(newData)
  
   const handlePost=()=>{
     console.log(post)
-    setPostData(post)
+    let postBody=    {
+      employeeId: handleId,
+      "createEmployeeLanguageChildren":EmployeeLanguageChildrenList ,
+      "companyReference": "00001_a01",
+      "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+    }
+
+    setPostData(postBody)
      setPostUrl(PostEmployeeLanguage())
     }
 
@@ -553,8 +565,8 @@ alert("Clicked")
   };
   
   const onCommandClick = (args) => {
-  console.log(args);
-  // onCompleteAction(args);
+  //console.log(args);
+   onCompleteAction(args);
   
   };
   
@@ -585,7 +597,7 @@ alert("Clicked")
   
       earningId: "",
   
-      employeeId: delEmployeeID,
+      transactionId: delEmployeeID,
   
       userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
   
@@ -593,7 +605,7 @@ alert("Clicked")
   
     }
   
-    setDeletUrl("")
+    setDeletUrl(DeleteEmployeeLanguage())
   
     setDeleteData({ data: deleteData })
   
@@ -611,7 +623,8 @@ alert("Clicked")
       toast.success('Employee Language Deleted Successfully!',);
   
       setIsActive(false);
-  
+      setViewInfo("")
+      getEmployeelanguage(handleId)
       // GetPreviousData(nonCashId);
   
     } else {
@@ -970,7 +983,7 @@ show={isActive}
             }}
           >
             {/* <CSLab code="HCM-TAAFD4M071D-HRPR" /> */}
-            <CSLab code="HCM-HGUHIR0OK6T" />
+            <CSLab code="HCM-TAAFD4M071D-HRPR" />
            
           </CButton>
         </CModalFooter>

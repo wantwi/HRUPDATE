@@ -67,6 +67,11 @@ import {
 } from "src/reusable/utils/helper";
 import { GetLabelByName } from "src/reusable/configs/config";
 import {
+  DeleteBeneficiary,
+  DeleteDependantDetails,
+  DeleteEmployeeEmergencyContact,
+  DeleteEmployeeGuarantor,
+  DeleteEmployeeNextOfKin,
   GetBeneficiary,
   GetEmployeeDependant,
   GetEmployeeEmergencyContact,
@@ -94,12 +99,14 @@ import NextOfKinForm from "./forms/NextOfKinForm";
 import useMultiFetch from "src/hooks/useMultiFetch";
 import useFetch from "src/hooks/useFetch";
 import usePost from "src/hooks/usePost";
+import SweetAlert from "react-bootstrap-sweetalert";
+import useDelete from "src/hooks/useDelete";
 
 const commandOptions = [
-  {
-    type: "Edit",
-    buttonOption: { iconCss: " e-icons e-edit", cssClass: "e-flat" },
-  },
+  // {
+  //   type: "Edit",
+  //   buttonOption: { iconCss: " e-icons e-edit", cssClass: "e-flat" },
+  // },
   {
     type: "Delete",
     buttonOption: { iconCss: "e-icons e-delete", cssClass: "e-flat" },
@@ -260,7 +267,16 @@ const [postEmerg,setPostEmerg]=useState([])
 const [postGua,setPostGuar]= useState([])
 const [postNxtofK, setPostNxtofK]=useState([])
   // const submitBtn =  useRef(null)
-
+  const [delEmployeeName,setDelEmployeeName]=useState("")
+  const[isActive,setIsActive]=useState(false)
+  const[delEmployeeID,setDelEmployeeID]=useState("")
+  const [labels,setLabel]=useState("")
+  const[EmergencyContactName,setEmergencyContactName] =useState([])
+  const [EmployeeDependantChildrenList, setEmployeeDependantChildrenList] = useState([])
+  const [EmployeeBeneficiaryChildrenList, setEmployeeBeneficiaryChildrenList] = useState([])
+  const [EmployeeEmerGencyContactChildrenList, setEmployeeEmerGencyContactChildrenList] = useState([])
+  const [EmployeerGurrantoContactChildrenList, setEmployeeGurrantoContactChildrenList] = useState([])
+  const [EmployeeNextOfKinChildrenList, setEmployeeNextOfKinChildrenList] = useState([])
 
 
 
@@ -289,7 +305,11 @@ const [postNxtofK, setPostNxtofK]=useState([])
     setSearchInput("");
     setCurrentFormData("")
   setSubmitData("")
-
+  // setEmergencyContact("")
+  // setGetNextOfKin("")
+  // setGetGuarantor("")
+  // setGetBenefiary("")
+  // setDependant("")
     // const [grid,] = useState(null);
 
     // const OnSaveContinueClick = () => {
@@ -298,44 +318,147 @@ const [postNxtofK, setPostNxtofK]=useState([])
   };
 
   const onCompleteAction = (args) => {
-    console.log(getValue("name", args));
-    console.log(grid);
-    if (grid) {
-      // here you can update the new row data by using setRowData method of Grid
-      // grid.setRowData(newData.id, newData);
-      console.log({ showGridItems: grid });
+    if(activeKey=== 1){
+      if (args.commandColumn.type === 'Delete') {
+  
+        args.cancel = true;
+    
+        setIsActive(true)
+    
+        setDelEmployeeName(`${args?.rowData?.employee?.firstName
+        } ${args?.rowData?.employee?.lastName
+        }`)
+    
+        setDelEmployeeID(args?.rowData?.id)
+    setLabel("HCM-MS5RN9DANOF-PSLL")
+      }
     }
+    if(activeKey=== 2){
+      if (args.commandColumn.type === 'Delete') {
+  
+        args.cancel = true;
+    
+        setIsActive(true)
+    
+        setDelEmployeeName(`${args?.rowData?.employee?.firstName
+        } ${args?.rowData?.employee?.lastName
+        }`)
+    
+        setDelEmployeeID(args.rowData.id)
+    setLabel("HCM-TXJFM19UOAG-LOLN")
+      }
+    }
+    if(activeKey=== 3){
+      if (args.commandColumn.type === 'Delete') {
+  
+        args.cancel = true;
+    
+        setIsActive(true)
+    
+        setDelEmployeeName(`${args?.rowData?.employee?.firstName
+        } ${args?.rowData?.employee?.lastName
+        }`)
+    
+        setDelEmployeeID(args.rowData.id)
+    setLabel("HCM-C7C1XLFCOS5-LANG")
+      }
+    }
+    if(activeKey=== 4){
+      if (args.commandColumn.type === 'Delete') {
+  
+        args.cancel = true;
+    
+        setIsActive(true)
+    
+        setDelEmployeeName(`${args?.rowData?.employee?.firstName
+        } ${args?.rowData?.employee?.lastName
+        }`)
+    
+        setDelEmployeeID(args.rowData.id)
+    setLabel("HCM-2VDPTKA7U9T-LOLN")
+      }
+    }
+    if(activeKey=== 5){
+      if (args.commandColumn.type === 'Delete') {
+  
+        args.cancel = true;
+    
+        setIsActive(true)
+    
+        setDelEmployeeName(`${args?.rowData?.employee?.firstName
+        } ${args?.rowData?.employee?.lastName
+        }`)
+    
+        setDelEmployeeID(args.rowData.id)
+    setLabel("HCM-EP256EK5BS-LASN")
+      }
+    }
+
   };
 
   const submitRequest = (args) => {
     if ( args.item.id === "saveItems") {
       console.log(activeKey)
       if(activeKey === 1){
-        console.log(postbene);
-            setPostData(postbene)
+        let PostBody={
+          employeeId:handleId,
+          createEmployeeBeneficiaryChildren: EmployeeBeneficiaryChildrenList,
+          userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          userName: "string",
+          CompanyReference: "00001_A01",
+        }
+            setPostData(PostBody)
    setPostUrl(PostBeneficiary())
       }
       if(activeKey === 2){
         console.log(activeKey);
        //console.log(postDep);
+       let postBody  ={
+        employeeId: handleId,
+        userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        userName: "string",
+        companyReference: "00001_A01",
+        createEmployeeDependantChildren: EmployeeDependantChildrenList,
+        
+       }
          setDependentPostUrl(PostDependantDetails())
-         setDependantPostData(postDep)
+         setDependantPostData(postBody)
       }
       if(activeKey === 3){
         console.log(activeKey);
+        let Emergency= {
+          employeeId:handleId,
+          createEmployeeEmergencyContactChildren: EmployeeEmerGencyContactChildrenList,
+         userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          userName: "string",
+          companyReference: "00001_A01",
+        }
         setEmegencyContactPostUrl(PostEmployeeEmergencyContact())
-         setEmegencyContactPostData(postEmerg)
+         setEmegencyContactPostData(Emergency)
 //console.log(postEmerg);
       }
       if(activeKey === 4){
         console.log(activeKey);
+        let postbody=   {
+          employeeId: handleId,
+            "createEmployeeGuarantorChildren": EmployeerGurrantoContactChildrenList,
+            "companyReference": "string",
+            "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+          }
+          
        setGuarrantorPostUrl(PostEmployeeGuarantor())
-        setPostGuarrantorData(postGua)
+        setPostGuarrantorData(postbody)
       }
       if(activeKey === 5 ){
         console.log(activeKey);
+        let postbody = {
+          employeeId:handleId,
+          createEmployeeNextofKinChildren:EmployeeNextOfKinChildrenList,
+          companyReference: "string",
+          userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        }
         setNOKPostUrl(PostEmployeeNextOfKin())
-        setPostNOK(postNxtofK)
+        setPostNOK(postbody)
       }
       
     } else {
@@ -366,32 +489,39 @@ const [postNxtofK, setPostNxtofK]=useState([])
   var values = ColumnDirective.getValue;
 
   const onCommandClick = (args) => {
-    console.log("on command click");
+    console.log(args);
     onCompleteAction(args);
   };
 
 
 
 const  {data:multicallData, setUrls} =  useMultiFetch([], (results) => {
-      
+
+      console.log(results);
+
   setGetBenefiary([...results[0].data]);
   setDependant([...results[1].data]);
   setEmergencyContact([...results[2].data]);
   setGetGuarantor([...results[3].data]);
   setRelationTypes([...results[4].data]);
   setGetNextOfKin([...results[5].data])
+  
 })
 
 useEffect(() => {
 
 setUrls([GetBeneficiary(handleId), 
   GetEmployeeDependant(handleId), GetEmployeeEmergencyContact(handleId), 
-  GetEmployeeGuarantor(handleId),RelationTypes(),GetEmployeeNextOfKin(handleId)])
+  GetEmployeeGuarantor(handleId),GetRelationTypes(),GetEmployeeNextOfKin(handleId)])
 return () => {
   
 }
 }, [handleId,setUrls])
 
+
+useEffect(() => {
+  console.log("XXX:", EmployeeDependantChildrenList)
+}, [EmployeeDependantChildrenList])
 
 
 
@@ -573,13 +703,7 @@ return () => {
       // console.log(submitData)
       let employeeId = handleId;
       //  let newData = { ...submitData, option: options, companyId: TestCompanyId }
-      let newData = {
-        ...currentFormData,
-        userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        userName: "string",
-        CompanyReference: "00001_A01",
-        employeeId,
-      };
+    
       console.log(currentFormData);
       let benefiaciaryGridData={
       
@@ -589,9 +713,11 @@ return () => {
         },
         
       }
-      console.log(benefiaciaryGridData);
+
+
+
+setEmployeeBeneficiaryChildrenList((prev) => [...prev,currentFormData ])
      setGetBenefiary((prevState)=>[benefiaciaryGridData,...prevState])
-     setPostBene(newData)
      checkBenefiary();
       
     }
@@ -647,18 +773,9 @@ return () => {
       }
       // console.log(submitData)
       let employeeId = handleId;
-      //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
-      let newData = {
-        ...currentFormData,
-        userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        userName: "string",
-        companyReference: "00001_A01",
-        employeeId,
-      };
-
-
-
-      console.log({ newData });
+      setEmployeeDependantChildrenList((prev) => [...prev,currentFormData ])
+ 
+      //console.log({Trial: currentFormData,Dep });
       let posting= {
        ...currentFormData,
          firstName: currentFormData?.firstName,
@@ -682,9 +799,9 @@ return () => {
          },
         
     }
-    console.log(posting);
+  
  setDependant((prevState)=>[posting,...prevState])
-   setPostDep(newData)
+   //setPostDep((prevState)=>[Dep,...prevState])
    setCurrentFormData("")
   
     }
@@ -722,6 +839,7 @@ return () => {
         employeeId,
         name: `${currentFormData?.firstName} ${currentFormData?.lastName}`,
       };
+   
 
       let posting=  {
        
@@ -731,9 +849,10 @@ return () => {
         address : currentFormData?.address,
       
       }
-      console.log({ newData });
+
       // postEmergencyContact(newData);
-      setPostEmerg(newData)
+ setEmployeeEmerGencyContactChildrenList((prev)=>[...prev,currentFormData])
+
       setEmergencyContact((prevState)=>[posting, ...prevState])
       
     }
@@ -779,16 +898,9 @@ return () => {
       // console.log(submitData)
       let employeeId = handleId;
       //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
-      let newData = {
-        ...currentFormData,
-        userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        userName: "string",
-        companyReference: "00001_A01",
-        employeeId,
-        name: `${currentFormData?.firstName} ${currentFormData?.lastName}`,
-      };
-
-      let posting=  {
+     
+      
+      let gridView=  {
         
         name: `${currentFormData?.firstName} ${currentFormData?.lastName}`,
         phone: currentFormData?.phone,
@@ -804,8 +916,10 @@ return () => {
           name: getName(checkedTypesGuarantor,currentFormData?.relationId)
         }
       }
-      setPostGuar(newData)
-      setGetGuarantor((prevState)=>[posting,...prevState])
+      setEmployeeGurrantoContactChildrenList((prev)=>[...prev,currentFormData])
+     
+     
+      setGetGuarantor((prevState)=>[gridView,...prevState])
       checkRelationGuarantor();
    
     }
@@ -874,9 +988,9 @@ let handleGrid=  {
     "name": getName(nationality,currentFormData?.nationalityId)
   }
 }
-
+setEmployeeNextOfKinChildrenList((prev)=>[...prev,currentFormData])
       setGetNextOfKin((prevState)=>[handleGrid,...prevState])
-      setPostNxtofK(newData)
+      // setPostNxtofK(newData)
       checkRelationNextOfKin();
     }
   };
@@ -1275,8 +1389,179 @@ console.log(show);
   console.log( checkedTypes);
 
 
+
+//   const showNewData=()=>{
+//     console.log("Called new data");
+// if(activeKey===1){
+//   setGetBenefiary("")
+//   setUrl(GetBeneficiary(handleId))
+//   console.log(activeKey);
+// }
+// if(activeKey===2){
+//   setDependant("")
+//   setUrl(GetEmployeeDependant(handleId))
+//   console.log(activeKey);
+// }
+// if(activeKey===3){
+//   setUrl(GetEmployeeEmergencyContact(handleId))
+//   console.log(activeKey);
+// }
+// if(activeKey===4){
+//   setUrl(GetEmployeeGuarantor(handleId))
+//   console.log(activeKey);
+// }
+// if(activeKey===5){
+//   setUrl(GetEmployeeNextOfKin(handleId))
+//   console.log(activeKey);
+// }
+
+//   }
+  const handleDeleteItem = async () => {
+  
+    if(activeKey===1){
+      let deleteData = {
+ 
+        earningId: "",
+        transactionsId: delEmployeeID,
+        employeeId: delEmployeeID,
+    
+        userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    
+        accountReference: "string"
+    
+      }
+    
+      setDeletUrl(DeleteBeneficiary())
+    
+      setDeleteData({ data: deleteData })
+    }
+    if(activeKey===2){
+      let deleteData = {
+ 
+        earningId: "",
+        transactionsId: delEmployeeID,
+    
+        employeeId: delEmployeeID,
+    
+        userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    
+        accountReference: "string"
+    
+      }
+    
+      setDeletUrl(DeleteDependantDetails())
+    
+      setDeleteData({ data: deleteData })
+    }
+    if(activeKey===3){
+      let deleteData = {
+ 
+        earningId: "",
+        transactionsId: delEmployeeID,
+    
+        employeeId: delEmployeeID,
+    
+        userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    
+        accountReference: "string"
+    
+      }
+    
+      setDeletUrl(DeleteEmployeeEmergencyContact())
+    
+      setDeleteData({ data: deleteData })
+    }
+    if(activeKey===4){
+      let deleteData = {
+ 
+        earningId: "",
+        transactionsId: delEmployeeID,
+    
+        employeeId: delEmployeeID,
+        transactionsId: delEmployeeID,
+    
+        userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    
+        accountReference: "string"
+    
+      }
+    
+      setDeletUrl(DeleteEmployeeGuarantor())
+    
+      setDeleteData({ data: deleteData })
+    }
+    if(activeKey===5){
+      let deleteData = {
+ 
+        earningId: "",
+        transactionsId: delEmployeeID,
+    
+        employeeId: delEmployeeID,
+    
+        userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    
+        accountReference: "string"
+    
+      }
+    
+      setDeletUrl(DeleteEmployeeNextOfKin())
+    
+      setDeleteData({ data: deleteData })
+    }
+  
+  
+  
+  };
+  const onConfirm = () => {
+
+    handleDeleteItem();
+
+  };
+
+  const onCancel = () => {
+
+    setIsActive(false);
+  
+  };
+
+  const { setData: setDeleteData, setUrl: setDeletUrl } = useDelete('', (response) => {
+  
+    // console.log({location:response });
+  
+    const { data } = response
+  
+    if (response.status === 200 || response.status === 204) {
+  
+      toast.success('Employee Language Deleted Successfully!',);
+  
+      setIsActive(false);
+      // showNewData()
+      // GetPreviousData(nonCashId);
+  
+    } else {
+  
+      toast.error('Transaction Failed, Please try agin later!', toastWarning);
+  
+    }
+  
+  
+  
+  })
+
+console.log(relationTypes);
   return (
     <>
+     <SweetAlert
+ warning
+showCancel
+ confirmBtnText="Yes, delete it!"
+confirmBtnBsStyle="danger"
+title={`${GetLabelByName("HCM-IIQS2WWFTPP_KCMI", lan)} ${GetLabelByName(labels, lan)} ${GetLabelByName("HCM-SF00RQBW0XB_PSLL", lan)} ${delEmployeeName}?`}
+ onConfirm={onConfirm}
+ onCancel={onCancel}
+ focusCancelBtn
+show={isActive}
+></SweetAlert>
       <CRow hidden={!show}>
         <CCol xs="12">
           <h5>
@@ -1397,7 +1682,7 @@ console.log(show);
                       active={activeKey === 5}
                       onClick={() => setActiveKey(5)}
                     >
-                      Next of Kin
+                    <CSLab code="HCM-EP256EK5BS-LASN" />
                     </CNavLink>
                   </CNavItem>
                 </CNav>
@@ -1417,6 +1702,7 @@ console.log(show);
                      toolbar={toolbarOptions}
                      toolbarClick={submitRequest}
                      actionBegin={ben_actionBegin}
+                     commandClick={onCommandClick}
                    >
                      
                      <ColumnsDirective>
@@ -1432,7 +1718,7 @@ console.log(show);
                          field="firstName"
                          editType="text"
                          headerText={GetLabelByName("HCM-KPH53NF08RG", lan)}
-                         width="100"
+                         width="80"
 
                          //onChange={(e) => setfname(e.target.value)}
                        />
@@ -1440,7 +1726,7 @@ console.log(show);
                          field="lastName"
                          headerText={GetLabelByName("HCM-ZYCFSGCKMC", lan)}
                          editType="text"
-                         width="100"
+                         width="80"
                          textAlign="Center"
                          // name="lname"
                          // value={lname}
@@ -1496,6 +1782,13 @@ console.log(show);
                          width="100"
                          textAlign="Center"
                        />
+                       
+                        <ColumnDirective
+                          commands={commandOptions}
+                          headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
+                          width="100"
+                          textAlign="Center"
+                        />
                      </ColumnsDirective>
                      <Inject
                        services={[
@@ -1618,12 +1911,12 @@ console.log(show);
                           textAlign="Center"
                         />
 
-                        {/* <ColumnDirective
+                        <ColumnDirective
                           commands={commandOptions}
                           headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
                           width="100"
                           textAlign="Center"
-                        /> */}
+                        />
                       </ColumnsDirective>
                       <Inject
                         services={[
@@ -1660,10 +1953,20 @@ console.log(show);
                           isPrimaryKey={true}
                         />
                         <ColumnDirective
-                          field="name"
+                          field="employee.firstName"
                           editType="text"
                           headerText={GetLabelByName(
-                            "HCM-DQLFZZ9A4F6-LASN",
+                            "HCM-VD1B12NKKJ_LANG",
+                            lan
+                          )}
+                          width="70"
+                          //edit={earnings}
+                        />
+                          <ColumnDirective
+                          field="employee.lastName"
+                          editType="text"
+                          headerText={GetLabelByName(
+                            "HCM-6CU7NZJCKLF",
                             lan
                           )}
                           width="70"
@@ -1697,6 +2000,12 @@ console.log(show);
                           )}
                           editType="text"
                           // editTemplate={editTemplate}
+                          width="100"
+                          textAlign="Center"
+                        />
+                           <ColumnDirective
+                          commands={commandOptions}
+                          headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
                           width="100"
                           textAlign="Center"
                         />
@@ -1808,6 +2117,12 @@ console.log(show);
                           width="100"
                           textAlign="Center"
                         />
+                           <ColumnDirective
+                          commands={commandOptions}
+                          headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
+                          width="100"
+                          textAlign="Center"
+                        />
                       </ColumnsDirective>
                       <Inject
                         services={[
@@ -1898,6 +2213,12 @@ console.log(show);
                             lan
                           )}
                           editType="text"
+                          width="100"
+                          textAlign="Center"
+                        />
+                           <ColumnDirective
+                          commands={commandOptions}
+                          headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
                           width="100"
                           textAlign="Center"
                         />

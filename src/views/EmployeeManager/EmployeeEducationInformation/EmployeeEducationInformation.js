@@ -67,6 +67,8 @@ import { GetEmployeeAccidentByEmployeeId } from "src/reusable/API/AccidentTransa
 import useMultiFetch from "src/hooks/useMultiFetch";
 import useFetch from "src/hooks/useFetch";
 import usePost from "src/hooks/usePost";
+import SweetAlert from "react-bootstrap-sweetalert";
+import useDelete from "src/hooks/useDelete";
 
 //GetEducationCoreArea
 // HttpAPIRequest
@@ -111,6 +113,9 @@ const EmployeeEducationInformation = (props) => {
   const [educationCore, setEducationCore] = useState([]);
   const [empDisplayName, setEmpDisplayName] = useState("");
   const [post, setPost] =useState([])
+  const [delEmployeeName,setDelEmployeeName]=useState("")
+const[isActive,setIsActive]=useState(false)
+const[delEmployeeID,setDelEmployeeID]=useState("")
   // const [postdetails,setPostDetails]= useState([{name:"",gender:""}])
 
 
@@ -366,8 +371,103 @@ console.log(forGrid);
     });
   };
 
+  const onConfirm = () => {
+
+    handleDeleteItem();
+
+  };
+
+  const onCancel = () => {
+
+    setIsActive(false);
+  
+  };
+  
+  const onCommandClick = (args) => {
+  // console.log(args);
+   onCompleteAction(args);
+  
+  };
+  
+  
+  
+  
+  const onCompleteAction = (args) => {
+  
+    if (args.commandColumn.type === 'Delete') {
+  
+      args.cancel = true;
+  
+      setIsActive(true)
+  
+      setDelEmployeeName(`${args?.rowData?.employee?.firstName
+      } ${args?.rowData?.employee?.lastName
+      }`)
+  
+      setDelEmployeeID(args.rowData.id)
+  
+    }
+  
+  };
+  
+  const handleDeleteItem = async () => {
+  
+    let deleteData = {
+  
+      earningId: "",
+  
+      employeeId: delEmployeeID,
+  
+      userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  
+      accountReference: "string"
+  
+    }
+  
+    setDeletUrl("")
+  
+    setDeleteData({ data: deleteData })
+  
+  
+  
+  };
+  const { setData: setDeleteData, setUrl: setDeletUrl } = useDelete('', (response) => {
+  
+    // console.log({location:response });
+  
+    const { data } = response
+  
+    if (response.status === 200 || response.status === 204) {
+  
+      toast.success('Employee Language Deleted Successfully!',);
+  
+      setIsActive(false);
+  
+      // GetPreviousData(nonCashId);
+  
+    } else {
+  
+      toast.error('Transaction Failed, Please try agin later!', toastWarning);
+  
+    }
+  
+  
+  
+  })
+
   return (
     <>
+     <SweetAlert
+ warning
+showCancel
+ confirmBtnText="Yes, delete it!"
+confirmBtnBsStyle="danger"
+title={`${GetLabelByName("HCM-IIQS2WWFTPP_KCMI", lan)} ${GetLabelByName("HCM-ZHMVWWTZ63B_KCMI", lan)} ${GetLabelByName("HCM-SF00RQBW0XB_PSLL", lan)} ${delEmployeeName}?`}
+ onConfirm={onConfirm}
+ onCancel={onCancel}
+ focusCancelBtn
+show={isActive}
+></SweetAlert>
       <CRow hidden={!show}>
         <CCol xs="12">
           <h5>
@@ -453,6 +553,7 @@ console.log(forGrid);
                   height={450}
                   allowPaging={true}
                   dataSource={viewinfo}
+                  commandClick={onCommandClick}
                   //toolbar={toolbarOptions}
                 >
                   <ColumnsDirective>
@@ -464,7 +565,7 @@ console.log(forGrid);
                     <ColumnDirective
                       field="qualification.name"
                       headerText="Qualification"
-                      width="150"
+                      width="120"
                     />
                     <ColumnDirective
                       field={"grade"}
@@ -474,35 +575,35 @@ console.log(forGrid);
                     <ColumnDirective
                       field={"title.name"}
                       headerText="Title"
-                      width="150"
+                      width="120"
                     />
                     <ColumnDirective
                       field={"educationType.name"}
                       headerText="Core Area"
-                      width="150"
+                      width="120"
                     />
                     <ColumnDirective
                       field="startDate"
                       headerText="Start Date"
-                      width="150"
+                      width="100"
                       type="date"
                       format={"dd/MMM/yyyy"}
                     />
                     <ColumnDirective
                       field="endDate"
                       headerText="End Date"
-                      width="150"
+                      width="100"
                       type="date"
                       format={"dd/MMM/yyyy"}
                     />
 
-                    {/* <ColumnDirective
+                    <ColumnDirective
                       commands={commandOptions}
                       color="primary"
                       headerText={"Action"}
                       width="50"
                       textAlign="Center"
-                    /> */}
+                    />
                   </ColumnsDirective>
                   <Inject
                     services={[

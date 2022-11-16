@@ -78,7 +78,7 @@ import {
 import { CustomAxios } from "src/reusable/API/CustomAxios";
 import { BaseURL } from "src/reusable/API/base";
 import { toast } from "react-toastify";
-import { GetEmployeeFamily, PostFamily } from "src/reusable/API/EmployeeFamilyEndPoint";
+import { DeleteEmployeeFamily, GetEmployeeFamily, PostFamily } from "src/reusable/API/EmployeeFamilyEndPoint";
 import SweetAlert from "react-bootstrap-sweetalert";
 import useDelete from "src/hooks/useDelete";
 
@@ -133,6 +133,9 @@ const EmployeeFamily = () => {
 const [delEmployeeName,setDelEmployeeName]=useState("")
 const[isActive,setIsActive]=useState(false)
 const[delEmployeeID,setDelEmployeeID]=useState("")
+const [EmployeeFamilyChildren,setEmployeeFamilyChildren]=useState([])
+
+
   //fucntion for multiple get (dropDown list in the form)
   // const MultipleGetRequests = async () => {
   //   try {
@@ -231,15 +234,23 @@ const[delEmployeeID,setDelEmployeeID]=useState("")
       employeeId: handleId,
     };
 
+    
+    setEmployeeFamilyChildren((prev)=>[...prev,submitData])
     setEmployeeAccident((prevState)=>[newData,...prevState])
-    setPost(newData)
+    // setPost(newData)
     console.log(newData);
   console.log(submitData?.employee?.id);
     // postAccidentTrans(newData);
   };
 
 const handlePosting=()=>{
-    setPostData(post)
+  let postBody={
+    employeeId: handleId,
+    "createEmployeeFamilyChildren": EmployeeFamilyChildren,
+    "companyReference": "string",
+    "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+  }
+    setPostData(postBody)
     setPostUrl(PostFamily())
    // console.log(post);
 }
@@ -414,7 +425,7 @@ const handleDeleteItem = async () => {
 
       earningId: "",
 
-      employeeId: delEmployeeID,
+      transactionsId: delEmployeeID,
 
       userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
 
@@ -422,7 +433,7 @@ const handleDeleteItem = async () => {
 
     }
 
-    setDeletUrl("")
+    setDeletUrl(DeleteEmployeeFamily())
 
     setDeleteData({ data: deleteData })
 
@@ -440,8 +451,10 @@ const handleDeleteItem = async () => {
       toast.success('Employee Family Deleted Successfully!',);
 
       setIsActive(false);
+      setEmployeeAccident("")
+      // GetPreviousData();
+      getEmployFamily(handleId)
 
-      // GetPreviousData(nonCashId);
 
     } else {
 

@@ -69,6 +69,7 @@ import {
   CSRequiredIndicator,
 } from "../../../reusable/components";
 import {
+  DeleteEmployeeSkill,
   GetEmployeeById,
   GetEmployeeSkillsTypes,
   PostEmployeeSkill,
@@ -133,6 +134,7 @@ const EmployeeSkill = (props) => {
   const [delEmployeeName,setDelEmployeeName]=useState("")
 const[isActive,setIsActive]=useState(false)
 const[delEmployeeID,setDelEmployeeID]=useState("")
+const [EmployeeSkillChildren, setEmployeeSkillChildren]=useState([])
 
 
 
@@ -180,7 +182,7 @@ const[delEmployeeID,setDelEmployeeID]=useState("")
 
     if (results?.id) {
       setSearchResult(results);
-      setUrl(GetEmployeeById(results.id))
+      handleGet(results.id)
       // GetRequest(GetEmployeeById(results.id))
       //   .then((response) => {
       //     console.log(response)
@@ -225,6 +227,12 @@ const[delEmployeeID,setDelEmployeeID]=useState("")
     //     console.log(grid);
     // }
   };
+
+const handleGet=(id)=>{
+ 
+  setUrl(GetEmployeeById(id))
+}
+
   //Get employee skill details
   // const getEmployeeSkills = async () => {
   //   try {
@@ -295,18 +303,19 @@ const[delEmployeeID,setDelEmployeeID]=useState("")
 let temps = {
   ...submitData[0]
 }
-    let newData = {
+    // let newData = {
       
-        "employeeId": temps?.employee
-        .id,
-        "companyReference": companyReference,
-        "description":  submitData?.description,
-        "skillTypeId": submitData?.skillTypeId,
-        "status": true,
-        "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+    //     "employeeId": temps?.employee
+    //     .id,
+    //     "companyReference": companyReference,
+    //     "description":  submitData?.description,
+    //     "skillTypeId": submitData?.skillTypeId,
+    //     "status": true,
+    //     "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
       
-    }
-    setSkillPost(newData)
+    // }
+    setEmployeeSkillChildren((prev)=>[...prev,submitData])
+    // setSkillPost(newData)
 console.log({submit : temps});
    let gridView= {
      
@@ -324,6 +333,7 @@ console.log({submit : temps});
       }
   
   }
+  setViewInfo((prevState)=>[gridView, ...prevState])
   setSubmitData("")
   dispatch({ type: "set", data: {} });
   console.log(gridView);
@@ -332,13 +342,20 @@ console.log({submit : temps});
     // console.log(finalData)
     // 'Add' === mode ? AddGLAccount(newData) : updateGLAccount(newData);
    // postEmployeeSkill(newData);
-   setViewInfo((prevState)=>[gridView, ...prevState])
+ 
    
   };
 
 const handlePost=()=>{
+  let postBody={
+    employeeId: handleId,
+    companyReference: "00001_a01",
+    createEmployeeSkillChildren :EmployeeSkillChildren,
+    "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+  }
+  
   setPostUrl(PostEmployeeSkill())
-  setPostData(skillPost)
+  setPostData(postBody)
 
 }
 const getName=(data,id)=>{
@@ -506,8 +523,7 @@ console.log(viewinfo)
     let deleteData = {
   
       earningId: "",
-  
-      employeeId: delEmployeeID,
+      transactionId: delEmployeeID,
   
       userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
   
@@ -515,7 +531,7 @@ console.log(viewinfo)
   
     }
   
-    setDeletUrl("")
+    setDeletUrl(DeleteEmployeeSkill())
   
     setDeleteData({ data: deleteData })
   
@@ -533,7 +549,8 @@ console.log(viewinfo)
       toast.success('Employee Language Deleted Successfully!',);
   
       setIsActive(false);
-  
+      setViewInfo("")
+      handleGet(handleId)
       // GetPreviousData(nonCashId);
   
     } else {

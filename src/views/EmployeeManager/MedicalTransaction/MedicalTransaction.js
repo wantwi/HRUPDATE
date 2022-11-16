@@ -76,6 +76,8 @@ import {
 } from "src/reusable/API/MedicalTransactionsEndPoints";
 import { CCardHeader } from "@coreui/bootstrap-react";
 import getClassName from "ui-box/dist/src/get-class-name";
+import SweetAlert from "react-bootstrap-sweetalert";
+import useDelete from "src/hooks/useDelete";
 
 const editOptions = {
   allowEditing: false,
@@ -84,10 +86,10 @@ const editOptions = {
   allowEditOnDblClick: false,
 };
 const commandOptions = [
-  {
-    type: "Edit",
-    buttonOption: { iconCss: " e-icons e-edit", cssClass: "e-flat" },
-  },
+  // {
+  //   type: "Edit",
+  //   buttonOption: { iconCss: " e-icons e-edit", cssClass: "e-flat" },
+  // },
   {
     type: "Delete",
     buttonOption: { iconCss: "e-icons e-delete", cssClass: "e-flat" },
@@ -123,7 +125,9 @@ const MedicalTransaction = () => {
   const [providerTypes, setProviderTypes] = useState([]);
   const [ailmentType, setAilmenentType] = useState([]);
 const [post,setPost]=useState([])
-  
+const [delEmployeeName,setDelEmployeeName]=useState("")
+const[isActive,setIsActive]=useState(false)
+const[delEmployeeID,setDelEmployeeID]=useState("")
   
   const {setOptData, setUrl} =  useFetch("", (response,results) => {
     if (response) {
@@ -340,12 +344,110 @@ return data.find(x=>x.id=== id)?.name || "Not Found"
   console.log(viewinfo);
 
   const TransLabelByCode = (name) => GetLabelByName(name, lan);
+
+  const onConfirm = () => {
+
+    handleDeleteItem();
+
+  };
+
+  const onCancel = () => {
+
+    setIsActive(false);
+  
+  };
+  
+  const onCommandClick = (args) => {
+  // console.log(args);
+   onCompleteAction(args);
+  
+  };
+  
+  
+  
+  
+  const onCompleteAction = (args) => {
+  
+    if (args.commandColumn.type === 'Delete') {
+  
+      args.cancel = true;
+  
+      setIsActive(true)
+  
+      setDelEmployeeName(`${args?.rowData?.employee?.firstName
+      } ${args?.rowData?.employee?.lastName
+      }`)
+  
+      setDelEmployeeID(args.rowData.id)
+  
+    }
+  
+  };
+  
+  const handleDeleteItem = async () => {
+  
+    let deleteData = {
+  
+      earningId: "",
+  
+      employeeId: delEmployeeID,
+  
+      userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  
+      accountReference: "string"
+  
+    }
+  
+    setDeletUrl("")
+  
+    setDeleteData({ data: deleteData })
+  
+  
+  
+  };
+  const { setData: setDeleteData, setUrl: setDeletUrl } = useDelete('', (response) => {
+  
+    // console.log({location:response });
+  
+    const { data } = response
+  
+    if (response.status === 200 || response.status === 204) {
+  
+      toast.success('Employee Language Deleted Successfully!',);
+  
+      setIsActive(false);
+  
+      // GetPreviousData(nonCashId);
+  
+    } else {
+  
+      toast.error('Transaction Failed, Please try agin later!', toastWarning);
+  
+    }
+  
+  
+  
+  })
+
+
+
   return (
     <>
+    <SweetAlert
+ warning
+showCancel
+ confirmBtnText="Yes, delete it!"
+confirmBtnBsStyle="danger"
+title={`${GetLabelByName("HCM-IIQS2WWFTPP_KCMI", lan)} ${GetLabelByName("HCM-VZJ3MPY1WO_LASN", lan)} ${GetLabelByName("HCM-SF00RQBW0XB_PSLL", lan)} ${delEmployeeName}?`}
+ onConfirm={onConfirm}
+ onCancel={onCancel}
+ focusCancelBtn
+show={isActive}
+></SweetAlert>
       <CRow hidden={!show}>
         <CCol xs="12">
           <h5>
-            <CSLab code="Medical Transaction" />
+            <CSLab code="HCM-VZJ3MPY1WO_LASN" />
           </h5>
         </CCol>
       </CRow>
@@ -426,6 +528,7 @@ return data.find(x=>x.id=== id)?.name || "Not Found"
               allowPaging={true}
               pageSettings={{ pageSize: 10 }}
               editSettings={editOptions}
+              commandClick={onCommandClick}
             >
               <ColumnsDirective>
                 <ColumnDirective
