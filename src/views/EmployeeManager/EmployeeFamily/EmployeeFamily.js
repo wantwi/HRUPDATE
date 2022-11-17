@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 //import { toast } from "react-toastify";
 import { toastWarning } from "src/toasters/Toaster";
 import moment from "moment";
+import { validEmail,validPhoneNumber } from "src/reusable/utils/data/regex";
 
 import CIcon from "@coreui/icons-react";
 import {
@@ -465,6 +466,12 @@ const handleDeleteItem = async () => {
 
 
   })
+  useEffect(()=>{
+    if(validPhoneNumber(data?.phone)){
+      console.log("VALID")
+    }
+
+  },[data?.phone])
 
   return (
     <>
