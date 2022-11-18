@@ -38,6 +38,7 @@ import {
   Edit,
   CommandColumn,
   Toolbar,
+  calculateAggregate,
 } from "@syncfusion/ej2-react-grids";
 // import { Variable } from "../../../reusable/utils/GenericData";
 // import { RecurringEarningData } from "../../../reusable/utils/EarningsData";
@@ -273,6 +274,8 @@ const [postNxtofK, setPostNxtofK]=useState([])
   const [EmployeeEmerGencyContactChildrenList, setEmployeeEmerGencyContactChildrenList] = useState([])
   const [EmployeerGurrantoContactChildrenList, setEmployeeGurrantoContactChildrenList] = useState([])
   const [EmployeeNextOfKinChildrenList, setEmployeeNextOfKinChildrenList] = useState([])
+  const [checkPercentage,setPercentage]=useState(false)
+  const[percent, setPercent]=useState(0)
 
 
 
@@ -303,7 +306,7 @@ const [postNxtofK, setPostNxtofK]=useState([])
   // setEmergencyContact("")
   // setGetNextOfKin("")
   // setGetGuarantor("")
-  // setGetBenefiary("")
+  setGetBenefiary("")
   // setDependant("")
     // const [grid,] = useState(null);
 
@@ -440,7 +443,6 @@ const [postNxtofK, setPostNxtofK]=useState([])
         setPostGuarrantorData(postbody)
       }
       if(activeKey === 5 ){
-        console.log(activeKey);
         let postbody = {
           employeeId:handleId,
           createEmployeeNextofKinChildren:EmployeeNextOfKinChildrenList,
@@ -458,21 +460,10 @@ const [postNxtofK, setPostNxtofK]=useState([])
   };
 
   const actionComplete = (args) => {
-    // if (args.requestType === 'add') {
-    //   args.cancel = true
-    //   console.log(sampleData)
-    // }
-
-    if (args.requestType === "save") {
-      // setRecEarnings(firstGrid.current.currentViewData)
-      let currentData = firstGrid.current.currentViewData;
-      //console.log(sampleData)
-      // getSampleData(currentData);
-
-      // console.log(newdata)
-      // let result = differenceWith(currentData, sampleData, isEqual);
-      //setRecEarnings(newdata)
-    }
+   if(activeKey == 1){
+    // setPercentage(handlePercentageCalc(BeneficiaryForm))
+   }
+   
   };
   var values = ColumnDirective.getValue;
 
@@ -682,31 +673,30 @@ useEffect(() => {
         return;
       }
 
-    
-      // console.log(submitData)
-      let employeeId = handleId;
-      //  let newData = { ...submitData, option: options, companyId: TestCompanyId }
-    
-      console.log(currentFormData);
+
       let benefiaciaryGridData={
       
         ...currentFormData,
         relation : {
           name: getName(relationTypes,currentFormData?.relationId)
         },
+
         
       }
-
-
-
+      
+           setGetBenefiary((prevState)=>[...prevState, benefiaciaryGridData])
 setEmployeeBeneficiaryChildrenList((prev) => [...prev,currentFormData ])
-     setGetBenefiary((prevState)=>[benefiaciaryGridData,...prevState])
+
+     
      checkBenefiary();
+    setTimeout(() => {
+     console.log( han(benefiaciary));
+    }, 2000); 
+   ;
       
     }
     //HANDLE DEPENDANT
     if (activeKey === 2) {
-      console.log(submitData);
       checkRelationDependant();
       if (!currentFormData?.firstName || submitData?.firstName === "") {
         toast.error("Please Enter First Name!", toastWarning);
@@ -754,6 +744,7 @@ setEmployeeBeneficiaryChildrenList((prev) => [...prev,currentFormData ])
         toast.error("Please Enter Expiry Date!", toastWarning);
         return;
       }
+   
       // console.log(submitData)
       let employeeId = handleId;
       setEmployeeDependantChildrenList((prev) => [...prev,currentFormData ])
@@ -979,174 +970,6 @@ setEmployeeNextOfKinChildrenList((prev)=>[...prev,currentFormData])
   };
 
 
-  //Post Employee Beneficiary
-  function postBeneficiary(data) {
-    //console.log("post data", data);
-    PostRequest(PostBeneficiary(), { data: data })
-      .then((response) => {
-        response.text().then((data) => {
-          if ("" == data) {
-            toast.success("Employee Beneficiary Added Successfully!");
-          //  MultipleGetRequests();
-            setCurrentFormData("");
-          } else {
-            try {
-              data = JSON.parse(data);
-              toast.error(
-                data?.reason
-                  ? data?.reason
-                  : "Failed to Add Employee Beneficiary",
-                "error",
-                4000
-              );
-            } catch (error) {
-              console.log(error);
-            }
-          }
-        });
-      })
-      .catch((err) => {
-        console.log({ err });
-      })
-      .finally(() => {
-        console.log("Done");
-      });
-  }
-  //post Dependant
-  function postDependant(data) {
-    console.log("post data", data);
-    PostRequest(PostDependantDetails(), { data: data })
-      .then((response) => {
-        response.text().then((data) => {
-          if ("" == data) {
-            toast.success("Employee Dependant Added Successfully!");
-            console.log("success");
-            //MultipleGetRequests();
-            setCurrentFormData("");
-          } else {
-            try {
-              data = JSON.parse(data);
-              toast.error(
-                data?.reason
-                  ? data?.reason
-                  : "Failed to Add Employee Dependant",
-                "error",
-                4000
-              );
-            } catch (error) {
-              console.log(error);
-            }
-          }
-        });
-      })
-      .catch((err) => {
-        console.log({ err });
-      })
-      .finally(() => {
-        console.log("Done");
-      });
-  }
-  //Post Emergency Contact
-  function postEmergencyContact(data) {
-    console.log("post data", data);
-    PostRequest(PostEmployeeEmergencyContact(), { data: data })
-      .then((response) => {
-        response.text().then((data) => {
-          if ("" == data) {
-            toast.success("Emergency Contact Added Successfully!");
-            console.log("success");
-           // MultipleGetRequests();
-            setCurrentFormData("");
-          } else {
-            try {
-              data = JSON.parse(data);
-              toast.error(
-                data?.reason ? data?.reason : "Failed to Add Emergency Contact",
-                "error",
-                4000
-              );
-            } catch (error) {
-              console.log(error);
-            }
-          }
-        });
-      })
-      .catch((err) => {
-        console.log({ err });
-      })
-      .finally(() => {
-        console.log("Done");
-      });
-  }
-  // Post Guarantor
-  function postGuarantor(data) {
-    console.log("post data", data);
-    PostRequest(PostEmployeeGuarantor(), { data: data })
-      .then((response) => {
-        response.text().then((data) => {
-          if ("" == data) {
-            toast.success("Employee Guarantor Added Successfully!");
-            console.log("success");
-          //  MultipleGetRequests();
-            setCurrentFormData("");
-          } else {
-            try {
-              data = JSON.parse(data);
-              toast.error(
-                data?.reason
-                  ? data?.reason
-                  : "Failed to Add Employee Guarantor",
-                "error",
-                4000
-              );
-            } catch (error) {
-              console.log(error);
-            }
-          }
-        });
-      })
-      .catch((err) => {
-        console.log({ err });
-      })
-      .finally(() => {
-        console.log("Done");
-      });
-  }
-  // Post Next Of Kin
-  function postNextOfKin(data) {
-    console.log("post data", data);
-    PostRequest(PostEmployeeNextOfKin(), { data: data })
-      .then((response) => {
-        response.text().then((data) => {
-          if ("" == data) {
-            toast.success("Employee Guarantor Added Successfully!");
-            console.log("success");
-            //MultipleGetRequests();
-            // handleNextOfKin();
-            setCurrentFormData("");
-          } else {
-            try {
-              data = JSON.parse(data);
-              toast.error(
-                data?.reason
-                  ? data?.reason
-                  : "Failed to Add Employee Guarantor",
-                "error",
-                4000
-              );
-            } catch (error) {
-              console.log(error);
-            }
-          }
-        });
-      })
-      .catch((err) => {
-        console.log({ err });
-      })
-      .finally(() => {
-        console.log("Done");
-      });
-  }
 
   const handleFormChange = (e) => {
     setCurrentFormData((prev) => ({
@@ -1156,8 +979,15 @@ setEmployeeNextOfKinChildrenList((prev)=>[...prev,currentFormData])
 
     setSubmitData((data) => {
       return { ...data, [e?.target?.name]: e?.target?.value };
-    }); 
+    });
+console.log(e?.target?.name);
+    if(e?.target?.name === "percentage"){
+    console.log(e?.target?.value);
+    setPercent(e?.target?.value)
+    }
   };
+
+
   const  {data:multical} =  useMultiFetch([ 
     GetNationality(),GetIdTypes()], (results) => {
 
@@ -1179,7 +1009,6 @@ setEmployeeNextOfKinChildrenList((prev)=>[...prev,currentFormData])
   })
 
   const ben_actionBegin = (args) => {
-    console.log({ beneficiary: args });
     checkRelationDependant();
     checkRelationGuarantor();
     checkRelationNextOfKin();
@@ -1198,6 +1027,7 @@ setEmployeeNextOfKinChildrenList((prev)=>[...prev,currentFormData])
         handleFormChange={handleFormChange}
         setCurrentFormData={setCurrentFormData}
         view={checkedBeneficiaryTypes}
+        
       />
     );
   }
@@ -1247,8 +1077,16 @@ setEmployeeNextOfKinChildrenList((prev)=>[...prev,currentFormData])
       />
     );
   }
-
-
+// useEffect(()=>{
+//   if(benefiaciary){
+ 
+//    console.log({percent: handlePercentageCalc(benefiaciary)});
+//   // setPercentage(result)
+   
+//   }
+  
+// },[benefiaciary])
+console.log(percent);
   var arr = [];
 
   // checkRelation
@@ -1262,7 +1100,6 @@ setEmployeeNextOfKinChildrenList((prev)=>[...prev,currentFormData])
 
       const newdata = relationTypes.filter((val) => {
         return !arr.find((arr) => {
-          console.log({ valueID: val.id + ": " + arr.id });
           return (
             (val.name === "Mother" && arr.name === "Mother") ||
             (val.name === "Father" && arr.name === "Father")
@@ -1270,7 +1107,6 @@ setEmployeeNextOfKinChildrenList((prev)=>[...prev,currentFormData])
         });
       });
       setCheckedTypes(newdata);
-      console.log(newdata);
     } else {
       setCheckedTypes(relationTypes);
     }
@@ -1287,7 +1123,6 @@ setEmployeeNextOfKinChildrenList((prev)=>[...prev,currentFormData])
 
       const newdata = relationTypes.filter((val) => {
         return !temp.find((arr) => {
-          console.log({ valueID: val.id + ": " + arr.id });
           return (
             (val.name === "Mother" && arr.name === "Mother") ||
             (val.name === "Father" && arr.name === "Father")
@@ -1295,7 +1130,6 @@ setEmployeeNextOfKinChildrenList((prev)=>[...prev,currentFormData])
         });
       });
       setCheckedTypesGuarantor(newdata);
-      console.log(newdata);
     } else {
       setCheckedTypesGuarantor(relationTypes);
     }
@@ -1309,12 +1143,9 @@ setEmployeeNextOfKinChildrenList((prev)=>[...prev,currentFormData])
         var obj = {};
         obj = nextOfKin[i].relation;
         arryKin.push(obj);
-        console.log({ Object: obj });
       }
-      console.log({ arryKin });
       const newdata = relationTypes.filter((val) => {
         return !arryKin.find((arr) => {
-          console.log({ valueID: val.id + ": " + arr.id });
           return (
             (val.name === "Mother" && arr.name === "Mother") ||
             (val.name === "Father" && arr.name === "Father")
@@ -1322,24 +1153,20 @@ setEmployeeNextOfKinChildrenList((prev)=>[...prev,currentFormData])
         });
       });
       setCheckedTypesNextOfKin(newdata);
-      console.log(newdata);
     } else {
       setCheckedTypesNextOfKin(relationTypes);
     }
   };
   var beneficiaryArr = [];
   const checkBenefiary = () => {
-    console.log("Called once");
     if (benefiaciary.length > 0) {
       for (let i = 0; i < benefiaciary.length; i++) {
         var obj = {};
         obj = benefiaciary[i].relation;
         beneficiaryArr.push(obj);
       }
-;console.log("Called twice")
       const newdata = relationTypes.filter((val) => {
         return !beneficiaryArr.find((arr) => {
-          console.log({ valueID: val.id + ": " + arr.id });
           return (
             (val.name === "Mother" && arr.name === "Mother") ||
             (val.name === "Father" && arr.name === "Father")
@@ -1347,9 +1174,7 @@ setEmployeeNextOfKinChildrenList((prev)=>[...prev,currentFormData])
         });
       });
       setCheckedBeneficiaryTypes(newdata);
-      console.log({newFiltere: newdata});
     } else {
-      console.log("Called thrice")
       setCheckedBeneficiaryTypes(relationTypes);
     }
   };
@@ -1399,31 +1224,24 @@ setEmployeeNextOfKinChildrenList((prev)=>[...prev,currentFormData])
         }
     }
 });
-  
 //FUNCTION USED TO CHECK ACTIVE TAB AND SET URL FOR FETCH
   const showNewData=()=>{
-    console.log("Called new data");
 if(activeKey===1){
   setGetBenefiary("")
   setUrl(GetBeneficiary(handleId))
-  console.log(activeKey);
 }
 if(activeKey===2){
   setDependant("")
   setUrl(GetEmployeeDependant(handleId))
-  console.log(activeKey);
 }
 if(activeKey===3){
   setUrl(GetEmployeeEmergencyContact(handleId))
-  console.log(activeKey);
 }
 if(activeKey===4){
   setUrl(GetEmployeeGuarantor(handleId))
-  console.log(activeKey);
 }
 if(activeKey===5){
   setUrl(GetEmployeeNextOfKin(handleId))
-  console.log(activeKey);
 }
 
   }
@@ -1583,6 +1401,62 @@ if(activeKey===5){
   
   
   })
+  const handlePercentageCalc=(data)=>{
+    let results = 0;
+    let convert = 0;
+    if (benefiaciary){
+      for(let i=0;i < data.length;i++){
+      console.log(typeof data[i]?.percentage);
+    convert  = parseInt(data[i]?.percentage)  ;
+    results =  convert + results
+  console.log(results);}}
+ console.log( results > 100);
+
+  }
+
+  const han=(data,newData)=>{
+    let rest = 0
+    let results = 0;
+    if(data){
+     
+      data?.map((x)=> {rest = rest + parseInt(x.percentage)})
+    }
+   results = rest + parseInt(newData)
+   console.log(results);
+   console.log(rest);
+ return results > 100
+
+  }
+  useEffect(()=>{
+    if(activeKey=== 1){
+      setPercentage(han(benefiaciary,currentFormData?.percentage))
+      if(han(benefiaciary,currentFormData?.percentage)){
+        toast.error("Percentage total must be 100% or less")
+      }
+    }
+   
+    
+  },[percent])
+console.log(checkPercentage);
+
+
+// useEffect(() => {
+  
+//   const percentages = benefiaciary.map(x =>(x?.percentage))
+
+//   const res = percentages.reduce(
+//     (previousValue, currentValue) =>parseInt(previousValue)  + parseInt(percent) ,
+//     0
+//   );
+
+//   console.log({res});
+
+//   return () => {
+    
+//   }
+// }, [currentFormData?.percentage])
+
+
 
   return (
     <>
@@ -1729,7 +1603,7 @@ show={isActive}
                    <GridComponent
                      height={300}
                      actionComplete={actionComplete}
-                     dataSource={benefiaciary}
+                     dataSource={ benefiaciary}
                      allowPaging={true}
                      pageSettings={{ pageSize: 8 }}
                      editSettings={editOptions}
@@ -2296,6 +2170,7 @@ show={isActive}
         setShow={setShowModal}
         submitBtn={submitBtn}
         setCurrentFormData={setCurrentFormData}
+        disableBtn = {checkPercentage}
       >
         {content}
       </FormModal>

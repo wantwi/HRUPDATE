@@ -217,7 +217,6 @@ const CSAutoComplete = ({
   const {setOptData, setUrl} =  useFetch("", (response,results) => {
     const toastId = toast.loading("Searching ");
     if (response) {
-      console.log(response);
       if (
         response.items &&
         Array.isArray(response.items) &&
@@ -228,7 +227,6 @@ const CSAutoComplete = ({
         setFilteredSuggestions(response.items);
         setShowSuggestions(true);
       }
-      console.log({ test: response });
       if (response && isObject(response)) {
         if (response?.hasOwnProperty("empty")) {
           if (!response?.empty) {
@@ -396,7 +394,6 @@ const CSAutoComplete = ({
               >
                 {[suggestion?.[displayTextKey], " ", suggestion?.lastName]}
                 {/* {suggestion?.[lastName]} */}
-                {console.log(suggestion?.[displayTextKey])}
               </li>
             );
           })}

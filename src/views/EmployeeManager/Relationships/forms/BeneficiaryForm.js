@@ -29,7 +29,6 @@ function BeneficiaryForm({
     try {
       let request = [HttpAPIRequest("GET", GetRelationTypes())];
       const multipleCall = await Promise.allSettled(request);
-      console.log(multipleCall[0].value);
 
       setRelationTypes([...multipleCall[0].value]);
     } catch (error) {
@@ -70,7 +69,6 @@ function BeneficiaryForm({
   
   })
 
-  console.log({ Beneficiary: view });
   // console.log({ relationTypes });
   // console.log({ checkedBeneficiaryTypes });
 
@@ -160,7 +158,7 @@ function BeneficiaryForm({
             </CLabel>
             <CInput
               name="percentage"
-              type="number"   
+              type="text"   
               placeholder={GetLabelByName("HCM-L61W6YKKCF-HRPR",lan)}
               onChange={handleFormChange}
               value={currentFormData?.percentage || ""}

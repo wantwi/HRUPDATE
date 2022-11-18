@@ -16,7 +16,7 @@ import NextOfKinForm from "../forms/NextOfKinForm";
 import { CSLab, CSRequiredIndicator } from "src/reusable/components";
 
 const FormModal = (props) => {
-  const { show, setShow, activeKey, submitBtn, setCurrentFormData } = props;
+  const { show, setShow, activeKey, submitBtn, setCurrentFormData, disableBtn } = props;
   const [formTitle, setFormTitle] = useState("");
 
   useEffect(() => {
@@ -58,9 +58,7 @@ const FormModal = (props) => {
   const handleReset=()=>{
    
     setCurrentFormData(" ");
-    console.log(show);
   }
-  console.log(show);
 
   return (
     <CModal show={show} onClose={() => setShow(false)} size={"lg"}>
@@ -85,7 +83,7 @@ const FormModal = (props) => {
         >
         <CSLab code={"HCM-9E3ZC2E1S0N-LASN"}/>
         </CButton>
-        <CButton color="primary" onClick={submitBtn}>
+        <CButton color="primary" onClick={submitBtn} disabled={disableBtn}>
          <CSLab code={"HCM-TAAFD4M071D-HRPR"}/>
         </CButton>
       </CModalFooter>

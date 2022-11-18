@@ -75,3 +75,13 @@ export const ValidateOnlyWord=(str)=>{
     const isValid= new RegExp('[a-zA-Z][\s][a-zA-Z]+$')
     return isValid.test(str)
 }
+
+/**
+ * to validate just alphabets with space Eg:How are 
+ * @param {string} str
+ * @returns boolean
+ */
+ export const ValidateWord=(str)=>{
+    const isValid= new RegExp('[a-zA-Z]+$')
+    return isValid.test(str)
+}

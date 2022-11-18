@@ -26,7 +26,6 @@ const useMultiFetch = (initialUrl, callback) => {
         });
         
       const response = await Promise.all(requests)
-      console.log({response});
 
       if (!response) {
         throw "Data was not fetched";
