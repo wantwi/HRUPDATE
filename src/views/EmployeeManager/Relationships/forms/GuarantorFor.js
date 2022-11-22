@@ -10,6 +10,9 @@ import { HttpAPIRequest } from "src/reusable/utils/helper";
 import useMultiFetch from "src/hooks/useMultiFetch";
 import { GetLabelByName } from "src/reusable/configs/config";
 import { useSelector } from "react-redux";
+import 'react-phone-number-input/style.css'
+
+import PhoneInput from "react-phone-number-input";
 
 function GuarantorForm({
   currentFormData,
@@ -17,7 +20,9 @@ function GuarantorForm({
   setCurrentFormData,
   view,
   nationality,
-  id
+  id,
+  setPhone,
+  phone
 }) {
   const lan = useSelector((state) => state.language);
 
@@ -99,18 +104,17 @@ function GuarantorForm({
               onChange={handleFormChange}
             />
           </CCol>
-          <CCol md="4">
-            <CLabel htmlFor="phone">
-              <CSLab code="HCM-28JQRN57PA4-PSLL" /> <CSRequiredIndicator />
-            </CLabel>
-            <CInput
-              name="phone"
-              type="text"
-              placeholder={GetLabelByName("HCM-4WKQXVS3API_LOLN",lan)}
-              value={currentFormData?.phone || ""}
-              onChange={handleFormChange}
-            />
-          </CCol>
+          <CCol md="4" xs="6">
+              <CLabel>
+    <CSLab code="HCM-BOSPUEXHRP_PSLL" />
+    </CLabel><CSRequiredIndicator />
+          <PhoneInput
+                  name ='phone'
+              placeholder="Phone"
+             value={currentFormData?.phone || phone ||  ''}
+                 onChange={setPhone} 
+        />
+              </CCol>
         </CRow>
         <CRow>
           <CCol md="4">

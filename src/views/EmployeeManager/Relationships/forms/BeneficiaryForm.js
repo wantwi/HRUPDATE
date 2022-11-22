@@ -11,14 +11,20 @@ import { GetRelationTypes } from "src/reusable/API/EmployeeRelationshipsEndPoint
 import useMultiFetch from "src/hooks/useMultiFetch";
 import { GetLabelByName } from "src/reusable/configs/config";
 import { useSelector } from "react-redux";
+import 'react-phone-number-input/style.css'
+import PhoneInput from "react-phone-number-input";
+
 
 function BeneficiaryForm({
   currentFormData,
   handleFormChange,
   setCurrentFormData,
   view,
+  setPhone,
+  phone
 }) {
   const lan = useSelector((state) => state.language);
+
 
   const [relationTypes, setRelationTypes] = useState([]);
   useEffect(() => {
@@ -102,19 +108,17 @@ function BeneficiaryForm({
               onChange={handleFormChange}
             />
           </CCol>
-          <CCol md="4">
-            <CLabel htmlFor="phone">
-              <CSLab code="HCM-28JQRN57PA4-PSLL" />
-              {""} <CSRequiredIndicator />
-            </CLabel>
-            <CInput
-              name="phone"
-              type="text"
-              placeholder={GetLabelByName("HCM-4WKQXVS3API_LOLN",lan)}
-              value={currentFormData?.phone || ""}
-              onChange={handleFormChange}
-            />
-          </CCol>
+          <CCol md="4" xs="6">
+              <CLabel>
+    <CSLab code="HCM-BOSPUEXHRP_PSLL" />
+    </CLabel><CSRequiredIndicator />
+          <PhoneInput
+                  name ='phone'
+              placeholder="Phone"
+             value={currentFormData?.phone || phone ||  ''}
+                 onChange={setPhone} 
+        />
+              </CCol>
         </CRow>
         <CRow>
           <CCol md="4">
@@ -162,6 +166,7 @@ function BeneficiaryForm({
               placeholder={GetLabelByName("HCM-L61W6YKKCF-HRPR",lan)}
               onChange={handleFormChange}
               value={currentFormData?.percentage || ""}
+              autoComplete={"off"}
             />
           </CCol>
         </CRow>

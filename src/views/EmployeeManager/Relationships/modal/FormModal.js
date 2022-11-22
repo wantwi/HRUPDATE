@@ -61,7 +61,7 @@ const FormModal = (props) => {
   }
 
   return (
-    <CModal show={show} onClose={() => setShow(false)} size={"lg"}>
+    <CModal show={show}  size={"lg"}>
       <CModalHeader closeButton>
         <CModalTitle>Add {formTitle}</CModalTitle>
       </CModalHeader>

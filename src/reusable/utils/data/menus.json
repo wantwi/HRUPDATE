@@ -21,17 +21,9 @@
           "_tag": "CSidebarNavItem",
           "name": "Employee Request",
           "to": "/employeemanager/employeerequest"
-        },
-        {
-          "_tag": "CSidebarNavItem",
-          "name": "Hire Applicant",
-          "to": "/employeemanager/hireapplicant"
-        },
-        {
-          "_tag": "CSidebarNavItem",
-          "name": "Employee Check List",
-          "to": "/employeemanager/employeechecklist"
-        },
+        }
+        ,
+     
         {
           "_tag": "CSidebarNavItem",
           "name": "Employee Job History",

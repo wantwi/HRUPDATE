@@ -212,7 +212,7 @@ const EmployeeDetail = (props) => {
   const [lname, setlname] = useState("");
   const [email, setEmail] = useState("");
   const [relation, setRelation] = useState("");
-  const [phone, setPhone] = useState("");
+ 
   const [otherPhone, setOtherPhone] = useState("");
   const [address, setAddress] = useState("");
 
@@ -276,7 +276,7 @@ const [postNxtofK, setPostNxtofK]=useState([])
   const [EmployeeNextOfKinChildrenList, setEmployeeNextOfKinChildrenList] = useState([])
   const [checkPercentage,setPercentage]=useState(false)
   const[percent, setPercent]=useState(0)
-
+  const [phone, setPhone] = useState(null);
 
 
   const actionBegin2 = () => {};
@@ -468,7 +468,14 @@ const [postNxtofK, setPostNxtofK]=useState([])
   var values = ColumnDirective.getValue;
 
   const onCommandClick = (args) => {
-    onCompleteAction(args);
+console.log(args.rowData.id);
+    if(args.rowData.id === undefined){
+      args.cancel = false;
+      return ;
+    }else{
+      onCompleteAction(args);
+    }
+    
   };
 
 
@@ -656,7 +663,7 @@ useEffect(() => {
         toast.error("Please Enter Last Name!", toastWarning);
         return;
       }
-      if (!currentFormData?.phone || submitData?.phone === " ") {
+      if (!phone || phone === " ") {
         toast.error("Please Enter Phone Number!", toastWarning);
         return;
       }
@@ -675,7 +682,6 @@ useEffect(() => {
 
 
       let benefiaciaryGridData={
-      
         ...currentFormData,
         relation : {
           name: getName(relationTypes,currentFormData?.relationId)
@@ -683,17 +689,21 @@ useEffect(() => {
 
         
       }
+ 
+      let data = {
+        ...currentFormData,
+        phone:phone,
+      }
       
-           setGetBenefiary((prevState)=>[...prevState, benefiaciaryGridData])
-setEmployeeBeneficiaryChildrenList((prev) => [...prev,currentFormData ])
+ setGetBenefiary((prevState)=>[...prevState, benefiaciaryGridData])
+ setEmployeeBeneficiaryChildrenList((prev) => [...prev,data ])
 
      
      checkBenefiary();
-    setTimeout(() => {
-     console.log( han(benefiaciary));
-    }, 2000); 
-   ;
-      
+   setCurrentFormData("")
+   setPhone("")
+   setShowModal(false)
+
     }
     //HANDLE DEPENDANT
     if (activeKey === 2) {
@@ -777,7 +787,7 @@ setEmployeeBeneficiaryChildrenList((prev) => [...prev,currentFormData ])
  setDependant((prevState)=>[posting,...prevState])
    //setPostDep((prevState)=>[Dep,...prevState])
    setCurrentFormData("")
-  
+   setShowModal(false)
     }
     //handle Emegency Contact
     if (activeKey === 3) {
@@ -790,7 +800,7 @@ setEmployeeBeneficiaryChildrenList((prev) => [...prev,currentFormData ])
         return;
       }
 
-      if (!currentFormData?.phone || submitData?.phone === " ") {
+      if (!phone || phone === " ") {
         toast.error("Please Enter Phone Number!", toastWarning);
         return;
       }
@@ -814,21 +824,36 @@ setEmployeeBeneficiaryChildrenList((prev) => [...prev,currentFormData ])
         name: `${currentFormData?.firstName} ${currentFormData?.lastName}`,
       };
    
-
+      console.log(phone);
       let posting=  {
-       
-        name: `${currentFormData?.firstName} ${currentFormData?.lastName}`,
+        employee:{
+          firstName: `${currentFormData?.firstName} `,
+          lastName: `${currentFormData?.lastName}`
+        }
+        ,
         email : currentFormData?.email,
-        phone : currentFormData?.phone,
+        phone : phone,
         address : currentFormData?.address,
       
       }
 
+
+
+      
+
+
+console.log(posting);
       // postEmergencyContact(newData);
- setEmployeeEmerGencyContactChildrenList((prev)=>[...prev,currentFormData])
+      let data = {
+        ...currentFormData,
+        phone: phone,
+      }
+ setEmployeeEmerGencyContactChildrenList((prev)=>[...prev,data])
 
       setEmergencyContact((prevState)=>[posting, ...prevState])
-      
+      setCurrentFormData("")
+      setPhone("")
+      setShowModal(false)
     }
     //handle Guarantor
     if (activeKey === 4) {
@@ -841,7 +866,7 @@ setEmployeeBeneficiaryChildrenList((prev) => [...prev,currentFormData ])
         return;
       }
 
-      if (!currentFormData?.phone || submitData?.phone === " ") {
+      if (!phone || phone === " ") {
         toast.error("Please Enter Phone Number!", toastWarning);
         return;
       }
@@ -868,7 +893,8 @@ setEmployeeBeneficiaryChildrenList((prev) => [...prev,currentFormData ])
         toast.error("Please Enter Occupation", toastWarning);
         return;
       }
-      setShow(false);
+      
+      
       // console.log(submitData)
       let employeeId = handleId;
       //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
@@ -877,7 +903,7 @@ setEmployeeBeneficiaryChildrenList((prev) => [...prev,currentFormData ])
       let gridView=  {
         
         name: `${currentFormData?.firstName} ${currentFormData?.lastName}`,
-        phone: currentFormData?.phone,
+        phone: phone,
         occupation: currentFormData?.occupation,
         address: currentFormData?.address,
        
@@ -890,12 +916,18 @@ setEmployeeBeneficiaryChildrenList((prev) => [...prev,currentFormData ])
           name: getName(checkedTypesGuarantor,currentFormData?.relationId)
         }
       }
-      setEmployeeGurrantoContactChildrenList((prev)=>[...prev,currentFormData])
+      let data = {
+        ...currentFormData,
+        phone: phone,
+      }
+      setEmployeeGurrantoContactChildrenList((prev)=>[...prev,data])
      
      
       setGetGuarantor((prevState)=>[gridView,...prevState])
       checkRelationGuarantor();
-   
+      setCurrentFormData("")
+      setPhone("")
+      setShowModal(false)
     }
     //handle Next oF Kin
     if (activeKey === 5) {
@@ -908,7 +940,7 @@ setEmployeeBeneficiaryChildrenList((prev) => [...prev,currentFormData ])
         return;
       }
 
-      if (!currentFormData?.phone || submitData?.phone === " ") {
+      if (!phone || phone === " ") {
         toast.error("Please Enter Phone Number!", toastWarning);
         return;
       }
@@ -948,7 +980,7 @@ let handleGrid=  {
   "name": `${currentFormData?.firstName} ${currentFormData?.lastName}`,
   "email": currentFormData?.email,
   "relationId": currentFormData?.relationId ,
-  "phone": submitData?.phone,
+  "phone": phone,
 
   "address": currentFormData?.address,
  
@@ -962,10 +994,18 @@ let handleGrid=  {
     "name": getName(nationality,currentFormData?.nationalityId)
   }
 }
-setEmployeeNextOfKinChildrenList((prev)=>[...prev,currentFormData])
+
+let data = {
+  ...currentFormData,
+  phone: phone,
+}
+setEmployeeNextOfKinChildrenList((prev)=>[...prev,data])
       setGetNextOfKin((prevState)=>[handleGrid,...prevState])
       // setPostNxtofK(newData)
       checkRelationNextOfKin();
+      setCurrentFormData("")
+      setPhone("")
+      setShowModal(false)
     }
   };
 
@@ -1023,6 +1063,8 @@ console.log(e?.target?.name);
   if (activeKey === 1) {
     content = (
       <BeneficiaryForm
+      setPhone= {setPhone}
+      phone={phone}
         currentFormData={currentFormData}
         handleFormChange={handleFormChange}
         setCurrentFormData={setCurrentFormData}
@@ -1048,6 +1090,8 @@ console.log(e?.target?.name);
   if (activeKey === 3) {
     content = (
       <EmergencyContactForm
+      setPhone= {setPhone}
+      phone={phone}
         currentFormData={currentFormData}
         handleFormChange={handleFormChange}
         setCurrentFormData={setCurrentFormData}
@@ -1057,6 +1101,8 @@ console.log(e?.target?.name);
   if (activeKey === 4) {
     content = (
       <GuarantorForm
+      setPhone= {setPhone}
+      phone={phone}
         currentFormData={currentFormData}
         handleFormChange={handleFormChange}
         setCurrentFormData={setCurrentFormData}
@@ -1069,6 +1115,8 @@ console.log(e?.target?.name);
   if (activeKey === 5) {
     content = (
       <NextOfKinForm
+      setPhone= {setPhone}
+      phone={phone}
         currentFormData={currentFormData}
         handleFormChange={handleFormChange}
         setCurrentFormData={setCurrentFormData}
@@ -2124,7 +2172,7 @@ show={isActive}
                           editType="text"
                           width="100"
                           textAlign="Center"
-                        />
+                        /> 
                            <ColumnDirective
                           commands={commandOptions}
                           headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
@@ -2165,6 +2213,7 @@ show={isActive}
         </CCol>
       </CRow>
       <FormModal
+      
         show={showModal}
         activeKey={activeKey}
         setShow={setShowModal}

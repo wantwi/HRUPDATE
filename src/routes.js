@@ -70,9 +70,9 @@ const EmployeeTrainingInformation = React.lazy(() =>
     "./views/EmployeeManager/EmployeeTrainingInformation/EmployeeTrainingInformation"
   )
 );
-const HireApplicant = React.lazy(() =>
-  import("./views/EmployeeManager/HireApplicant/HireApplicant")
-);
+// const HireApplicant = React.lazy(() =>
+//   import("./views/EmployeeManager/HireApplicant/HireApplicant")
+// );
 const SupervisorAppraisal = React.lazy(() =>
   import("./views/EmployeeManager/SupervisorAppraisal/SupervisorAppraisal")
 );
@@ -283,11 +283,11 @@ const routes = [
     name: "Employee Request ",
     component: EmployeeRequest,
   },
-  {
-    path: "/employeemanager/hireapplicant",
-    name: "Hire Applicant",
-    component: HireApplicant,
-  },
+  // {
+  //   path: "/employeemanager/hireapplicant",
+  //   name: "Hire Applicant",
+  //   component: HireApplicant,
+  // },
   {
     path: "/employeemanager/employeechecklist",
     name: "Employee Check List",

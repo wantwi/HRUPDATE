@@ -82,6 +82,8 @@ import { toast } from "react-toastify";
 import { DeleteEmployeeFamily, GetEmployeeFamily, PostFamily } from "src/reusable/API/EmployeeFamilyEndPoint";
 import SweetAlert from "react-bootstrap-sweetalert";
 import useDelete from "src/hooks/useDelete";
+import 'react-phone-number-input/style.css'
+import PhoneInput from "react-phone-number-input";
 
 const editOptions = {
   allowEditing: false,
@@ -135,7 +137,7 @@ const [delEmployeeName,setDelEmployeeName]=useState("")
 const[isActive,setIsActive]=useState(false)
 const[delEmployeeID,setDelEmployeeID]=useState("")
 const [EmployeeFamilyChildren,setEmployeeFamilyChildren]=useState([])
-
+const [phone, setPhone] = useState(null);
 
   //fucntion for multiple get (dropDown list in the form)
   // const MultipleGetRequests = async () => {
@@ -208,16 +210,12 @@ const [EmployeeFamilyChildren,setEmployeeFamilyChildren]=useState([])
 
   //handles form submit
   const handleOnSubmit = () => {
-    console.log(submitData);
-
+  
     if (!submitData?.name || submitData?.name === "") {
       toast.error("Please Enter a Full Name!", toastWarning);
       return;
     }
-    if (
-      !submitData?.phone ||
-      submitData?.phone === ""
-    ) {
+    if ( !phone || phone === "" ) {
       toast.error("Please Enter Phone Number!", toastWarning);
       return;
     }
@@ -225,23 +223,21 @@ const [EmployeeFamilyChildren,setEmployeeFamilyChildren]=useState([])
       toast.error("Please Enter Email Address!", toastWarning);
       return;
     }
-   
- 
+
+   //submitData?.phone = phone;
     let newData = {
       ...submitData,
+      phone,
       userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
       userName: "string",
       CompanyReference: "00001_a01",
       employeeId: handleId,
     };
-
+console.log(newData);
     
-    setEmployeeFamilyChildren((prev)=>[...prev,submitData])
+    setEmployeeFamilyChildren((prev)=>[...prev,newData])
     setEmployeeAccident((prevState)=>[newData,...prevState])
-    // setPost(newData)
-    console.log(newData);
-  console.log(submitData?.employee?.id);
-    // postAccidentTrans(newData);
+  
   };
 
 const handlePosting=()=>{
@@ -472,7 +468,7 @@ const handleDeleteItem = async () => {
     }
 
   },[data?.phone])
-
+console.log(EmployeeFamilyChildren);
   return (
     <>
   
@@ -669,19 +665,16 @@ show={isActive}
                   ))}
                 </CSelect> */}
               </CCol>
-              <CCol md="6">
-                <CLabel htmlFor="phone">
-                  <CSLab code="HCM-28JQRN57PA4-PSLL" />
-                  <CSRequiredIndicator />
-                </CLabel>
-                <CInput
-                  id="phone"
-                  name="phone"
-                  type="text"
-                  value={data?.phone || ""}
-                  onChange={handleOnChange}
-                  placeholder={GetLabelByName("HCM-4WKQXVS3API_LOLN", lan)}
-                ></CInput>
+              <CCol md="4" xs="6">
+              <CLabel>
+    <CSLab code="HCM-BOSPUEXHRP_PSLL" />
+    </CLabel><CSRequiredIndicator />
+          <PhoneInput
+                  name ='phone'
+              placeholder="Phone"
+             value={data?.phone || phone ||  ''}
+                 onChange={setPhone} 
+        />
               </CCol>
             </>
           </CRow>

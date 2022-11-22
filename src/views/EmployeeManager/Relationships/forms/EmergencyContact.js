@@ -1,5 +1,7 @@
 import { CCol, CForm, CInput, CLabel, CRow, CSelect } from "@coreui/react";
 import React from "react";
+import 'react-phone-number-input/style.css'
+import PhoneInput from "react-phone-number-input";
 import { useSelector } from "react-redux";
 import { CSLab, CSRequiredIndicator } from "src/reusable/components";
 import { GetLabelByName } from "src/reusable/configs/config";
@@ -8,8 +10,11 @@ function EmergencyContactForm({
   currentFormData,
   handleFormChange,
   setCurrentFormData,
-}) {
+  setPhone,
+  phone
 
+}) {
+  
   const lan = useSelector((state) => state.language);
 
   return (
@@ -41,18 +46,17 @@ function EmergencyContactForm({
               onChange={handleFormChange}
             />
           </CCol>
-          <CCol md="4">
-            <CLabel htmlFor="phone">
-              <CSLab code="HCM-28JQRN57PA4-PSLL" /> <CSRequiredIndicator />
-            </CLabel>
-            <CInput
-              name="phone"
-              type="text"
-              placeholder={GetLabelByName("HCM-4WKQXVS3API_LOLN",lan)}
-              value={currentFormData?.phone || ""}
-              onChange={handleFormChange}
-            />
-          </CCol>
+          <CCol md="4" xs="6">
+              <CLabel>
+    <CSLab code="HCM-BOSPUEXHRP_PSLL" />
+    </CLabel><CSRequiredIndicator />
+          <PhoneInput
+                  name ='phone'
+              placeholder="Phone"
+             value={currentFormData?.phone || phone ||  ''}
+                 onChange={setPhone} 
+        />
+              </CCol>
         </CRow>
         <CRow>
           <CCol md="4">
