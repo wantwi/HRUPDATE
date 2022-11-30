@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import moment from "moment";
@@ -119,22 +119,52 @@ const[isActive,setIsActive]=useState(false)
 const[delEmployeeID,setDelEmployeeID]=useState("")
 const [EmployeeEduInfoChildren,setEmployeeEduInfoChildren]=useState([])
   // const [postdetails,setPostDetails]= useState([{name:"",gender:""}])
+  const startDateRef = useRef(null)
+  const endDateRef = useRef(null)
+  const qualificationRef = useRef(null)
+  const coreAreaRef =useRef(null)
+  const proTitle = useRef(null)
+  const gradeRef = useRef(null)
+  const schoolRef = useRef(null)
 
+const refs = [
+  startDateRef,
+  endDateRef,
+  qualificationRef,
+  coreAreaRef,
+  proTitle,
+  gradeRef,
+  schoolRef
+]
+
+const refs2 = [
+  qualificationRef,
+  coreAreaRef,
+  proTitle,
+  
+]
+
+const checkForValue = (ref) => {
+  console.log({checkForValue: ref.current?.value});
+  if (ref.current?.value) {
+    ref.current.style.border = "1px solid green";
+  }
+};
 
 
   // GetProfessionalTitles()
   const  {data:multicallData} =  useMultiFetch([  GetProfessionalTitles(),  
     GetQualificationTypes(),GetEducationCoreArea()], (results) => {
       setProfessionalTitle([
-        { id: "-1", name: `Select Title` },
+        { id: -1, name: `Select Title` },
         ...results[0].data,
       ]);
       setQualification([
-        { id: "-1", name: `Select Qualification` },
+        { id: -1, name: `Select Qualification` },
         ...results[1].data,
       ]);
       setEducationCore([
-        { id: "-1", name: `Select Education Core Area` },
+        { id: -1, name: `Select Education Core Area` },
         ...results[2].data,
       ]);
       console.log(results[0].data)
@@ -178,6 +208,48 @@ dispatch({ type: 'set', data: { } });
   };
 
   const handleOnSubmit = () => {
+
+    refs.forEach((ref) => {
+      if (ref.current.value.length > 2) {
+        ref.current.style.border = "2px solid green";
+      }else if (ref.current.value.length < 1) {
+        ref.current.style.border = "2px solid red";
+        console.log("second");
+      } else if (ref.current.value === "") {
+        ref.current.style.border = "2px solid red";
+        console.log("third");
+
+      } else {
+        ref.current.style.border = "2px solid red";
+       
+        return
+ 
+      }
+    });
+    refs2.forEach((ref) => {
+      if (ref.current.value !== "-1") {
+        ref.current.style.border = "2px solid green";
+      }else if (ref.current.value === "-1") {
+        ref.current.style.border = "2px solid red";
+        console.log("second");
+      } else if (ref.current.value === "") {
+        ref.current.style.border = "2px solid red";
+        console.log("third");
+
+      } else {
+        ref.current.style.border = "2px solid red";
+       
+        return
+ 
+      }
+    });
+
+
+
+    if (!submitData?.StartDate || submitData?.StartDate === -1 && !submitData?.endDate || submitData?.endDate === -1 && !submitData?.qualificationId || submitData?.qualificationId === -1 && !submitData?.educationTypeId || submitData?.educationTypeId === -1 && !submitData?.titleId || submitData?.titleId === -1 && !submitData?.grade || submitData?.grade === "" && !submitData?.school || submitData?.school === "") {
+      toast.error(GetLabelByName("HCM-WQ9J7737WDC_LASN", lan), toastWarning);
+      return;
+    }
 
 
     if (!submitData?.StartDate || submitData?.StartDate === -1) {
@@ -371,7 +443,7 @@ console.log(forGrid);
   // }, [handleId]);
 
   const handleOnChange = (evnt) => {
-    //console.log(evnt)
+    console.log(evnt)
     setSubmitData((data) => {
       return { ...data, [evnt?.target?.name]: evnt?.target?.value };
     });
@@ -677,13 +749,16 @@ show={isActive}
                 <CSLab code="HCM-K85NF9HWVXC-LANG" />
                 <CSRequiredIndicator />
               </CLabel>
-              <CInput
-                className=""
+              <input
+              className="form-control"
                 name="StartDate"
                 id="StartDate"
                 type="date"
+                ref={startDateRef}
+
                 value={data?.StartDate || -1}
-                onChange={handleOnChange}
+       onChange={(e)=>{handleOnChange(e); checkForValue(startDateRef)}}
+
                 max={moment().format("YYYY-MM-DD")}
               />
             </CCol>
@@ -692,13 +767,15 @@ show={isActive}
                 <CSLab code="HCM-S4N9DCXVMJ" />
                 <CSRequiredIndicator />
               </CLabel>
-              <CInput
-                className=""
+              <input
+               className="form-control"
                 id="endDate"
                 name="endDate"
                 type="date"
+                ref={endDateRef}
                 value={data?.endDate || -1}
-                onChange={handleOnChange}
+                onChange={(e)=>{handleOnChange(e); checkForValue(endDateRef)}}
+
                 max={moment().format("YYYY-MM-DD")}
               />
             </CCol>
@@ -707,17 +784,20 @@ show={isActive}
                 <CSLab code="HCM-AQL471VH30T_LANG" />
                 <CSRequiredIndicator />
               </CLabel>
-              <CSelect
+              <select
+              className="form-control"
                 name="qualificationId"
                 value={data?.qualificationId || -1}
-                onChange={handleOnChange}
+                ref={qualificationRef}
+                onChange={(e)=>{handleOnChange(e); checkForValue(qualificationRef)}}
+
               >
                 {qualification.map((x, i) => (
                   <option key={i} value={x.id}>
                     {x.name}
                   </option>
                 ))}
-              </CSelect>
+              </select>
             </CCol>
           </CRow>
           <CRow>
@@ -726,10 +806,12 @@ show={isActive}
                 <CSLab code="HCM-0GQBD3AIMTXJ_HRPR" />
                 <CSRequiredIndicator />
               </CLabel>
-              <CSelect
+              <select
+              className="form-control"
                 name="educationTypeId"
+                ref={coreAreaRef}
                 value={data?.educationTypeId || -1}
-                onChange={handleOnChange}
+                onChange={(e)=>{handleOnChange(e); checkForValue(coreAreaRef)}}
               >
                 {educationCore.map((x, i) => (
                   <option key={i} value={x.id}>
@@ -743,37 +825,40 @@ show={isActive}
                     </option>
                   )
                 )} */}
-              </CSelect>
+              </select>
             </CCol>
             <CCol md="3">
               <CLabel htmlFor="professionalTitle">
                 <CSLab code="HCM-14CIXISPX6X-LANG" />
                 <CSRequiredIndicator />
               </CLabel>
-              <CSelect
+              <select
+              className="form-control"
                 name="titleId"
+                ref={proTitle}
                 value={data?.titleId || -1}
-                onChange={handleOnChange}
+                onChange={(e)=>{handleOnChange(e); checkForValue(proTitle)}}
               >
                 {titles.map((x, i) => (
                   <option key={i} value={x.id}>
                     {x.name}
                   </option>
                 ))}
-              </CSelect>
+              </select>
             </CCol>
             <CCol md="3">
               <CLabel htmlFor="grade">
                 <CSLab code="HCM-P82D0RPB0G-LOLN" />
                 <CSRequiredIndicator />
               </CLabel>
-              <CInput
-                className=""
+              <input
+          className="form-control"
                 id="grade"
                 type="text"
+                ref={gradeRef}
                 name="grade"
                 value={data?.grade || ""}
-                onChange={handleOnChange}
+                onChange={(e)=>{handleOnChange(e); checkForValue(gradeRef)}}
                 placeholder={GetLabelByName("HCM-D5ABDMN6RNT_LANG", lan)}
               />
             </CCol>
@@ -783,13 +868,14 @@ show={isActive}
                 <CSRequiredIndicator />
               </CLabel>
 
-              <CInput
-                className=""
+              <input
+               className="form-control"
                 id="school"
                 type="text"
                 name="school"
+                ref={schoolRef}
                 value={data?.school || ""}
-                onChange={handleOnChange}
+                onChange={(e)=>{handleOnChange(e); checkForValue(schoolRef)}}
                 placeholder={GetLabelByName("HCM-TIUPTL2IYO9-KCMI", lan)}
               />
             </CCol>

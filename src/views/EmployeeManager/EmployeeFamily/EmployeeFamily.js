@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 //import { toast } from "react-toastify";
@@ -84,6 +84,7 @@ import SweetAlert from "react-bootstrap-sweetalert";
 import useDelete from "src/hooks/useDelete";
 import 'react-phone-number-input/style.css'
 import PhoneInput from "react-phone-number-input";
+import { Formik } from "formik";
 
 const editOptions = {
   allowEditing: false,
@@ -138,41 +139,49 @@ const[isActive,setIsActive]=useState(false)
 const[delEmployeeID,setDelEmployeeID]=useState("")
 const [EmployeeFamilyChildren,setEmployeeFamilyChildren]=useState([])
 const [phone, setPhone] = useState(null);
+const [canSave, setCanSave] = useState(false);
+const [isSubmitBtnClick, setIsSubmitBtnClick] = useState(false);
 
-  //fucntion for multiple get (dropDown list in the form)
-  // const MultipleGetRequests = async () => {
-  //   try {
-  //     let request = [HttpAPIRequest("GET", GetAccidentTypes())];
-  //     const multipleCall = await Promise.allSettled(request);
-  //     console.log(multipleCall[0].value);
-
-  //     setAccidentTypes([
-  //       { id: "-1", name: `Select Accident Type` },
-  //       ...multipleCall[0].value,
-  //     ]);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  
   const searchReset = () => {
     setShow(true);
     setSearchInput("");
 
-    // const [grid,] = useState(null);
-
-    // const OnSaveContinueClick = () => {
-    //     console.log(grid);
-    // }
   };
   const  {data:multicallData} =  useMultiFetch([ GetAccidentTypes()], (results) => {
     setAccidentTypes([{ id: "-1", name: `Select Accident Type` }, ...results[0].data]);
    
-  })
+  }) 
+  const nameRef = useRef(null);
+  const emailRef = useRef(null);
+  const phoneRef = useRef(null)
+
+  const refs = [
+    nameRef,
+    emailRef,
+    phoneRef
+         
+  ];
 
   // useEffect(() => {
   //   MultipleGetRequests();
   // }, []);
+  const checkForValue = (ref) => {
+    console.log({checkForValue: ref});
+    if (ref.current?.value) {
+      ref.current.style.border = "1px solid green";
+    }
+  };
 
+  // useEffect(() => {
+  //   refs.forEach((ref) => {
+  //     ref.current.style.border = "1px solid #e1e2e3";
+  //   });
+
+  //  setBorder(false);
+
+    // return () => {};
+  // }, []);
 
   const {setOptData, setUrl} =  useFetch("", (response,results) => {
     if (response) {
@@ -207,12 +216,59 @@ const [phone, setPhone] = useState(null);
     //   console.log(error);
     // }
   };
+  const checkRequired=()=>{
+
+   refs.forEach((ref) => {
+            if (ref.current.value.length > 2) {
+              ref.current.style.border = "2px solid green";
+            }else if (ref.current.value.length < 2) {
+              ref.current.style.border = "2px solid red";
+            } else if (ref.current.value === "") {
+              ref.current.style.border = "2px solid red";
+            } else {
+              ref.current.style.border = "2px solid red";
+       
+            }
+          });
+          
+    
+  
+  }
+  const checkRequiredToast=()=>{
+
+  }
+
 
   //handles form submit
   const handleOnSubmit = () => {
   
+    refs.forEach((ref) => {
+      if (ref.current.value.length > 2) {
+        ref.current.style.border = "2px solid green";
+      }else if (ref.current.value.length < 2) {
+        ref.current.style.border = "2px solid red";
+        console.log("second");
+      } else if (ref.current.value === "") {
+        ref.current.style.border = "2px solid red";
+        console.log("third");
+
+      } else {
+        ref.current.style.border = "2px solid red";
+       
+        return
+ 
+      }
+    });
+    
+    if (!submitData?.name || submitData?.name === "" && !submitData?.email || submitData?.email === ""  &&  !phone || phone === "") {
+      toast.error(GetLabelByName("HCM-WQ9J7737WDC_LASN", lan), toastWarning);
+      return;
+    }
+    
+   
+
     if (!submitData?.name || submitData?.name === "") {
-      toast.error("Please Enter a Full Name!", toastWarning);
+      toast.error(GetLabelByName("HCM-W4TEXTQO7M9_LOLN", lan), toastWarning); 
       return;
     }
     if ( !phone || phone === "" ) {
@@ -225,6 +281,7 @@ const [phone, setPhone] = useState(null);
     }
 
    //submitData?.phone = phone;
+   setVisible(false)
     let newData = {
       ...submitData,
       phone,
@@ -364,7 +421,7 @@ const handlePosting=()=>{
   const TransLabelByCode = (name) => GetLabelByName(name, lan);
 
   const handleOnChange = (evnt) => {
-    //console.log(evnt)
+  
     setSubmitData((data) => {
       return { ...data, [evnt?.target?.name]: evnt?.target?.value };
     });
@@ -372,7 +429,15 @@ const handlePosting=()=>{
       type: "set",
       data: { ...data, [evnt?.target?.name]: evnt?.target?.value },
     });
+    console.log(evnt?.target?.name);
+    if(evnt?.target?.name === "name" && evnt?.target?.value === ""){
+      toast.error("Enter Name")
+    }
   };
+
+
+
+
   console.log("from Db: ", getEmployeeAccident);
 
   console.log({ submitdatas: data });
@@ -415,6 +480,8 @@ const handlePosting=()=>{
     }
 
   };
+
+
 
 const handleDeleteItem = async () => {
 
@@ -652,10 +719,12 @@ show={isActive}
                   <CSLab code="HCM-DQLFZZ9A4F6-LASN" />
                   <CSRequiredIndicator />
                 </CLabel>
-                <CInput
+                <input
                   name="name"
+                  ref={nameRef}
+                  className="form-control"
                   value={data?.name || ""}
-                  onChange={handleOnChange}
+                  onChange={(e)=>{handleOnChange(e); checkForValue(nameRef)}}
                   placeholder={GetLabelByName("HCM-W4TEXTQO7M9_LOLN",lan)}
                 />
                   {/* {accidentTypes.map((x, i) => (
@@ -671,9 +740,11 @@ show={isActive}
     </CLabel><CSRequiredIndicator />
           <PhoneInput
                   name ='phone'
+                  ref={phoneRef}
               placeholder="Phone"
              value={data?.phone || phone ||  ''}
-                 onChange={setPhone} 
+            
+                 onChange={(e)=> {setPhone(e);checkForValue(nameRef)}} 
         />
               </CCol>
             </>
@@ -685,14 +756,16 @@ show={isActive}
                   <CSLab code="HCM-CXLK7IYZ9B9-KCMI" />
                   <CSRequiredIndicator />
                 </CLabel>
-                <CInput
+                <input
                   id="email"
                   name="email"
                   type="text"
+                  ref={emailRef}
+                  className="form-control"
                   value={data?.email || ""}
-                  onChange={handleOnChange}
+                  onChange={(e)=>{handleOnChange(e); checkForValue(emailRef)}}
                   placeholder={GetLabelByName("HCM-61522DCMNA-LANG", lan)}
-                ></CInput>
+                ></input>
               </CCol>
               {/* <CCol md="6">
                 <CLabel htmlFor="DateInformed">
@@ -734,8 +807,11 @@ show={isActive}
           <CButton
             color="primary"
             onClick={() => {
-              setVisible(false);
-              handleOnSubmit();
+              setIsSubmitBtnClick(true)
+                handleOnSubmit();
+            
+            
+             
             }}
           >
             <CSLab code="HCM-TAAFD4M071D-HRPR" />

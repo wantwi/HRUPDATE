@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { toastWarning } from "src/toasters/Toaster";
@@ -128,6 +128,26 @@ const [post,setPost]=useState([])
 const [delEmployeeName,setDelEmployeeName]=useState("")
 const[isActive,setIsActive]=useState(false)
 const[delEmployeeID,setDelEmployeeID]=useState("")
+
+
+const ailmentRef = useRef(null)
+const healthCareProvider =useRef(null)
+const costRef = useRef(null)
+const dateOfVisitRef = useRef(null)
+
+const refs=[
+  ailmentRef,
+  healthCareProvider,
+  costRef,
+  dateOfVisitRef
+]
+
+const checkForValue = (ref) => {
+  console.log({checkForValue: ref});
+  if (ref.current?.value) {
+    ref.current.style.border = "1px solid green";
+  }
+};
   
   const {setOptData, setUrl} =  useFetch("", (response,results) => {
     if (response) {
@@ -193,7 +213,28 @@ getEmployeeMedicalyById(results.id)
 
 
   const handleOnSubmit = () => {
-    console.log("submit data ", submitData);
+    refs.forEach((ref) => {
+      if (ref.current.value.length > 2) {
+        ref.current.style.border = "2px solid green";
+      }else if (ref.current.value.length < 2) {
+        ref.current.style.border = "2px solid red";
+        console.log("second");
+      } else if (ref.current.value === "") {
+        ref.current.style.border = "2px solid red";
+        console.log("third");
+
+      } else {
+        ref.current.style.border = "2px solid red";
+       
+        return
+ 
+      }
+    });
+    
+    if (!submitData?.ailmentTypeId || submitData?.ailmentTypeId === -1 && !submitData?.providorTypeId || submitData?.providorTypeId === ""  &&  !submitData?.dateOfService || submitData?.dateOfService === "") {
+      toast.error(GetLabelByName("HCM-WQ9J7737WDC_LASN", lan), toastWarning);
+      return;
+    }
 
     if (!submitData?.ailmentTypeId || submitData?.ailmentTypeId === -1) {
       toast.error("Please Select Ailment!", toastWarning);
@@ -207,9 +248,11 @@ getEmployeeMedicalyById(results.id)
       toast.error("Please Select a Date!", toastWarning);
       return;
     }
-    // console.log(submitData)
-    // let employeeId = submitData.id;
-    //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
+    if (!submitData?.cost || submitData?.cost <  0) {
+      toast.error("Please Enter Cost!", toastWarning);
+      return;
+    }
+    setVisible(false);
     let newData = {
       ...submitData,
       userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
@@ -244,6 +287,7 @@ let handleNewGridData=
 
    setViewInfo((prevState)=>[handleNewGridData,...prevState])
    setPost(newData)
+   setSubmitData("")
    
   };
 
@@ -612,34 +656,38 @@ show={isActive}
                   <CSLab code="HCM-QRFDOPK87VI_LASN" />
                   <CSRequiredIndicator />
                 </CLabel>
-                <CSelect
+                <select
+                className="form-control"
                   name="ailmentTypeId"
+                  ref={ailmentRef}
                   value={data.ailmentTypeId || -1}
-                  onChange={handleOnChange}
+                  onChange={(e)=>{handleOnChange(e); checkForValue(ailmentRef)}}
                 >
                   {ailmentType.map((x, i) => (
                     <option key={i} value={x.id}>
                       {x.name}
                     </option>
                   ))}
-                </CSelect>
+                </select>
               </CCol>
               <CCol md="6">
                 <CLabel htmlFor="HealthCareProvider">
                   <CSLab code="HCM-D7HKVE8UGRI_LOLN" />
                   <CSRequiredIndicator />
                 </CLabel>
-                <CSelect
+                <select
                   name="providorTypeId"
+                  ref={healthCareProvider}
+                  className="form-control"
                   value={data?.providorTypeId || -1}
-                  onChange={handleOnChange}
+                  onChange={(e)=>{handleOnChange(e); checkForValue(healthCareProvider)}}
                 >
                   {providerTypes.map((x, i) => (
                     <option key={i} value={x.id}>
                       {x.name}
                     </option>
                   ))}
-                </CSelect>
+                </select>
               </CCol>
             </>
           </CRow>
@@ -650,13 +698,15 @@ show={isActive}
                   <CSLab code="HCM-I23QDSWPM1D_KCMI" />
                   <CSRequiredIndicator />
                 </CLabel>
-                <CInput
-                  className=""
+                <input
+          className="form-control"
                   id="dateOfService"
+                  ref={dateOfVisitRef}
                   type="date"
                   name="dateOfService"
                   value={data?.dateOfService || -1}
-                  onChange={handleOnChange}
+                  onChange={(e)=>{handleOnChange(e); checkForValue(dateOfVisitRef)}}
+
                   max={moment().format("YYYY-MM-DD")}
                 />
               </CCol>
@@ -665,13 +715,15 @@ show={isActive}
                   <CSLab code="HCM-3OZ72JARXE-KCMI" />
                   <CSRequiredIndicator />
                 </CLabel>
-                <CInput
-                  className=""
+                <input
+               className="form-control"
                   id="Cost"
                   type="text"
+                  ref={costRef}
                   name="cost"
                   value={data?.cost || ""}
-                  onChange={handleOnChange}
+                  onChange={(e)=>{handleOnChange(e); checkForValue(costRef)}}
+
                 />
               </CCol>
             </>
@@ -698,7 +750,7 @@ show={isActive}
           <CButton
             color="primary"
             onClick={() => {
-              setVisible(false);
+             
               handleOnSubmit();
             }}
           >

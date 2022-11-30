@@ -13460,7 +13460,17 @@
   "german": "",
   "status": 1,
   "type": "string"
- }
+ },
+ "HCM-WQ9J7737WDC_LASN": {
+   "id": "c7a4207d-8175-4add-aa3c-ffabadf926df",
+   "en": "Please provide data for all required fields.",
+   "fr": "Veuillez fournir des données pour tous les champs obligatoires.",
+   "spanish": "Por favor proporcione datos para todos los campos requeridos.",
+   "portuguese": "Forneça dados para todos os campos obrigatórios.",
+   "german": "Bitte geben Sie Daten für alle Pflichtfelder an.",
+   "status": 1,
+   "type": "string"
+  }
 }
 
 

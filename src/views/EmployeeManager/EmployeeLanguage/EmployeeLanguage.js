@@ -148,7 +148,17 @@ const [EmployeeLanguageChildrenList, setEmployeeLanguageChildrenList]= useState(
 
   //const [newGridDta, setNewGridData] = useState([]);
   const firstGrid = useRef();
+  const languageRef =useRef(null);
+  const readRef =useRef(null);
+  const speakRef =useRef(null);
+  const writeRef =useRef(null);
 
+  const refs=[
+    languageRef,
+    readRef,
+    speakRef,
+    writeRef
+  ]
   const toolbarOptions = [
     "Add",
     "Cancel",
@@ -357,9 +367,31 @@ console.log(results);
 
   //Handles Submit
   const handleOnSubmit = () => {
-    DropDown()
+               DropDown()
               GetColumnNames();
-    console.log("submit data ", submitData);
+ 
+    refs.forEach((ref) => {
+      if (ref.current.value > 0) {
+        ref.current.style.border = "2px solid green";
+      }else if (ref.current.value.length === -1) {
+        ref.current.style.border = "2px solid red";
+        console.log("second");
+      } else if (ref.current.value === "") {
+        ref.current.style.border = "2px solid red";
+        console.log("third");
+
+      } else {
+        ref.current.style.border = "2px solid red";
+       
+        return
+ 
+      }
+    });
+    if (!submitData?.languageId || submitData?.languageId === -1 && !submitData?.read || submitData?.read === -1 && !submitData?.write || submitData?.write === -1 && !submitData?.speak || submitData?.speak === -1) {
+      toast.error(GetLabelByName("HCM-WQ9J7737WDC_LASN", lan), toastWarning);
+      return;
+    }
+
 
     if (!submitData?.languageId || submitData?.languageId == -1) {
       toast.error("Please Select a Language!", toastWarning);
@@ -377,7 +409,8 @@ console.log(results);
       toast.error("Please Select Ability(Speaking)!", toastWarning);
       return;
     }
-     console.log(submitData)
+   //  console.log(submitData)
+     setVisible(false)
     let employeeId = searchResult?.id;
     //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
 
@@ -637,7 +670,12 @@ alert("Clicked")
   
   })
   
-
+  const checkForValue = (ref) => {
+    console.log({checkForValue: ref});
+    if (ref.current?.value) {
+      ref.current.style.border = "1px solid green";
+    }
+  };
 
 
   // const getSampleData = () => {
@@ -863,10 +901,12 @@ show={isActive}
                 <CLabel htmlFor="languageType">
                   <CSLab code="HCM-3WG87DYRWCR-LOLN" /> <CSRequiredIndicator />
                 </CLabel>
-                <CSelect
+                <select
                   name="languageId"
+                  ref={languageRef}
+                  className="form-control"
                   value={data?.languageId || -1}
-                  onChange={handleOnChange}
+                  onChange={(e)=>{handleOnChange(e); checkForValue(languageRef)}}
                 >
                   {" "}
                   <option value={-1}>Select Language</option>
@@ -875,7 +915,7 @@ show={isActive}
                       {x.name}
                     </option>
                   ))}
-                </CSelect>
+                </select>
               </CCol>
             </>
           </CRow>
@@ -888,10 +928,13 @@ show={isActive}
                 <CLabel>
                   <CSLab code="HCM-NZQAVOJB6PG_LANG" /> <CSRequiredIndicator />
                 </CLabel>
-                <CSelect
+                <select
                   name="read"
+                  className="form-control"
+                  ref={readRef}
                   value={data?.read || -1}
-                  onChange={handleOnChange}
+                  onChange={(e)=>{handleOnChange(e); checkForValue(readRef)}}
+
                 >
                   <option value={-1} selected>
                     Select Option
@@ -907,16 +950,18 @@ show={isActive}
                   <option value={3}>Advanced</option>
                   <option value={4}>Fluent</option>
                   <option value={5}>Native</option> */}
-                </CSelect>
+                </select>
               </CCol>
               <CCol md="4">
                 <CLabel>
                   <CSLab code="HCM-D7I7MVGUUNL_KCMI" /> <CSRequiredIndicator />
                 </CLabel>
-                <CSelect
+                <select
                   name="write"
+                  ref={writeRef}
+                  className="form-control"
                   value={data?.write || -1}
-                  onChange={handleOnChange}
+                  onChange={(e)=>{handleOnChange(e); checkForValue(writeRef)}}
                 >
                   <option value={-1} selected>
                     Select Option
@@ -932,16 +977,18 @@ show={isActive}
                   <option value={3}>Advanced</option>
                   <option value={4}>Fluent</option>
                   <option value={5}>Native</option> */}
-                </CSelect>
+                </select>
               </CCol>
               <CCol md="4">
                 <CLabel>
                   <CSLab code="HCM-3OMR0504EHX-HRPR" /> <CSRequiredIndicator />
                 </CLabel>
-                <CSelect
+                <select
                   name="speak"
+                  className="form-control"
+                  ref={speakRef}
                   value={data?.speak || -1}
-                  onChange={handleOnChange}
+                  onChange={(e)=>{handleOnChange(e);checkForValue(speakRef)}}
                 >
                   <option value={-1} selected>
                     Select Option
@@ -957,7 +1004,7 @@ show={isActive}
                   <option value={3}>Advanced</option>
                   <option value={4}>Fluent</option>
                   <option value={5}>Native</option> */}
-                </CSelect>
+                </select>
               </CCol>
             </>
           </CRow>

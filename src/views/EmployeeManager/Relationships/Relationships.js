@@ -279,6 +279,52 @@ const [postNxtofK, setPostNxtofK]=useState([])
   const [phone, setPhone] = useState(null);
 
 
+//Beneficiary
+  const firstNameRef = useRef(null);
+  const LastnameRef = useRef(null);
+  const phoneRef = useRef(null);
+  const addressRef = useRef(null);
+  const relationRef = useRef(null);
+  const percentageRef = useRef(null);
+
+
+  const refs = [
+    firstNameRef,
+    LastnameRef,
+    phoneRef,
+    addressRef,
+    percentageRef
+  ]
+  const refs2 =[
+    relationRef,
+  ]
+//Emergency Contact
+const firstNameEmergContactRef = useRef(null);
+  const LastnameEmergContactRef = useRef(null);
+  const phoneEmergContactRef = useRef(null);
+  const addressEmergContactRef = useRef(null);
+  const emailEmergContactRef = useRef(null)
+
+  
+  const EmergContRefs = [
+    firstNameEmergContactRef,
+    LastnameEmergContactRef,
+    addressEmergContactRef,
+    phoneEmergContactRef,
+    emailEmergContactRef
+   
+  ]
+  
+
+
+
+  const checkForValue = (ref) => {
+    console.log({checkForValue: ref});
+    if (ref.current?.value) {
+      ref.current.style.border = "1px solid green";
+    }
+  };
+
   const actionBegin2 = () => {};
 
   const toolbarOptions = [
@@ -655,11 +701,52 @@ useEffect(() => {
     // Beneficiary
     
     if (activeKey === 1) {
+      refs.forEach((ref) => {
+        if (ref.current.value.length > 2) {
+          ref.current.style.border = "2px solid green";
+        }else if (ref.current.value.length < 1) {
+          ref.current.style.border = "2px solid red";
+          console.log("second");
+        } else if (ref.current.value === "") {
+          ref.current.style.border = "2px solid red";
+          console.log("third");
+  
+        } else {
+          ref.current.style.border = "2px solid red";
+         
+          return
+   
+        }
+      });
+      refs2.forEach((ref) => {
+        if (ref.current.value !== "-1") {
+          ref.current.style.border = "2px solid green";
+        }else if (ref.current.value === "-1") {
+          ref.current.style.border = "2px solid red";
+          console.log("second");
+        } else if (ref.current.value === "") {
+          ref.current.style.border = "2px solid red";
+          console.log("third");
+  
+        } else {
+          ref.current.style.border = "2px solid red";
+         
+          return
+   
+        }
+      });
+  
+      if (!currentFormData?.firstName || submitData?.firstName === "" &&  !currentFormData?.lastName || submitData?.lastName === "" &&  !phone || phone === "" && !currentFormData?.address || submitData?.address === "" && !currentFormData?.percentage || submitData?.percentage === "") {
+        toast.error(GetLabelByName("HCM-WQ9J7737WDC_LASN", lan), toastWarning);
+        return;
+      }
+
+
       if (!currentFormData?.firstName || submitData?.firstName === "") {
         toast.error("Please Enter First Name!", toastWarning);
         return;
       }
-      if (!currentFormData?.lastName || submitData?.lastName === " ") {
+      if (!currentFormData?.lastName || submitData?.lastName === "") {
         toast.error("Please Enter Last Name!", toastWarning);
         return;
       }
@@ -667,11 +754,11 @@ useEffect(() => {
         toast.error("Please Enter Phone Number!", toastWarning);
         return;
       }
-      if (!currentFormData?.address || submitData?.address === " ") {
+      if (!currentFormData?.address || submitData?.address === "") {
         toast.error("Please Enter Address!", toastWarning);
         return;
       }
-      if (!currentFormData?.percentage || submitData?.percentage === " ") {
+      if (!currentFormData?.percentage || submitData?.percentage === "") {
         toast.error("Please Enter Percentage!", toastWarning);
         return;
       }
@@ -791,6 +878,29 @@ useEffect(() => {
     }
     //handle Emegency Contact
     if (activeKey === 3) {
+    
+        EmergContRefs.forEach((ref) => {
+          if (ref.current.value.length > 2) {
+            ref.current.style.border = "2px solid green";
+          }else if (ref.current.value.length < 1) {
+            ref.current.style.border = "2px solid red";
+            console.log("second");
+          } else if (ref.current.value === "") {
+            ref.current.style.border = "2px solid red";
+            console.log("third");
+    
+          } else {
+            ref.current.style.border = "2px solid red";
+           
+            return
+     
+          }
+        });
+        if (!currentFormData?.firstName || submitData?.firstName === "" &&  !currentFormData?.lastName || submitData?.lastName === "" &&  !phone || phone === "" && !currentFormData?.address || submitData?.address === "" && !currentFormData?.email || submitData?.email === -1) {
+          toast.error(GetLabelByName("HCM-WQ9J7737WDC_LASN", lan), toastWarning);
+          return;
+        }
+
       if (!currentFormData?.firstName || submitData?.firstName === "") {
         toast.error("Please Enter First Name!", toastWarning);
         return;
@@ -800,7 +910,7 @@ useEffect(() => {
         return;
       }
 
-      if (!phone || phone === " ") {
+      if (!phone || phone === "") {
         toast.error("Please Enter Phone Number!", toastWarning);
         return;
       }
@@ -1064,6 +1174,13 @@ console.log(e?.target?.name);
     content = (
       <BeneficiaryForm
       setPhone= {setPhone}
+      firstNameref = {firstNameRef}
+      lastNameref={LastnameRef}
+      phonref={phoneRef}
+      addressref={addressRef}
+      relationref={relationRef}
+      percentageref={percentageRef}
+      checkValue={checkForValue}
       phone={phone}
         currentFormData={currentFormData}
         handleFormChange={handleFormChange}
@@ -1076,6 +1193,12 @@ console.log(e?.target?.name);
   if (activeKey === 2) {
     content = (
       <DependantForm
+      // firstNameref = {firstNameEmergContactRef}
+      // lastNameref={LastnameEmergContactRef}
+      // phonref={phoneEmergContactRef}
+      // addressref={addressEmergContactRef}
+      // emailRef={emailEmergContactRef}
+      checkValue={checkForValue}
         currentFormData={currentFormData}
         handleFormChange={handleFormChange}
         setCurrentFormData={setCurrentFormData}
@@ -1090,6 +1213,12 @@ console.log(e?.target?.name);
   if (activeKey === 3) {
     content = (
       <EmergencyContactForm
+      firstNameref = {firstNameEmergContactRef}
+      lastNameref={LastnameEmergContactRef}
+      phonref={phoneEmergContactRef}
+      addressref={addressEmergContactRef}
+      emailRef={emailEmergContactRef}
+      checkValue={checkForValue}
       setPhone= {setPhone}
       phone={phone}
         currentFormData={currentFormData}

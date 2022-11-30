@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { SearchEmployees } from "src/reusable/API/EmployeeEndpoints";
 import { CustomAxios } from "src/reusable/API/CustomAxios";
@@ -135,7 +135,17 @@ const[isActive,setIsActive]=useState(false)
 const[delEmployeeID,setDelEmployeeID]=useState("")
 const [EmployeeHomeTownChildrenList, setEmployeeHomeTownChildrenList]= useState([])
 
+const hometownRef =useRef(null);
 
+const refs=[
+  hometownRef,
+]
+const checkForValue = (ref) => {
+  console.log({checkForValue: ref});
+  if (ref.current?.value) {
+    ref.current.style.border = "1px solid green";
+  }
+};
 
   const {setOptData, setUrl} =  useFetch("", (response,results) => {
     if (response) {
@@ -248,27 +258,39 @@ const [EmployeeHomeTownChildrenList, setEmployeeHomeTownChildrenList]= useState(
 
   //Handles Submit
   const handleOnSubmit = () => {
-    console.log("submit data ", searchResult);
+    refs.forEach((ref) => {
+      if (ref.current.value.length > 2) {
+        ref.current.style.border = "2px solid green";
+      }else if (ref.current.value.length < 2) {
+        ref.current.style.border = "2px solid red";
+        console.log("second");
+      } else if (ref.current.value === "") {
+        ref.current.style.border = "2px solid red";
+        console.log("third");
+
+      } else {
+        ref.current.style.border = "2px solid red";
+       
+        return
+ 
+      }
+    });
+    if (!submitData?.name || submitData?.name === "" ) {
+      toast.error(GetLabelByName("HCM-WQ9J7737WDC_LASN", lan), toastWarning);
+      return;
+    }
 
     if (!submitData?.name || submitData?.name === "") {
       toast.error("Please enter hometown!", toastWarning);
       return;
     }
-    if (!submitData?.description || submitData?.description === "") {
-      toast.error("Please Enter Description!", toastWarning);
-      return;
-    }
-    // console.log(submitData)
+    // if (!submitData?.description || submitData?.description === "") {
+    //   toast.error("Please Enter Description!", toastWarning);
+    //   return;
+    // }
+    
     let employeeId = submitData.id;
-    //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
-    // let newData = {
-    //   ...submitData,
-    //   userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    //   userName: "string",
-    //   CompanyReference: "00001_A01",
-    //   employeeId: searchResult?.id,
-    // };
-// console.log(submitData);
+    setVisible(false);
 setEmployeeHomeTownChildrenList((prev)=>[...prev,submitData ])
 
 
@@ -662,7 +684,7 @@ show={isActive}
                 <CLabel htmlFor="name">
                   <CSLab code="HCM-UVUQH81OLB8-LASN" />{" "}<CSRequiredIndicator />
                 </CLabel>
-                <CInput type="text" id="name" name="name" value={data?.name|| ""} onChange={handleOnChange} placeholder={GetLabelByName("HCM-8VMMSBPPZRJ-KCMI",lan)}/>
+                <input   className="form-control" type="text" id="name" name="name" value={data?.name|| ""} ref={hometownRef} onChange={(e)=>{handleOnChange(e); checkForValue(hometownRef)}} placeholder={GetLabelByName("HCM-8VMMSBPPZRJ-KCMI",lan)}/>
               </CCol>
               {/* <CCol md="12">
                 <CLabel htmlFor="Skill">
@@ -790,7 +812,7 @@ show={isActive}
             // style={{ cursor: !canSave ? "not-allowed" : "pointer" }}
             //disabled={!canSave}
             onClick={() => {
-              setVisible(false);
+              
               handleOnSubmit();
             }}
             color="primary"

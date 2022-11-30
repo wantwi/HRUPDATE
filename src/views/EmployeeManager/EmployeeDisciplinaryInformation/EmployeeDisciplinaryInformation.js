@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { toastWarning } from "src/toasters/Toaster";
@@ -32,6 +32,8 @@ import {
   CLabel,
   CTextarea,
   CSelect,
+  CCardHeader,
+  CCardFooter,
 } from "@coreui/react";
 import {
   ColumnDirective,
@@ -54,7 +56,7 @@ import {
   CSAutoComplete,
   CSRequiredIndicator,
 } from "../../../reusable/components";
-import { AiOutlinePlus } from "react-icons/ai";
+import { AiFillSave, AiOutlineClose, AiOutlinePlus } from "react-icons/ai";
 import { SearchEmployees } from "src/reusable/API/EmployeeEndpoints";
 
 import { LessThanIcon } from "evergreen-ui";
@@ -65,6 +67,7 @@ import {
   GetOffenceCategoryRule,
   PostEmployeeDisciplinaryInfo,
 } from "src/reusable/API/EmployeeDisciplinaryEndpoints";
+import { CardHeader } from "semantic-ui-react";
 
 const commandOptions = [
   {
@@ -119,11 +122,30 @@ const EmployeeDisciplinaryInformation = (props) => {
   const [handleCategoryTypeID, setHandleCategoryTypeID] = useState("");
 const[value, setValueid] =useState("")
 
+const actionByRef= useRef(null);
+const actionDateRef = useRef(null);
+const incidentDateRef = useRef(null);
+const offenceCategoryRef = useRef(null);
+const offenceCategoryRuleRef = useRef(null);
+
+const refs = [
+  actionByRef,
+  actionDateRef,
+  incidentDateRef,
+]
+
+const refs2 = [
+  offenceCategoryRef,
+  offenceCategoryRuleRef,
+]
 
 
-
-
-
+const checkForValue = (ref) => {
+  console.log({checkForValue: ref});
+  if (ref.current?.value) {
+    ref.current.style.border = "1px solid green";
+  }
+};
 
 
   const handleSearchResultSelect = (results) => {
@@ -177,65 +199,67 @@ getEmployeeOffence(results.id)
   };
   let uniqueIdKey = uniqueIdKey || "id";
 
-  const MultipleGetRequests = async () => {
-    try {
-      // if (handleCategoryTypeID == "") {
-      //   setHandleCategoryTypeID(null);
-      // }
-      let request = [
-        HttpAPIRequest("GET", GetOffenceCategory()),
-        // HttpAPIRequest("GET", GetOffenceCategoryRule(handleCategoryTypeID)),
-      ];
-      const multipleCall = await Promise.allSettled(request);
+  // const MultipleGetRequests = async () => {
+  //   try {
+  //     // if (handleCategoryTypeID == "") {
+  //     //   setHandleCategoryTypeID(null);
+  //     // }
+  //     let request = [
+  //       HttpAPIRequest("GET", GetOffenceCategory()),
+  //       // HttpAPIRequest("GET", GetOffenceCategoryRule(handleCategoryTypeID)),
+  //     ];
+  //     const multipleCall = await Promise.allSettled(request);
 
-      setOffenceCategoryType([
-        { id: "-1", name: `Select Offence Category` },
-        ...multipleCall[0].value,
-      ]);
-      // setOffenceCategoryRuleType([
-      //   { id: "-1", name: `Select Offence Type` },
-      //   ...multipleCall[1].value,
-      // ]);
+  //     setOffenceCategoryType([
+  //       { id: "-1", name: `Select Offence Category` },
+  //       ...multipleCall[0].value,
+  //     ]);
+  //     // setOffenceCategoryRuleType([
+  //     //   { id: "-1", name: `Select Offence Type` },
+  //     //   ...multipleCall[1].value,
+  //     // ]);
 
-      console.log("offence category ", offenceCategoryType);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //     console.log("offence category ", offenceCategoryType);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
 
   //Handles category Type Rule
 
-  const handleNewId = async (value) => {
-    console.log({ value });
-    try {
-      let request = [HttpAPIRequest("GET", GetOffenceCategoryRule(value))];
+  // const handleNewId = async (value) => {
+  //   console.log({ value });
+  //   try {
+  //     let request = [HttpAPIRequest("GET", GetOffenceCategoryRule(value))];
 
-      const multipleCall = await Promise.allSettled(request);
-      console.log(multipleCall);
-      setOffenceCategoryRuleType([
-        { id: "-1", name: `Select Offence Type` },
-        multipleCall[0].value,
-      ]);
-      console.log("offence category ", offenceCategoryType);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //     const multipleCall = await Promise.allSettled(request);
+  //     console.log(multipleCall);
+  //     setOffenceCategoryRuleType([
+  //       { id: "-1", name: `Select Offence Type` },
+  //       multipleCall[0].value,
+  //     ]);
+  //     console.log("offence category ", offenceCategoryType);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const  {data:multicallData} =  useMultiFetch([ GetOffenceCategory(), 
-    GetOffenceCategoryRule(value)], (results) => {
+    GetOffenceCategoryRule()], (results) => {
       setOffenceCategoryType([
         { id: "-1", name: `Select Offence Category` },
         ...results[0].data,
       ]);
+      setOffenceCategoryRuleType([ { id: "-1", name: `Select Offence Category Rule` },
+      ...results[1].data,])
   
   })
   console.log("ID", handleCategoryTypeID);
 
-  useEffect(() => {
-    MultipleGetRequests();
-  }, []);
+  // useEffect(() => {
+  //   MultipleGetRequests();
+  // }, []);
 
   //Get employee skill details
 
@@ -258,7 +282,18 @@ getEmployeeOffence(results.id)
         }
     }
 });
+const searchReset = () => {
+  setShow(true);
+  setSearchInput("");
+setViewInfo("")
+dispatch({ type: 'set', data: { } });
 
+  // const [grid,] = useState(null);
+
+  // const OnSaveContinueClick = () => {
+  //     console.log(grid);
+  // }
+};
   const getEmployeeOffence =(id) => {
     setUrl(GetEmployeeOffenceById(id))
     // try {
@@ -281,7 +316,48 @@ getEmployeeOffence(results.id)
 
   //Handles Submit
   const handleOnSubmit = () => {
-    console.log("submit data ", submitData);
+   
+    refs.forEach((ref) => {
+      if (ref.current.value.length > 2) {
+        ref.current.style.border = "2px solid green";
+      }else if (ref.current.value.length < 1) {
+        ref.current.style.border = "2px solid red";
+        console.log("second");
+      } else if (ref.current.value === "") {
+        ref.current.style.border = "2px solid red";
+        console.log("third");
+
+      } else {
+        ref.current.style.border = "2px solid red";
+       
+        return
+ 
+      }
+    });
+    refs2.forEach((ref) => {
+      if (ref.current.value !== "-1") {
+        ref.current.style.border = "2px solid green";
+      }else if (ref.current.value === "-1") {
+        ref.current.style.border = "2px solid red";
+        console.log("second");
+      } else if (ref.current.value === "") {
+        ref.current.style.border = "2px solid red";
+        console.log("third");
+
+      } else {
+        ref.current.style.border = "2px solid red";
+       
+        return
+ 
+      }
+    });
+    if (!submitData?.actionBy || submitData?.actionBy === ""  && !submitData?.actionDate || submitData?.actionDate === "" && !submitData?.incidentDate || submitData?.incidentDate === ""  && !submitData?.offenceCategoryId ||
+    submitData?.offenceCategoryId ===  "-1" && !submitData?.offenceCategoryRuleId ||
+    submitData?.offenceCategoryRuleId === "") {
+      toast.error(GetLabelByName("HCM-WQ9J7737WDC_LASN", lan), toastWarning);
+      return;
+    }
+
 
     if (!submitData?.actionBy || submitData?.actionBy === "") {
       toast.error("Please Enter Action Takers Name!", toastWarning);
@@ -297,7 +373,7 @@ getEmployeeOffence(results.id)
     }
     if (
       !submitData?.offenceCategoryId ||
-      submitData?.offenceCategoryId === ""
+      submitData?.offenceCategoryId ===  "-1"
     ) {
       toast.error("Please Select Offence Category!", toastWarning);
       return;
@@ -309,14 +385,17 @@ getEmployeeOffence(results.id)
       toast.error("Please Select Offence Rule!", toastWarning);
       return;
     }
-    if (!submitData?.description || submitData?.description === "") {
-      toast.error("Please Enter Offence Description!", toastWarning);
-      return;
-    }
+    // if (!submitData?.description || submitData?.description === "") {
+    //   toast.error("Please Enter Offence Description!", toastWarning);
+    //   return;
+    // }
 
     // console.log(submitData)
     let employeeId = submitData.id;
     //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
+
+
+    setVisible(false);
     let newData = {
       ...submitData,
       userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
@@ -437,8 +516,8 @@ getEmployeeOffence(results.id)
         <CCol md="8" className="text-right"></CCol>
         <CCol xs="12" hidden={show}>
           <CCard>
-            <CCardBody style={{ height: CardBodyHeight, overflowY: "auto" }}>
-              <CFormGroup row>
+          <CCardHeader hidden={show} className={""}>
+          <CFormGroup row>
                 <CCol md="4">
                   <b>Employee:</b>{" "}
                   <span
@@ -472,8 +551,12 @@ getEmployeeOffence(results.id)
                   </CButton>
                 </CCol>
               </CFormGroup>
+            </CCardHeader>
+            <CCardBody style={{ height: CardBodyHeight, overflowY: "auto" }}>
+            
               <CCol md="12">
                 <GridComponent
+                height={450}
                   dataSource={viewinfo}
                   allowPaging={true}
                   pageSettings={{ pageSize: 10 }}
@@ -544,6 +627,30 @@ getEmployeeOffence(results.id)
                 </GridComponent>
               </CCol>
             </CCardBody>
+            <CCardFooter style={{ position: 'relative;' }}>
+            {/* <CButton
+                style={{ marginRight: 5, float: 'right', color: 'white' }}
+                  onClick={() => handlePost()}
+                  type="button"
+                  size="sm" 
+                  color="success"
+                >
+                  <AiFillSave size={20} /> 
+                  <CSLab code="HCM-HGUHIR0OK6T" />
+                </CButton> */}
+                <CButton
+                style={{ marginRight: 5, float: 'right', color: 'white' }}
+                  onClick={() => searchReset()}
+                  type="button"
+                  size="sm"
+                  color="danger"
+                >
+                  <AiOutlineClose size={20} />
+                  <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
+                </CButton>
+              
+           
+            </CCardFooter>
           </CCard>
         </CCol>
       </CRow>
@@ -567,11 +674,13 @@ getEmployeeOffence(results.id)
                 <CSLab code="HCM-BLC5UYKD3GO-PSLL" />
                 <CSRequiredIndicator />
               </CLabel>
-              <CInput
+              <input
+              className="form-control"
+              ref={actionByRef}
                 name="actionBy"
                 type="text"
                 value={data?.actionBy || " "}
-                onChange={handleOnChange}
+                onChange={(e)=>{handleOnChange(e); checkForValue(actionByRef)}}
                 placeholder={GetLabelByName("HCM-BLC5UYKD3GO-PSLL", lan)}
               />
             </CCol>
@@ -580,13 +689,14 @@ getEmployeeOffence(results.id)
                 <CSLab code="HCM-S3239KDC9DF-PSLL" />
                 <CSRequiredIndicator />
               </CLabel>
-              <CInput
-                className=""
+              <input
+               className="form-control"
+               ref={actionDateRef}
                 name="actionDate"
                 id="actionDate"
                 type="date"
                 value={data?.actionDate || ""}
-                onChange={handleOnChange}
+                onChange={(e)=>{handleOnChange(e); checkForValue(actionDateRef)}}
                 max={moment().format("YYYY-MM-DD")}
               />
             </CCol>
@@ -596,13 +706,14 @@ getEmployeeOffence(results.id)
                 <CSLab code="HCM-T0013FX72OI_LASN" />
                 <CSRequiredIndicator />
               </CLabel>
-              <CInput
-                className=""
+              <input
+               className="form-control"
+               ref={incidentDateRef}
                 name="incidentDate"
                 id="incidentDate"
                 type="date"
                 value={data?.incidentDate || ""}
-                onChange={handleOnChange}
+                onChange={(e)=>{handleOnChange(e); checkForValue(incidentDateRef)}}
                 max={moment().format("YYYY-MM-DD")}
               />
             </CCol>
@@ -613,17 +724,20 @@ getEmployeeOffence(results.id)
                 <CSLab code="HCM-2E10YDIBMZQ_LASN" />
                 <CSRequiredIndicator />
               </CLabel>
-              <CSelect
+              <select
+              className="form-control"
                 name="offenceCategoryId"
+                ref={offenceCategoryRef}
+                onChange={(e)=>{handleOnChange(e); checkForValue(offenceCategoryRef)}}
                 value={data?.offenceCategoryId || -1}
-                onChange={handleOnChange}
+                
               >
                 {offenceCategoryType.map((x, i) => (
                   <option key={i} value={x.id}>
                     {x.name}
                   </option>
                 ))}
-              </CSelect>
+              </select>
             </CCol>
 
             <CCol md="4">
@@ -631,17 +745,19 @@ getEmployeeOffence(results.id)
                 <CSLab code="HCM-1PWPBZG8B09-LASN" />
                 <CSRequiredIndicator />
               </CLabel>
-              <CSelect
+              <select
+               className="form-control"
+               ref={offenceCategoryRuleRef}
                 name="offenceCategoryRuleId"
                 value={data?.offenceCategoryRuleId || -1}
-                onChange={handleOnChange}
+                onChange={(e)=>{handleOnChange(e); checkForValue(offenceCategoryRuleRef)}}
               >
                 {offenceCategoryRuleType.map((x, i) => (
                   <option key={i} value={x.id}>
                     {x.name}
                   </option>
                 ))}
-              </CSelect>
+              </select>
             </CCol>
           </CRow>
           <CRow>
@@ -681,7 +797,7 @@ getEmployeeOffence(results.id)
           <CButton
             color="primary"
             onClick={() => {
-              setVisible(false);
+           
               handleOnSubmit();
             }}
           >

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { BaseURL } from "src/reusable/API/base";
 import { toast } from "react-toastify";
@@ -137,9 +137,24 @@ const EmployeeHobby = (props) => {
   const[isActive,setIsActive]=useState(false)
   const[delEmployeeID,setDelEmployeeID]=useState("")
   const[EmployeeHobbyChildren,setEmployeeHobbyChildren]=useState([])
+
+
+  const hobbyRef =useRef([]);
+
+
+  const refs = [
+    hobbyRef,
+
+  ]
   
 
 
+  const checkForValue = (ref) => {
+    console.log({checkForValue: ref.current.value});
+    if (ref.current?.value) {
+      ref.current.style.border = "1px solid green";
+    }
+  };
 
 
 
@@ -164,7 +179,28 @@ const EmployeeHobby = (props) => {
   })
 
   const handleOnSubmit = () => {
-    console.log("submit data ", unitId.length);
+console.log(unitId);
+    refs.forEach((ref) => {
+      if (ref.current.value.length < 1) {
+        ref.current.style.border = "2px solid green";
+      }else if (ref.current.value.length === -1) {
+        ref.current.style.border = "2px solid red";
+        console.log("second");
+      } else if (ref.current.value === "") {
+        ref.current.style.border = "2px solid red";
+        console.log("third");
+
+      } else {
+        ref.current.style.border = "2px solid red";
+       
+        return
+ 
+      }
+    });
+    if (!unitId.length || unitId.length < 1 ) {
+      toast.error(GetLabelByName("HCM-WQ9J7737WDC_LASN", lan), toastWarning);
+      return;
+    }
 
      if (unitId.length < 1) {
        toast.error("Please Select Hobby Type!", toastWarning);
@@ -173,6 +209,7 @@ const EmployeeHobby = (props) => {
    
     let employeeId = submitData.id;
     //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
+    setVisible(false);
     
     let newData = {
     
@@ -654,8 +691,8 @@ show={isActive}
                     //defaultValue={[colourOptions[2], colourOptions[3]]}
 
                     //onFocus={() => setIsDisabled(!isDisabled)}
-
-                    onChange={handleUnit}
+                    ref={hobbyRef}
+                    onChange={(e)=>{handleUnit(e);checkForValue(hobbyRef)}}
                     isMulti
                     name="unit"
                     options={checkedHobby}
@@ -692,7 +729,6 @@ show={isActive}
             <CButton
               color="primary"
               onClick={() => {
-                setVisible(false);
                 handleOnSubmit();
               }}
             >

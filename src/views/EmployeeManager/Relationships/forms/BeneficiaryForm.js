@@ -21,7 +21,14 @@ function BeneficiaryForm({
   setCurrentFormData,
   view,
   setPhone,
-  phone
+  phone,
+  firstNameref,
+  lastNameref,
+  phonref,
+  addressref,
+  relationref,
+  percentageref,
+  checkValue,
 }) {
   const lan = useSelector((state) => state.language);
 
@@ -87,12 +94,14 @@ function BeneficiaryForm({
               <CSLab code="HCM-KPH53NF08RG" />
               {""} <CSRequiredIndicator />
             </CLabel>
-            <CInput
+            <input
+            className="form-control"
               name="firstName"
               type="text"
+              ref={firstNameref}
               placeholder={GetLabelByName("HCM-M45LNYXVT6_LASN",lan)}
               value={currentFormData?.firstName || ""}
-              onChange={handleFormChange}
+              onChange={(e)=>{handleFormChange(e); checkValue(firstNameref)}}
             />
           </CCol>
           <CCol md="4">
@@ -100,12 +109,14 @@ function BeneficiaryForm({
               <CSLab code="HCM-6CU7NZJCKLF" />
               {""} <CSRequiredIndicator />
             </CLabel>
-            <CInput
+            <input
+            className="form-control"
               name="lastName"
+              ref={lastNameref}
               type="text"
               placeholder={GetLabelByName("HCM-B6FYFT3XE6S_HRPR",lan)}
               value={currentFormData?.lastName || ""}
-              onChange={handleFormChange}
+              onChange={(e)=>{handleFormChange(e); checkValue(lastNameref)}}
             />
           </CCol>
           <CCol md="4" xs="6">
@@ -113,10 +124,11 @@ function BeneficiaryForm({
     <CSLab code="HCM-BOSPUEXHRP_PSLL" />
     </CLabel><CSRequiredIndicator />
           <PhoneInput
+          ref={phonref}
                   name ='phone'
               placeholder="Phone"
              value={currentFormData?.phone || phone ||  ''}
-                 onChange={setPhone} 
+                 onChange={(e)=>{setPhone(e); checkValue(phonref)} }
         />
               </CCol>
         </CRow>
@@ -126,12 +138,14 @@ function BeneficiaryForm({
               <CSLab code="HCM-7WIK8PDIQOV-LOLN" />
               {""} <CSRequiredIndicator />
             </CLabel>
-            <CInput
+            <input
+            className="form-control"
               name="address"
               type="text"
+              ref={addressref}
               placeholder={GetLabelByName("HCM-AF2ZPOUARPA-PSLL",lan)}
               value={currentFormData?.address || ""}
-              onChange={handleFormChange}
+              onChange={(e)=>{handleFormChange(e); checkValue(addressref)}}
             />
           </CCol>
           <CCol md="4">
@@ -139,10 +153,12 @@ function BeneficiaryForm({
               <CSLab code="HCM-RWMIP9K3NEH_HRPR" />
               {""} <CSRequiredIndicator />
             </CLabel>
-            <CSelect
+            <select
+            className="form-control"
+            ref={relationref}
               name="relationId"
               value={currentFormData?.relationId || -1}
-              onChange={handleFormChange}
+              onChange={(e)=>{handleFormChange(e); checkValue(relationref)}}
             >
               {" "}
               <option value={-1} selected>
@@ -153,18 +169,21 @@ function BeneficiaryForm({
                   {x.name}
                 </option>
               ))}
-            </CSelect>
+            </select>
           </CCol>
           <CCol md="4">
             <CLabel htmlFor="percentage">
               <CSLab code="HCM-HB5MNHJGQE5-HRPR" />
               {""} <CSRequiredIndicator />
             </CLabel>
-            <CInput
+            <input
+            className="form-control"
               name="percentage"
               type="text"   
+              ref={percentageref}
               placeholder={GetLabelByName("HCM-L61W6YKKCF-HRPR",lan)}
-              onChange={handleFormChange}
+              onChange={(e)=>{handleFormChange(e); checkValue(percentageref)}}
+
               value={currentFormData?.percentage || ""}
               autoComplete={"off"}
             />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { SearchEmployees } from "src/reusable/API/EmployeeEndpoints";
 import { CustomAxios } from "src/reusable/API/CustomAxios";
@@ -135,6 +135,12 @@ const EmployeeSkill = (props) => {
 const[isActive,setIsActive]=useState(false)
 const[delEmployeeID,setDelEmployeeID]=useState("")
 const [EmployeeSkillChildren, setEmployeeSkillChildren]=useState([])
+
+const skillRef = useRef(null)
+
+const refs =[
+  skillRef,
+]
 
 
 
@@ -287,19 +293,40 @@ const handleGet=(id)=>{
   //Handles Submit
   const handleOnSubmit = () => {
     console.log("submit data ", submitData);
+    refs.forEach((ref) => {
+      if (ref.current.value > 0) {
+        ref.current.style.border = "2px solid green";
+      }else if (ref.current.value.length === -1) {
+        ref.current.style.border = "2px solid red";
+        console.log("second");
+      } else if (ref.current.value === "") {
+        ref.current.style.border = "2px solid red";
+        console.log("third");
+
+      } else {
+        ref.current.style.border = "2px solid red";
+       
+        return
+ 
+      }
+    });
+    if (!submitData?.skillTypeId || submitData?.skillTypeId === -1 ) {
+      toast.error(GetLabelByName("HCM-WQ9J7737WDC_LASN", lan), toastWarning);
+      return;
+    }
 
     if (!submitData?.skillTypeId || submitData?.skillTypeId === "") {
       toast.error("Please Select a Skill Type!", toastWarning);
       return;
     }
-    if (!submitData?.description || submitData?.description === "") {
-      toast.error("Please Enter Description!", toastWarning);
-      return;
-    }
+    // if (!submitData?.description || submitData?.description === "") {
+    //   toast.error("Please Enter Description!", toastWarning);
+    //   return;
+    // }
     // console.log(submitData)
    
     //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
-
+    setVisible(false);
 let temps = {
   ...submitData[0]
 }
@@ -538,6 +565,12 @@ console.log(viewinfo)
   
   
   };
+  const checkForValue = (ref) => {
+    console.log({checkForValue: ref});
+    if (ref.current?.value) {
+      ref.current.style.border = "1px solid green";
+    }
+  };
   const { setData: setDeleteData, setUrl: setDeletUrl } = useDelete('', (response) => {
   
     // console.log({location:response });
@@ -750,10 +783,12 @@ show={isActive}
                   <CSLab code="HCM-P29OOIV9P7_PSLL" />
                   <CSRequiredIndicator />
                 </CLabel>
-                <CSelect
+                <select
                   name="skillTypeId"
+                  ref={skillRef}
+                  className="form-control"
                   value={data?.skillTypeId || -1}
-                  onChange={handleOnChange}
+                  onChange={(e)=>{handleOnChange(e);checkForValue(skillRef)}}
                 >
                   <option value={-1}> Select Skill</option>
                   {chekedSkillTypes.map((x, i) => (
@@ -761,7 +796,7 @@ show={isActive}
                       {x.name}
                     </option>
                   ))}
-                </CSelect>
+                </select>
               </CCol>
               {/* <CCol md="4">
                 <CLabel htmlFor="phonenumber">
@@ -871,7 +906,7 @@ show={isActive}
             // style={{ cursor: !canSave ? "not-allowed" : "pointer" }}
             //disabled={!canSave}
             onClick={() => {
-              setVisible(false);
+             
               handleOnSubmit();
             }}
             color="primary"

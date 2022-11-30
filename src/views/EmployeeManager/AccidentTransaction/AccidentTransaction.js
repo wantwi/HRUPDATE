@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 //import { toast } from "react-toastify";
@@ -41,6 +41,7 @@ import {
   Sort,
   Edit,
   CommandColumn,
+  saveComplete,
 } from "@syncfusion/ej2-react-grids";
 
 import "../../../../node_modules/@syncfusion/ej2-base/styles/material.css";
@@ -134,6 +135,27 @@ const[isActive,setIsActive]=useState(false)
 const[delEmployeeID,setDelEmployeeID]=useState("")
 const[AccidentTransactionChildren, setAccidentTransactionChildren]=useState([])
 
+const accidentTypeRef =useRef(null);
+const locationRef = useRef(null);
+const dateInformedRef = useRef(null);
+const dateOfAccidentRef = useRef(null)
+
+const refs=[
+  accidentTypeRef,
+  locationRef,
+  dateInformedRef,
+  dateOfAccidentRef
+
+]
+
+const checkForValue = (ref) => {
+  console.log({checkForValue: ref});
+  if (ref.current?.value) {
+    ref.current.style.border = "1px solid green";
+  }
+};
+
+
   //fucntion for multiple get (dropDown list in the form)
   // const MultipleGetRequests = async () => {
   //   try {
@@ -208,6 +230,29 @@ const[AccidentTransactionChildren, setAccidentTransactionChildren]=useState([])
   const handleOnSubmit = () => {
     console.log(submitData);
 
+    refs.forEach((ref) => {
+      if (ref.current.value.length > 2) {
+        ref.current.style.border = "2px solid green";
+      }else if (ref.current.value.length < 2) {
+        ref.current.style.border = "2px solid red";
+        console.log("second");
+      } else if (ref.current.value === "") {
+        ref.current.style.border = "2px solid red";
+        console.log("third");
+
+      } else {
+        ref.current.style.border = "2px solid red";
+       
+        return
+ 
+      }
+    });
+    if (!submitData?.accidentTypeId || submitData?.accidentTypeId === -1 && !submitData?.LocationofAccident ||
+      submitData?.LocationofAccident === "" && !submitData?.DateofAccident || submitData?.DateofAccident === "" && !submitData?.DateInformed || submitData?.DateInformed === "") {
+      toast.error(GetLabelByName("HCM-WQ9J7737WDC_LASN", lan), toastWarning);
+      return;
+    }
+
     if (!submitData?.accidentTypeId || submitData?.accidentTypeId === -1) {
       toast.error("Please Select Accident Type!", toastWarning);
       return;
@@ -242,7 +287,7 @@ const[AccidentTransactionChildren, setAccidentTransactionChildren]=useState([])
     //   CompanyReference: "00001_a01",
     //   employeeId : searchResult?.id
     // };
-
+    setVisible(false);
     let postin = 
     {
       
@@ -633,31 +678,35 @@ show={isActive}
                   <CSLab code="HCM-LPG0UTX0P7H-HRPR" />
                   <CSRequiredIndicator />
                 </CLabel>
-                <CSelect
+                <select
                   name="accidentTypeId"
+                  ref={accidentTypeRef}
+                  className="form-control"
                   value={data?.accidentTypeId || ""}
-                  onChange={handleOnChange}
+                  onChange={(e)=>{handleOnChange(e); checkForValue(accidentTypeRef)}}
                 >
                   {accidentTypes.map((x, i) => (
                     <option key={i} value={x.id}>
                       {x.name}
                     </option>
                   ))}
-                </CSelect>
+                </select>
               </CCol>
               <CCol md="6">
                 <CLabel htmlFor="LocationofAccident">
                   <CSLab code="HCM-QJCY2VRWA7_LOLN" />
                   <CSRequiredIndicator />
                 </CLabel>
-                <CInput
+                <input
                   id="LocationofAccident"
                   name="LocationofAccident"
                   type="text"
+                    ref={locationRef}
+                    className="form-control"
                   value={data?.LocationofAccident || ""}
-                  onChange={handleOnChange}
+                  onChange={(e)=>{handleOnChange(e); checkForValue(locationRef)}}
                   placeholder={GetLabelByName("HCM-ZFA4W47NARI_KCMI", lan)}
-                ></CInput>
+                ></input>
               </CCol>
             </>
           </CRow>
@@ -668,13 +717,15 @@ show={isActive}
                   <CSLab code="HCM-JVUPJOPETGK-LANG" />
                   <CSRequiredIndicator />
                 </CLabel>
-                <CInput
-                  className=""
+                <input
+                
                   id="DateofAccident"
                   name="DateofAccident"
+                  ref={dateOfAccidentRef}
                   value={data?.DateofAccident || ""}
+                  className= "form-control"
                   type="date"
-                  onChange={handleOnChange}
+                  onChange={(e)=>{handleOnChange(e);checkForValue(dateOfAccidentRef)}}
                   max={moment().format("YYYY-MM-DD")}
                 />
               </CCol>
@@ -683,13 +734,14 @@ show={isActive}
                   <CSLab code="HCM-GOO3SSJSCG5_LANG" />
                   <CSRequiredIndicator />
                 </CLabel>
-                <CInput
-                  className=""
+                <input
+                className="form-control"
                   id="DateInformed"
                   type="date"
                   name="DateInformed"
+                  ref={dateInformedRef}
                   value={data?.DateInformed || ""}
-                  onChange={handleOnChange}
+                  onChange={(e)=>{handleOnChange(e); checkForValue(dateInformedRef)}}
                   max={moment().format("YYYY-MM-DD")}
                 />
               </CCol>
@@ -718,7 +770,7 @@ show={isActive}
           <CButton
             color="primary"
             onClick={() => {
-              setVisible(false);
+          
               handleOnSubmit();
             }}
           >
