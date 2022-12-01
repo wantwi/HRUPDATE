@@ -314,9 +314,81 @@ const firstNameEmergContactRef = useRef(null);
     emailEmergContactRef
    
   ]
+
+  //Dependent Refs
+   const DependentFirstName= useRef(null);
+   const DependentLastName = useRef(null);
+   const DependentDOB = useRef(null);
+   const DependentAddress = useRef(null);
+   const DependentRelation = useRef(null);
+   const DependentNationality = useRef(null);
+   const DependentIdType = useRef(null);
+   const DependentIdNumber = useRef(null);
+   const DependentDateOfExpiry = useRef(null);
+   const DependentEmail = useRef(null)
+   const DependentPhone = useRef(null)
+
+    const DependentRefs = [
+      DependentFirstName,
+      DependentLastName,
+      DependentDOB,
+      DependentAddress,
+      DependentIdType,
+      DependentIdNumber,
+      DependentDateOfExpiry,
+      
+    ]
+
+    const DependentDropDownRefs=[
+      DependentRelation,
+      DependentNationality,
+    ]
+
+   //Guarrantor Ref
+   const GuarrantorfirstNameRef = useRef(null);
+   const GuarrantorLastnameRef = useRef(null);
+   const GuarrantorphoneRef = useRef(null);
+   const GuarrantoraddressRef = useRef(null);
+   const GuarrantorRelationRef = useRef(null);
+   const GuarrantorNationalityRef = useRef(null);
+   const GuarrantorEmailRef = useRef(null)
+   const GuarrantorOccupationRef = useRef(null)
   
 
+const GuarantorRefs=[
+  GuarrantorfirstNameRef,
+  GuarrantorLastnameRef,
+  GuarrantorphoneRef,
+  GuarrantoraddressRef,
+  GuarrantorEmailRef,
+  GuarrantorOccupationRef
+ 
+]
+const GuarantorDropDownRefs=[
+  GuarrantorRelationRef,
+  GuarrantorNationalityRef,
+]
 
+
+
+const NextOfKinFirstNameRef= useRef(null)
+const NextOfKinLastNameRef= useRef(null);
+const NextOfKinPhoneRef= useRef(null)
+const NextOfKinAddress = useRef(null);
+const NextOfKinRelation = useRef(null);
+const NextOfKinNationality = useRef(null)
+
+const NextOfKinRefs=[
+  NextOfKinFirstNameRef,
+  NextOfKinLastNameRef,
+  NextOfKinPhoneRef,
+  NextOfKinAddress,
+  
+]
+const NextOfKinDropDownRefs=[
+  NextOfKinRelation,
+  NextOfKinNationality
+]
 
   const checkForValue = (ref) => {
     console.log({checkForValue: ref});
@@ -795,49 +867,96 @@ useEffect(() => {
     //HANDLE DEPENDANT
     if (activeKey === 2) {
       checkRelationDependant();
+      DependentRefs.forEach((ref) => {
+        if (ref.current.value.length > 2) {
+          ref.current.style.border = "2px solid green";
+        }else if (ref.current.value.length < 1) {
+          ref.current.style.border = "2px solid red";
+          console.log("second");
+        } else if (ref.current.value === "") {
+          ref.current.style.border = "2px solid red";
+          console.log("third");
+  
+        } else {
+          ref.current.style.border = "2px solid red";
+         
+          return
+   
+        }
+      });
+      DependentDropDownRefs.forEach((ref) => {
+        if (ref.current.value !== "-1") {
+          ref.current.style.border = "2px solid green";
+        }else if (ref.current.value === "-1") {
+          ref.current.style.border = "2px solid red";
+          console.log("second");
+        } else if (ref.current.value === "") {
+          ref.current.style.border = "2px solid red";
+          console.log("third");
+  
+        } else {
+          ref.current.style.border = "2px solid red";
+         
+          return
+   
+        }
+      });
+  
+      if (!currentFormData?.firstName || submitData?.firstName === "" && 
+       !currentFormData?.lastName || submitData?.lastName === "" && 
+        !currentFormData?.dateOfBirth || submitData?.dateOfBirth === "" && 
+        !currentFormData?.address || submitData?.address === "" && 
+         !currentFormData?.relationTypeId ||
+      submitData?.relationTypeId === "-1" && !currentFormData?.nationalityId || submitData?.nationalityId === "-1" 
+      && !currentFormData?.identityTypeId ||
+      submitData?.identityTypeId === "-1" && !currentFormData?.identityNumber ||
+      submitData?.identityNumber === "" && !currentFormData?.dateOfExpiry || submitData?.dateOfExpiry === "" ) {
+        toast.error(GetLabelByName("HCM-WQ9J7737WDC_LASN", lan), toastWarning);
+        return;
+      }
       if (!currentFormData?.firstName || submitData?.firstName === "") {
         toast.error("Please Enter First Name!", toastWarning);
         return;
       }
-      if (!currentFormData?.lastName || submitData?.lastName === " ") {
+      if (!currentFormData?.lastName || submitData?.lastName === "") {
         toast.error("Please Enter Last Name!", toastWarning);
         return;
       }
 
-      if (!currentFormData?.dateOfBirth || submitData?.dateOfBirth === " ") {
+      if (!currentFormData?.dateOfBirth || submitData?.dateOfBirth === "") {
         toast.error("Please Enter Date Of Birth!", toastWarning);
         return;
       }
-      if (!currentFormData?.address || submitData?.address === " ") {
+      if (!currentFormData?.address || submitData?.address === "") {
         toast.error("Please Enter Address!", toastWarning);
         return;
       }
       if (
         !currentFormData?.relationTypeId ||
-        submitData?.relationTypeId === -1
+        submitData?.relationTypeId === "-1"
       ) {
         toast.error("Please Select Relation!", toastWarning);
         return;
       }
-      if (!currentFormData?.nationalityId || submitData?.nationalityId === -1) {
+      if (!currentFormData?.nationalityId || submitData?.nationalityId === "-1") {
         toast.error("Please Select Nationality!", toastWarning);
         return;
       }
       if (
         !currentFormData?.identityTypeId ||
-        submitData?.identityTypeId === -1
+        submitData?.identityTypeId === "-1"
       ) {
         toast.error("Please Select ID Type!", toastWarning);
         return;
       }
       if (
         !currentFormData?.identityNumber ||
-        submitData?.identityNumber === " "
+        submitData?.identityNumber === ""
       ) {
         toast.error("Please Enter ID Number!", toastWarning);
         return;
       }
-      if (!currentFormData?.dateOfExpiry || submitData?.dateOfExpiry === " ") {
+      if (!currentFormData?.dateOfExpiry || submitData?.dateOfExpiry === "") {
         toast.error("Please Enter Expiry Date!", toastWarning);
         return;
       }
@@ -967,6 +1086,51 @@ console.log(posting);
     }
     //handle Guarantor
     if (activeKey === 4) {
+
+      GuarantorRefs.forEach((ref) => {
+        if (ref.current.value.length > 2) {
+          ref.current.style.border = "2px solid green";
+        }else if (ref.current.value.length < 1) {
+          ref.current.style.border = "2px solid red";
+          console.log("second");
+        } else if (ref.current.value === "") {
+          ref.current.style.border = "2px solid red";
+          console.log("third");
+  
+        } else {
+          ref.current.style.border = "2px solid red";
+         
+          return
+   
+        }
+      });
+      GuarantorDropDownRefs.forEach((ref) => {
+        if (ref.current.value !== "-1") {
+          ref.current.style.border = "2px solid green";
+        }else if (ref.current.value === "-1") {
+          ref.current.style.border = "2px solid red";
+          console.log("second");
+        } else if (ref.current.value === "") {
+          ref.current.style.border = "2px solid red";
+          console.log("third");
+  
+        } else {
+          ref.current.style.border = "2px solid red";
+         
+          return
+   
+        }
+      });
+  
+      if (!currentFormData?.firstName || submitData?.firstName === "" && 
+       !currentFormData?.lastName || submitData?.lastName === "" &&  !phone || phone === "" && !currentFormData?.address || submitData?.address === "" 
+       && !currentFormData?.relationId || submitData?.relationId === "-1" && 
+       !currentFormData?.email || submitData?.email === -1 && !currentFormData?.nationalityId ||
+      submitData?.nationalityId === "-1" && !currentFormData?.occupation || submitData?.occupation === "-1") {
+        toast.error(GetLabelByName("HCM-WQ9J7737WDC_LASN", lan), toastWarning);
+        return;
+      }
+
       if (!currentFormData?.firstName || submitData?.firstName === "") {
         toast.error("Please Enter First Name!", toastWarning);
         return;
@@ -1041,6 +1205,49 @@ console.log(posting);
     }
     //handle Next oF Kin
     if (activeKey === 5) {
+      NextOfKinRefs.forEach((ref) => {
+        if (ref.current.value.length > 2) {
+          ref.current.style.border = "2px solid green";
+        }else if (ref.current.value.length < 1) {
+          ref.current.style.border = "2px solid red";
+          console.log("second");
+        } else if (ref.current.value === "") {
+          ref.current.style.border = "2px solid red";
+          console.log("third");
+  
+        } else {
+          ref.current.style.border = "2px solid red";
+         
+          return
+   
+        }
+      });
+      NextOfKinDropDownRefs.forEach((ref) => {
+        if (ref.current.value !== "-1") {
+          ref.current.style.border = "2px solid green";
+        }else if (ref.current.value === "-1") {
+          ref.current.style.border = "2px solid red";
+          console.log("second");
+        } else if (ref.current.value === "") {
+          ref.current.style.border = "2px solid red";
+          console.log("third");
+  
+        } else {
+          ref.current.style.border = "2px solid red";
+         
+          return
+   
+        }
+      });
+  
+      if (!currentFormData?.firstName || submitData?.firstName === "" && 
+       !currentFormData?.lastName || submitData?.lastName === "" &&  !phone || phone === "" && !currentFormData?.address || submitData?.address === "" 
+       && !currentFormData?.relationId || submitData?.relationId === "-1" && 
+       !currentFormData?.email || submitData?.email === -1 && !currentFormData?.nationalityId ||
+      submitData?.nationalityId === "-1") {
+        toast.error(GetLabelByName("HCM-WQ9J7737WDC_LASN", lan), toastWarning);
+        return;
+      }
       if (!currentFormData?.firstName || submitData?.firstName === "") {
         toast.error("Please Enter First Name!", toastWarning);
         return;
@@ -1050,7 +1257,7 @@ console.log(posting);
         return;
       }
 
-      if (!phone || phone === " ") {
+      if (!phone || phone === "") {
         toast.error("Please Enter Phone Number!", toastWarning);
         return;
       }
@@ -1193,11 +1400,15 @@ console.log(e?.target?.name);
   if (activeKey === 2) {
     content = (
       <DependantForm
-      // firstNameref = {firstNameEmergContactRef}
-      // lastNameref={LastnameEmergContactRef}
-      // phonref={phoneEmergContactRef}
-      // addressref={addressEmergContactRef}
-      // emailRef={emailEmergContactRef}
+      firstNameref = {DependentFirstName}
+      lastNameref={DependentLastName}
+      addressref={DependentAddress}
+      relationRef={DependentRelation}
+      nationalityRef = {DependentNationality}
+      dateOfBirthRef = {DependentDOB}
+      IdTypeRef ={DependentIdType}
+      IdNumerRef={DependentIdNumber}
+      dateOfExpiry ={DependentDateOfExpiry}
       checkValue={checkForValue}
         currentFormData={currentFormData}
         handleFormChange={handleFormChange}
@@ -1226,10 +1437,19 @@ console.log(e?.target?.name);
         setCurrentFormData={setCurrentFormData}
       />
     );
-  }
+  }  
   if (activeKey === 4) {
     content = (
       <GuarantorForm
+      firstName={GuarrantorfirstNameRef}
+      lastName={GuarrantorLastnameRef}
+      phoneRef={GuarrantorphoneRef}
+      address={GuarrantoraddressRef}
+      email={GuarrantorEmailRef}
+      occupation={GuarrantorOccupationRef}
+      relation={GuarrantorRelationRef}
+nationalityRef={GuarrantorNationalityRef}
+checkValue={checkForValue}
       setPhone= {setPhone}
       phone={phone}
         currentFormData={currentFormData}
@@ -1244,6 +1464,13 @@ console.log(e?.target?.name);
   if (activeKey === 5) {
     content = (
       <NextOfKinForm
+      firstNameRef={NextOfKinFirstNameRef}
+      lastNameRef={NextOfKinLastNameRef}
+      phoneRef={NextOfKinPhoneRef}
+      AddressRef={NextOfKinAddress}
+relationRef={NextOfKinRelation}
+nationalityRef={NextOfKinNationality}
+checkValue={checkForValue}
       setPhone= {setPhone}
       phone={phone}
         currentFormData={currentFormData}

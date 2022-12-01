@@ -22,7 +22,17 @@ function GuarantorForm({
   nationality,
   id,
   setPhone,
-  phone
+  phone,
+  firstName,
+  lastName,
+  phoneRef,
+  address,
+  email,
+  occupation,
+  relation,
+  nationalityRef,
+  checkValue
+
 }) {
   const lan = useSelector((state) => state.language);
 
@@ -83,12 +93,14 @@ function GuarantorForm({
             <CLabel htmlFor="firstName">
               <CSLab code="HCM-KPH53NF08RG" /> <CSRequiredIndicator />
             </CLabel>
-            <CInput
+            <input
+            className="form-control"
+            ref={firstName}
               name="firstName"
               type="text"
               placeholder={GetLabelByName("HCM-M45LNYXVT6_LASN",lan)}
               value={currentFormData?.firstName || ""}
-              onChange={handleFormChange}
+              onChange={(e)=>{handleFormChange(e);checkValue(firstName)}}
             />
           </CCol>
           <CCol md="4">
@@ -96,12 +108,14 @@ function GuarantorForm({
               <CSLab code="HCM-6CU7NZJCKLF" />
               <CSRequiredIndicator />
             </CLabel>
-            <CInput
+            <input
+            className="form-control"
+            ref={lastName}
               name="lastName"
               type="text"
               placeholder={GetLabelByName("HCM-B6FYFT3XE6S_HRPR",lan)}
               value={currentFormData?.lastName || ""}
-              onChange={handleFormChange}
+              onChange={(e)=>{handleFormChange(e);checkValue(lastName)}}
             />
           </CCol>
           <CCol md="4" xs="6">
@@ -109,10 +123,11 @@ function GuarantorForm({
     <CSLab code="HCM-BOSPUEXHRP_PSLL" />
     </CLabel><CSRequiredIndicator />
           <PhoneInput
+          ref={phoneRef}
                   name ='phone'
               placeholder="Phone"
              value={currentFormData?.phone || phone ||  ''}
-                 onChange={setPhone} 
+                 onChange={(e)=>{setPhone(e);checkValue(phoneRef)}} 
         />
               </CCol>
         </CRow>
@@ -121,22 +136,26 @@ function GuarantorForm({
             <CLabel htmlFor="address">
               <CSLab code="HCM-7WIK8PDIQOV-LOLN" /> <CSRequiredIndicator />
             </CLabel>
-            <CInput
+            <input
+             className="form-control"
+             ref={address}
               name="address"
               type="text"
               placeholder={GetLabelByName("HCM-AF2ZPOUARPA-PSLL",lan)}
               value={currentFormData?.address || ""}
-              onChange={handleFormChange}
+              onChange={(e)=>{handleFormChange(e);checkValue(address)}}
             />
           </CCol>
           <CCol md="4">
             <CLabel htmlFor="relationId">
               <CSLab code="HCM-RWMIP9K3NEH_HRPR" /> <CSRequiredIndicator />
             </CLabel>
-            <CSelect
+            <select
+             className="form-control"
+             ref={relation}
               name="relationId"
               value={currentFormData?.relationId || -1}
-              onChange={handleFormChange}
+              onChange={(e)=>{handleFormChange(e);checkValue(relation)}}
             >
               <option value={-1}> Select Relation</option>
               {view.map((x, i) => (
@@ -144,23 +163,25 @@ function GuarantorForm({
                   {x.name}
                 </option>
               ))}
-            </CSelect>
+            </select>
           </CCol>
           <CCol md="4">
             <CLabel htmlFor="nationalityId">
               <CSLab code="HCM-IM8I8SKJ1J9_KCMI" /> <CSRequiredIndicator />
             </CLabel>
-            <CSelect
+            <select
+             className="form-control"
+             ref={nationalityRef}
               name="nationalityId"
               value={currentFormData?.nationalityId || -1}
-              onChange={handleFormChange}
+              onChange={(e)=>{handleFormChange(e);checkValue(nationalityRef)}}
             >
               {nationality.map((x, i) => (
                 <option key={i} value={x.id}>
                   {x.name}
                 </option>
               ))}
-            </CSelect>
+            </select>
           </CCol>
         </CRow>
         <CRow>
@@ -168,24 +189,28 @@ function GuarantorForm({
             <CLabel htmlFor="email">
               <CSLab code="HCM-CXLK7IYZ9B9-KCMI" /> <CSRequiredIndicator />
             </CLabel>
-            <CInput
+            <input
+            className="form-control"
+            ref={email}
               name="email"
               type="text"
               placeholder={GetLabelByName("HCM-61522DCMNA-LANG",lan)}
               value={currentFormData?.email || ""}
-              onChange={handleFormChange}
+              onChange={(e)=>{handleFormChange(e);checkValue(email)}}
             />
           </CCol>
           <CCol md="4">
             <CLabel htmlFor="occupation">
               <CSLab code="HCM-RZ2I74RYDFN-KCMI" /> <CSRequiredIndicator />
             </CLabel>
-            <CInput
+            <input
+            className="form-control"
+            ref={occupation}
               name="occupation"
               type="text"
               placeholder={GetLabelByName("HCM-4NXC09IAZ2V-HRPR",lan)}
               value={currentFormData?.occupation || ""}
-              onChange={handleFormChange}
+              onChange={(e)=>{handleFormChange(e);checkValue(occupation)}}
             />
           </CCol>
           {/* <CCol md="4">

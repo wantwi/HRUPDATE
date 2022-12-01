@@ -23,7 +23,7 @@ function NextOfKinForm({
   nationality,
   id,
   setPhone,
-  phone
+  phone,firstNameRef,lastNameRef,phoneRef,AddressRef,relationRef,nationalityRef,checkValue
 }) {
   const lan = useSelector((state) => state.language);
   const [relationTypes, setRelationTypes] = useState([]);
@@ -60,12 +60,14 @@ function NextOfKinForm({
               <CSLab code="HCM-KPH53NF08RG" /> {""}
               <CSRequiredIndicator />
             </CLabel>
-            <CInput
+            <input
+            className="form-control"
+            ref={firstNameRef}
               name="firstName"
               type="text"
               placeholder={GetLabelByName("HCM-M45LNYXVT6_LASN",lan)}
               value={currentFormData?.firstName || ""}
-              onChange={handleFormChange}
+              onChange={(e)=>{handleFormChange(e);checkValue(firstNameRef)}}
             />
           </CCol>
           <CCol md="4">
@@ -73,12 +75,14 @@ function NextOfKinForm({
               <CSLab code="HCM-6CU7NZJCKLF" /> {""}
               <CSRequiredIndicator />
             </CLabel>
-            <CInput
+            <input
+            className="form-control"
+            ref={lastNameRef}
               name="lastName"
               type="text"
               placeholder={GetLabelByName("HCM-B6FYFT3XE6S_HRPR",lan)}
               value={currentFormData?.lastName || ""}
-              onChange={handleFormChange}
+              onChange={(e)=>{handleFormChange(e);checkValue(lastNameRef)}}
             />
           </CCol>
           <CCol md="4" xs="6">
@@ -86,10 +90,11 @@ function NextOfKinForm({
     <CSLab code="HCM-BOSPUEXHRP_PSLL" />
     </CLabel><CSRequiredIndicator />
           <PhoneInput
+          ref={phoneRef}
                   name ='phone'
               placeholder="Phone"
              value={currentFormData?.phone || phone ||  ''}
-                 onChange={setPhone} 
+                 onChange={(e)=>{setPhone(e);checkValue(phoneRef)} }
         />
               </CCol>
         </CRow>
@@ -99,7 +104,8 @@ function NextOfKinForm({
               <CSLab code="HCM-BIARUHXGKQ4-HRPR" /> {""}
       
             </CLabel>
-            <CInput
+            <input
+
               name="otherPhone"
               type="text"
               placeholder="Enter Phone Number"
@@ -112,12 +118,14 @@ function NextOfKinForm({
               <CSLab code="HCM-7WIK8PDIQOV-LOLN" /> {""}
               <CSRequiredIndicator />
             </CLabel>
-            <CInput
+            <input
+            ref={AddressRef}
+            className="form-control"
               name="address"
               type="text"
               placeholder={GetLabelByName("HCM-AF2ZPOUARPA-PSLL",lan)}
               value={currentFormData?.address || ""}
-              onChange={handleFormChange}
+              onChange={(e)=>{handleFormChange(e);checkValue(AddressRef)}}
             />
           </CCol>
           <CCol md="4">
@@ -125,6 +133,7 @@ function NextOfKinForm({
               <CSLab code="HCM-CXLK7IYZ9B9-KCMI" /> 
             </CLabel>
             <CInput
+            
               name="email"
               type="text"
               placeholder={GetLabelByName("HCM-61522DCMNA-LANG",lan)}
@@ -139,10 +148,12 @@ function NextOfKinForm({
               <CSLab code="HCM-RWMIP9K3NEH_HRPR" /> {""}
               <CSRequiredIndicator />
             </CLabel>
-            <CSelect
+            <select
+            ref={relationRef}
+            className="form-control"
               name="relationId"
               value={currentFormData?.relationId || -1}
-              onChange={handleFormChange}
+              onChange={(e)=>{handleFormChange(e);checkValue(relationRef)}}
             >
               <option value={-1}>Selection Relation</option>
               {view.map((x, i) => (
@@ -150,7 +161,7 @@ function NextOfKinForm({
                   {x.name}
                 </option>
               ))}
-            </CSelect>
+            </select>
           </CCol>
           <CCol md="4">
             <CLabel htmlFor="nationalityId">
@@ -158,17 +169,19 @@ function NextOfKinForm({
               {""}
               <CSRequiredIndicator />
             </CLabel>
-            <CSelect
+            <select
+            className="form-control"
+            ref={nationalityRef}
               name="nationalityId"
               value={currentFormData?.nationalityId || -1}
-              onChange={handleFormChange}
+              onChange={(e)=>{handleFormChange(e);checkValue(nationalityRef)}}
             >
               {nationality.map((x, i) => (
                 <option key={i} value={x.id}>
                   {x.name}
                 </option>
               ))}
-            </CSelect>
+            </select>
           </CCol>
         </CRow>
       </CForm>

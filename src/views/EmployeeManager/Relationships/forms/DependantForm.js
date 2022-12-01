@@ -23,7 +23,18 @@ function DependantForm({
   setCurrentFormData,
   view,
   id,
-  nationality
+  nationality,
+  firstNameref,
+  lastNameref,
+
+  addressref,
+  relationRef,
+  nationalityRef,
+  dateOfBirthRef,
+  IdTypeRef,
+  IdNumerRef,
+  dateOfExpiry,
+  checkValue
 }) {
   const lan = useSelector((state) => state.language);
   const [relationTypes, setRelationTypes] = useState([]);
@@ -86,7 +97,7 @@ function DependantForm({
   //   MultipleGetRequests();
   // }, []);
 
-  return (
+  return ( 
     <div>
       <CForm>
         <CRow>
@@ -94,12 +105,14 @@ function DependantForm({
             <CLabel htmlFor="firstName">
               <CSLab code="HCM-KPH53NF08RG" /> <CSRequiredIndicator />
             </CLabel>
-            <CInput
+            <input
+            className="form-control"
+             ref={firstNameref}
               name="firstName"
               type="text"
               value={currentFormData?.firstName || ""}
               placeholder={GetLabelByName("HCM-M45LNYXVT6_LASN",lan)}
-              onChange={handleFormChange}
+              onChange={(e)=>{handleFormChange(e);checkValue(firstNameref)}}
               // placeholder="First Name"
             />
             
@@ -108,23 +121,27 @@ function DependantForm({
             <CLabel htmlFor="lastName">
               <CSLab code="HCM-6CU7NZJCKLF" /> <CSRequiredIndicator />
             </CLabel>
-            <CInput
+            <input
+            className="form-control"
+            ref={lastNameref}
               name="lastName"
               type="text"
               placeholder={GetLabelByName("HCM-B6FYFT3XE6S_HRPR",lan)}
               value={currentFormData?.lastName || ""}
-              onChange={handleFormChange}
+              onChange={(e)=>{handleFormChange(e); checkValue(lastNameref)}}
             />
           </CCol>
           <CCol md="4">
             <CLabel htmlFor="dateOfBirth">
               <CSLab code="HCM-XYNVK7A8USK_PSLL" /> <CSRequiredIndicator />
             </CLabel>
-            <CInput
+            <input
+             className="form-control"
+             ref={dateOfBirthRef}
               name="dateOfBirth"
               type="date"
               value={currentFormData?.dateOfBirth || ""}
-              onChange={handleFormChange}
+              onChange={(e)=>{handleFormChange(e); checkValue(dateOfBirthRef)}}
               max={moment().format("YYYY-MM-DD")}
             />
           </CCol>
@@ -134,22 +151,26 @@ function DependantForm({
             <CLabel htmlFor="address">
               <CSLab code="HCM-7WIK8PDIQOV-LOLN" /> <CSRequiredIndicator />
             </CLabel>
-            <CInput
+            <input
+            className="form-control"
+            ref={addressref}
               name="address"
               type="text"
               placeholder={GetLabelByName("HCM-AF2ZPOUARPA-PSLL",lan)}
               value={currentFormData?.address || ""}
-              onChange={handleFormChange}
+              onChange={(e)=>{handleFormChange(e); checkValue(addressref)}}
             />
           </CCol>
           <CCol md="4">
             <CLabel htmlFor="relationTypeId">
               <CSLab code="HCM-RWMIP9K3NEH_HRPR" /> <CSRequiredIndicator />
             </CLabel>
-            <CSelect
+            <select
+            className="form-control"
               name="relationTypeId"
+              ref={relationRef}
               value={currentFormData?.relationTypeId || -1}
-              onChange={handleFormChange}
+              onChange={(e)=>{handleFormChange(e); checkValue(relationRef)}}
             >
               <option value={-1} selected>
                 {" "}
@@ -160,23 +181,25 @@ function DependantForm({
                   {x.name}
                 </option>
               ))}
-            </CSelect>
+            </select>
           </CCol>
           <CCol md="4">
             <CLabel htmlFor="nationalityId">
               <CSLab code="HCM-IM8I8SKJ1J9_KCMI" /> <CSRequiredIndicator />
             </CLabel>
-            <CSelect
+            <select
+             className="form-control"
+             ref={nationalityRef}
               name="nationalityId"
               value={currentFormData?.nationalityId || -1}
-              onChange={handleFormChange}
+              onChange={(e)=>{handleFormChange(e); checkValue(nationalityRef)}}
             >
               {nationality.map((x, i) => (
                 <option key={i} value={x.id}>
                   {x.name}
                 </option>
               ))}
-            </CSelect>
+            </select>
           </CCol>
         </CRow>
         <CRow>
@@ -184,39 +207,45 @@ function DependantForm({
             <CLabel htmlFor="identityTypeId">
               <CSLab code="HCM-YIEJZNSN8L_PSLL" /> <CSRequiredIndicator />
             </CLabel>
-            <CSelect
+            <select
+            className="form-control"
+            ref={IdTypeRef}
               name="identityTypeId"
               value={currentFormData?.identityTypeId || -1}
-              onChange={handleFormChange}
+              onChange={(e)=>{handleFormChange(e); checkValue(IdTypeRef)}}
             >
               {id.map((x, i) => (
                 <option key={i} value={x.id}>
                   {x.name}
                 </option>
               ))}
-            </CSelect>
+            </select>
           </CCol>
           <CCol md="4">
             <CLabel htmlFor="identityNumber">
               <CSLab code="HCM-WJ7T6PUPMYD-LASN" /> <CSRequiredIndicator />
             </CLabel>
-            <CInput
+            <input
+            className="form-control"
+            ref={IdNumerRef}
               name="identityNumber"
               type="text"
               placeholder={GetLabelByName("HCM-WJ7T6PUPMYD-LASN",lan)}
               value={currentFormData?.identityNumber || ""}
-              onChange={handleFormChange}
+              onChange={(e)=>{handleFormChange(e); checkValue(IdNumerRef)}}
             />
           </CCol>
           <CCol md="4">
             <CLabel htmlFor="dateOfExpiry">
               <CSLab code="HCM-JKZ3735Q4D-LOLN" /> <CSRequiredIndicator />
             </CLabel>
-            <CInput
+            <input
+            className="form-control"
+            ref={dateOfExpiry}
               name="dateOfExpiry"
               type="date"
               value={currentFormData?.dateOfExpiry || ""}
-              onChange={handleFormChange}
+              onChange={(e)=>{handleFormChange(e); checkValue(dateOfExpiry)}}
             />
           </CCol>
         </CRow>
