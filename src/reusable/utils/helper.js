@@ -222,3 +222,26 @@ export const moneyFormatter = (num)=> {
     return response.json()
     })
     }
+    export const  moneyInTxt = (value, standard, dec = 0) => {
+        let nf = new Intl.NumberFormat(standard, {
+       minimumFractionDigits: dec,
+       maximumFractionDigits: 2
+        });
+       return nf.format(Number(value) ? value : 0.00);
+       };
+       export const capitalizeWord = (arr) => {
+        return arr.split(" ").map((word)=> word.charAt(0).toUpperCase()+ word.toLowerCase().slice(1)).join(" ");
+    };
+    export const validateEmail =(email) =>{
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(String(email).toLowerCase());
+    };
+    /**
+ * Check for only numbers/decimal inputs
+ * @param {string} input 
+ * @returns boolean
+ */
+ export const isValidNumber = (input) => {
+    var p = new RegExp(/^[0-9]+([.][0-9]+)?$/);
+    return p.test(input);
+  };

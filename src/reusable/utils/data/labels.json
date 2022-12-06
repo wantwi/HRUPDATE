@@ -13470,7 +13470,137 @@
    "german": "Bitte geben Sie Daten für alle Pflichtfelder an.",
    "status": 1,
    "type": "string"
-  }
+  },
+  "HCM-N0AWTBARHZA-KCMI": {
+   "id": "2ccf3efb-fbe0-454b-961e-c7ba2b15f8ad",
+   "en": "Select",
+   "fr": "Sélectionner",
+   "spanish": "",
+   "portuguese": "",
+   "german": "",
+   "status": 1,
+   "type": "string"
+ },
+ "HCM-ZYB0UGLFZT9_HRPR": {
+  "id": "414b6c2c-3060-4b8a-9337-e080c4308deb",
+  "en": "Select Payroll Hours",
+  "fr": "Sélectionnez les heures de paie",
+  "spanish": "",
+  "portuguese": "",
+  "german": "",
+  "status": 1,
+  "type": "string"
+},
+"HCM-7VR8XXS1YVK-LANG": {
+ "id": "85009a4c-0f2b-46f9-952c-f75c5f0505c8",
+ "en": "Select Status",
+ "fr": "Sélectionnez le statut",
+ "spanish": "",
+ "portuguese": "",
+ "german": "",
+ "status": 1,
+ "type": "string"
+},
+"HCM-KVU6ZZOI9TR_LASN": {
+ "id": "2f2f6456-b1c5-4aba-bcbb-bd0dbd71cae7",
+ "en": "Enter Staff ID",
+ "fr": "Entrez l'ID du personnel",
+ "spanish": "",
+ "portuguese": "",
+ "german": "",
+ "status": 1,
+ "type": "string"
+},
+"HCM-EOH7D1YOS2G_LOLN": {
+ "id": "f62ec0e2-3fb2-4005-bb87-ca662e0a56d7",
+ "en": "Select Title",
+ "fr": "Sélectionnez le titre",
+ "spanish": "",
+ "portuguese": "",
+ "german": "",
+ "status": 1,
+ "type": "string"
+},
+"HCM-WOEVNX19YX-LASN": {
+ "id": "94f27d02-ae17-49b1-a761-5b114fddc9f2",
+ "en": "Enter Other Name",
+ "fr": "Entrer un autre nom",
+ "spanish": "",
+ "portuguese": "",
+ "german": "",
+ "status": 1,
+ "type": "string"
+},
+"HCM-24XO0WBOU79-HRPR": {
+     "id": "9b547087-69ed-4e23-b3d9-f888ddcc6cb1",
+     "en": "Select Marital Status",
+     "fr": "Sélectionnez l'état civil",
+     "spanish": "",
+     "portuguese": "",
+     "german": "",
+     "status": 1,
+     "type": "string"
+   },
+   "HCM-MLXT5911ZC-LASN": {
+    "id": "2d666bcc-6114-442b-b216-4c6caa9c190f",
+    "en": "Enter Digital Address",
+    "fr": "Entrez l'adresse numérique",
+    "spanish": "",
+    "portuguese": "",
+    "german": "",
+    "status": 1,
+    "type": "string"
+  },
+  "HCM-AN601MNCJXE-LOLN": {
+   "id": "5b88c646-ef48-4a05-a9e1-e0f60b30086e",
+   "en": "Profile Picture",
+   "fr": "Image de profil",
+   "spanish": "Foto de perfil",
+   "portuguese": "Foto do perfil",
+   "german": "Profilbild",
+   "status": 1,
+   "type": "string"
+ },
+ "HCM-QBIJLIRXEVB-LASN": {
+  "id": "751cb125-40c9-4063-b777-995fec339e63",
+  "en": "Select Nationality",
+  "fr": "Sélectionnez la nationalité",
+  "spanish": "",
+  "portuguese": "",
+  "german": "",
+  "status": 1,
+  "type": "string"
+},
+"HCM-RHPFDVJQYK_LANG": {
+ "id": "91f2dfeb-17c0-4918-bb98-675732cf877c",
+ "en": "Enter National ID",
+ "fr": "Entrez l'identifiant national",
+ "spanish": "",
+ "portuguese": "",
+ "german": "",
+ "status": 1,
+ "type": "string"
+},
+"HCM-4E1JWW6GREC_KCMI": {
+ "id": "d07d5e68-e26c-4130-be16-dbb5cc44fee2",
+ "en": "Enter Probation Month",
+ "fr": "Entrez le mois de probation",
+ "spanish": "",
+ "portuguese": "",
+ "german": "",
+ "status": 1,
+ "type": "string"
+},
+"HCM-WGN2SQIGAC_LOLN": {
+ "id": "a9e7fa08-bf7f-4c06-9295-d1f98ad5724d",
+ "en": "Select Notch",
+ "fr": "Sélectionnez l'encoche",
+ "spanish": "",
+ "portuguese": "",
+ "german": "",
+ "status": 1,
+ "type": "string"
+}
 }
 
 

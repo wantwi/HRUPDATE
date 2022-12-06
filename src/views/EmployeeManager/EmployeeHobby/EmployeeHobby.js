@@ -179,28 +179,29 @@ const EmployeeHobby = (props) => {
   })
 
   const handleOnSubmit = () => {
-console.log(unitId);
-    refs.forEach((ref) => {
-      if (ref.current.value.length < 1) {
-        ref.current.style.border = "2px solid green";
-      }else if (ref.current.value.length === -1) {
-        ref.current.style.border = "2px solid red";
-        console.log("second");
-      } else if (ref.current.value === "") {
-        ref.current.style.border = "2px solid red";
-        console.log("third");
 
-      } else {
-        ref.current.style.border = "2px solid red";
+    // refs.forEach((ref) => {
+    
+    //   if (ref.current.props.value < 1) {
+    //     ref.current.style.border = "2px solid green";
+    //   }else if (ref.current.value.length === -1) {
+    //     ref.current.style.border = "2px solid red";
+    //     console.log("second");
+    //   } else if (ref.current.value === "") {
+    //     ref.current.style.border = "2px solid red";
+    //     console.log("third");
+
+    //   } else {
+    //     ref.current.style.border = "2px solid red";
        
-        return
+    //     return
  
-      }
-    });
-    if (!unitId.length || unitId.length < 1 ) {
-      toast.error(GetLabelByName("HCM-WQ9J7737WDC_LASN", lan), toastWarning);
-      return;
-    }
+    //   }
+    // });
+    // if (!unitId.length || unitId.length < 1 ) {
+    //   toast.error(GetLabelByName("HCM-WQ9J7737WDC_LASN", lan), toastWarning);
+    //   return;
+    // }
 
      if (unitId.length < 1) {
        toast.error("Please Select Hobby Type!", toastWarning);
@@ -221,7 +222,7 @@ console.log(unitId);
     let gridView= {
       
       "hobbyType": {
-        "id": `${unitId.map((x)=> x)}`,
+        id: `${unitId.map((x)=> x)}`,
         
         "name": getName(hobbyTypes,`${unitId.map((x)=>x)}`),
        
@@ -234,6 +235,8 @@ console.log(unitId);
       }
     }
 
+
+ 
 
     setEmployeeHobbyChildren((prev)=>[...prev, gridView?.hobbyType?.id])
 setEmployeeHobbyby(newData)
