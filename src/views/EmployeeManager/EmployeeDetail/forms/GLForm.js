@@ -1,6 +1,7 @@
 import { CCol, CLabel, CRow, CSelect } from "@coreui/react";
 import React, {  useState } from "react";
 import { useSelector } from "react-redux";
+import useAuth from "src/hooks/useAuth";
 import useFetch from "src/hooks/useFetch";
 import { GetGLAccounts } from "src/reusable/API/EmployeeDetailsEndpoints";
 import { CSLab, CSLineLabel } from "src/reusable/components";
@@ -17,8 +18,11 @@ const GLForm = ({glFormData, setGlFormData}) => {
             [event.target.name]:event.target.value
         }))
     }
+    const {auth}= useAuth()
+    const {companyReference: CompanyReference } = auth
 
-    useFetch(GetGLAccounts(COMPANY_REFRENCE),(response) =>{
+
+    useFetch(GetGLAccounts(CompanyReference),(response) =>{
         setGLAccountData(response)
     })
 

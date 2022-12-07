@@ -68,6 +68,7 @@ import {
   PostEmployeeDisciplinaryInfo,
 } from "src/reusable/API/EmployeeDisciplinaryEndpoints";
 import { CardHeader } from "semantic-ui-react";
+import useAuth from "src/hooks/useAuth";
 
 const commandOptions = [
   {
@@ -244,7 +245,10 @@ getEmployeeOffence(results.id)
   //     console.log(error);
   //   }
   // };
+  const {auth}= useAuth()
+  const {companyReference: CompanyReference } = auth
 
+  
   const  {data:multicallData} =  useMultiFetch([ GetOffenceCategory(), 
     GetOffenceCategoryRule()], (results) => {
       setOffenceCategoryType([

@@ -2,6 +2,7 @@ import { CCol, CInput, CLabel, CRow, CSelect } from "@coreui/react";
 import React, { useEffect, useRef, useState } from "react";
 import CurrencyFormat from "react-currency-format";
 import { useSelector } from "react-redux";
+import useAuth from "src/hooks/useAuth";
 import useFetch from "src/hooks/useFetch";
 import useMultiFetch from "src/hooks/useMultiFetch";
 import { GetAllDivisonsByCompanyReference } from "src/reusable/API/DepartmentEndpoints";
@@ -24,7 +25,7 @@ import {
   CSRequiredIndicator,
 } from "src/reusable/components";
 import { GetLabelByName } from "src/reusable/configs/config";
-const COMPANY_REFRENCE = "00000002_01";
+// const COMPANY_REFRENCE = "00000002_01";
 
 const OrganizationalForm = ({
   organizationalForm,
@@ -74,6 +75,8 @@ console.log(resObj);
     setBorder(false);
   };
 
+  const {auth}= useAuth()
+  const {companyReference: CompanyReference } = auth
   const {
     sectionList = [],
     departmentList = [],
@@ -89,16 +92,16 @@ console.log(resObj);
 
   useMultiFetch(
     [
-      GetAllSectionsByCompanyReference(COMPANY_REFRENCE),
-      GetAllDepartmentsByCompanyReference(COMPANY_REFRENCE),
-      GetAllDivisonsByCompanyReference(COMPANY_REFRENCE),
-      GetAllEmployeeTypesByCompanyRefernece(COMPANY_REFRENCE),
-      GetAllPositionsByCompanyReference(COMPANY_REFRENCE),
-      GetAllUnitsByCompanyReference(COMPANY_REFRENCE),
-      GetAllLocationsByCompanyReference(COMPANY_REFRENCE),
-      GetEmployeeStatus(COMPANY_REFRENCE),
-      GetsalaryGrade(COMPANY_REFRENCE),
-      GetNotchSize(COMPANY_REFRENCE)
+      GetAllSectionsByCompanyReference(CompanyReference),
+      GetAllDepartmentsByCompanyReference(CompanyReference),
+      GetAllDivisonsByCompanyReference(CompanyReference),
+      GetAllEmployeeTypesByCompanyRefernece(CompanyReference),
+      GetAllPositionsByCompanyReference(CompanyReference),
+      GetAllUnitsByCompanyReference(CompanyReference),
+      GetAllLocationsByCompanyReference(CompanyReference),
+      GetEmployeeStatus(CompanyReference),
+      GetsalaryGrade(CompanyReference),
+      GetNotchSize(CompanyReference)
     ]
   
   );
@@ -120,6 +123,8 @@ console.log(resObj);
 
     notchRef.current.value = organizationalForm?.notchId;
   });
+
+
 
   useEffect(() => {
     const DEFAULT_GUID = "00000000-0000-0000-0000-000000000000";

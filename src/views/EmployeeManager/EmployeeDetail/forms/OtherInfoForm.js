@@ -1,6 +1,7 @@
 import { CCol, CLabel, CRow, CSelect, CTextarea } from "@coreui/react";
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import useAuth from "src/hooks/useAuth";
 import useMultiFetch from "src/hooks/useMultiFetch";
 import { GetPayrollHours } from "src/reusable/API/EmployeeDetailsEndpoints";
 import { CSLab, CSLineLabel } from "src/reusable/components";
@@ -21,6 +22,9 @@ const OtherInfoForm = ({ otherInfoFormData, setOtherInfoFormData }) => {
     }));
   };
 
+  const {auth}= useAuth()
+  const {companyReference: CompanyReference } = auth
+
   const multiFetchResponse = (response) => {
     let resObj = {};
     resObj.payrollHoursList = response[0].data;
@@ -30,7 +34,7 @@ const OtherInfoForm = ({ otherInfoFormData, setOtherInfoFormData }) => {
 
   const { payrollHoursList = [] } = genericData;
 
-  useMultiFetch([GetPayrollHours(COMPANY_REFRENCE)], multiFetchResponse);
+  useMultiFetch([GetPayrollHours(CompanyReference)], multiFetchResponse);
   const handleOnFocusout = () => {
     if (!isValidNumber(otherInfoFormData?.percentageOfBasic)) {
       percentageRef.current.focus()

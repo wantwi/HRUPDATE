@@ -132,7 +132,7 @@ const LeaveTransaction = (props) => {
   const {auth}= useAuth()
   const {companyReference: CompanyReference } = auth
 
-  
+
   const  {data:multicallData} =  useMultiFetch([AvailableDayBasis(COMPREF), 
     AllowedDayBasis(COMPREF),YearEndBasis(COMPREF),LeaveTypes(COMPREF)], (results) => {
       setAvailableDayBasis([

@@ -70,6 +70,7 @@ import useFetch from "src/hooks/useFetch";
 import usePost from "src/hooks/usePost";
 import SweetAlert from "react-bootstrap-sweetalert";
 import useDelete from "src/hooks/useDelete";
+import useAuth from "src/hooks/useAuth";
 
 //GetEducationCoreArea
 // HttpAPIRequest
@@ -172,7 +173,8 @@ const checkForValue = (ref) => {
   
   })
 
-
+  const {auth}= useAuth()
+  const {companyReference: CompanyReference } = auth
 
 
   const handleSearchResultSelect = (results) => {

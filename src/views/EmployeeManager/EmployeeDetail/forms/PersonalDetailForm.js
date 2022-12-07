@@ -21,8 +21,9 @@ import { capitalizeWord, validateEmail } from "src/reusable/utils/helper";
 import DefaultProfile from "../../../../assets/profile.png";
 import ImageUploader from "react-image-upload";
 import "react-image-upload/dist/index.css";
+import useAuth from "src/hooks/useAuth";
 
-const COMPANY_REFRENCE = "00001_A01";
+// const COMPANY_REFRENCE = "00001_A01";
 
 const PersonalDetailForm = ({
   setImage,
@@ -56,6 +57,10 @@ const PersonalDetailForm = ({
   const countryRef = useRef(null);
   const nationalityRef = useRef(null);
 
+
+  const {auth}= useAuth()
+  const {companyReference: CompanyReference } = auth
+
   const refs = [
     firstNameRef,
     lastNameRef,
@@ -87,7 +92,7 @@ const PersonalDetailForm = ({
       GetAllMarital("MST"),
       GetCountry(),
       GetNationality(),
-      GetTitles(COMPANY_REFRENCE),
+      GetTitles(CompanyReference),
     ],
     multiFetchResponse
   );

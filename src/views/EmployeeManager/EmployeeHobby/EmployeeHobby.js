@@ -81,6 +81,7 @@ import useFetch from "src/hooks/useFetch";
 import usePost from "src/hooks/usePost";
 import useDelete from "src/hooks/useDelete";
 import SweetAlert from "react-bootstrap-sweetalert";
+import useAuth from "src/hooks/useAuth";
 
 
 
@@ -156,7 +157,8 @@ const EmployeeHobby = (props) => {
     }
   };
 
-
+  const {auth}= useAuth()
+  const {companyReference: CompanyReference } = auth
 
 
  

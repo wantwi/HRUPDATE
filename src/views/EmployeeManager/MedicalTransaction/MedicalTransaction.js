@@ -78,6 +78,7 @@ import { CCardHeader } from "@coreui/bootstrap-react";
 import getClassName from "ui-box/dist/src/get-class-name";
 import SweetAlert from "react-bootstrap-sweetalert";
 import useDelete from "src/hooks/useDelete";
+import useAuth from "src/hooks/useAuth";
 
 const editOptions = {
   allowEditing: false,
@@ -141,6 +142,8 @@ const refs=[
   costRef,
   dateOfVisitRef
 ]
+const {auth}= useAuth()
+  const {companyReference: CompanyReference } = auth
 
 const checkForValue = (ref) => {
   console.log({checkForValue: ref});
