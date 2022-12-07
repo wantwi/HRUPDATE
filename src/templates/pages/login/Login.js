@@ -1,24 +1,94 @@
+// import React, { useEffect, useState } from 'react'
+// import { Link } from 'react-router-dom'
+// import {
+//   CButton,
+//   CCard,
+//   CCardBody,
+//   CCardGroup,
+//   CCol,
+//   CContainer,
+//   CForm,
+//   CInput,
+//   CInputGroup,
+//   CInputGroupPrepend,
+//   CInputGroupText,
+//   CRow
+// } from '@coreui/react'
+// import CIcon from '@coreui/icons-react'
+ import { userLogin } from 'src/auth/config'
+// import Loader from 'src/Loader/Loader'
+
+
+
+// const Login = () => {
+//   const [isLoading, setisLoading] = useState(false)
+
+
+//   const loginUser = async () => {
+
+//     setisLoading(true)
+//     const res = await userLogin()
+//     if(res) {
+//       setisLoading(false)
+//     }
+
+//   }
+//   useEffect(() => {
+    
+//     setisLoading(false)
+//     return () => {
+//       setisLoading(false)
+//     }
+//   }, [])
+
+
+  
+
+//   return (
+//     <div className="c-app c-default-layout flex-row align-items-center">
+//       {
+//         isLoading ? <Loader/> : <CContainer>
+//         <CRow className="justify-content-center">
+//           <CCol md="12">
+//             <CCardGroup>
+//               <CCard className="p-4">
+//                 <CCardBody>
+//                   <CForm>
+//                     <h1>Login</h1>
+//                     <p className="text-muted">Sign In to your Personax Customer Admin account</p>
+                   
+//                     <CRow>
+//                       <CCol xs="6">
+//                         <CButton color="primary" onClick={loginUser} className="px-4">Login</CButton>
+//                       </CCol>
+                    
+//                     </CRow>
+//                   </CForm>
+//                 </CCardBody>
+//               </CCard>
+             
+//             </CCardGroup>
+//           </CCol>
+//         </CRow>
+//       </CContainer>
+//       }
+      
+//     </div>
+//   )
+// }
+
+// export default Login
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+
 import {
   CButton,
-  CCard,
-  CCardBody,
-  CCardGroup,
-  CCol,
   CContainer,
-  CForm,
-  CInput,
-  CInputGroup,
-  CInputGroupPrepend,
-  CInputGroupText,
   CRow
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import { userLogin } from 'src/auth/config'
+//import { userLogin } from 'src/config/config'
 import Loader from 'src/Loader/Loader'
-
-
+import BG_IMG from "../../../assets/bg1.png"
+import Logo from "../../../assets/bg.png"
 
 const Login = () => {
   const [isLoading, setisLoading] = useState(false)
@@ -34,7 +104,6 @@ const Login = () => {
 
   }
   useEffect(() => {
-    
     setisLoading(false)
     return () => {
       setisLoading(false)
@@ -45,58 +114,31 @@ const Login = () => {
   
 
   return (
-    <div className="c-app c-default-layout flex-row align-items-center">
+    <div className="c-app c-default-layout flex-row align-items-center" style={{backgroundImage: isLoading ?"" :`url(${BG_IMG})`, backgroundSize:"cover", position:"relative"}}>
       {
-        isLoading ? <Loader/> : <CContainer>
-        <CRow className="justify-content-center">
-          <CCol md="12">
-            <CCardGroup>
-              <CCard className="p-4">
-                <CCardBody>
-                  <CForm>
-                    <h1>Login</h1>
-                    <p className="text-muted">Sign In to your Personax Customer Admin account</p>
-                    {/* <CInputGroup className="mb-3">
-                      <CInputGroupPrepend>
-                        <CInputGroupText>
-                          <CIcon name="cil-user" />
-                        </CInputGroupText>
-                      </CInputGroupPrepend>
-                      <CInput type="text" placeholder="Username" autoComplete="username" />
-                    </CInputGroup> */}
-                    {/* <CInputGroup className="mb-4">
-                      <CInputGroupPrepend>
-                        <CInputGroupText>
-                          <CIcon name="cil-lock-locked" />
-                        </CInputGroupText>
-                      </CInputGroupPrepend>
-                      <CInput type="password" placeholder="Password" autoComplete="current-password" />
-                    </CInputGroup> */}
-                    <CRow>
-                      <CCol xs="6">
-                        <CButton color="primary" onClick={loginUser} className="px-4">Login</CButton>
-                      </CCol>
-                      {/* <CCol xs="6" className="text-right">
-                        <CButton color="link" className="px-0">Forgot password?</CButton>
-                      </CCol> */}
-                    </CRow>
-                  </CForm>
-                </CCardBody>
-              </CCard>
-              {/* <CCard className="text-white bg-primary py-5 d-md-down-none" style={{ width: '44%' }}>
-                <CCardBody className="text-center">
-                  <div>
-                    <h2>Sign up</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
-                      labore et dolore magna aliqua.</p>
-                    <Link to="/register">
-                      <CButton color="primary" className="mt-3" active tabIndex={-1}>Register Now!</CButton>
-                    </Link>
-                  </div>
-                </CCardBody>
-              </CCard> */}
-            </CCardGroup>
-          </CCol>
+          isLoading 
+          ? null 
+          :
+          <>
+          <div style={{position:"absolute", width:"100vw", height:"100vh", background:"black", opacity:"0.4"}}></div>
+      <div style={{position:"absolute",top:50, left:100,}}>
+        <img alt='logo' src={Logo} style={{objectFit:"cover", width:200,height:"auto"}}/>
+      </div>
+          </>
+      }
+      {
+        isLoading ? <Loader/> : <CContainer style={{zIndex:100}}>
+        <CRow className="justify-content-center" >
+          <h1 style={{color:"#fff", fontSize:50}}>Personax Standard Customer Admin</h1>
+        
+       
+        </CRow>
+        <CRow className="justify-content-center" >
+         
+          <div className='mt-2'>
+          <CButton size='lg' style={{padding:10,fontSize:25}} color="primary" onClick={loginUser} className="px-4">Login</CButton>
+          </div>
+       
         </CRow>
       </CContainer>
       }
@@ -106,3 +148,4 @@ const Login = () => {
 }
 
 export default Login
+

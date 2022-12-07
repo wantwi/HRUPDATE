@@ -17,7 +17,7 @@
 //     );
 // };
 import React, { useCallback, useEffect } from "react";
-import { Redirect, useHistory } from "react-router-dom";
+import {  useHistory } from "react-router-dom";
 import { userLogin } from "src/auth/config";
  import useAuth from "./hooks/useAuth";
 import Loader from "./Loader/Loader";
@@ -30,7 +30,7 @@ export const ProtectedRoute = ({ children }) => {
      const goTo = useCallback(() => {
         history.push(`/${path}`)
      },
-     [path])
+     [history,path])
 
     useEffect(() => {
         if(!auth?.given_name){

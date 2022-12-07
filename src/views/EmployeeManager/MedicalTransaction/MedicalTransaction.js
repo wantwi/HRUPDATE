@@ -193,6 +193,13 @@ getEmployeeMedicalyById(results.id)
     setSearchInput("");
     setViewInfo("")
     dispatch({ type: "set", data: {} });
+    refs.forEach((ref) => {
+  
+      ref.current.style.border = "1px solid #d8dbe0";
+      return
+
+    
+  });
   };
 
 

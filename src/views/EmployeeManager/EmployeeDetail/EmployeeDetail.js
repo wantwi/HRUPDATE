@@ -71,7 +71,7 @@ import useMultiFetchAllSettled from "src/hooks/useMultiFetchAllSettled";
 import usePrompt from "src/hooks/usePrompt";
 import useCustomApi from "src/hooks/useCustomApi";
 
-let companyReference = "00001_A01";
+let companyReference = "00000002_01";
 const COMPANY_REFRENCE = "00001_A01";
 const DEFAULT_GUID = "00000000-0000-0000-0000-000000000000";
 
@@ -292,6 +292,7 @@ function EmployeeDetail() {
   const [image, setImage] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
+  const [handleId, setHandleId] = useState("");
 
   //form data states
   const [organizationalForm, setOrganizationalForm] = useState(init_org);
@@ -864,6 +865,7 @@ const tabTwoRef = useRef(null)
             setOrderBy={setOrderBy}
             sortOrder={sortOrder}
             setSortOrder={setSortOrder}
+            handleId={setHandleId}
           />
         </CCol>
         <CCol md="8" xs="5" className="text-right">

@@ -85,6 +85,7 @@ import useFetch from "src/hooks/useFetch";
 import { Log } from "oidc-client";
 import useDelete from "src/hooks/useDelete";
 import SweetAlert from "react-bootstrap-sweetalert";
+import useAuth from "src/hooks/useAuth";
 // import { values } from "core-js/es7/array";
 
 const editOptions = {
@@ -279,41 +280,21 @@ console.log(results);
        setSearchResult(results);
       //  getEmployeelanguage(results.id)
        setUrl(GetEmployeeByID(results?.id))
-    //   GetRequest()
-    //     .then((response) => {
-    //       // toast.dismiss(toastId);
-    //       if (response.ok) {
-    //         response.json().then((response) => {
-          
-    //           if (response && Object.keys(response).length > 0) {
-    //             dispatch({ type: "set", data: { ...response } });
-    //             setSubmitData({ ...response });
-              
-    //             setShow(false);
-    //             setMode("Update");
-    //           } else {
-    //             setMode("Add");
-    //             setShow(false);
-              
-    //           }
-    //         });
-    //       }
-    //     })
-    //     .catch((err) => {
-    //        console.log(err);
-    //       // toaster(toastId, "Failed to retrieve details", 'error', 4000);
-    //     });
+   
     }
   };
   const searchReset = () => {
     setShow(true);
     setSearchInput("");
     setVisible(false)
-    // const [grid,] = useState(null);
+    refs.forEach((ref) => {
+  
+      ref.current.style.border = "1px solid #d8dbe0";
+      return
 
-    // const OnSaveContinueClick = () => {
-    //     console.log(grid);
-    // }
+    
+  });
+   
   };
 
   const renderViewInfor = (data) => {
@@ -334,7 +315,8 @@ console.log(results);
     console.log(ID)
    
   };
-
+  const {auth}= useAuth()
+  const {companyReference: CompanyReference } = auth
 
 
   const submitRequest = (args) => {
@@ -346,7 +328,7 @@ console.log(results);
 
 
 //DROP DOWN FOR EMPLOYEE LANGUAGE
-  const  {data:multicallData} =  useMultiFetch([ GetEmployeeLanguagesType()], (results) => {
+  const  {data:multicallData} =  useMultiFetch([ GetEmployeeLanguagesType(CompanyReference)], (results) => {
     setEmployeelanguageType([...results[0].data]);
   
   })

@@ -71,11 +71,7 @@ import {
   PostRequest,
 } from "src/reusable/utils/helper";
 import { SearchEmployees } from "src/reusable/API/EmployeeEndpoints";
-import {
-  PostAccidentTransaction,
-  GetAccidentTypes,
-  GetEmployeeAccidentByEmployeeId,
-} from "src/reusable/API/AccidentTransaction";
+// 
 import { CustomAxios } from "src/reusable/API/CustomAxios";
 import { BaseURL } from "src/reusable/API/base";
 import { toast } from "react-toastify";
@@ -85,6 +81,7 @@ import useDelete from "src/hooks/useDelete";
 import 'react-phone-number-input/style.css'
 import PhoneInput from "react-phone-number-input";
 import { Formik } from "formik";
+import useAuth from "src/hooks/useAuth";
 
 const editOptions = {
   allowEditing: false,
@@ -94,10 +91,7 @@ const editOptions = {
 };
 
 const commandOptions = [
-  // {
-  //   type: "Edit",
-  //   buttonOption: { iconCss: " e-icons e-edit", cssClass: "e-flat" },
-  // },
+
   {
     type: "Delete",
     buttonOption: { iconCss: "e-icons e-delete", cssClass: "e-flat" },
@@ -146,12 +140,20 @@ const [isSubmitBtnClick, setIsSubmitBtnClick] = useState(false);
   const searchReset = () => {
     setShow(true);
     setSearchInput("");
+    refs.forEach((ref) => {
+  
+        ref.current.style.border = "1px solid #d8dbe0";
+        return
+ 
+      
+    });
+    
 
   };
-  const  {data:multicallData} =  useMultiFetch([ GetAccidentTypes()], (results) => {
-    setAccidentTypes([{ id: "-1", name: `Select Accident Type` }, ...results[0].data]);
+  // const  {data:multicallData} =  useMultiFetch([ GetAccidentTypes()], (results) => {
+  //   setAccidentTypes([{ id: "-1", name: `Select Accident Type` }, ...results[0].data]);
    
-  }) 
+  // }) 
   const nameRef = useRef(null);
   const emailRef = useRef(null);
   const phoneRef = useRef(null)
@@ -162,26 +164,20 @@ const [isSubmitBtnClick, setIsSubmitBtnClick] = useState(false);
     phoneRef
          
   ];
+  const {auth}= useAuth()
+  const {companyReference: CompanyReference } = auth
 
   // useEffect(() => {
   //   MultipleGetRequests();
   // }, []);
   const checkForValue = (ref) => {
-    console.log({checkForValue: ref});
+    console.log({checkForValue: ref.current.style.border});
     if (ref.current?.value) {
       ref.current.style.border = "1px solid green";
     }
   };
 
-  // useEffect(() => {
-  //   refs.forEach((ref) => {
-  //     ref.current.style.border = "1px solid #e1e2e3";
-  //   });
-
-  //  setBorder(false);
-
-    // return () => {};
-  // }, []);
+ 
 
   const {setOptData, setUrl} =  useFetch("", (response,results) => {
     if (response) {
@@ -205,16 +201,7 @@ const [isSubmitBtnClick, setIsSubmitBtnClick] = useState(false);
   // get employee by id for grid view
   const getEmployFamily =  (id) => {
     setUrl(GetEmployeeFamily(id))
-    // try {
-    //   const request = await CustomAxios.get(
-    //     `${BaseURL}EmployeeAccident/${handleId}`
-    //   );
-    //   const respond = request.data;
-      
-    //   console.log("responds", respond);
-    // } catch (error) {
-    //   console.log(error);
-    // }
+   
   };
   const checkRequired=()=>{
 
@@ -237,7 +224,7 @@ const [isSubmitBtnClick, setIsSubmitBtnClick] = useState(false);
   const checkRequiredToast=()=>{
 
   }
-
+  // 
 
   //handles form submit
   const handleOnSubmit = () => {
@@ -330,39 +317,7 @@ const handlePosting=()=>{
   })
 
 
-  //funtion to handle post
-  function postAccidentTrans(data) {
-    console.log(data);
-    PostRequest(PostAccidentTransaction(), { data: data })
-      .then((response) => {
-        response.text().then((data) => {
-          if ("" === data) {
-            toast.success("Accident Transaction Added Successfully!");
-            console.log("success");
-           // getEmployyeAccidentById();
-          } else {
-            try {
-              data = JSON.parse(data);
-              toast.error(
-                data?.reason
-                  ? data?.reason
-                  : "Failed to Add Accident Transaction",
-                "error",
-                4000
-              );
-            } catch (error) {
-              console.log("MODEL", error);
-            }
-          }
-        });
-      })
-      .catch((err) => {
-        console.log({ err });
-      })
-      .finally(() => {
-        console.log("Done");
-      });
-  }
+
 
   const handleSearchResultSelect = (results) => {
     console.log("show results", results);
@@ -375,48 +330,10 @@ const handlePosting=()=>{
     if (results?.id) {
       setSearchResult(results);
       getEmployFamily(results.id)
-    //   GetRequest()
-    //     .then((response) => {
-    //       // toast.dismiss(toastId);
-    //       if (response.ok) {
-    //         response.json().then((response) => {
-    //           if (response && Object.keys(response).length > 0) {
-    //             dispatch({ type: "set", data: { ...response } });
-    //             setSubmitData({ ...response });
-
-    //             setShow(false);
-    //             setMode("Update");
-    //           } else {
-    //             setMode("Add");
-    //             setShow(false);
-    //           }
-    //         });
-    //       }
-    //     })
-    //     .catch((err) => {});
+   
     }
   };
-  // const testApi = async () => {
-  //   try {
-  //     const request = await CustomAxios.get(
-  //       `http://192.168.0.48:5100/EmployeeBio/${handleId}`
-  //     );
 
-  //     const res = request.data;
-
-  //     setViewInfo([res]);
-  //   } catch (error) {
-  //     console.log({ error });
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (handleId !== "") {
-  //     testApi();
-  //     // getEmployyeAccidentById();
-  //     console.log(viewinfo);
-  //   }
-  // }, [handleId]);
   const employeeName = viewinfo.map((x) => x.firstName + " " + x.lastName);
   const TransLabelByCode = (name) => GetLabelByName(name, lan);
 

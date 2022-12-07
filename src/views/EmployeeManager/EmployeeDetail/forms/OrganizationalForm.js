@@ -24,7 +24,7 @@ import {
   CSRequiredIndicator,
 } from "src/reusable/components";
 import { GetLabelByName } from "src/reusable/configs/config";
-const COMPANY_REFRENCE = "00001_A01";
+const COMPANY_REFRENCE = "00000002_01";
 
 const OrganizationalForm = ({
   organizationalForm,
@@ -69,7 +69,7 @@ const OrganizationalForm = ({
     resObj.employeeStatusList = response[7].data;
     resObj.salaryGradeList = response[8].data;
     resObj.notcheSize = response[9].data?.size;
-
+console.log(resObj);
     setGenericData(resObj);
     setBorder(false);
   };
@@ -99,8 +99,8 @@ const OrganizationalForm = ({
       GetEmployeeStatus(COMPANY_REFRENCE),
       GetsalaryGrade(COMPANY_REFRENCE),
       GetNotchSize(COMPANY_REFRENCE)
-    ],
-    multiFetchResponse
+    ]
+  
   );
 
   const { setUrl: setNotchUrl } = useFetch("", (result) => {
@@ -252,6 +252,7 @@ const OrganizationalForm = ({
 
     return () => {};
   }, [resetFormVal]);
+  console.log(employeeStatusList);
 
   return (
     <>
@@ -467,6 +468,7 @@ const OrganizationalForm = ({
                 {employeeStatusList.map((x, i) => (
                   <option key={i} value={x.id}>
                     {GetLabelByName(`${x?.code || x?.name}`, lan, x.name)}
+                    {/* {x?.name} */}
                   </option>
                 ))}
               </select>

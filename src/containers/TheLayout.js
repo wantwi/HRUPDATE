@@ -1,4 +1,5 @@
 import React from 'react';
+import LoaderComponent from 'src/reusable/components/LoaderComponent/LoaderComponent';
 
 import { TheContent, TheSidebar, TheFooter, TheHeader} from './index';
 import PersistLogin from 'src/PersistLogin'
@@ -6,6 +7,7 @@ const TheLayout = () => {
 
   return (
     <PersistLogin>
+       <LoaderComponent>
 <div className="c-app c-default-layout">
       <TheSidebar />
       <div className="c-wrapper">
@@ -16,6 +18,7 @@ const TheLayout = () => {
         <TheFooter />
       </div>
     </div>
+    </LoaderComponent>
     </PersistLogin>
     
   )

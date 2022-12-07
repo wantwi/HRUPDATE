@@ -102,6 +102,8 @@ import useFetch from "src/hooks/useFetch";
 import usePost from "src/hooks/usePost";
 import SweetAlert from "react-bootstrap-sweetalert";
 import useDelete from "src/hooks/useDelete";
+import useAuth from "src/hooks/useAuth";
+
 
 const commandOptions = [
   // {
@@ -138,6 +140,7 @@ const getAllTypes = () => {
 };
 getAllTypes();
 setTimeout(() => {}, 2000);
+
 
 //onClick={handleOnSubmit}
 
@@ -421,6 +424,13 @@ const NextOfKinDropDownRefs=[
     setSearchInput("");
     setCurrentFormData("")
   setSubmitData("")
+  refs.forEach((ref) => {
+  
+    ref.current.style.border = "1px solid #d8dbe0";
+    return
+
+  
+});
   // setEmergencyContact("")
   // setGetNextOfKin("")
   // setGetGuarantor("")
@@ -432,7 +442,8 @@ const NextOfKinDropDownRefs=[
     //     console.log(grid);
     // }
   };
-
+  const {auth}= useAuth()
+  const {companyReference: CompanyReference } = auth
   const onCompleteAction = (args) => {
     if(activeKey=== 1){
       if (args.commandColumn.type === 'Delete') {
@@ -614,7 +625,7 @@ useEffect(() => {
 
 setUrls([GetBeneficiary(handleId), 
   GetEmployeeDependant(handleId), GetEmployeeEmergencyContact(handleId), 
-  GetEmployeeGuarantor(handleId),GetRelationTypes(),GetEmployeeNextOfKin(handleId)])
+  GetEmployeeGuarantor(handleId),GetRelationTypes(CompanyReference),GetEmployeeNextOfKin(handleId)])
 return () => {
   
 }
@@ -1346,7 +1357,7 @@ console.log(e?.target?.name);
 
 
   const  {data:multical} =  useMultiFetch([ 
-    GetNationality(),GetIdTypes()], (results) => {
+    GetNationality(CompanyReference ),GetIdTypes(CompanyReference )], (results) => {
 
 
 

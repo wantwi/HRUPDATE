@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-//import useCustomApi from "./useCustomApi";
 import useCustomApi from "src/api/useCustomApi";
 import useLoader from "./useLoader";
 

@@ -163,7 +163,13 @@ const EmployeeHobby = (props) => {
   const searchReset = () => {
     setShow(true);
     setSearchInput("");
+    refs.forEach((ref) => {
+  
+      ref.current.style.border = "1px solid #d8dbe0";
+      return
 
+    
+  });
     // const [grid,] = useState(null);
 
     // const OnSaveContinueClick = () => {

@@ -71,7 +71,10 @@ import {
 import usePost from "src/hooks/usePost";
 import useMultiFetch from "src/hooks/useMultiFetch";
 import useFetch from "src/hooks/useFetch";
-
+import { AllowedDayBasis, AvailableDayBasis, GetLeaveTransactionById, PostLeaveTransaction, YearEndBasis } from "src/reusable/API/LeaveTransaction";
+import LeaveTypes from "../LeaveTypes/LeaveTypes";
+import useAuth from "src/hooks/useAuth";
+const COMPREF = "00001_a01"
 // {
 //   "employeeId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
 //   "code": "string",
@@ -125,9 +128,13 @@ const LeaveTransaction = (props) => {
     setMode("Add");
     setShow(false);
   };
+ 
+  const {auth}= useAuth()
+  const {companyReference: CompanyReference } = auth
 
-  const  {data:multicallData} =  useMultiFetch([GetAvailableDayBasis(), 
-    GetAllowedDayBasis(),GetYearBasis(),GetLeaveTypes()], (results) => {
+  
+  const  {data:multicallData} =  useMultiFetch([AvailableDayBasis(COMPREF), 
+    AllowedDayBasis(COMPREF),YearEndBasis(COMPREF),LeaveTypes(COMPREF)], (results) => {
       setAvailableDayBasis([
         { id: "-1", name: `Select Available Day Basis` },
         ...results[0].value,
@@ -212,57 +219,12 @@ const LeaveTransaction = (props) => {
       setSearchResult(results);
       setEmployeeName(`${results?.firstName} ${results?.lastName}`)
 
+setUrl(GetLeaveTransactionById(results?.id))
 
-
-      // GetRequest()
-      //   .then((response) => {
-      //     // toast.dismiss(toastId);
-      //     if (response.ok) {
-      //       response.json().then((response) => {
-      //         // console.log({response});
-      //         if (response && Object.keys(response).length > 0) {
-      //           dispatch({ type: "set", data: { ...response } });
-      //           setSubmitData({ ...response });
-      //           // setDuplicateData({ ...response })
-      //           //console.log({ response });
-
-      //           //let rates = response?.rates;
-
-      //           // setExchangeRate(rates);
-      //           setShow(false);
-      //           setMode("Update");
-      //         } else {
-      //           setMode("Add");
-      //           setShow(false);
-      //           // dispatch({ type: 'set', data: { ...results, isHomeCurrency } });
-      //           // setSubmitData({ ...results, isHomeCurrency });
-      //         }
-      //       });
-      //     }
-      //   })
-      //   .catch((err) => {
-      //     // console.log(err);
-      //     // toaster(toastId, "Failed to retrieve details", 'error', 4000);
-      //   });
+     
     }
   };
-  // GET EMPLOYEE lEAVE DETAILS
-  // const getEmployeeSkills = async () => {
-  //   try {
-  //     const request = await CustomAxios.get(`EmployeeSkills/${handleId}`);
-
-  //     const response = request.data;
-  //     console.log("emp response:", response);
-  //     setViewInfo((prevState) => response);
-  //   } catch (error) {
-  //     console.log({ error });
-  //   }
-  // };
-  // useEffect(() => {
-  //   if (handleId !== "") {
-  //     getEmployeeSkills();
-  //   }
-  // }, [handleId]);
+  
 
   const TransLabelByCode = (name) => GetLabelByName(name, lan);
   const searchReset = () => {
@@ -273,45 +235,10 @@ const LeaveTransaction = (props) => {
 
     const TransLabelByCode = (name) => GetLabelByName(name, lan);
 
-    // const OnSaveContinueClick = () => {
-    //     console.log(grid);
-    // }
+  
   };
 
-  //Drop down list for hobby types
-  const MultipleGetRequests = async () => {
-    try {
-      let request = [
-        HttpAPIRequest("GET", GetAvailableDayBasis()),
-        HttpAPIRequest("GET", GetAllowedDayBasis()),
-        HttpAPIRequest("GET", GetYearBasis()),
-      ];
-      const multipleCall = await Promise.allSettled(request);
-      console.log(multipleCall[0].value);
-      console.log(multipleCall[1].value);
-      console.log(multipleCall[2].value);
-
-      setAvailableDayBasis([
-        { id: "-1", name: `Select Available Day Basis` },
-        ...multipleCall[0].value,
-      ]);
-      setAllowedDayBasis([
-        { id: "-1", name: `Select Allowed Day Basis ` },
-        ...multipleCall[1].value,
-      ]);
-      setYearBasis([
-        { id: "-1", name: `Select Year Basis` },
-        ...multipleCall[2].value,
-      ]);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    MultipleGetRequests();
-  }, []);
-
+  
   //Handles Submit
   const handleOnSubmit = () => {
     console.log("submit data ", submitData);
@@ -320,13 +247,8 @@ const LeaveTransaction = (props) => {
       toast.error("Please Select a Skill Type!", toastWarning);
       return;
     }
-    // if (!submitData?.payPeriodId || submitData?.payPeriodId === '') {
-    //     //toast.error('Please select a pay period!', toastWarning);
-    //     return;
-    // }
-    // console.log(submitData)
+  
     let employeeId = submitData.id;
-    //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
     let newData = {
       ...submitData,
       userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
@@ -335,38 +257,53 @@ const LeaveTransaction = (props) => {
       employeeId,
       status: true,
     };
+    let tripo= {
+      "code": "string",
+      "name": "string",
+      "description": "string",
+      "availableDayBasisId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "allowedDayBasisId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "status": true,
+      "yearEndBasisId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "outstandingDayType": true,
+      "applyMaximumOutstandingDay": true,
+      "maximumNumberOfDays": 0,
+      "companyReference": "string",
+      "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+    }
+    setPostUrl(PostLeaveTransaction())
     //let finalData = JSON.stringify(newData)
     // console.log(finalData)
     // 'Add' === mode ? AddGLAccount(newData) : updateGLAccount(newData);
-    postEmployeeLeave(newData);
+    // postEmployeeLeave(newData);
   };
 
   //Post Employee Skill
-  function postEmployeeLeave(data) {
-    console.log("post data", data);
-    PostRequest(PostEmployeeLeave(), { data: data })
-      .then((response) => {
-        response.text().then((data) => {
-          if ("" === data) {
-            // toast.success('Earning Mass Update Successful!',);
-            console.log("success");
-          } else {
-            try {
-              data = JSON.parse(data);
-              // toaster(toastId, data?.reason ? data?.reason : "Failed to update Currency", 'error', 4000);
-            } catch (error) {
-              console.log(error);
-            }
-          }
-        });
-      })
-      .catch((err) => {
-        console.log({ err });
-      })
-      .finally(() => {
-        console.log("Done");
-      });
-  }
+  // function postEmployeeLeave(data) {
+  //   console.log("post data", data);
+  //   PostRequest(PostEmployeeLeave(), { data: data })
+  //     .then((response) => {
+  //       response.text().then((data) => {
+  //         if ("" === data) {
+  //           // toast.success('Earning Mass Update Successful!',);
+  //           console.log("success");
+  //         } else {
+  //           try {
+  //             data = JSON.parse(data);
+  //             // toaster(toastId, data?.reason ? data?.reason : "Failed to update Currency", 'error', 4000);
+  //           } catch (error) {
+  //             console.log(error);
+  //           }
+  //         }
+  //       });
+  //     })
+  //     .catch((err) => {
+  //       console.log({ err });
+  //     })
+  //     .finally(() => {
+  //       console.log("Done");
+  //     });
+  // }
   const handleOnChange = (evnt) => {
     //console.log(evnt)
     setSubmitData((data) => {

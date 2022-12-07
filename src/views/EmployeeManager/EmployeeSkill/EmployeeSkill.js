@@ -81,6 +81,7 @@ import usePost from "src/hooks/usePost";
 import getClassName from "ui-box/dist/src/get-class-name";
 import useDelete from "src/hooks/useDelete";
 import SweetAlert from "react-bootstrap-sweetalert";
+import useAuth from "src/hooks/useAuth";
 
 const editOptions = {
   allowEditing: false,
@@ -143,7 +144,8 @@ const refs =[
 ]
 
 
-
+const {auth}= useAuth()
+  const {companyReference: CompanyReference } = auth
 
 
   const {setOptData, setUrl} =  useFetch("", (response,results) => {
@@ -226,6 +228,13 @@ const refs =[
   const searchReset = () => {
     setShow(true);
     setSearchInput("");
+    refs.forEach((ref) => {
+  
+      ref.current.style.border = "1px solid #d8dbe0";
+      return
+
+    
+  });
 
     // const [grid,] = useState(null);
 
@@ -239,50 +248,14 @@ const handleGet=(id)=>{
   setUrl(GetEmployeeById(id))
 }
 
-  //Get employee skill details
-  // const getEmployeeSkills = async () => {
-  //   try {
-  //     const request = await CustomAxios.get(`EmployeeSkills/${handleId}`);
-
-  //     const response = request.data;
-  //     console.log("emp response:", response);
-  //     setViewInfo((prevState) => response);
-  //     checkBenefiary();
-  //   } catch (error) {
-  //     console.log({ error });
-  //   }
-  // };
-  // useEffect(() => {
-  //   if (handleId !== "") {
-  //     getEmployeeSkills();
-  //   }
-  // }, [handleId]);
-
   useEffect(() => {
     console.log("check view info ", viewinfo);
   });
 
-  //Drop down list for hobby types
-  // const MultipleGetRequests = async () => {
-  //   try {
-  //     let request = [HttpAPIRequest("GET", GetEmployeeSkillsTypes())];
-  //     const multipleCall = await Promise.allSettled(request);
-  //     console.log(multipleCall[0].value);
-
-  //     setSkillType([...multipleCall[0].value]);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   MultipleGetRequests();
-  // }, []);
 
 
 
-
-  const  {data:multicallData} =  useMultiFetch([ GetEmployeeSkillsTypes()], (results) => {
+  const  {data:multicallData} =  useMultiFetch([ GetEmployeeSkillsTypes(CompanyReference)], (results) => {
     console.log(results[0].data);
     setSkillType([...results[0].data]);
        

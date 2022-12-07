@@ -80,6 +80,7 @@ import usePost from "src/hooks/usePost";
 import { DeleteEmployeeHometown, GetEmployeeHometownId, PostEmployeeHometown } from "src/reusable/API/EmployeeHometownEndpoints";
 import useDelete from "src/hooks/useDelete";
 import SweetAlert from "react-bootstrap-sweetalert";
+import useAuth from "src/hooks/useAuth";
 
 const editOptions = {
   allowEditing: false,
@@ -170,7 +171,8 @@ const checkForValue = (ref) => {
     }
 });
 
-
+const {auth}= useAuth()
+  const {companyReference: CompanyReference } = auth
 
 
   const handleSearchResultSelect = (results) => {
@@ -190,38 +192,7 @@ const checkForValue = (ref) => {
     if (results?.id) {
       HandleGet(results?.id)
       setSearchResult(results);
-      // GetRequest(GetEmployeeById(results.id))
-      //   .then((response) => {
-      //     console.log(response)
-      //     // toast.dismiss(toastId);
-      //     if (response.ok) {
-      //       response.json().then((response) => {
-      //         // console.log({response});
-      //         if (response && Object.keys(response).length > 0) {
-      //           dispatch({ type: "set", data: { ...response } });
-      //           setSubmitData({ ...response });
-      //           setViewInfo(response);
-      //           // setDuplicateData({ ...response })
-      //           console.log({ response });
-
-      //           //let rates = response?.rates;
-
-      //           // setExchangeRate(rates);
-      //           setShow(false);
-               
-      //         } else {
-      //           setMode("Add");
-      //           setShow(false);
-      //           // dispatch({ type: 'set', data: { ...results, isHomeCurrency } });
-      //           // setSubmitData({ ...results, isHomeCurrency });
-      //         }
-      //       });
-      //     }
-      //   })
-      //   .catch((err) => {
-      //     // console.log(err);
-      //     // toaster(toastId, "Failed to retrieve details", 'error', 4000);
-      //   });
+      
     }
   };
   const HandleGet=(id)=>{
@@ -231,12 +202,14 @@ const checkForValue = (ref) => {
   const searchReset = () => {
     setShow(true);
     setSearchInput("");
+    refs.forEach((ref) => {
+  
+      ref.current.style.border = "1px solid #d8dbe0";
+      return
 
-    // const [grid,] = useState(null);
-
-    // const OnSaveContinueClick = () => {
-    //     console.log(grid);
-    // }
+    
+  });
+   
   };
  
 
@@ -248,12 +221,6 @@ const checkForValue = (ref) => {
 
 
 
-  // const  {data:multicallData} =  useMultiFetch([ GetEmployeeSkillsTypes()], (results) => {
-  //   console.log(results[0].data);
-  //   setSkillType([...results[0].data]);
-       
-  
-  // })
 
 
   //Handles Submit

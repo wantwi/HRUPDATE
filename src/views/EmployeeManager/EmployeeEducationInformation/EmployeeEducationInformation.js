@@ -198,6 +198,13 @@ const checkForValue = (ref) => {
     setShow(true);
     setSearchInput("");
 setViewInfo("")
+refs.forEach((ref) => {
+  
+  ref.current.style.border = "1px solid #d8dbe0";
+  return
+
+
+});
 dispatch({ type: 'set', data: { } });
 
     // const [grid,] = useState(null);

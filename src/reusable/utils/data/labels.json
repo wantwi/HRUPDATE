@@ -13600,6 +13600,16 @@
  "german": "",
  "status": 1,
  "type": "string"
+},
+"HCM-MCMD5AEF1QJ-KCMI": {
+ "id": "0ead81b8-e806-4bb5-8549-6de8fcb7bc50",
+ "en": " Pay Tax",
+ "fr": "Payer la taxe",
+ "spanish": "",
+ "portuguese": "",
+ "german": "",
+ "status": 1,
+ "type": "string"
 }
 }
 

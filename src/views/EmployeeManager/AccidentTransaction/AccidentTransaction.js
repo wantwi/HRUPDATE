@@ -82,6 +82,7 @@ import { BaseURL } from "src/reusable/API/base";
 import { toast } from "react-toastify";
 import SweetAlert from "react-bootstrap-sweetalert";
 import useDelete from "src/hooks/useDelete";
+import useAuth from "src/hooks/useAuth";
 
 const editOptions = {
   allowEditing: false,
@@ -155,7 +156,8 @@ const checkForValue = (ref) => {
   }
 };
 
-
+const {auth}= useAuth()
+  const {companyReference: CompanyReference } = auth
   //fucntion for multiple get (dropDown list in the form)
   // const MultipleGetRequests = async () => {
   //   try {
@@ -175,6 +177,13 @@ const checkForValue = (ref) => {
     setShow(true);
     setSearchInput("");
     dispatch({ type: 'set', data: {  } });
+    refs.forEach((ref) => {
+  
+      ref.current.style.border = "1px solid #d8dbe0";
+      return
+
+    
+  });
     setSubmitData("");
     // const [grid,] = useState(null);
 
@@ -182,7 +191,7 @@ const checkForValue = (ref) => {
     //     console.log(grid);
     // }
   };
-  const  {data:multicallData} =  useMultiFetch([ GetAccidentTypes()], (results) => {
+  const  {data:multicallData} =  useMultiFetch([ GetAccidentTypes(CompanyReference)], (results) => {
     setAccidentTypes([{ id: "-1", name: `Select Accident Type` }, ...results[0].data]);
    
   })

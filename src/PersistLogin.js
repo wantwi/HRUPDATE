@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+// import { useDispatch } from "react-redux";
+// import { useHistory } from "react-router-dom";
 import { renewToken } from "src/auth/config";
 import useAuth from "./hooks/useAuth";
 import Loader from './Loader/Loader';
@@ -8,11 +8,11 @@ import Loader from './Loader/Loader';
 const menus = [];
 
 const PersistLogin = ({ children }) => {
-  const dispatch = useDispatch();
+ // const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
-  const history = useHistory();
+ // const history = useHistory();
 
-  const path = history.location.pathname.replace("/",'')
+  //const path = history.location.pathname.replace("/",'')
 
   const { auth, setAuth } = useAuth();
 

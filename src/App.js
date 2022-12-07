@@ -3,8 +3,8 @@ import React, { Component } from "react";
 import { HashRouter, Route, Switch,BrowserRouter } from "react-router-dom";
 import "./scss/style.scss";
 import { ToastContainer } from "react-toastify";
-import Loader from './reusable/components/LoaderComponent/LoaderComponent';
-
+// import Loader from './reusable/components/LoaderComponent/LoaderComponent';
+import Loader from './Loader/Loader';
 // import Loader from "./Loader/Loader";
 import UserConfirmation from "./reusable/utils/UserConfirmation";
 import ReportViewerPage from "./views/Report/ReportViewerPage";
@@ -34,12 +34,12 @@ class App extends Component {
     return (
       <BrowserRouter
         basename={process.env.REACT_APP_BASE_NAME}
-        getUserConfirmation={(message, callback) =>
-          UserConfirmation(message, callback)
-        }
+        // getUserConfirmation={(message, callback) =>
+        //   UserConfirmation(message, callback)
+        // }
       >
         <ToastContainer />
-        <React.Suspense fallback={<Loader />}>
+        <React.Suspense fallback={<Loader/>}>
           <Switch>
             <Route
               exact
