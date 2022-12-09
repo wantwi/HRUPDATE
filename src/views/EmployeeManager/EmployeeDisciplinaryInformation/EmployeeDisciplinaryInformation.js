@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState,  useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { toastWarning } from "src/toasters/Toaster";
@@ -248,7 +248,7 @@ getEmployeeOffence(results.id)
   const {auth}= useAuth()
   const {companyReference: CompanyReference } = auth
 
-  
+
   const  {data:multicallData} =  useMultiFetch([ GetOffenceCategory(), 
     GetOffenceCategoryRule()], (results) => {
       setOffenceCategoryType([

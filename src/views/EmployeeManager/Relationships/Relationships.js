@@ -394,7 +394,6 @@ const NextOfKinDropDownRefs=[
 ]
 
   const checkForValue = (ref) => {
-    console.log({checkForValue: ref});
     if (ref.current?.value) {
       ref.current.style.border = "1px solid green";
     }
@@ -434,7 +433,7 @@ const NextOfKinDropDownRefs=[
   // setEmergencyContact("")
   // setGetNextOfKin("")
   // setGetGuarantor("")
-  setGetBenefiary("")
+  // setGetBenefiary("")
   // setDependant("")
     // const [grid,] = useState(null);
 
@@ -622,14 +621,14 @@ const  {data:multicallData, setUrls} =  useMultiFetch([], (results) => {
 })
 
 useEffect(() => {
-
+console.log(handleId);
 setUrls([GetBeneficiary(handleId), 
   GetEmployeeDependant(handleId), GetEmployeeEmergencyContact(handleId), 
   GetEmployeeGuarantor(handleId),GetRelationTypes(CompanyReference),GetEmployeeNextOfKin(handleId)])
 return () => {
   
 }
-}, [handleId,setUrls])
+}, [handleId])
 
 
 useEffect(() => {
@@ -789,10 +788,8 @@ useEffect(() => {
           ref.current.style.border = "2px solid green";
         }else if (ref.current.value.length < 1) {
           ref.current.style.border = "2px solid red";
-          console.log("second");
         } else if (ref.current.value === "") {
           ref.current.style.border = "2px solid red";
-          console.log("third");
   
         } else {
           ref.current.style.border = "2px solid red";
@@ -806,10 +803,8 @@ useEffect(() => {
           ref.current.style.border = "2px solid green";
         }else if (ref.current.value === "-1") {
           ref.current.style.border = "2px solid red";
-          console.log("second");
         } else if (ref.current.value === "") {
           ref.current.style.border = "2px solid red";
-          console.log("third");
   
         } else {
           ref.current.style.border = "2px solid red";
@@ -833,7 +828,7 @@ useEffect(() => {
         toast.error("Please Enter Last Name!", toastWarning);
         return;
       }
-      if (!phone || phone === " ") {
+      if (!phone || phone === "") {
         toast.error("Please Enter Phone Number!", toastWarning);
         return;
       }
@@ -883,10 +878,8 @@ useEffect(() => {
           ref.current.style.border = "2px solid green";
         }else if (ref.current.value.length < 1) {
           ref.current.style.border = "2px solid red";
-          console.log("second");
         } else if (ref.current.value === "") {
           ref.current.style.border = "2px solid red";
-          console.log("third");
   
         } else {
           ref.current.style.border = "2px solid red";
@@ -900,10 +893,8 @@ useEffect(() => {
           ref.current.style.border = "2px solid green";
         }else if (ref.current.value === "-1") {
           ref.current.style.border = "2px solid red";
-          console.log("second");
         } else if (ref.current.value === "") {
           ref.current.style.border = "2px solid red";
-          console.log("third");
   
         } else {
           ref.current.style.border = "2px solid red";
@@ -1014,10 +1005,8 @@ useEffect(() => {
             ref.current.style.border = "2px solid green";
           }else if (ref.current.value.length < 1) {
             ref.current.style.border = "2px solid red";
-            console.log("second");
           } else if (ref.current.value === "") {
             ref.current.style.border = "2px solid red";
-            console.log("third");
     
           } else {
             ref.current.style.border = "2px solid red";
@@ -1064,7 +1053,6 @@ useEffect(() => {
         name: `${currentFormData?.firstName} ${currentFormData?.lastName}`,
       };
    
-      console.log(phone);
       let posting=  {
         employee:{
           firstName: `${currentFormData?.firstName} `,
@@ -1082,7 +1070,6 @@ useEffect(() => {
       
 
 
-console.log(posting);
       // postEmergencyContact(newData);
       let data = {
         ...currentFormData,
@@ -1103,10 +1090,8 @@ console.log(posting);
           ref.current.style.border = "2px solid green";
         }else if (ref.current.value.length < 1) {
           ref.current.style.border = "2px solid red";
-          console.log("second");
         } else if (ref.current.value === "") {
           ref.current.style.border = "2px solid red";
-          console.log("third");
   
         } else {
           ref.current.style.border = "2px solid red";
@@ -1120,10 +1105,8 @@ console.log(posting);
           ref.current.style.border = "2px solid green";
         }else if (ref.current.value === "-1") {
           ref.current.style.border = "2px solid red";
-          console.log("second");
         } else if (ref.current.value === "") {
           ref.current.style.border = "2px solid red";
-          console.log("third");
   
         } else {
           ref.current.style.border = "2px solid red";
@@ -1221,10 +1204,8 @@ console.log(posting);
           ref.current.style.border = "2px solid green";
         }else if (ref.current.value.length < 1) {
           ref.current.style.border = "2px solid red";
-          console.log("second");
         } else if (ref.current.value === "") {
           ref.current.style.border = "2px solid red";
-          console.log("third");
   
         } else {
           ref.current.style.border = "2px solid red";
@@ -1238,10 +1219,8 @@ console.log(posting);
           ref.current.style.border = "2px solid green";
         }else if (ref.current.value === "-1") {
           ref.current.style.border = "2px solid red";
-          console.log("second");
         } else if (ref.current.value === "") {
           ref.current.style.border = "2px solid red";
-          console.log("third");
   
         } else {
           ref.current.style.border = "2px solid red";
@@ -1348,9 +1327,7 @@ setEmployeeNextOfKinChildrenList((prev)=>[...prev,data])
     setSubmitData((data) => {
       return { ...data, [e?.target?.name]: e?.target?.value };
     });
-console.log(e?.target?.name);
     if(e?.target?.name === "percentage"){
-    console.log(e?.target?.value);
     setPercent(e?.target?.value)
     }
   };
@@ -1501,7 +1478,6 @@ checkValue={checkForValue}
 //   }
   
 // },[benefiaciary])
-console.log(percent);
   var arr = [];
 
   // checkRelation
@@ -1642,11 +1618,11 @@ console.log(percent);
 //FUNCTION USED TO CHECK ACTIVE TAB AND SET URL FOR FETCH
   const showNewData=()=>{
 if(activeKey===1){
-  setGetBenefiary("")
+  setGetBenefiary([])
   setUrl(GetBeneficiary(handleId))
 }
 if(activeKey===2){
-  setDependant("")
+  setDependant([])
   setUrl(GetEmployeeDependant(handleId))
 }
 if(activeKey===3){
@@ -1780,29 +1756,29 @@ if(activeKey===5){
        
       // GetPreviousData(nonCashId);
       if(activeKey === 1){
-        setGetBenefiary("")
+        setGetBenefiary([])
         showNewData()
         }
            
      
       if(activeKey === 2){
-        setDependant("")
+        setDependant([])
         showNewData()
         
        }
         
      
       if(activeKey === 3){
-        setEmergencyContact("")
+        setEmergencyContact([])
         showNewData()
       }
       if(activeKey === 4){
-        setGetGuarantor("")
+        setGetGuarantor([])
         showNewData()
        
       }
       if(activeKey === 5 ){
-      setGetNextOfKin("")
+      setGetNextOfKin([])
       showNewData()
        
       }
@@ -1821,7 +1797,6 @@ if(activeKey===5){
     let convert = 0;
     if (benefiaciary){
       for(let i=0;i < data.length;i++){
-      console.log(typeof data[i]?.percentage);
     convert  = parseInt(data[i]?.percentage)  ;
     results =  convert + results
   console.log(results);}}
@@ -1837,8 +1812,7 @@ if(activeKey===5){
       data?.map((x)=> {rest = rest + parseInt(x.percentage)})
     }
    results = rest + parseInt(newData)
-   console.log(results);
-   console.log(rest);
+   
  return results > 100
 
   }
@@ -1852,7 +1826,6 @@ if(activeKey===5){
    
     
   },[percent])
-console.log(checkPercentage);
 
 
 // useEffect(() => {
@@ -1864,7 +1837,7 @@ console.log(checkPercentage);
 //     0
 //   );
 
-//   console.log({res});
+  console.log({benefiaciary: benefiaciary});
 
 //   return () => {
     
@@ -1880,7 +1853,7 @@ console.log(checkPercentage);
 showCancel
  confirmBtnText="Yes, delete it!"
 confirmBtnBsStyle="danger"
-title={`${GetLabelByName("HCM-IIQS2WWFTPP_KCMI", lan)} ${GetLabelByName(labels, lan)} ${GetLabelByName("HCM-SF00RQBW0XB_PSLL", lan)} ${delEmployeeName}?`}
+title={`${GetLabelByName("HCM-Z3GW6TG207", lan)} ?`}
  onConfirm={onConfirm}
  onCancel={onCancel}
  focusCancelBtn

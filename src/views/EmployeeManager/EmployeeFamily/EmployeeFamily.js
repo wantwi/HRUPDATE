@@ -135,11 +135,16 @@ const [EmployeeFamilyChildren,setEmployeeFamilyChildren]=useState([])
 const [phone, setPhone] = useState(null);
 const [canSave, setCanSave] = useState(false);
 const [isSubmitBtnClick, setIsSubmitBtnClick] = useState(false);
+const [empDisplayName, setEmpDisplayName] = useState("");
 
   
   const searchReset = () => {
     setShow(true);
     setSearchInput("");
+    setEmployeeAccident("")
+    setPhone(null)
+    setSubmitData("")
+    dispatch({ type: 'set', data: {} });
     refs.forEach((ref) => {
   
         ref.current.style.border = "1px solid #d8dbe0";
@@ -326,6 +331,9 @@ const handlePosting=()=>{
     setShow(false);
     dispatch({ type: "set", data: { ...results } });
     setSubmitData({ ...results });
+    setEmpDisplayName(
+      (prevState) => `${results.firstName} ${results.lastName}`
+    );
 
     if (results?.id) {
       setSearchResult(results);
@@ -334,7 +342,7 @@ const handlePosting=()=>{
     }
   };
 
-  const employeeName = viewinfo.map((x) => x.firstName + " " + x.lastName);
+  // const employeeName = viewinfo.map((x) => x.firstName + " " + x.lastName);
   const TransLabelByCode = (name) => GetLabelByName(name, lan);
 
   const handleOnChange = (evnt) => {
@@ -372,19 +380,36 @@ const handlePosting=()=>{
   };
 
   const onCommandClick = (args) => {
-// console.log(args);
-   onCompleteAction(args);
 
+    // setEmployeeAccident({
+    //   data: this.state.data.filter((_, i) => i !== index)
+    // });
+
+    console.log(args);
+    if(args.rowData.id === undefined){
+      args.cancel = true;
+      return;
+    }
+    else{
+      onCompleteAction(args);
+ 
+    }
+
+
+  
+    
   };
 
-
+const rowSelected=(args)=>{
+console.log(args);
+}
 
 
   const onCompleteAction = (args) => {
-
+console.log(args);
     if (args.commandColumn.type === 'Delete') {
 
-      args.cancel = true;
+      args.cancel = false;
 
       setIsActive(true)
 
@@ -402,11 +427,10 @@ const handlePosting=()=>{
 
 const handleDeleteItem = async () => {
 
+  console.log(delEmployeeID);
     let deleteData = {
 
-      earningId: "",
-
-      transactionsId: delEmployeeID,
+      transactionsId: delEmployeeID || "",
 
       userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
 
@@ -461,7 +485,7 @@ console.log(EmployeeFamilyChildren);
 showCancel
  confirmBtnText="Yes, delete it!"
 confirmBtnBsStyle="danger"
-title={`${GetLabelByName("HCM-IIQS2WWFTPP_KCMI", lan)} ${GetLabelByName("HCM-BFCF6D9NBVN_LASN", lan)} ${GetLabelByName("HCM-SF00RQBW0XB_PSLL", lan)} ${delEmployeeName}?`}
+title={`${GetLabelByName("HCM-Z3GW6TG207", lan)}?`}
  onConfirm={onConfirm}
  onCancel={onCancel}
  focusCancelBtn
@@ -522,7 +546,7 @@ show={isActive}
                     size="md"
                     color="primary"
                   >
-                    {employeeName}
+                    {empDisplayName}
                   </span>
                 </CCol>
                 <CCol md="4">
@@ -547,6 +571,7 @@ show={isActive}
             {/* style={{ height: CardBodyHeight, overflowY: "auto" }} */}
 
             <GridComponent
+            rowDeselected={rowSelected}
               height={"350"}
               dataSource={getEmployeeAccident}
               allowPaging={true}

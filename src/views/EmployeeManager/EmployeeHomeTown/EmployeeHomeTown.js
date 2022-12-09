@@ -475,7 +475,7 @@ const { setData: setDeleteData, setUrl: setDeletUrl } = useDelete('', (response)
 showCancel
  confirmBtnText="Yes, delete it!"
 confirmBtnBsStyle="danger"
-title={`${GetLabelByName("HCM-IIQS2WWFTPP_KCMI", lan)} ${GetLabelByName("HCM-A0B8SHDK6DI_LASN", lan)} ${GetLabelByName("HCM-SF00RQBW0XB_PSLL", lan)} ${delEmployeeName}?`}
+title={`${GetLabelByName("HCM-Z3GW6TG207", lan)}?`}
 
  onConfirm={onConfirm}
  onCancel={onCancel}

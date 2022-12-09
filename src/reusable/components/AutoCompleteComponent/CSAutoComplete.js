@@ -392,7 +392,7 @@ const CSAutoComplete = ({
                 onClick={onClick}
                 title={`Click to select `}
               >
-                {[suggestion?.[displayTextKey], " ", suggestion?.lastName]}
+                {[suggestion?.[displayTextKey], " ", suggestion?.lastName," ", suggestion?.staffId]}
                 {/* {suggestion?.[lastName]} */}
               </li>
             );

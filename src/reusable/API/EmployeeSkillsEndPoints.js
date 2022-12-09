@@ -1,4 +1,3 @@
-import { BaseURL } from "./base";
 
 export const GetEmployeeSkills =()=>`EmployeeSkills`
 export const GetEmployeeSkillsTypes =() =>`EmployeeSkills/Type/dropdown-types?companyReference=00001_A01`

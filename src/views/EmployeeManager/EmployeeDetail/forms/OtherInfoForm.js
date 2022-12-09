@@ -7,7 +7,6 @@ import { GetPayrollHours } from "src/reusable/API/EmployeeDetailsEndpoints";
 import { CSLab, CSLineLabel } from "src/reusable/components";
 import { GetLabelByName } from "src/reusable/configs/config";
 import { isValidNumber } from "src/reusable/utils/helper";
-const COMPANY_REFRENCE = "00001_A01";
 
 
 const OtherInfoForm = ({ otherInfoFormData, setOtherInfoFormData }) => {

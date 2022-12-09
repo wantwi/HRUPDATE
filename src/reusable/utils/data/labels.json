@@ -13610,6 +13610,16 @@
  "german": "",
  "status": 1,
  "type": "string"
+},
+"HCM-U5IWNYFKLM_LOLN": {
+ "id": "0ead81b8-e806-4bb5-8549-6de8fcb7bc50",
+ "en": " Add Leave Type",
+ "fr": "Not Set",
+ "spanish": "",
+ "portuguese": "",
+ "german": "",
+ "status": 1,
+ "type": "string"
 }
 }
 

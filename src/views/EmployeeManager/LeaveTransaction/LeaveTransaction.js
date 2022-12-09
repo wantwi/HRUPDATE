@@ -1,15 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { SearchEmployees } from "src/reusable/API/EmployeeEndpoints";
-import { CustomAxios } from "src/reusable/API/CustomAxios";
 import { toast } from "react-toastify";
 import { toastWarning } from "src/toasters/Toaster";
 
-import {
-  GetRequest,
-  HttpAPIRequest,
-  PostRequest,
-} from "src/reusable/utils/helper";
+
 
 import CIcon from "@coreui/icons-react";
 import {
@@ -24,22 +19,12 @@ import {
   CButton,
   CCardFooter,
   CSelect,
-  CForm,
-  CTabs,
-  CNav,
-  CNavItem,
-  CNavLink,
-  CTabContent,
-  CTabPane,
+ 
   CLabel,
   CTextarea,
-  CInputRadio,
   CCardHeader,
   CModalFooter,
-  CModal,
-  CModalHeader,
-  CModalTitle,
-  CModalBody,
+  
 } from "@coreui/react";
 import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai";
 import { AiFillSave, AiOutlineRedo } from "react-icons/ai";
@@ -57,10 +42,8 @@ import {
   CSAutoComplete,
   CSRequiredIndicator,
 } from "../../../reusable/components";
-import { Checkbox } from "evergreen-ui";
-import CheckBoxComponent from "src/reusable/components/CheckBoxComponent/CheckBoxComponent";
-import { setChecked } from "@syncfusion/ej2-react-grids";
-import { CFormCheck, CFormInput } from "@coreui/bootstrap-react";
+
+
 import {
   GetYearBasis,
   PostEmployeeLeave,
@@ -75,21 +58,7 @@ import { AllowedDayBasis, AvailableDayBasis, GetLeaveTransactionById, PostLeaveT
 import LeaveTypes from "../LeaveTypes/LeaveTypes";
 import useAuth from "src/hooks/useAuth";
 const COMPREF = "00001_a01"
-// {
-//   "employeeId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-//   "code": "string",
-//   "name": "string",
-//   "description": "string",
-//   "availableDayBasisId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-//   "allowedDayBasisId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-//   "status": true,
-//   "yearEndBasisId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-//   "outstandingDayType": true,
-//   "applyMaximumOutstandingDay": true,
-//   "maximumNumberOfDays": 0,
-//   "companyReference": "string",
-//   "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-// }
+
 
 const LeaveTransaction = (props) => {
   const lan = useSelector((state) => state.language);
@@ -98,9 +67,6 @@ const LeaveTransaction = (props) => {
   const [activeKey, setActiveKey] = useState(1);
   const [, setSaveContinueLabel] = useState("Continue");
 
-  const [isChecked, setIsChecked] = useState(false);
-  const [visible, setVisible] = useState(false);
-  const [skill, setSkill] = useState("");
 
   const data = useSelector((state) => state.data);
   const dispatch = useDispatch();
@@ -122,7 +88,6 @@ const LeaveTransaction = (props) => {
   const [yearBasis, setYearBasis] = useState([]);
   const [employeeName, setEmployeeName]= useState("")
   const [leaveType, setLeaveType]=useState([])
-  const [leaveReason,setLeaveReason]=useState([])
 
   const handleAddNewRecord = () => {
     setMode("Add");

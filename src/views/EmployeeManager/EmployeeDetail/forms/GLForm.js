@@ -6,7 +6,6 @@ import useFetch from "src/hooks/useFetch";
 import { GetGLAccounts } from "src/reusable/API/EmployeeDetailsEndpoints";
 import { CSLab, CSLineLabel } from "src/reusable/components";
 import { GetLabelByName } from "src/reusable/configs/config";
-const COMPANY_REFRENCE = "00001_A01";
 const DEFAULT_GUID =  "00000000-0000-0000-0000-000000000000"
 const GLForm = ({glFormData, setGlFormData}) => {
     const lan = useSelector((state) => state.language);

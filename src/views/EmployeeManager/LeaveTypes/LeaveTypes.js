@@ -34,6 +34,7 @@ import {
   CLabel,
   CTextarea,
   CInputRadio,
+  CCardHeader,
 } from "@coreui/react";
 import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai";
 import { AiFillSave, AiOutlineRedo } from "react-icons/ai";
@@ -62,25 +63,14 @@ import {
   PostEmployeeLeave,
   SearchLeaveTypes,
 } from "src/reusable/API/EmployeeLeaveTypes";
-// {
-//   "employeeId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-//   "code": "string",
-//   "name": "string",
-//   "description": "string",
-//   "availableDayBasisId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-//   "allowedDayBasisId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-//   "status": true,
-//   "yearEndBasisId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-//   "outstandingDayType": true,
-//   "applyMaximumOutstandingDay": true,
-//   "maximumNumberOfDays": 0,
-//   "companyReference": "string",
-//   "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-// }
+import useMultiFetch from "src/hooks/useMultiFetch";
+import { AllowedDayBasis, AvailableDayBasis, GetLeaveTransactionById, LeaveTypesDrop, YearEndBasis } from "src/reusable/API/LeaveTransaction";
+import useFetch from "src/hooks/useFetch";
 
-const LeaveTypes = (props) => {
+
+
+const LeaveTypes = () => {
   const lan = useSelector((state) => state.language);
-
   const [show, setShow] = useState(true);
   const [activeKey, setActiveKey] = useState(1);
   const [, setSaveContinueLabel] = useState("Continue");
@@ -107,6 +97,7 @@ const LeaveTypes = (props) => {
   const [availableDayBasis, setAvailableDayBasis] = useState([]);
   const [allowedDayBasis, setAllowedDayBasis] = useState([]);
   const [yearBasis, setYearBasis] = useState([]);
+  const [leaveType, setLeaveType]=useState([])
 
   const handleAddNewRecord = () => {
     setMode("Add");
@@ -120,114 +111,72 @@ const LeaveTypes = (props) => {
     setEmpDisplayName(
       (prevState) => `${results.firstName} ${results.lastName}`
     );
-    // testApi();
-    // return;
     setMode("Add");
     setShow(false);
     dispatch({ type: "set", data: { ...results } });
     setSubmitData({ ...results });
 
-    if (results?.code) {
+    if (results?.id) {
       setSearchResult(results);
-
-      GetRequest()
-        .then((response) => {
-          // toast.dismiss(toastId);
-          if (response.ok) {
-            response.json().then((response) => {
-              // console.log({response});
-              if (response && Object.keys(response).length > 0) {
-                dispatch({ type: "set", data: { ...renderData(response) } });
-                setSubmitData(renderData(response));
-                // setDuplicateData({ ...response })
-                //console.log({ response });
-
-                //let rates = response?.rates;
-
-                // setExchangeRate(rates);
-                setShow(false);
-                setMode("Update");
-              } else {
-                setMode("Add");
-                setShow(false);
-                // dispatch({ type: 'set', data: { ...results, isHomeCurrency } });
-                // setSubmitData({ ...results, isHomeCurrency });
-              }
-            });
-          }
-        })
-        .catch((err) => {
-          // console.log(err);
-          // toaster(toastId, "Failed to retrieve details", 'error', 4000);
-        });
+      setUrl(GetLeaveTransactionById(results?.id))
+      
     }
   };
-  // GET EMPLOYEE lEAVE DETAILS
-  // const getEmployeeSkills = async () => {
-  //   try {
-  //     const request = await CustomAxios.get(`EmployeeSkills/${handleId}`);
+  const COMPREF = "00001_a01"
 
-  //     const response = request.data;
-  //     console.log("emp response:", response);
-  //     setViewInfo((prevState) => response);
-  //   } catch (error) {
-  //     console.log({ error });
-  //   }
-  // };
-  // useEffect(() => {
-  //   if (handleId !== "") {
-  //     getEmployeeSkills();
-  //   }
-  // }, [handleId]);
-  console.log({ submitdata: setSubmitData });
+
   const TransLabelByCode = (name) => GetLabelByName(name, lan);
   const searchReset = () => {
     setShow(true);
     setSearchInput("");
 
-    // const [grid,] = useState(null);
-
-   
-
-    // const OnSaveContinueClick = () => {
-    //     console.log(grid);
-    // }
+ 
   };
   
-  //Drop down list for hobby types
-  const MultipleGetRequests = async () => {
-    try {
-      let request = [
-        HttpAPIRequest("GET", GetAvailableDayBasis()),
-        HttpAPIRequest("GET", GetAllowedDayBasis()),
-        HttpAPIRequest("GET", GetYearBasis()),
-      ];
-      const multipleCall = await Promise.allSettled(request);
-      console.log(multipleCall[0].value);
-      console.log(multipleCall[1].value);
-      console.log(multipleCall[2].value);
 
+
+
+const  {data:multicallData} =  useMultiFetch([  AvailableDayBasis(COMPREF), 
+   AllowedDayBasis(COMPREF), 
+  YearEndBasis(COMPREF),
+  LeaveTypesDrop(COMPREF)
+  ], (results) => {
+    console.log(results);
       setAvailableDayBasis([
         { id: "-1", name: `Select Available Day Basis` },
-        ...multipleCall[0].value,
+        ...results[0].data,
       ]);
       setAllowedDayBasis([
         { id: "-1", name: `Select Allowed Day Basis ` },
-        ...multipleCall[1].value,
+        ...results[1].data,
       ]);
       setYearBasis([
         { id: "-1", name: `Select Year Basis` },
-        ...multipleCall[2].value,
+        ...results[2].data,
       ]);
-    } catch (error) {
-      console.log(error);
+      setLeaveType([
+        { id: "-1", name: `Select Leave Types` },
+        ...results[3].data,
+      ]);
+  })
+
+  const {setOptData, setUrl} =  useFetch("", (response,results) => {
+    if (response) {
+        if (response && Object.keys(response).length > 0) {
+            setSearchResult(results);
+            dispatch({ type: 'set', data: { ...response } });
+            setSubmitData({...response});
+          //  setDupData({...response})
+            setMode('Update');
+            setShow(false);
+        } else {
+            setMode('Add');
+            setShow(false);
+            dispatch({ type: 'set', data: { ...response } });
+            setSubmitData({ ...response });
+        }
     }
-  };
-
-  useEffect(() => {
-    MultipleGetRequests();
-  }, []);
-
+});
   //Handles Submit
   const handleOnSubmit = () => {
     console.log("submit data ", submitData);
@@ -242,19 +191,19 @@ const LeaveTypes = (props) => {
     }
     if (
       !submitData?.availableDayBasisId ||
-      submitData?.availableDayBasisId === -1
+      submitData?.availableDayBasisId === "-1"
     ) {
       toast.error("Please select available day basis!", toastWarning);
       return;
     }
     if (
       !submitData?.allowedDayBasisId ||
-      submitData?.allowedDayBasisId === -1
+      submitData?.allowedDayBasisId === "-1"
     ) {
       toast.error("Please select allowed day basis ", toastWarning);
       return;
     }
-    if (!submitData?.status || submitData?.status === -1) {
+    if (!submitData?.status || submitData?.status === "-1") {
       toast.error("Please select status", toastWarning);
       return;
     }
@@ -277,39 +226,39 @@ const LeaveTypes = (props) => {
     //let finalData = JSON.stringify(newData)
     // console.log(finalData)
     // 'Add' === mode ? AddGLAccount(newData) : updateGLAccount(newData);
-    postEmployeeLeave(newData);
+    // postEmployeeLeave(newData);
   };
 
   //Post Employee Skill
-  function postEmployeeLeave(data) {
-    console.log("post data", data);
-    PostRequest(PostEmployeeLeave(), { data: data })
-      .then((response) => {
-        response.text().then((data) => {
-          if ("" === data) {
-            toast.success("Leave Type Added Successfully!!");
-            console.log("success");
-          } else {
-            try {
-              data = JSON.parse(data);
-              toast.error(
-                data?.reason ? data?.reason : "Failed to Add Leave Type",
-                "error",
-                4000
-              );
-            } catch (error) {
-              console.log(error);
-            }
-          }
-        });
-      })
-      .catch((err) => {
-        console.log({ err });
-      })
-      .finally(() => {
-        console.log("Done");
-      });
-  }
+  // function postEmployeeLeave(data) {
+  //   console.log("post data", data);
+  //   PostRequest(PostEmployeeLeave(), { data: data })
+  //     .then((response) => {
+  //       response.text().then((data) => {
+  //         if ("" === data) {
+  //           toast.success("Leave Type Added Successfully!!");
+  //           console.log("success");
+  //         } else {
+  //           try {
+  //             data = JSON.parse(data);
+  //             toast.error(
+  //               data?.reason ? data?.reason : "Failed to Add Leave Type",
+  //               "error",
+  //               4000
+  //             );
+  //           } catch (error) {
+  //             console.log(error);
+  //           }
+  //         }
+  //       });
+  //     })
+  //     .catch((err) => {
+  //       console.log({ err });
+  //     })
+  //     .finally(() => {
+  //       console.log("Done");
+  //     });
+  // }
   // {
   //   "id": "88be80f3-37c5-4739-9157-f058a60c7926",
   //   "code": "LV0001",
@@ -352,41 +301,50 @@ const LeaveTypes = (props) => {
   //   "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
   // }
 
-  const renderData = (userInfo) => {
-    let newObj = {};
-    newObj.employeeId = userInfo?.id || "";
-    newObj.code = userInfo?.code || "";
-    newObj.name = userInfo?.name || "";
-    newObj.description = userInfo?.description || "";
-    newObj.availableDayBasisId = userInfo?.availableDayBasis?.id || "";
-    newObj.allowedDayBasisId = userInfo?.allowedDayBasis?.id || "";
-    newObj.status = userInfo?.status || true;
-    newObj.yearEndBasisId = userInfo?.yearEndBasis?.id || "";
-    newObj.outstandingDayType = userInfo?.outstandingDayType || "";
-    newObj.userId = "3fa85f64-5717-4562-b3fc-2c963f66afa6";
-    newObj.companyReference = "00001_a01";
-    newObj.applyMaximumOutstandingDay =
-      userInfo?.applyMaximumOutstandingDay || false;
-    newObj.maximumNumberOfDays = userInfo?.maximumNumberOfDays || 0;
+  // const renderData = (userInfo) => {
+  //   let newObj = {};
+  //   newObj.employeeId = userInfo?.id || "";
+  //   newObj.code = userInfo?.code || "";
+  //   newObj.name = userInfo?.name || "";
+  //   newObj.description = userInfo?.description || "";
+  //   newObj.availableDayBasisId = userInfo?.availableDayBasis?.id || "";
+  //   newObj.allowedDayBasisId = userInfo?.allowedDayBasis?.id || "";
+  //   newObj.status = userInfo?.status || true;
+  //   newObj.yearEndBasisId = userInfo?.yearEndBasis?.id || "";
+  //   newObj.outstandingDayType = userInfo?.outstandingDayType || "";
+  //   newObj.userId = "3fa85f64-5717-4562-b3fc-2c963f66afa6";
+  //   newObj.companyReference = "00001_a01";
+  //   newObj.applyMaximumOutstandingDay =
+  //     userInfo?.applyMaximumOutstandingDay || false;
+  //   newObj.maximumNumberOfDays = userInfo?.maximumNumberOfDays || 0;
 
-    return newObj;
-  };
-
+  //   return newObj;
+  // };
   const handleOnChange = (evnt) => {
-    //console.log(evnt)
+    console.log(evnt)
     setSubmitData((data) => {
-      return renderData({ ...data, [evnt?.target?.name]: evnt?.target?.value });
+      return { ...data, [evnt?.target?.name]: evnt?.target?.value };
     });
     dispatch({
       type: "set",
-      data: renderData({ ...data, [evnt?.target?.name]: evnt?.target?.value }),
+      data: { ...data, [evnt?.target?.name]: evnt?.target?.value },
     });
   };
-  console.log({ populate: renderData(submitData) });
+  // const handleOnChange = (evnt) => {
+  //   //console.log(evnt)
+  //   setSubmitData((data) => {
+  //     return renderData({ ...data, [evnt?.target?.name]: evnt?.target?.value });
+  //   });
+  //   dispatch({
+  //     type: "set",
+  //     data: renderData({ ...data, [evnt?.target?.name]: evnt?.target?.value }),
+  //   });
+  // };
+   console.log(availableDayBasis);
 
   return (
     <>
-      <CRow>
+      <CRow hidden={!show}>
         <CCol xs="12">
           <h5>
             <CSLab code="HCM-E3ZPL9HV68G-LOLN" />
@@ -397,7 +355,7 @@ const LeaveTypes = (props) => {
         <CCol md="4">
           <CFormGroup>
             <CSAutoComplete
-              filterUrl={SearchLeaveTypes(searchInput)}
+              filterUrl={SearchEmployees(searchInput)}
               //filterUrl=''            //filterUrl={SearchInternalCurrencies(searchInput)}
               placeholder={"Search for leave by leave type "}
               handleSelect={handleSearchResultSelect}
@@ -410,7 +368,7 @@ const LeaveTypes = (props) => {
               isPaginated={false}
               pageNumber={pageNumber}
               setPageNumber={setPageNumber}
-              numberOfItems={numberOfItems}
+              numberOfItems={numberOfItems} 
               setNumberOfItems={setNumberOfItems}
               orderBy={orderBy}
               setOrderBy={setOrderBy}
@@ -423,7 +381,7 @@ const LeaveTypes = (props) => {
             />
           </CFormGroup>
         </CCol>
-
+  
         <CCol md="8" xs="5" className="text-right">
           <CFormGroup>
             <CButton
@@ -434,15 +392,37 @@ const LeaveTypes = (props) => {
             >
               {" "}
               <AiOutlinePlus />{" "}
-              {show ? <CSLab code="HCM-TAAFD4M071D-HRPR" /> : null}{" "}
+              {show ? <CSLab code="HCM-U5IWNYFKLM_LOLN" /> : null}{" "}
             </CButton>
           </CFormGroup>
         </CCol>
+
       </CRow>
+
       <CRow>
         <CCol md="8" className="text-right"></CCol>
         <CCol xs="12" hidden={show}>
           <CCard>
+          <CCardHeader>
+              <CFormGroup row>
+                <CCol md="4">
+                  <b>Employee:</b>{" "}
+                  <span
+                    style={{
+                      textDecoration: "underline dotted",
+                      cursor: "pointer",
+                    }}
+                    type="button"
+                    onClick={() => setLarge(!large)}
+                    size="md"
+                    color="primary"
+                  >
+                    {empDisplayName}
+                  </span>
+                </CCol>
+                
+              </CFormGroup>
+            </CCardHeader>
             <CCardBody style={{ height: CardBodyHeight }}>
               <CRow className={"bottom-spacing"}>
                 <CCol md="5">
@@ -451,6 +431,7 @@ const LeaveTypes = (props) => {
                   </CCol>
                   <>
                     <CRow>
+                      
                       <CCol md="4">
                         <CLabel>
                           {" "}

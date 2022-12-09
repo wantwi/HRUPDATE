@@ -86,7 +86,7 @@ import useAuth from "src/hooks/useAuth";
 const editOptions = {
   allowEditing: false,
   allowAdding: false,
-  allowDeleting: false,
+  allowDeleting: true,
   allowEditOnDblClick: false,
 };
 const commandOptions = [
@@ -191,43 +191,13 @@ const {auth}= useAuth()
     if (results?.id) {
       setSearchResult(results);
       handleGet(results.id)
-      // GetRequest(GetEmployeeById(results.id))
-      //   .then((response) => {
-      //     console.log(response)
-      //     // toast.dismiss(toastId);
-      //     if (response.ok) {
-      //       response.json().then((response) => {
-      //         // console.log({response});
-      //         if (response && Object.keys(response).length > 0) {
-      //           dispatch({ type: "set", data: { ...response } });
-      //           setSubmitData({ ...response });
-      //           setViewInfo(response);
-      //           // setDuplicateData({ ...response })
-      //           console.log({ response });
-
-      //           //let rates = response?.rates;
-
-      //           // setExchangeRate(rates);
-      //           setShow(false);
-               
-      //         } else {
-      //           setMode("Add");
-      //           setShow(false);
-      //           // dispatch({ type: 'set', data: { ...results, isHomeCurrency } });
-      //           // setSubmitData({ ...results, isHomeCurrency });
-      //         }
-      //       });
-      //     }
-      //   })
-      //   .catch((err) => {
-      //     // console.log(err);
-      //     // toaster(toastId, "Failed to retrieve details", 'error', 4000);
-      //   });
+     
     }
   };
   const searchReset = () => {
     setShow(true);
     setSearchInput("");
+   
     refs.forEach((ref) => {
   
       ref.current.style.border = "1px solid #d8dbe0";
@@ -384,35 +354,35 @@ return data.find(x=> x.id === id)?.name || "Not Found"
 
 
   //Post Employee Skill
-  function postEmployeeSkill(data) {
-    console.log("post data", data);
-    PostRequest(PostEmployeeSkill(), { data: data })
-      .then((response) => {
-        response.text().then((data) => {
-          if ("" == data) {
-            toast.success("Employee Skill Added Successfully!");
-            console.log("success");
-          } else {
-            try {
-              data = JSON.parse(data);
-              toast.error(
-                data?.reason ? data?.reason : "Failed to Add Employee Skill",
-                "error",
-                400
-              );
-            } catch (error) {
-              console.log(error);
-            }
-          }
-        });
-      })
-      .catch((err) => {
-        console.log({ err });
-      })
-      .finally(() => {
-        console.log("Done");
-      });
-  }
+  // function postEmployeeSkill(data) {
+  //   console.log("post data", data);
+  //   PostRequest(PostEmployeeSkill(), { data: data })
+  //     .then((response) => {
+  //       response.text().then((data) => {
+  //         if ("" == data) {
+  //           toast.success("Employee Skill Added Successfully!");
+  //           console.log("success");
+  //         } else {
+  //           try {
+  //             data = JSON.parse(data);
+  //             toast.error(
+  //               data?.reason ? data?.reason : "Failed to Add Employee Skill",
+  //               "error",
+  //               400
+  //             );
+  //           } catch (error) {
+  //             console.log(error);
+  //           }
+  //         }
+  //       });
+  //     })
+  //     .catch((err) => {
+  //       console.log({ err });
+  //     })
+  //     .finally(() => {
+  //       console.log("Done");
+  //     });
+  // }
   const handleOnChange = (evnt) => {
     //console.log(evnt)
     console.log(evnt?.target?.value)
@@ -492,8 +462,14 @@ console.log(viewinfo)
   };
   
   const onCommandClick = (args) => {
-  // console.log(args);
-   onCompleteAction(args);
+    if(args.rowData.id === undefined){
+      args.cancel = false;
+      return ;
+    }else{
+      onCompleteAction(args);
+    }
+    
+   
   
   };
   
@@ -522,7 +498,7 @@ console.log(viewinfo)
   
     let deleteData = {
   
-      earningId: "",
+      
       transactionId: delEmployeeID,
   
       userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",

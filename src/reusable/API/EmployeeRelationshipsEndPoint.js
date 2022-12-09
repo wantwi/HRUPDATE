@@ -1,4 +1,3 @@
-import { BaseURL } from "./base";
 
 export const GetEmployeeDependant = (filter) =>
   `EmployeeDependant/${filter}`;

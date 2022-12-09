@@ -1,4 +1,3 @@
-import { BaseURL } from "./base";
  
 //POST EMPLOYEE LANGUAGE
 

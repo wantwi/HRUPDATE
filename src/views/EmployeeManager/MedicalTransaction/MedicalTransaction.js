@@ -75,7 +75,7 @@ import {
   PostEmployeeMedical,
 } from "src/reusable/API/MedicalTransactionsEndPoints";
 import { CCardHeader } from "@coreui/bootstrap-react";
-import getClassName from "ui-box/dist/src/get-class-name";
+// import getClassName from "ui-box/dist/src/get-class-name";
 import SweetAlert from "react-bootstrap-sweetalert";
 import useDelete from "src/hooks/useDelete";
 import useAuth from "src/hooks/useAuth";
@@ -330,38 +330,38 @@ return data.find(x=>x.id=== id)?.name || "Not Found"
   }
   
   //Post Employee Hobby
-  function postEmployeeMedical(data) {
-    console.log("post data", data);
-    PostRequest(PostEmployeeMedical(), { data: data })
-      .then((response) => {
-        response.text().then((data) => {
-          if ("" === data) {
-            toast.success("Medical Transaction Successful!");
-            getEmployeeMedicalyById();
-            console.log("success");
-          } else {
-            try {
-              data = JSON.parse(data);
-              toast.error(
-                data?.reason
-                  ? data?.reason
-                  : "Failed to Create Medical Transaction",
-                "error",
-                400
-              );
-            } catch (error) {
-              console.log(error);
-            }
-          }
-        });
-      })
-      .catch((err) => {
-        console.log({ err });
-      })
-      .finally(() => {
-        console.log("Done");
-      });
-  }
+  // function postEmployeeMedical(data) {
+  //   console.log("post data", data);
+  //   PostRequest(PostEmployeeMedical(), { data: data })
+  //     .then((response) => {
+  //       response.text().then((data) => {
+  //         if ("" === data) {
+  //           toast.success("Medical Transaction Successful!");
+  //           getEmployeeMedicalyById();
+  //           console.log("success");
+  //         } else {
+  //           try {
+  //             data = JSON.parse(data);
+  //             toast.error(
+  //               data?.reason
+  //                 ? data?.reason
+  //                 : "Failed to Create Medical Transaction",
+  //               "error",
+  //               400
+  //             );
+  //           } catch (error) {
+  //             console.log(error);
+  //           }
+  //         }
+  //       });
+  //     })
+  //     .catch((err) => {
+  //       console.log({ err });
+  //     })
+  //     .finally(() => {
+  //       console.log("Done");
+  //     });
+  // }
 
   const getEmployeeMedicalyById =(id) => {
     setUrl(GetEmployeeMedical(id))

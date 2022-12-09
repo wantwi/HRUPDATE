@@ -1,4 +1,4 @@
-import { BaseURL } from "./base";
+
 
 export const PostAccidentTransaction =()=> `EmployeeAccident`
 export const DeleteAccidentTransaction =()=> `EmployeeAccident`

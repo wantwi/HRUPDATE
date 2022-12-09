@@ -242,7 +242,6 @@ const [EmployeeLanguageChildrenList, setEmployeeLanguageChildrenList]= useState(
 
   const {setOptData, setUrl} =  useFetch("", (response,results) => {
     if (response) {
-      console.log(response);
       const request = response;
       const res = request.map((x) => ({
         languageId: x.id,
@@ -275,7 +274,6 @@ const [EmployeeLanguageChildrenList, setEmployeeLanguageChildrenList]= useState(
     setShow(false);
     dispatch({ type: "set", data: { ...results } });
     setSubmitData({ ...results });
-console.log(results);
      if (results?.id) {
        setSearchResult(results);
       //  getEmployeelanguage(results.id)
@@ -312,7 +310,6 @@ console.log(results);
 
 
     setUrl(GetEmployeeByID(ID))
-    console.log(ID)
    
   };
   const {auth}= useAuth()
@@ -357,10 +354,8 @@ console.log(results);
         ref.current.style.border = "2px solid green";
       }else if (ref.current.value.length === -1) {
         ref.current.style.border = "2px solid red";
-        console.log("second");
       } else if (ref.current.value === "") {
         ref.current.style.border = "2px solid red";
-        console.log("third");
 
       } else {
         ref.current.style.border = "2px solid red";
@@ -419,7 +414,6 @@ let newGridData ={
 }
 // setPost(newData)
   
-    console.log(newGridData);
     setViewInfo((prevState) => [newGridData,...prevState]);
    
   
@@ -435,7 +429,6 @@ let newGridData ={
   
  
   const handlePost=()=>{
-    console.log(post)
     let postBody=    {
       employeeId: handleId,
       "createEmployeeLanguageChildren":EmployeeLanguageChildrenList ,
@@ -690,7 +683,7 @@ alert("Clicked")
   //console.log({ viewinfo });
   //console.log({ arr });
   
-  console.log(viewinfo);
+  console.log({view: viewinfo});
   //console.log({ postEmployee });
 
   return (
@@ -700,7 +693,7 @@ alert("Clicked")
 showCancel
  confirmBtnText="Yes, delete it!"
 confirmBtnBsStyle="danger"
-title={`${GetLabelByName("HCM-IIQS2WWFTPP_KCMI", lan)} ${GetLabelByName("HCM-2YN2O0KO4YX-LASN", lan)} ${GetLabelByName("HCM-SF00RQBW0XB_PSLL", lan)} ${delEmployeeName}?`}
+title={`${GetLabelByName("HCM-Z3GW6TG207", lan)} ?`}
  onConfirm={onConfirm}
  onCancel={onCancel}
  focusCancelBtn
