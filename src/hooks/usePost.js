@@ -33,7 +33,7 @@ const usePost = (initialUrl, callback) => {
 
     } catch (error) {
       console.log({ error });
-      toast.error("Something went wrong, Please try again later!");
+      // toast.error("Something went wrong, Please try again later!");
       setError(error);
       setLoading(false)
       setUrl("")

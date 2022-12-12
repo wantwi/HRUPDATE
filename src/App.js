@@ -32,7 +32,7 @@ const Page500 = React.lazy(() => import("./templates/pages/page500/Page500"));
 class App extends Component {
   render() {
     return (
-      <BrowserRouter
+      <HashRouter
         basename={process.env.REACT_APP_BASE_NAME}
         // getUserConfirmation={(message, callback) =>
         //   UserConfirmation(message, callback)
@@ -75,7 +75,7 @@ class App extends Component {
             />
           </Switch>
         </React.Suspense>
-      </BrowserRouter>
+      </HashRouter>
     );
   }
 }

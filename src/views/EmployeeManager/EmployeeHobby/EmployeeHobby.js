@@ -89,7 +89,7 @@ import useAuth from "src/hooks/useAuth";
 const editOptions = {
   allowEditing: false,
   allowAdding: false,
-  allowDeleting: false,
+  allowDeleting: true,
   allowEditOnDblClick: false,
 };
 const commandOptions = [
@@ -188,28 +188,6 @@ const EmployeeHobby = (props) => {
 
   const handleOnSubmit = () => {
 
-    // refs.forEach((ref) => {
-    
-    //   if (ref.current.props.value < 1) {
-    //     ref.current.style.border = "2px solid green";
-    //   }else if (ref.current.value.length === -1) {
-    //     ref.current.style.border = "2px solid red";
-    //     console.log("second");
-    //   } else if (ref.current.value === "") {
-    //     ref.current.style.border = "2px solid red";
-    //     console.log("third");
-
-    //   } else {
-    //     ref.current.style.border = "2px solid red";
-       
-    //     return
- 
-    //   }
-    // });
-    // if (!unitId.length || unitId.length < 1 ) {
-    //   toast.error(GetLabelByName("HCM-WQ9J7737WDC_LASN", lan), toastWarning);
-    //   return;
-    // }
 
      if (unitId.length < 1) {
        toast.error("Please Select Hobby Type!", toastWarning);
@@ -228,7 +206,7 @@ const EmployeeHobby = (props) => {
       userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
     };
     let gridView= {
-      
+      isDelete : true,
       "hobbyType": {
         id: `${unitId.map((x)=> x)}`,
         
@@ -242,11 +220,15 @@ const EmployeeHobby = (props) => {
        
       }
     }
+    let submit = {
+      hobbyTypeId :  `${unitId.map((x)=> x)}`,
+      isDelete :true
+    }
 
 
  
 
-    setEmployeeHobbyChildren((prev)=>[...prev, gridView?.hobbyType?.id])
+    setEmployeeHobbyChildren((prev)=>[...prev, submit])
 setEmployeeHobbyby(newData)
     setViewInfo((prevState)=>[gridView,...prevState])
     //console.log(gridView)
@@ -270,8 +252,11 @@ const handlePost=()=>{
     "companyReference": "00001_a01",
     "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
   }
-       setPostUrl(PostEmployeeHobbies())
-     setPostData(postBody)
+  if(EmployeeHobbyChildren.length > 0){
+    setPostUrl(PostEmployeeHobbies())
+    setPostData(postBody)
+  }
+       return
 }
 
 
@@ -451,8 +436,18 @@ const getName=(data,id)=>{
   };
   
   const onCommandClick = (args) => {
-  // console.log(args);
-   onCompleteAction(args);
+    if(args.rowData.isDelete === true){
+      console.log(EmployeeHobbyChildren);
+      args.cancel = false;
+       setEmployeeHobbyChildren((current)=>current.filter((deleteItem) => deleteItem.isDelete !== true));
+      // setEmployeeFamilyChildren((current)=>current.filter((deleteItem) => deleteItem.isDelete !== true))
+      return;
+    }
+    else{
+      onCompleteAction(args);
+ 
+    }
+  
   
   };
   
@@ -506,7 +501,7 @@ const getName=(data,id)=>{
   
     if (response.status === 200 || response.status === 204) {
   
-      toast.success('Employee Language Deleted Successfully!',);
+      toast.success(`${GetLabelByName("HCM-9VWW2UPSTXS-PSLL", lan)}`);
   
       setIsActive(false);
       setViewInfo("")

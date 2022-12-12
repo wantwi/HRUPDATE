@@ -90,7 +90,7 @@ import useAuth from "src/hooks/useAuth";
 
 const editOptions = {
   allowEditing: false,
-  allowAdding: true,
+  allowAdding: false,
   allowDeleting: true,
   allowEditOnDblClick: false,
 };
@@ -391,16 +391,32 @@ const [EmployeeLanguageChildrenList, setEmployeeLanguageChildrenList]= useState(
     let employeeId = searchResult?.id;
     //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
 
-    // let newData = {
-    //   ...submitData,
-    //   userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    //   userName: "string",
-    //   CompanyReference: "00001_A01",
-    //   employeeId: employeeId,
-    // };
-    setEmployeeLanguageChildrenList((prev)=>[...prev, submitData])
+    let newData = {
+      firstName : submitData?.firstName,
+      
+     id : submitData?.id,
+     
+     languageId : submitData?.languageId,
+     
+     lastName : submitData?.lastName ,
+     
+     read :submitData?.read , 
+     
+     speak :submitData?.speak ,
+     
+     staffId : submitData?.staffId,
+     
+     write : submitData?.write,
+     isDelete : true,
+     
+    }
 
+
+
+   setEmployeeLanguageChildrenList((prev)=>[...prev, newData])
+console.log({submitData : submitData});
 let newGridData ={
+  isDelete: true,
   employee: {
     id: handleId,
   },
@@ -434,10 +450,13 @@ let newGridData ={
       "createEmployeeLanguageChildren":EmployeeLanguageChildrenList ,
       "companyReference": "00001_a01",
       "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-    }
 
-    setPostData(postBody)
-     setPostUrl(PostEmployeeLanguage())
+    }
+if(EmployeeLanguageChildrenList.length > 0){
+  setPostData(postBody)
+  setPostUrl(PostEmployeeLanguage())
+}
+    return;
     }
 
 
@@ -573,8 +592,20 @@ alert("Clicked")
   };
   
   const onCommandClick = (args) => {
-  //console.log(args);
-   onCompleteAction(args);
+    console.log(args.rowData);
+    console.log(EmployeeLanguageChildrenList);
+    if(args.rowData.isDelete === true){
+      args.cancel = false;
+      setViewInfo((current)=>current.filter((deleteItem) => deleteItem.isDelete !== true ))
+
+      setEmployeeLanguageChildrenList((current)=>current.filter((deleteItem) => deleteItem.isDelete !== true ))
+      return;
+    }
+    else{
+      onCompleteAction(args);
+ 
+    }
+ 
   
   };
   
@@ -628,7 +659,7 @@ alert("Clicked")
   
     if (response.status === 200 || response.status === 204) {
   
-      toast.success('Employee Language Deleted Successfully!',);
+      toast.success(`${GetLabelByName("HCM-9VWW2UPSTXS-PSLL", lan)}`);
   
       setIsActive(false);
       setViewInfo("")

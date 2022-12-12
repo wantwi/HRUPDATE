@@ -129,7 +129,7 @@ const [post,setPost]=useState([])
 const [delEmployeeName,setDelEmployeeName]=useState("")
 const[isActive,setIsActive]=useState(false)
 const[delEmployeeID,setDelEmployeeID]=useState("")
-
+const[MedicalTransactionChildren, setMedicalTransactionChildren]=useState([])
 
 const ailmentRef = useRef(null)
 const healthCareProvider =useRef(null)
@@ -294,7 +294,7 @@ let handleNewGridData=
  
 
 }
-
+setMedicalTransactionChildren((prev)=>[...prev,submitData])
    setViewInfo((prevState)=>[handleNewGridData,...prevState])
    setPost(newData)
    setSubmitData("")
@@ -323,11 +323,23 @@ let handleNewGridData=
 const getName=(data, id)=>{
 return data.find(x=>x.id=== id)?.name || "Not Found"
 }
-  
-  const handlePost=()=>{
-    setPostData(post)
+
+const handlePost =()=>{
+  let postBody={
+    employeeId: handleId,
+    companyReference: "00001_a01",
+    "createEmployeeMedicalChildren": MedicalTransactionChildren,
+    "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+  }
+  console.log(MedicalTransactionChildren);
+  if(MedicalTransactionChildren?.length > 0   ){
+    setPostData(postBody)
     setPostUrl(PostEmployeeMedical())
   }
+ 
+}
+  
+  
   
   //Post Employee Hobby
   // function postEmployeeMedical(data) {
@@ -467,7 +479,7 @@ return data.find(x=>x.id=== id)?.name || "Not Found"
   
     if (response.status === 200 || response.status === 204) {
   
-      toast.success('Employee Language Deleted Successfully!',);
+      toast.success(`${GetLabelByName("HCM-9VWW2UPSTXS-PSLL", lan)}`);
   
       setIsActive(false);
       setViewInfo("")
@@ -494,7 +506,7 @@ return data.find(x=>x.id=== id)?.name || "Not Found"
 showCancel
  confirmBtnText="Yes, delete it!"
 confirmBtnBsStyle="danger"
-title={`${GetLabelByName("HCM-IIQS2WWFTPP_KCMI", lan)} ${GetLabelByName("HCM-VZJ3MPY1WO_LASN", lan)} ${GetLabelByName("HCM-SF00RQBW0XB_PSLL", lan)} ${delEmployeeName}?`}
+title={`${GetLabelByName("HCM-Z3GW6TG207", lan)} ?`}
  onConfirm={onConfirm}
  onCancel={onCancel}
  focusCancelBtn

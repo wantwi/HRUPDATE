@@ -284,11 +284,21 @@ let temps = {
     //     "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
       
     // }
-    setEmployeeSkillChildren((prev)=>[...prev,submitData])
+    let submit ={
+      isDelete : true, 
+      description: submitData?.description,
+      firstName : submitData?.firstName,
+      id : submitData?.id,
+      lastName : submitData?.lastName,
+      skillTypeId : submitData?.skillTypeId,
+      staffId : submitData?.staffId
+    }
+   
+    setEmployeeSkillChildren((prev)=>[...prev,submit])
     // setSkillPost(newData)
 console.log({submit : temps});
    let gridView= {
-     
+     isDelete : true,
       employee: {
          
           "firstName": searchResult?.firstName,
@@ -323,9 +333,11 @@ const handlePost=()=>{
     createEmployeeSkillChildren :EmployeeSkillChildren,
     "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
   }
-  
-  setPostUrl(PostEmployeeSkill())
-  setPostData(postBody)
+  if(EmployeeSkillChildren.length > 0 ){
+    setPostUrl(PostEmployeeSkill())
+    setPostData(postBody)
+  }
+
 
 }
 const getName=(data,id)=>{
@@ -462,13 +474,16 @@ console.log(viewinfo)
   };
   
   const onCommandClick = (args) => {
-    if(args.rowData.id === undefined){
+    if(args.rowData.isDelete === true){
       args.cancel = false;
-      return ;
-    }else{
-      onCompleteAction(args);
+      setEmployeeSkillChildren((current)=>current.filter((deleteItem) => deleteItem.isDelete !== true));
+      // setEmployeeFamilyChildren((current)=>current.filter((deleteItem) => deleteItem.isDelete !== true))
+      return;
     }
-    
+    else{
+      onCompleteAction(args);
+ 
+    }
    
   
   };
@@ -528,7 +543,7 @@ console.log(viewinfo)
   
     if (response.status === 200 || response.status === 204) {
   
-      toast.success('Employee Language Deleted Successfully!',);
+      toast.success(`${GetLabelByName("HCM-9VWW2UPSTXS-PSLL", lan)}`);
   
       setIsActive(false);
       setViewInfo("")

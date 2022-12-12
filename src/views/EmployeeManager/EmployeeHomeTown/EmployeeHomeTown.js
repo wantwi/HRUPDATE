@@ -85,7 +85,7 @@ import useAuth from "src/hooks/useAuth";
 const editOptions = {
   allowEditing: false,
   allowAdding: false,
-  allowDeleting: false,
+  allowDeleting: true,
   allowEditOnDblClick: false,
 };
 const commandOptions = [
@@ -202,6 +202,9 @@ const {auth}= useAuth()
   const searchReset = () => {
     setShow(true);
     setSearchInput("");
+    dispatch({ type: "set", data: { } });
+    setSubmitData("")
+
     refs.forEach((ref) => {
   
       ref.current.style.border = "1px solid #d8dbe0";
@@ -251,33 +254,45 @@ const {auth}= useAuth()
       toast.error("Please enter hometown!", toastWarning);
       return;
     }
-    // if (!submitData?.description || submitData?.description === "") {
-    //   toast.error("Please Enter Description!", toastWarning);
-    //   return;
-    // }
+ 
     
-    let employeeId = submitData.id;
+ 
     setVisible(false);
-setEmployeeHomeTownChildrenList((prev)=>[...prev,submitData ])
+    const submit={
+      description :  submitData?.description,
+        firstName : submitData?.firstName ,
+      
+        id : submitData?.id,
 
+        lastName :submitData?.lastName,
+     
+        name  : submitData?.name,
+      
+        staffId : submitData?.staffId,
+
+        isDelete : true
+        
+    }
+
+setEmployeeHomeTownChildrenList((prev)=>[...prev,submit ])
+console.log({submit: submit});
 
 let postData={
-  
+  isDelete: true,
     
     "name": submitData?.name,
     "employee": {
     
       "firstName": searchResult?.firstName,
       "lastName": searchResult?.lastName,
-  
+     
     }
   
 }
 
-  setViewInfo((prevState)=>[postData, ...prevState])
+  setViewInfo((prevState)=>[...prevState , postData])
+  dispatch({ type: "set", data: { } });
 
-    // setPostUrl(PostEmployeeHometown())
-    // setPostData(newData)
 
   };
 
@@ -287,10 +302,15 @@ const handleposting=()=>{
     employeeId: searchResult?.id,
     createEmployeeHomeTownChildren: EmployeeHomeTownChildrenList,
     "companyReference": "00001_a01",
-    "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+    "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+
+
   }
-  setPostUrl(PostEmployeeHometown())
-   setPostData(postBody)
+  if(EmployeeHomeTownChildrenList.length > 0){
+    setPostUrl(PostEmployeeHometown())
+    setPostData(postBody)
+  }
+ 
 }
 
   const  {setData:setPostData, setUrl:setPostUrl} = usePost('', (response) => {
@@ -368,6 +388,7 @@ console.log(viewinfo)
   };
 
 
+
   useEffect(() => {
     if (viewinfo.length > 0) {
       checkBenefiary();
@@ -376,6 +397,10 @@ console.log(viewinfo)
     console.log(skillType);
 
   }, []);
+
+  const handleClose=()=>{
+    dispatch({ type: "set", data: { } });
+  }
 
 
 
@@ -396,8 +421,18 @@ const onCancel = () => {
 };
 
 const onCommandClick = (args) => {
-// console.log(args);
- onCompleteAction(args);
+console.log(args?.rowData);
+  if(args?.rowData?.isDelete === true){
+    args.cancel = false;
+    setViewInfo((current)=>current.filter((deleteItem) => deleteItem.isDelete !== true));
+    setEmployeeHomeTownChildrenList((current)=>current.filter((deleteItem) => deleteItem.isDelete !== true))
+    return;
+  }
+  else{
+    onCompleteAction(args);
+
+  }
+
 
 };
 
@@ -449,7 +484,7 @@ const { setData: setDeleteData, setUrl: setDeletUrl } = useDelete('', (response)
 
   if (response.status === 200 || response.status === 204) {
 
-    toast.success('Employee Hometown Deleted Successfully!',);
+    toast.success(`${GetLabelByName("HCM-9VWW2UPSTXS-PSLL", lan)}`);
 
     setIsActive(false);
     setViewInfo("")
@@ -772,7 +807,7 @@ show={isActive}
               <CSLab code="HCM-LVXUVAB9G_KCMI" />( <CSRequiredIndicator />)
             </em>
           </p>
-          <CButton color="secondary" onClick={() => setVisible(false)}>
+          <CButton color="secondary" onClick={() =>{handleClose(); setVisible(false)}}>
             <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
           </CButton>
           <CButton

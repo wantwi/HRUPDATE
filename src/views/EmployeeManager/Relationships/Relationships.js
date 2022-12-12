@@ -419,6 +419,7 @@ const NextOfKinDropDownRefs=[
   //relationTs();
 
   const searchReset = () => {
+    console.log("called");
     setShow(true);
     setSearchInput("");
     setCurrentFormData("")
@@ -430,17 +431,26 @@ const NextOfKinDropDownRefs=[
 
   
 });
-  // setEmergencyContact("")
-  // setGetNextOfKin("")
-  // setGetGuarantor("")
-  // setGetBenefiary("")
-  // setDependant("")
-    // const [grid,] = useState(null);
-
-    // const OnSaveContinueClick = () => {
-    //     console.log(grid);
-    // }
+if(activeKey===1){
+  setGetBenefiary([])
+}
+if(activeKey===2){
+  setDependant([])
+ 
+}
+if(activeKey===3){
+  setEmergencyContact([])
+}
+if(activeKey===4){
+  setGetGuarantor([])
+}
+if(activeKey===5){
+  setGetNextOfKin([])
   };
+}
+
+
+
   const {auth}= useAuth()
   const {companyReference: CompanyReference } = auth
   const onCompleteAction = (args) => {
@@ -525,6 +535,7 @@ const NextOfKinDropDownRefs=[
   const submitRequest = (args) => {
     if ( args.item.id === "saveItems") {
       if(activeKey === 1){
+     
         let PostBody={
           employeeId:handleId,
           createEmployeeBeneficiaryChildren: EmployeeBeneficiaryChildrenList,
@@ -532,8 +543,11 @@ const NextOfKinDropDownRefs=[
           userName: "string",
           CompanyReference: "00001_A01",
         }
-            setPostData(PostBody)
+        if(EmployeeBeneficiaryChildrenList.length> 0){
+          setPostData(PostBody)
    setPostUrl(PostBeneficiary())
+        }
+        return;  
       }
       if(activeKey === 2){
        
@@ -545,8 +559,11 @@ const NextOfKinDropDownRefs=[
         createEmployeeDependantChildren: EmployeeDependantChildrenList,
         
        }
-         setDependentPostUrl(PostDependantDetails())
-         setDependantPostData(postBody)
+       if(EmployeeDependantChildrenList.length> 0){
+        setDependentPostUrl(PostDependantDetails())
+        setDependantPostData(postBody)
+       }
+       return;
       }
       if(activeKey === 3){
         let Emergency= {
@@ -556,8 +573,11 @@ const NextOfKinDropDownRefs=[
           userName: "string",
           companyReference: "00001_A01",
         }
-        setEmegencyContactPostUrl(PostEmployeeEmergencyContact())
-         setEmegencyContactPostData(Emergency)
+        if(EmployeeEmerGencyContactChildrenList.length> 0){
+          setEmegencyContactPostUrl(PostEmployeeEmergencyContact())
+          setEmegencyContactPostData(Emergency)
+        }
+        return;
       }
       if(activeKey === 4){
         let postbody=   {
@@ -566,9 +586,11 @@ const NextOfKinDropDownRefs=[
             "companyReference": "string",
             "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
           }
-          
-       setGuarrantorPostUrl(PostEmployeeGuarantor())
-        setPostGuarrantorData(postbody)
+          if(EmployeerGurrantoContactChildrenList.length > 0){
+            setGuarrantorPostUrl(PostEmployeeGuarantor())
+            setPostGuarrantorData(postbody)
+          }
+          return;
       }
       if(activeKey === 5 ){
         let postbody = {
@@ -577,8 +599,11 @@ const NextOfKinDropDownRefs=[
           companyReference: "string",
           userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
         }
-        setNOKPostUrl(PostEmployeeNextOfKin())
-        setPostNOK(postbody)
+        if(EmployeeNextOfKinChildrenList.length> 0){
+          setNOKPostUrl(PostEmployeeNextOfKin())
+          setPostNOK(postbody)
+        }
+        return;
       }
       
     } else {
@@ -596,8 +621,30 @@ const NextOfKinDropDownRefs=[
   var values = ColumnDirective.getValue;
 
   const onCommandClick = (args) => {
-console.log(args.rowData.id);
-    if(args.rowData.id === undefined){
+      console.log(args?.rowData);
+    if(args.rowData.isDelete === true){
+
+      if(activeKey===1){
+        setEmployeeBeneficiaryChildrenList((current)=>current.filter((deleteItem) => deleteItem.isDelete !== true));
+
+      }
+      if(activeKey===2){
+        setEmployeeDependantChildrenList((current)=>current.filter((deleteItem) => deleteItem.isDelete !== true));
+
+       
+      }
+      if(activeKey===3){
+        setEmployeeEmerGencyContactChildrenList((current)=>current.filter((deleteItem) => deleteItem.isDelete !== true));
+
+      }
+      if(activeKey===4){
+        setEmployeeGurrantoContactChildrenList((current)=>current.filter((deleteItem) => deleteItem.isDelete !== true));
+
+      }
+      if(activeKey===5){
+        setEmployeeNextOfKinChildrenList((current)=>current.filter((deleteItem) => deleteItem.isDelete !== true));
+
+        };
       args.cancel = false;
       return ;
     }else{
@@ -625,10 +672,8 @@ console.log(handleId);
 setUrls([GetBeneficiary(handleId), 
   GetEmployeeDependant(handleId), GetEmployeeEmergencyContact(handleId), 
   GetEmployeeGuarantor(handleId),GetRelationTypes(CompanyReference),GetEmployeeNextOfKin(handleId)])
-return () => {
-  
-}
-}, [handleId])
+console.log(handleId);
+}, [searchResult,handleId,setUrls,CompanyReference])
 
 
 useEffect(() => {
@@ -847,9 +892,11 @@ useEffect(() => {
 
 
       let benefiaciaryGridData={
+        isDelete: true,
         ...currentFormData,
         relation : {
-          name: getName(relationTypes,currentFormData?.relationId)
+          name: getName(relationTypes,currentFormData?.relationId),
+        
         },
 
         
@@ -858,6 +905,7 @@ useEffect(() => {
       let data = {
         ...currentFormData,
         phone:phone,
+        isDelete: true
       }
       
  setGetBenefiary((prevState)=>[...prevState, benefiaciaryGridData])
@@ -963,12 +1011,34 @@ useEffect(() => {
         return;
       }
    
-      // console.log(submitData)
-      let employeeId = handleId;
-      setEmployeeDependantChildrenList((prev) => [...prev,currentFormData ])
+      
+
+      let formaData ={
+        isDelete: true,
+        address : currentFormData?.address,
+
+dateOfBirth: currentFormData?.dateOfBirth,
+
+dateOfExpiry: currentFormData?.dateOfExpiry ,
+
+firstName: currentFormData?.firstName,
+
+identityNumber: currentFormData?.identityNumber,
+
+identityTypeId: currentFormData?.identityTypeId,
+
+lastName: currentFormData?.lastName,
+
+nationalityId: currentFormData?.nationalityId,
+
+relationTypeId : currentFormData?.relationTypeId,
+      }
+
+       setEmployeeDependantChildrenList((prev) => [...prev,formaData])
  
       //console.log({Trial: currentFormData,Dep });
       let posting= {
+        isDelete: true,
        ...currentFormData,
          firstName: currentFormData?.firstName,
          lastName: currentFormData?.lastName,
@@ -1044,17 +1114,12 @@ useEffect(() => {
       // console.log(submitData)
       let employeeId = handleId;
       //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
-      let newData = {
-        ...currentFormData,
-        userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        userName: "string",
-        companyReference: "00001_A01",
-        employeeId,
-        name: `${currentFormData?.firstName} ${currentFormData?.lastName}`,
-      };
-   
+      
+      
       let posting=  {
+        isDelete : true,
         employee:{
+         
           firstName: `${currentFormData?.firstName} `,
           lastName: `${currentFormData?.lastName}`
         }
@@ -1072,6 +1137,7 @@ useEffect(() => {
 
       // postEmergencyContact(newData);
       let data = {
+        isDelete : true,
         ...currentFormData,
         phone: phone,
       }
@@ -1169,7 +1235,7 @@ useEffect(() => {
      
       
       let gridView=  {
-        
+        isDelete : true,
         name: `${currentFormData?.firstName} ${currentFormData?.lastName}`,
         phone: phone,
         occupation: currentFormData?.occupation,
@@ -1187,6 +1253,7 @@ useEffect(() => {
       let data = {
         ...currentFormData,
         phone: phone,
+        isDelete : true,
       }
       setEmployeeGurrantoContactChildrenList((prev)=>[...prev,data])
      
@@ -1283,7 +1350,7 @@ useEffect(() => {
       // postNextOfKin(newData);
 
 let handleGrid=  {
- 
+  isDelete : true,
   "name": `${currentFormData?.firstName} ${currentFormData?.lastName}`,
   "email": currentFormData?.email,
   "relationId": currentFormData?.relationId ,
@@ -1305,6 +1372,7 @@ let handleGrid=  {
 let data = {
   ...currentFormData,
   phone: phone,
+  isDelete : true,
 }
 setEmployeeNextOfKinChildrenList((prev)=>[...prev,data])
       setGetNextOfKin((prevState)=>[handleGrid,...prevState])
@@ -1472,7 +1540,7 @@ checkValue={checkForValue}
 // useEffect(()=>{
 //   if(benefiaciary){
  
-//    console.log({percent: handlePercentageCalc(benefiaciary)});
+ console.log({data: currentFormData});
 //   // setPercentage(result)
    
 //   }
@@ -1750,8 +1818,7 @@ if(activeKey===5){
   
     if (response.status === 200 || response.status === 204) {
   
-      toast.success('Employee Language Deleted Successfully!',);
-  
+      toast.success(`${GetLabelByName("HCM-9VWW2UPSTXS-PSLL", lan)}`);
       setIsActive(false);
        
       // GetPreviousData(nonCashId);
@@ -1843,7 +1910,7 @@ if(activeKey===5){
     
 //   }
 // }, [currentFormData?.percentage])
-
+console.log(EmployeeDependantChildrenList);
 
 
   return (

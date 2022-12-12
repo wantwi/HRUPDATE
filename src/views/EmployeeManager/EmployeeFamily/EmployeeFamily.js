@@ -86,7 +86,7 @@ import useAuth from "src/hooks/useAuth";
 const editOptions = {
   allowEditing: false,
   allowAdding: false,
-  allowDeleting: false,
+  allowDeleting: true,
   allowEditOnDblClick: false,
 };
 
@@ -155,10 +155,25 @@ const [empDisplayName, setEmpDisplayName] = useState("");
     
 
   };
-  // const  {data:multicallData} =  useMultiFetch([ GetAccidentTypes()], (results) => {
-  //   setAccidentTypes([{ id: "-1", name: `Select Accident Type` }, ...results[0].data]);
-   
-  // }) 
+const initialState= [
+  
+    {
+      "id": null,
+      "name": null,
+      "email": null,
+      "phone": null,
+      "staffId": null,
+      "companyReference": null,
+      "employee": {
+          "id": null,
+          "firstName": null,
+          "lastName":null,
+          "staffId": null,
+          "status": false,
+          isDelete : false,
+      }
+  }
+]
   const nameRef = useRef(null);
   const emailRef = useRef(null);
   const phoneRef = useRef(null)
@@ -281,10 +296,14 @@ const [empDisplayName, setEmpDisplayName] = useState("");
       userName: "string",
       CompanyReference: "00001_a01",
       employeeId: handleId,
+      isDelete: true,
     };
 console.log(newData);
     
     setEmployeeFamilyChildren((prev)=>[...prev,newData])
+
+    setEmployeeFamilyChildren((current)=>current.filter((item) => console.log(item) ))
+    
     setEmployeeAccident((prevState)=>[newData,...prevState])
   
   };
@@ -296,8 +315,11 @@ const handlePosting=()=>{
     "companyReference": "string",
     "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
   }
+  if(EmployeeFamilyChildren.length > 0){
     setPostData(postBody)
     setPostUrl(PostFamily())
+  }
+   
    // console.log(post);
 }
 
@@ -306,7 +328,7 @@ const handlePosting=()=>{
     // console.log({location:response });
     const {data} = response
     if ("" === data) {
-      toast.success(GetLabelByName("HCM-HAGGXNJQW2B_HRPR", lan));
+      toast.success(`${GetLabelByName("HCM-9VWW2UPSTXS-PSLL", lan)}`);
     //  showToasts();
       searchReset(2);
     } else {
@@ -381,13 +403,13 @@ const handlePosting=()=>{
 
   const onCommandClick = (args) => {
 
-    // setEmployeeAccident({
-    //   data: this.state.data.filter((_, i) => i !== index)
-    // });
+
 
     console.log(args);
-    if(args.rowData.id === undefined){
-      args.cancel = true;
+    if(args.rowData.isDelete === true){
+      args.cancel = false;
+      setEmployeeAccident((current)=>current.filter((deleteItem) => deleteItem.isDelete !== true));
+      setEmployeeFamilyChildren((current)=>current.filter((deleteItem) => deleteItem.isDelete !== true))
       return;
     }
     else{
@@ -409,7 +431,7 @@ console.log(args);
 console.log(args);
     if (args.commandColumn.type === 'Delete') {
 
-      args.cancel = false;
+      args.cancel = true;
 
       setIsActive(true)
 
@@ -453,8 +475,7 @@ const handleDeleteItem = async () => {
 
     if (response.status === 200 || response.status === 204) {
 
-      toast.success('Employee Family Deleted Successfully!',);
-
+      toast.success(`${GetLabelByName("HCM-9VWW2UPSTXS-PSLL", lan)}`);
       setIsActive(false);
       setEmployeeAccident("")
       // GetPreviousData();
@@ -476,7 +497,8 @@ const handleDeleteItem = async () => {
     }
 
   },[data?.phone])
-console.log(EmployeeFamilyChildren);
+console.log(getEmployeeAccident);
+  console.log(EmployeeFamilyChildren);  
   return (
     <>
   
@@ -495,7 +517,7 @@ show={isActive}
  </SweetAlert>
 
 
-      <CRow hidden={!show}>
+      <CRow >
         <CCol xs="12">
           <h5>
             <CSLab code="HCM-BFCF6D9NBVN_LASN" />

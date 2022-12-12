@@ -78,18 +78,22 @@ import useAuth from "src/hooks/useAuth";
 // GetProfessionalTitles
 
 const commandOptions = [
+ 
   {
     type: "Delete",
     buttonOption: { iconCss: "e-icons e-delete", cssClass: "e-flat" },
   },
+  {
+    type: "Save",
+    buttonOption: { iconCss: "e-icons e-update", cssClass: "e-flat" },
+  },
+  {
+    type: "Cancel",
+    buttonOption: { iconCss: "e-icons e-cancel-icon", cssClass: "e-flat" },
+  },
 ];
 
-const editOptions = {
-  allowEditing: true,
-  allowAdding: true,
-  allowDeleting: false,
-  allowEditOnDblClick: true,
-};
+
 const toolbarOptions = ["Add", "Cancel"];
 
 const EmployeeEducationInformation = (props) => {
@@ -105,6 +109,12 @@ const EmployeeEducationInformation = (props) => {
   const [large, setLarge] = useState(false);
   const [show, setShow] = useState(true);
   const [mode, setMode] = useState("");
+  const [editOptions] = useState({
+    allowEditing: false,
+    allowAdding: true,
+    allowDeleting: true,
+    allowEditOnDblClick: false,
+  });
   const [visible, setVisible] = useState(false);
   const [searchResult, setSearchResult] = useState(null);
   const [viewinfo, setViewInfo] = useState([]);
@@ -295,57 +305,72 @@ dispatch({ type: 'set', data: { } });
     }
  
   
-    let employeeId = submitData?.id;
-    console.log(employeeId)
-    let newData = {
-      
-      ...submitData,
-      userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      userName: "string",
-      CompanyReference: "00001_A01",
-      employeeId,
-      status: true,
-      employeeId : searchResult?.id,
-
-    };
-
-
- console.log(searchResult)
+   
+    
    
 let forGrid =
   {
+    isDelete : true,
+    grade: submitData?.grade,
+    school: submitData?.school,
+    startDate: submitData?.StartDate,
+    endDate: submitData?.endDate,
+    educationType: {
+      
+      
+      name: getName(submitData?.educationTypeId,educationCore),
+      
+      status: true
+    },
+    title: {
     
-    "grade": submitData?.grade,
-    "school": submitData?.school,
-    "startDate": submitData?.StartDate,
-    "endDate": submitData?.endDate,
-    "educationType": {
-      
-      "code": "string",
-      "name": getName(submitData?.educationTypeId,educationCore),
-      
-      "status": true
+      name : getName(submitData?.titleId,titles)
     },
-    "title": {
-      "id": submitData?.titleId,
-      "name": getName(submitData?.titleId,titles)
-    },
-    "qualification": {
-      "id": submitData?.qualificationId,
-      "name": getName(submitData?.qualificationId,qualification)
+    qualification: {
+     
+      name : getName(submitData?.qualificationId,qualification)
     }
   }
-  setPost(newData)
-  setEmployeeEduInfoChildren((prev)=>[...prev, submitData])
+ 
+
+
+
+let submit = {
+  isDelete: true,
+  description: submitData?.description,
+  educationTypeId: submitData?.educationTypeId,
+  qualificationId : submitData?.qualificationId,
+  titleId: submitData?.titleId,
+  status: true,
+  grade: submitData?.grade,
+  startDate: submitData?.StartDate,
+  endDate: submitData?.endDate,
+  school: submitData?.school
+}
+
+  setEmployeeEduInfoChildren((prev)=>[...prev, submit])
 setViewInfo((prevState)=>[forGrid,...prevState])
 console.log(forGrid);
-   // postEmployeeEducationInfo(newData);
+
+   setVisible(false)
+   dispatch({ type: 'set', data: {} });
+
+
   };
 
 
+
+
+
+
+  // RENDER DROPDOWN NAMES
   const getName = (id, states) => {
     return states.find((x) => x.id == id)?.name || "Not found";
    };
+
+
+
+
 
    const handlePost=()=>{
     let postHobby={
@@ -354,8 +379,11 @@ console.log(forGrid);
       "companyReference": "00001_a01",
       "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
     }
-    setPostUrl(PostEmployeeEducationInfos())
-     setPostData(postHobby)
+    if( EmployeeEduInfoChildren.length > 0){
+      setPostUrl(PostEmployeeEducationInfos())
+      setPostData(postHobby)
+    }
+  
    // console.log(post)
    }
 
@@ -377,7 +405,7 @@ console.log(forGrid);
     }
 
   })
-
+console.log(EmployeeEduInfoChildren);
   function postEmployeeEducationInfo(data) {
     console.log(data);
     PostRequest(PostEmployeeEducationInfos(), { data: data })
@@ -475,8 +503,17 @@ console.log(forGrid);
   };
   
   const onCommandClick = (args) => {
-  // console.log(args);
-   onCompleteAction(args);
+    console.log(args.rowData);
+    if(args.rowData.isDelete === true){
+      args.cancel = false;
+      setEmployeeEduInfoChildren((current)=>current.filter((deleteItem) => deleteItem.isDelete !== true));
+      setViewInfo((current)=>current.filter((deleteItem) => deleteItem.isDelete !== true))
+      return;
+    }
+    else{
+      onCompleteAction(args);
+ 
+    }
   
   };
   
@@ -487,7 +524,7 @@ console.log(forGrid);
   
     if (args.commandColumn.type === 'Delete') {
   
-      args.cancel = true;
+      args.cancel = false;
   
       setIsActive(true)
   
@@ -505,9 +542,8 @@ console.log(forGrid);
   
     let deleteData = {
   
-      earningId: "",
   
-      transactionsId: delEmployeeID,
+      transactionId: delEmployeeID,
   
       userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
   
@@ -530,8 +566,8 @@ console.log(forGrid);
   
     if (response.status === 200 || response.status === 204) {
   
-      toast.success('Employee Language Deleted Successfully!',);
-  
+      toast.success(`${GetLabelByName("HCM-9VWW2UPSTXS-PSLL", lan)}?`);
+      
       setIsActive(false);
       setViewInfo("")
       getEmployeebyId(handleId)
@@ -555,7 +591,7 @@ console.log(forGrid);
 showCancel
  confirmBtnText="Yes, delete it!"
 confirmBtnBsStyle="danger"
-title={`${GetLabelByName("HCM-IIQS2WWFTPP_KCMI", lan)} ${GetLabelByName("HCM-ZHMVWWTZ63B_KCMI", lan)} ${GetLabelByName("HCM-SF00RQBW0XB_PSLL", lan)} ${delEmployeeName}?`}
+title={`${GetLabelByName("HCM-Z3GW6TG207", lan)}?`}
  onConfirm={onConfirm}
  onCancel={onCancel}
  focusCancelBtn

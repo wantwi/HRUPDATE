@@ -87,7 +87,7 @@ import useAuth from "src/hooks/useAuth";
 const editOptions = {
   allowEditing: false,
   allowAdding: false,
-  allowDeleting: false,
+  allowDeleting: true,
   allowEditOnDblClick: false,
 };
 
@@ -223,16 +223,7 @@ const {auth}= useAuth()
   // get employee by id for grid view
   const getEmployyeAccidentById =  (id) => {
     setUrl(GetEmployeeAccidentByEmployeeId(id))
-    // try {
-    //   const request = await CustomAxios.get(
-    //     `${BaseURL}EmployeeAccident/${handleId}`
-    //   );
-    //   const respond = request.data;
-      
-    //   console.log("responds", respond);
-    // } catch (error) {
-    //   console.log(error);
-    // }
+  
   };
 
   //handles form submit
@@ -299,7 +290,7 @@ const {auth}= useAuth()
     setVisible(false);
     let postin = 
     {
-      
+      isDelete: true,
       "locationOfAccident": "string",
     
     
@@ -313,7 +304,22 @@ const {auth}= useAuth()
       },
      
     }
-    setAccidentTransactionChildren((prev)=>[...prev,submitData])
+let submit = {
+  DateInformed : submitData?.DateInformed,
+
+DateofAccident : submitData?.DateofAccident,
+
+LocationofAccident : submitData?.LocationofAccident,
+
+accidentTypeId : submitData?.accidentTypeId,
+
+note : submitData?.note,
+isDelete :true
+
+}
+
+console.log({sub :submitData });
+    setAccidentTransactionChildren((prev)=>[...prev,submit])
     // setTransactionData(newData)
     setEmployeeAccident((prevState)=>[postin,...prevState])
 
@@ -331,8 +337,12 @@ const handlePost =()=>{
     "createEmployeeAccidentChildren": AccidentTransactionChildren,
     "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
   }
- setPostData(postBody)
+  console.log(AccidentTransactionChildren);
+  if(AccidentTransactionChildren?.length > 0   ){
+    setPostData(postBody)
     setPostUrl(PostAccidentTransaction())
+  }
+ 
 }
 
 
@@ -436,8 +446,15 @@ return data.find(x=>x.id === id)?.name || "Not Found"
   };
   
   const onCommandClick = (args) => {
-   //console.log(args);
-   onCompleteAction(args);
+if(args.rowData.isDelete === true){
+      args.cancel = false;
+      setAccidentTransactionChildren((current)=>current.filter((deleteItem) => deleteItem.isDelete !== true))
+      return;
+    }
+    else{
+      onCompleteAction(args);
+ 
+    }
   
   };
   
@@ -490,7 +507,7 @@ return data.find(x=>x.id === id)?.name || "Not Found"
   
     if (response.status === 200 || response.status === 204) {
   
-      toast.success('Employee Language Deleted Successfully!',);
+      toast.success(`${GetLabelByName("HCM-9VWW2UPSTXS-PSLL", lan)}`);
   
       setIsActive(false);
     setEmployeeAccident("")
