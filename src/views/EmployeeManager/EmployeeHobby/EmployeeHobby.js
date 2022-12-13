@@ -533,7 +533,7 @@ confirmBtnBsStyle="danger"
  focusCancelBtn
 show={isActive}
 ></SweetAlert>
-      <CRow hidden={!show}>
+      <CRow >
         <CCol xs="12">
           <h5>
             <CSLab code="HCM-DXF3IK0PP9V-HRPR" />

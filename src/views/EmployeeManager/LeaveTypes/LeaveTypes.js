@@ -344,7 +344,7 @@ const  {data:multicallData} =  useMultiFetch([  AvailableDayBasis(COMPREF),
 
   return (
     <>
-      <CRow hidden={!show}>
+      <CRow >
         <CCol xs="12">
           <h5>
             <CSLab code="HCM-E3ZPL9HV68G-LOLN" />

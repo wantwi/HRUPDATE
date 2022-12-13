@@ -204,7 +204,7 @@ const initialState= [
         if (response && Object.keys(response).length > 0) {
             setSearchResult(results);
             dispatch({ type: 'set', data: { ...response } });
-            setSubmitData({...response});
+           // setSubmitData({...response});
            
            setEmployeeAccident(response);
             setMode('Update');
@@ -298,26 +298,32 @@ const initialState= [
       employeeId: handleId,
       isDelete: true,
     };
+
 console.log(newData);
     
     setEmployeeFamilyChildren((prev)=>[...prev,newData])
 
-    setEmployeeFamilyChildren((current)=>current.filter((item) => console.log(item) ))
+   // setEmployeeFamilyChildren((current)=>current.filter((item) => console.log(item) ))
     
     setEmployeeAccident((prevState)=>[newData,...prevState])
-  
+  setSubmitData([])
+  dispatch({ type: "set", data: { } });
+  setPhone()
   };
 
 const handlePosting=()=>{
   let postBody={
     employeeId: handleId,
     "createEmployeeFamilyChildren": EmployeeFamilyChildren,
-    "companyReference": "string",
+    "companyReference": "00001_a01",
     "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
   }
+
+  console.log(postBody);
   if(EmployeeFamilyChildren.length > 0){
     setPostData(postBody)
     setPostUrl(PostFamily())
+    setEmployeeFamilyChildren([])
   }
    
    // console.log(post);
@@ -328,7 +334,7 @@ const handlePosting=()=>{
     // console.log({location:response });
     const {data} = response
     if ("" === data) {
-      toast.success(`${GetLabelByName("HCM-9VWW2UPSTXS-PSLL", lan)}`);
+      toast.success(`${GetLabelByName("HCM-HAGGXNJQW2B_HRPR", lan)}`);
     //  showToasts();
       searchReset(2);
     } else {
@@ -352,7 +358,7 @@ const handlePosting=()=>{
     setMode("Add");
     setShow(false);
     dispatch({ type: "set", data: { ...results } });
-    setSubmitData({ ...results });
+    // setSubmitData({ ...results });
     setEmpDisplayName(
       (prevState) => `${results.firstName} ${results.lastName}`
     );

@@ -519,7 +519,7 @@ show={isActive}
 >
  
  </SweetAlert>
-      <CRow hidden={!show}>
+      <CRow >
         <CCol xs="12">
           <h5>
             <CSLab code="HCM-A0B8SHDK6DI_LASN" />

@@ -566,7 +566,7 @@ console.log(EmployeeEduInfoChildren);
   
     if (response.status === 200 || response.status === 204) {
   
-      toast.success(`${GetLabelByName("HCM-9VWW2UPSTXS-PSLL", lan)}?`);
+      toast.success(`${GetLabelByName("HCM-9VWW2UPSTXS-PSLL", lan)}`);
       
       setIsActive(false);
       setViewInfo("")
@@ -597,7 +597,7 @@ title={`${GetLabelByName("HCM-Z3GW6TG207", lan)}?`}
  focusCancelBtn
 show={isActive}
 ></SweetAlert>
-      <CRow hidden={!show}>
+      <CRow>
         <CCol xs="12">
           <h5>
             <CSLab code="HCM-ZHMVWWTZ63B_KCMI" />

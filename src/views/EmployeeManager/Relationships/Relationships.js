@@ -1926,7 +1926,7 @@ title={`${GetLabelByName("HCM-Z3GW6TG207", lan)} ?`}
  focusCancelBtn
 show={isActive}
 ></SweetAlert>
-      <CRow hidden={!show}>
+      <CRow >
         <CCol xs="12">
           <h5>
             <CSLab code="HCM-ETP5RDAYHNK_LANG" />
