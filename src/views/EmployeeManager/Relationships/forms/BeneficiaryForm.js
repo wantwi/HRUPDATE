@@ -117,7 +117,7 @@ function BeneficiaryForm({
               placeholder={GetLabelByName("HCM-B6FYFT3XE6S_HRPR",lan)}
               value={currentFormData?.lastName || ""}
               onChange={(e)=>{handleFormChange(e); checkValue(lastNameref)}}
-            />
+            /> 
           </CCol>
           <CCol md="4" xs="6">
               <CLabel>

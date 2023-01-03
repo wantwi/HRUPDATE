@@ -157,7 +157,7 @@ const checkForValue = (ref) => {
         if (response && Object.keys(response).length > 0) {
             // setSearchResult(results);
             dispatch({ type: 'set', data: { ...response } });
-            setSubmitData(response);
+            // setSubmitData(response);
             //setDupData({...response})
             setViewInfo(response)
             setMode('Update');
@@ -166,7 +166,7 @@ const checkForValue = (ref) => {
             setMode('Add');
             setShow(false);
             dispatch({ type: 'set', data: { ...response } });
-            setSubmitData({ ...response });
+            // setSubmitData({ ...response });
         }
     }
 });
@@ -183,7 +183,7 @@ const checkForValue = (ref) => {
     setMode("Add");
     setShow(false);
     dispatch({ type: "set", data: { ...results } });
-    setSubmitData({ ...results });
+    // setSubmitData({ ...results });
     setSearchResult(results);
     if (results?.id) {
 
@@ -211,11 +211,11 @@ getEmployeeMedicalyById(results.id)
   const  {data:multicallData} =  useMultiFetch([GetProviderTypes(), 
     GetAilmentType()], (results) => {
       setProviderTypes([
-        { id: "-1", name: `Select Provider` },
+        { id: "", name: `Select Provider` },
         ...results[0].data,
       ]);
       setAilmenentType([
-        { id: "-1", name: `Select Ailment` },
+        { id: "", name: `Select Ailment` },
         ...results[1].data,
       ]);
   
@@ -224,6 +224,7 @@ getEmployeeMedicalyById(results.id)
 
   const handleOnSubmit = () => {
     refs.forEach((ref) => {
+      console.log(ref);
       if (ref.current.value.length > 2) {
         ref.current.style.border = "2px solid green";
       }else if (ref.current.value.length < 2) {
@@ -241,7 +242,7 @@ getEmployeeMedicalyById(results.id)
       }
     });
     
-    if (!submitData?.ailmentTypeId || submitData?.ailmentTypeId === -1 && !submitData?.providorTypeId || submitData?.providorTypeId === ""  &&  !submitData?.dateOfService || submitData?.dateOfService === "") {
+    if (!submitData?.ailmentTypeId || submitData?.ailmentTypeId === "" && !submitData?.providorTypeId || submitData?.providorTypeId === ""  &&  !submitData?.dateOfService || submitData?.dateOfService === "") {
       toast.error(GetLabelByName("HCM-WQ9J7737WDC_LASN", lan), toastWarning);
       return;
     }

@@ -545,7 +545,8 @@ if(activeKey===5){
         }
         if(EmployeeBeneficiaryChildrenList.length> 0){
           setPostData(PostBody)
-   setPostUrl(PostBeneficiary())
+          setPostUrl(PostBeneficiary())
+          PostBody("")
         }
         return;  
       }
@@ -562,6 +563,7 @@ if(activeKey===5){
        if(EmployeeDependantChildrenList.length> 0){
         setDependentPostUrl(PostDependantDetails())
         setDependantPostData(postBody)
+        postBody("")
        }
        return;
       }
@@ -576,6 +578,7 @@ if(activeKey===5){
         if(EmployeeEmerGencyContactChildrenList.length> 0){
           setEmegencyContactPostUrl(PostEmployeeEmergencyContact())
           setEmegencyContactPostData(Emergency)
+          Emergency("")
         }
         return;
       }
@@ -589,6 +592,7 @@ if(activeKey===5){
           if(EmployeerGurrantoContactChildrenList.length > 0){
             setGuarrantorPostUrl(PostEmployeeGuarantor())
             setPostGuarrantorData(postbody)
+            postbody("")
           }
           return;
       }
@@ -602,6 +606,7 @@ if(activeKey===5){
         if(EmployeeNextOfKinChildrenList.length> 0){
           setNOKPostUrl(PostEmployeeNextOfKin())
           setPostNOK(postbody)
+          postbody("")
         }
         return;
       }
@@ -909,6 +914,7 @@ useEffect(() => {
       }
       
  setGetBenefiary((prevState)=>[...prevState, benefiaciaryGridData])
+ benefiaciaryGridData("")
  setEmployeeBeneficiaryChildrenList((prev) => [...prev,data ])
 
      

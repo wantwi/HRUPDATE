@@ -6733,7 +6733,7 @@
 
   "HCM-NUNYCE5Y09A-HRPR": {
     "id": "fd511029-1dc1-4b00-b3a4-81a3f3648784",
-    "en": "Record Deleted Successfully!",
+    "en": "Record Deleted!",
     "fr": " Enregistrement supprimé avec succès!",
     "spanish": "",
     "portuguese": "",
@@ -13216,7 +13216,7 @@
     "type": "string"
   },"HCM-HAGGXNJQW2B_HRPR": {
     "id": "c7a4207d-8175-4add-aa3c-ffabadf926df",
-    "en": "Record Added Successfully",
+    "en": "Record Added",
     "fr": "Article ajouté avec succès",
     "spanish": "",
     "portuguese": "",
@@ -13620,9 +13620,18 @@
  "german": "",
  "status": 1,
  "type": "string"
+},
+"HCM-KFXT3UX564C-LASN": {
+ "id": "0ead81b8-e806-4bb5-8549-6de8fcb7bc50",
+ "en": "Are you sure you want to delete this record?",
+ "fr": "Not Set",
+ "spanish": "",
+ "portuguese": "",
+ "german": "",
+ "status": 1,
+ "type": "string"
 }
 }
-
 
 
 

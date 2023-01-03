@@ -152,14 +152,12 @@ const checkForValue = (ref) => {
     if (response) {
       if (response && Object.keys(response).length > 0) {
         dispatch({ type: "set", data: { ...response } });
-        setSubmitData({ ...response });
+        // setSubmitData({ ...response });
         setViewInfo( response );
         // setDuplicateData({ ...response })
         console.log({ response });
 
-        //let rates = response?.rates;
-
-        // setExchangeRate(rates);
+       
         setShow(false);
        
       } else {
@@ -187,7 +185,7 @@ const {auth}= useAuth()
     setMode("Add");
     setShow(false);
   //  dispatch({ type: "set", data: { ...results } });
-    setSubmitData({ ...results });
+    // setSubmitData({ ...results });
 
     if (results?.id) {
       HandleGet(results?.id)
@@ -204,6 +202,7 @@ const {auth}= useAuth()
     setSearchInput("");
     dispatch({ type: "set", data: { } });
     setSubmitData("")
+    setEmployeeHomeTownChildrenList("")
 
     refs.forEach((ref) => {
   
@@ -250,10 +249,10 @@ const {auth}= useAuth()
       return;
     }
 
-    if (!submitData?.name || submitData?.name === "") {
-      toast.error("Please enter hometown!", toastWarning);
-      return;
-    }
+    // if (!submitData?.name || submitData?.name === "") {
+    //   toast.error("Please enter hometown!", toastWarning);
+    //   return;
+    // }
  
     
  
@@ -306,10 +305,13 @@ const handleposting=()=>{
 
 
   }
+  console.log(EmployeeHomeTownChildrenList);
   if(EmployeeHomeTownChildrenList.length > 0){
     setPostUrl(PostEmployeeHometown())
     setPostData(postBody)
+    postBody("")
   }
+
  
 }
 
@@ -484,7 +486,7 @@ const { setData: setDeleteData, setUrl: setDeletUrl } = useDelete('', (response)
 
   if (response.status === 200 || response.status === 204) {
 
-    toast.success(`${GetLabelByName("HCM-9VWW2UPSTXS-PSLL", lan)}`);
+    toast.success(`${GetLabelByName("HCM-NUNYCE5Y09A-HRPR", lan)}`);
 
     setIsActive(false);
     setViewInfo("")
@@ -510,7 +512,7 @@ const { setData: setDeleteData, setUrl: setDeletUrl } = useDelete('', (response)
 showCancel
  confirmBtnText="Yes, delete it!"
 confirmBtnBsStyle="danger"
-title={`${GetLabelByName("HCM-Z3GW6TG207", lan)}?`}
+title={`${GetLabelByName("HCM-KFXT3UX564C-LASN", lan)}?`}
 
  onConfirm={onConfirm}
  onCancel={onCancel}

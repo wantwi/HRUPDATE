@@ -177,6 +177,7 @@ const {auth}= useAuth()
     setShow(true);
     setSearchInput("");
     dispatch({ type: 'set', data: {  } });
+    setAccidentTransactionChildren("")
     refs.forEach((ref) => {
   
       ref.current.style.border = "1px solid #d8dbe0";
@@ -206,7 +207,7 @@ const {auth}= useAuth()
         if (response && Object.keys(response).length > 0) {
             setSearchResult(results);
             dispatch({ type: 'set', data: { ...response } });
-            setSubmitData({...response});
+            // setSubmitData({...response});
            
            setEmployeeAccident(response);
             setMode('Update');
@@ -215,7 +216,7 @@ const {auth}= useAuth()
             setMode('Add');
             setShow(false);
             dispatch({ type: 'set', data: { ...response } });
-            setSubmitData({ ...response });
+            // setSubmitData({ ...response });
         }
     }
 });
@@ -291,7 +292,7 @@ const {auth}= useAuth()
     let postin = 
     {
       isDelete: true,
-      "locationOfAccident": "string",
+      "locationOfAccident": submitData?.LocationofAccident,
     
     
       "dateOfAccident":  submitData?.DateofAccident,
@@ -341,6 +342,7 @@ const handlePost =()=>{
   if(AccidentTransactionChildren?.length > 0   ){
     setPostData(postBody)
     setPostUrl(PostAccidentTransaction())
+    postBody("")
   }
  
 }
@@ -408,7 +410,7 @@ return data.find(x=>x.id === id)?.name || "Not Found"
     setMode("Add");
     setShow(false);
     dispatch({ type: "set", data: { ...results } });
-    setSubmitData({ ...results });
+    // setSubmitData({ ...results });
 
     if (results?.id) {
       setSearchResult(results);
@@ -482,8 +484,6 @@ if(args.rowData.isDelete === true){
   const handleDeleteItem = async () => {
   
     let deleteData = {
-  
-      earningId: "",
   
       transactionsId: delEmployeeID,
   
@@ -800,7 +800,7 @@ show={isActive}
               handleOnSubmit();
             }}
           >
-            <CSLab code="HCM-HGUHIR0OK6T" />
+            <CSLab code="HCM-TAAFD4M071D-HRPR" />
           </CButton>
         </CModalFooter>
       </CModal>

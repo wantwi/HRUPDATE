@@ -273,7 +273,7 @@ const [EmployeeLanguageChildrenList, setEmployeeLanguageChildrenList]= useState(
     setMode("Add");
     setShow(false);
     dispatch({ type: "set", data: { ...results } });
-    setSubmitData({ ...results });
+  
      if (results?.id) {
        setSearchResult(results);
       //  getEmployeelanguage(results.id)
@@ -285,6 +285,7 @@ const [EmployeeLanguageChildrenList, setEmployeeLanguageChildrenList]= useState(
     setShow(true);
     setSearchInput("");
     setVisible(false)
+    setEmployeeLanguageChildrenList("")
     refs.forEach((ref) => {
   
       ref.current.style.border = "1px solid #d8dbe0";
@@ -455,6 +456,7 @@ let newGridData ={
 if(EmployeeLanguageChildrenList.length > 0){
   setPostData(postBody)
   setPostUrl(PostEmployeeLanguage())
+  postBody("")
 }
     return;
     }
@@ -659,7 +661,7 @@ alert("Clicked")
   
     if (response.status === 200 || response.status === 204) {
   
-      toast.success(`${GetLabelByName("HCM-9VWW2UPSTXS-PSLL", lan)}`);
+      toast.success(`${GetLabelByName("HCM-NUNYCE5Y09A-HRPR", lan)}`);
   
       setIsActive(false);
       setViewInfo("")
@@ -724,7 +726,7 @@ alert("Clicked")
 showCancel
  confirmBtnText="Yes, delete it!"
 confirmBtnBsStyle="danger"
-title={`${GetLabelByName("HCM-Z3GW6TG207", lan)} ?`}
+title={`${GetLabelByName("HCM-KFXT3UX564C-LASN", lan)} ?`}
  onConfirm={onConfirm}
  onCancel={onCancel}
  focusCancelBtn

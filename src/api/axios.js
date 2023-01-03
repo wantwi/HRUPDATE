@@ -24,6 +24,8 @@ const CustomAxios = axios.create({
     headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        "Application-ID": process.env.REACT_APP_ID,
+         "Company-Reference": JSON.parse(sessionStorage.getItem("companyReference"))?.reference || ""
     },
     withCredentials: true
 }); 
