@@ -497,41 +497,7 @@ alert("Clicked")
   })
 
 
-  //Post Employee Skill
-  // function postEmployeeLanguage(data) {
-  //   console.log("post data", data);
-  //   PostRequest(PostEmployeeLanguage(), { data: data })
-  //     .then((response) => {
-  //       response.text().then((data) => {
-  //         if ("" == data) {
-  //           toast.success("Employee Language Added Successfully!");
-  //           console.log("success");
-  //           getEmployeelanguage();
-  //           setVisible(false);
-  //           setSubmitData("");
-  //         } else {
-  //           try {
-  //             data = JSON.parse(data);
-  //             toast.error(
-  //               data?.reason ? data?.reason : "Failed to Add Employee Language",
-  //               "error",
-  //               400
-  //             );
-  //             setVisible(true);
-  //           } catch (error) {
-  //             console.log(error);
-  //             toast.error(error.message);
-  //           }
-  //         }
-  //       });
-  //     })
-  //     .catch((err) => {
-  //       console.log({ err });
-  //     })
-  //     .finally(() => {
-  //       console.log("Done");
-  //     });
-  // }
+  
   const handleOnChange = (evnt) => {
     //console.log(evnt)
     setSubmitData((data) => {
