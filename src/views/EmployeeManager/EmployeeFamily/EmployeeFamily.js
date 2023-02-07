@@ -136,6 +136,7 @@ const [phone, setPhone] = useState(null);
 const [canSave, setCanSave] = useState(false);
 const [isSubmitBtnClick, setIsSubmitBtnClick] = useState(false);
 const [empDisplayName, setEmpDisplayName] = useState("");
+const [reference, setReference]= useState([])
 
   
   const searchReset = () => {
@@ -191,7 +192,6 @@ const initialState= [
   //   MultipleGetRequests();
   // }, []);
   const checkForValue = (ref) => {
-    console.log({checkForValue: ref.current.style.border});
     if (ref.current?.value) {
       ref.current.style.border = "1px solid green";
     }
@@ -204,11 +204,16 @@ const initialState= [
         if (response && Object.keys(response).length > 0) {
             setSearchResult(results);
             dispatch({ type: 'set', data: { ...response } });
-           // setSubmitData({...response});
-           
+
+           let local = JSON.parse(localStorage.getItem("name")) 
+
+           let rest = {...response,}
+           console.log(rest);
+
            setEmployeeAccident(response);
             setMode('Update');
             setShow(false);
+
         } else {
             setMode('Add');
             setShow(false);
@@ -254,10 +259,8 @@ const initialState= [
         ref.current.style.border = "2px solid green";
       }else if (ref.current.value.length < 2) {
         ref.current.style.border = "2px solid red";
-        console.log("second");
       } else if (ref.current.value === "") {
         ref.current.style.border = "2px solid red";
-        console.log("third");
 
       } else {
         ref.current.style.border = "2px solid red";
@@ -299,11 +302,9 @@ const initialState= [
       isDelete: true,
     };
 
-console.log(newData);
     
     setEmployeeFamilyChildren((prev)=>[...prev,newData])
 
-   // setEmployeeFamilyChildren((current)=>current.filter((item) => console.log(item) ))
     
     setEmployeeAccident((prevState)=>[newData,...prevState])
   setSubmitData([])
@@ -319,19 +320,16 @@ const handlePosting=()=>{
     "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
   }
 
-  console.log(postBody);
   if(EmployeeFamilyChildren.length > 0){
     setPostData(postBody)
     setPostUrl(PostFamily())
     setEmployeeFamilyChildren([])
   }
    
-   // console.log(post);
 }
 
 
   const  {setData:setPostData, setUrl:setPostUrl} = usePost('', (response) => {
-    // console.log({location:response });
     const {data} = response
     if ("" === data) {
       toast.success(`${GetLabelByName("HCM-HAGGXNJQW2B_HRPR", lan)}`);
@@ -353,7 +351,6 @@ const handlePosting=()=>{
 
 
   const handleSearchResultSelect = (results) => {
-    console.log("show results", results);
 
     setMode("Add");
     setShow(false);
@@ -382,7 +379,6 @@ const handlePosting=()=>{
       type: "set",
       data: { ...data, [evnt?.target?.name]: evnt?.target?.value },
     });
-    console.log(evnt?.target?.name);
     if(evnt?.target?.name === "name" && evnt?.target?.value === ""){
       toast.error("Enter Name")
     }
@@ -391,9 +387,8 @@ const handlePosting=()=>{
 
 
 
-  console.log("from Db: ", getEmployeeAccident);
+ 
 
-  console.log({ submitdatas: data });
 
   const onConfirm = () => {
 
@@ -409,13 +404,13 @@ const handlePosting=()=>{
 
   const onCommandClick = (args) => {
 
+    console.log(args.rowData); 
 
-
-    console.log(args);
-    if(args.rowData.isDelete === true){
+    if(args.rowData.isDelete === true ){
+     console.log(args.rowData); 
+      setEmployeeAccident((current)=>current.filter((deleteItem) => deleteItem.name !== args.rowData.name));
+      setEmployeeFamilyChildren((current)=>current.filter((deleteItem) =>  deleteItem.name !== args.rowData.name))
       args.cancel = false;
-      setEmployeeAccident((current)=>current.filter((deleteItem) => deleteItem.isDelete !== true));
-      setEmployeeFamilyChildren((current)=>current.filter((deleteItem) => deleteItem.isDelete !== true))
       return;
     }
     else{
@@ -429,12 +424,11 @@ const handlePosting=()=>{
   };
 
 const rowSelected=(args)=>{
-console.log(args);
 }
 
 
   const onCompleteAction = (args) => {
-console.log(args);
+
     if (args.commandColumn.type === 'Delete') {
 
       args.cancel = true;
@@ -451,11 +445,14 @@ console.log(args);
 
   };
 
+ const  GetPreviousData=(e)=>{
+  console.log(e);
 
+
+  }
 
 const handleDeleteItem = async () => {
 
-  console.log(delEmployeeID);
     let deleteData = {
 
       transactionsId: delEmployeeID || "",
@@ -475,16 +472,17 @@ const handleDeleteItem = async () => {
   };
   const { setData: setDeleteData, setUrl: setDeletUrl } = useDelete('', (response) => {
 
-    // console.log({location:response });
 
     const { data } = response
 
     if (response.status === 200 || response.status === 204) {
 
-      toast.success(`${GetLabelByName("HCM-9VWW2UPSTXS-PSLL", lan)}`);
+      toast.success(`${GetLabelByName("HCM-NUNYCE5Y09A-HRPR", lan)}`);
       setIsActive(false);
+    getEmployeeAccident?.map((x)=> x?.isDelete === true?  localStorage.setItem("name", JSON.stringify(x)) : null);
+      
+      GetPreviousData(reference);
       setEmployeeAccident("")
-      // GetPreviousData();
       getEmployFamily(handleId)
 
 
@@ -503,8 +501,12 @@ const handleDeleteItem = async () => {
     }
 
   },[data?.phone])
-console.log(getEmployeeAccident);
-  console.log(EmployeeFamilyChildren);  
+
+  useEffect(()=>{
+      console.log(reference)
+  },[reference])
+
+
   return (
     <>
   
