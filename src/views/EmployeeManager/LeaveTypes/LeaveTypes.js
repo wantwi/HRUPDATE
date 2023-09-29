@@ -97,7 +97,7 @@ const LeaveTypes = () => {
   const [availableDayBasis, setAvailableDayBasis] = useState([]);
   const [allowedDayBasis, setAllowedDayBasis] = useState([]);
   const [yearBasis, setYearBasis] = useState([]);
-  const [leaveType, setLeaveType]=useState([])
+  const [leaveType, setLeaveType] = useState([])
 
   const handleAddNewRecord = () => {
     setMode("Add");
@@ -119,64 +119,65 @@ const LeaveTypes = () => {
     if (results?.id) {
       setSearchResult(results);
       setUrl(GetLeaveTransactionById(results?.id))
-      
+
     }
   };
-  const COMPREF = "00001_a01"
-
+  const COMPREF = JSON.parse(
+    sessionStorage.getItem("companyReference")
+  )?.reference;
 
   const TransLabelByCode = (name) => GetLabelByName(name, lan);
   const searchReset = () => {
     setShow(true);
     setSearchInput("");
 
- 
+
   };
-  
 
 
 
-const  {data:multicallData} =  useMultiFetch([  AvailableDayBasis(COMPREF), 
-   AllowedDayBasis(COMPREF), 
+
+  const { data: multicallData } = useMultiFetch([AvailableDayBasis(COMPREF),
+  AllowedDayBasis(COMPREF),
   YearEndBasis(COMPREF),
   LeaveTypesDrop(COMPREF)
   ], (results) => {
     console.log(results);
-      setAvailableDayBasis([
-        { id: "-1", name: `Select Available Day Basis` },
-        ...results[0].data,
-      ]);
-      setAllowedDayBasis([
-        { id: "-1", name: `Select Allowed Day Basis ` },
-        ...results[1].data,
-      ]);
-      setYearBasis([
-        { id: "-1", name: `Select Year Basis` },
-        ...results[2].data,
-      ]);
-      setLeaveType([
-        { id: "-1", name: `Select Leave Types` },
-        ...results[3].data,
-      ]);
+    setAvailableDayBasis([
+      { id: "-1", name: `Select Available Day Basis` },
+      ...results[0].data,
+    ]);
+    setAllowedDayBasis([
+      { id: "-1", name: `Select Allowed Day Basis ` },
+      ...results[1].data,
+    ]);
+    setYearBasis([
+      { id: "-1", name: `Select Year Basis` },
+      ...results[2].data,
+    ]);
+    setLeaveType([
+      { id: "-1", name: `Select Leave Types` },
+      ...results[3].data,
+    ]);
   })
 
-  const {setOptData, setUrl} =  useFetch("", (response,results) => {
+  const { setOptData, setUrl } = useFetch("", (response, results) => {
     if (response) {
-        if (response && Object.keys(response).length > 0) {
-            setSearchResult(results);
-            dispatch({ type: 'set', data: { ...response } });
-            setSubmitData({...response});
-          //  setDupData({...response})
-            setMode('Update');
-            setShow(false);
-        } else {
-            setMode('Add');
-            setShow(false);
-            dispatch({ type: 'set', data: { ...response } });
-            setSubmitData({ ...response });
-        }
+      if (response && Object.keys(response).length > 0) {
+        setSearchResult(results);
+        dispatch({ type: 'set', data: { ...response } });
+        setSubmitData({ ...response });
+        //  setDupData({...response})
+        setMode('Update');
+        setShow(false);
+      } else {
+        setMode('Add');
+        setShow(false);
+        dispatch({ type: 'set', data: { ...response } });
+        setSubmitData({ ...response });
+      }
     }
-});
+  });
   //Handles Submit
   const handleOnSubmit = () => {
     console.log("submit data ", submitData);
@@ -340,7 +341,7 @@ const  {data:multicallData} =  useMultiFetch([  AvailableDayBasis(COMPREF),
   //     data: renderData({ ...data, [evnt?.target?.name]: evnt?.target?.value }),
   //   });
   // };
-   console.log(availableDayBasis);
+
 
   return (
     <>
@@ -368,7 +369,7 @@ const  {data:multicallData} =  useMultiFetch([  AvailableDayBasis(COMPREF),
               isPaginated={false}
               pageNumber={pageNumber}
               setPageNumber={setPageNumber}
-              numberOfItems={numberOfItems} 
+              numberOfItems={numberOfItems}
               setNumberOfItems={setNumberOfItems}
               orderBy={orderBy}
               setOrderBy={setOrderBy}
@@ -377,11 +378,11 @@ const  {data:multicallData} =  useMultiFetch([  AvailableDayBasis(COMPREF),
               mode={mode}
               setMode={setMode}
               handleId={setHandleId}
-              // reset={handleReset}
+            // reset={handleReset}
             />
           </CFormGroup>
         </CCol>
-  
+
         <CCol md="8" xs="5" className="text-right">
           <CFormGroup>
             <CButton
@@ -403,7 +404,7 @@ const  {data:multicallData} =  useMultiFetch([  AvailableDayBasis(COMPREF),
         <CCol md="8" className="text-right"></CCol>
         <CCol xs="12" hidden={show}>
           <CCard>
-          <CCardHeader>
+            <CCardHeader>
               <CFormGroup row>
                 <CCol md="4">
                   <b>Employee:</b>{" "}
@@ -420,7 +421,7 @@ const  {data:multicallData} =  useMultiFetch([  AvailableDayBasis(COMPREF),
                     {empDisplayName}
                   </span>
                 </CCol>
-                
+
               </CFormGroup>
             </CCardHeader>
             <CCardBody style={{ height: CardBodyHeight }}>
@@ -431,7 +432,7 @@ const  {data:multicallData} =  useMultiFetch([  AvailableDayBasis(COMPREF),
                   </CCol>
                   <>
                     <CRow>
-                      
+
                       <CCol md="4">
                         <CLabel>
                           {" "}

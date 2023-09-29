@@ -129,7 +129,7 @@ const init_org = {
   isSecondaryEmployment: false,
   isProbation: false,
   isOvertimeExempt: false,
-  isPayTax:false,
+  isPayTax: false,
   salaryGradeId: DEFAULT_GUID,
   salaryRate: "",
   salaryType: DEFAULT_GUID,
@@ -296,15 +296,15 @@ function EmployeeDetail() {
 
   //form data states
   const [organizationalForm, setOrganizationalForm] = useState(init_org);
-  
+
   const [personalFormDetails, setPersonalFormDetails] = useState(init);
   const [otherInfoFormData, setOtherInfoFormData] = useState(init_salIno);
   const [glFormData, setGlFormData] = useState(null);
   const [paymentsInfo, setPaymentsInfo] = useState([]);
   const salaryRateRef = useRef(null);
   const tabOneRef = useRef(null);
-const tabTwoRef = useRef(null)
- 
+  const tabTwoRef = useRef(null)
+
   const [isSubmitBtnClick, setIsSubmitBtnClick] = useState(false);
   const [orignalRecord, setOrignalRecord] = useState({})
   const [canUpdate, setCanUpdate] = useState(false)
@@ -319,6 +319,8 @@ const tabTwoRef = useRef(null)
   const onCancel = () => {
     setIsActive(false);
   };
+
+  console.log("In Here")
 
   const dataURLtoFile = (dataurl, filename) => {
     var arr = dataurl.split(","),
@@ -342,7 +344,7 @@ const tabTwoRef = useRef(null)
   const { setData, setUrl: setDeletUrl } = useDelete("", (response) => {
     if (response) {
       searchReset();
-     // toast.success("Division Deleted Successfully!");
+      // toast.success("Division Deleted Successfully!");
       // toaster('', 'Enter code', 'success', 3000)
     }
     setIsActive(false);
@@ -376,7 +378,7 @@ const tabTwoRef = useRef(null)
     //   setShowHistory(true);
     // }
   };
-  
+
   const responseFunc = (response) => {
     setMode("Update");
     setShow(false);
@@ -390,48 +392,48 @@ const tabTwoRef = useRef(null)
       const obj = employeeProfile?.value?.data;
       obj.dateOfBirth = obj.dateOfBirth.split("T")[0];
       obj.address = obj?.address || ""
-      obj.digitalAddress= obj?.address || ""
+      obj.digitalAddress = obj?.address || ""
       obj.nationalID = obj?.address || ""
       obj.gender = `${obj?.gender}`
-      obj.maritalStatus = `${obj?.maritalStatus}` 
-     
+      obj.maritalStatus = `${obj?.maritalStatus}`
+
 
       setPersonalFormDetails(obj);
-      setOrignalRecord((prev) =>({...prev,...obj}))
+      setOrignalRecord((prev) => ({ ...prev, ...obj }))
     }
     if (employeeOrganisation?.status === "fulfilled") {
       const obj = employeeOrganisation?.value?.data;
       obj.hireDate = obj.hireDate.split("T")[0];
       obj.id = employeeProfile?.value?.data?.id;
-      obj.probationMonth = `${obj?.probationMonth}` || "" 
+      obj.probationMonth = `${obj?.probationMonth}` || ""
       setOrganizationalForm(obj);
-      setOrignalRecord((prev) =>({...prev,...obj}))
+      setOrignalRecord((prev) => ({ ...prev, ...obj }))
     }
 
     if (employeeGL?.status === "fulfilled") {
       const obj = employeeGL?.value?.data;
-      
+
       setGlFormData(obj);
-      setOrignalRecord((prev) =>({...prev,...obj}))
-      
+      setOrignalRecord((prev) => ({ ...prev, ...obj }))
+
     }
     if (employeeSalryInfo?.status === "fulfilled") {
       const obj = employeeSalryInfo?.value?.data;
-    
+
       setOtherInfoFormData(obj);
-      setOrignalRecord((prev) =>({...prev,...obj}))
-      
+      setOrignalRecord((prev) => ({ ...prev, ...obj }))
+
     }
 
     if (employeeAccount?.status === "fulfilled") {
       const accountData = employeeAccount?.value?.data;
       const formattedPaymentInfo = reFormatePaymentMode(accountData);
-      setOrignalRecord((prev) =>({...prev,paymentMeans:formattedPaymentInfo}))
+      setOrignalRecord((prev) => ({ ...prev, paymentMeans: formattedPaymentInfo }))
       setPaymentsInfo(formattedPaymentInfo);
     }
   };
 
- 
+
 
   const { setUrl: setGetUserImageUrl } = useFetch("", (res) => {
     if (res?.base6) {
@@ -526,7 +528,7 @@ const tabTwoRef = useRef(null)
 
     tabOneRef.current.lastChild.click()
 
-   
+
 
     //form data states
   };
@@ -556,20 +558,20 @@ const tabTwoRef = useRef(null)
   }, [hasAccept]);
 
   const uploadUerProfile = async (userId) => {
-   
+
     if (!image?.file) {
       resetForm();
       if (mode === "Add") {
         //toast.success("Record Created");
-        toast.success(GetLabelByName(`HCM-38AAOQLZAHL_LANG`,lan));
+        toast.success(GetLabelByName(`HCM-38AAOQLZAHL_LANG`, lan));
         setTimeout(() => {
           setIsOpen(true);
         }, 1000);
 
-        
+
       } else {
         //toast.success("Record Updated");
-        toast.success(GetLabelByName(`HCM-1N2S9Z1T3VU_LANG`,lan));
+        toast.success(GetLabelByName(`HCM-1N2S9Z1T3VU_LANG`, lan));
         setShow(true);
       }
 
@@ -590,18 +592,18 @@ const tabTwoRef = useRef(null)
         resetForm();
         if (mode === "Add") {
           //toast.success("Create Successful");
-          toast.success(GetLabelByName(`HCM-38AAOQLZAHL_LANG`,lan));
+          toast.success(GetLabelByName(`HCM-38AAOQLZAHL_LANG`, lan));
           setTimeout(() => {
             setIsOpen(true);
           }, 1000);
         } else {
-         // toast.success("Update Successful");
-         toast.success(GetLabelByName(`HCM-1N2S9Z1T3VU_LANG`,lan));
+          // toast.success("Update Successful");
+          toast.success(GetLabelByName(`HCM-1N2S9Z1T3VU_LANG`, lan));
 
           setShow(true);
         }
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const { setUrl: setPostUrl, setData: setPostData } = usePost("", postReponse);
@@ -630,10 +632,11 @@ const tabTwoRef = useRef(null)
     if (!canSave) {
       // toast.error(`${GetLabelByName(requireObjLable[missing[0]],lan)} is required`);
       //toast.error(`Please provide data for all required fields.`);
-        toast.error(GetLabelByName(`HCM-WQ9J7737WDC_LASN`,lan));
+      toast.error(GetLabelByName(`HCM-WQ9J7737WDC_LASN`, lan));
       //
 
-      const tabOne = {firstName: personalFormDetails?.firstName,
+      const tabOne = {
+        firstName: personalFormDetails?.firstName,
         lastName: personalFormDetails?.lastName,
         gender: personalFormDetails?.gender,
         dateOfBirth: personalFormDetails?.dateOfBirth,
@@ -641,23 +644,24 @@ const tabTwoRef = useRef(null)
         emailAddress: personalFormDetails?.emailAddress,
         phoneNumber: personalFormDetails?.phoneNumber || "",
         country: personalFormDetails?.country,
-        nationality: personalFormDetails?.nationality}
+        nationality: personalFormDetails?.nationality
+      }
 
-        // if(Object.values(tabOne).every((field) => field?.length > 0)){
-        //   tabOneRef.current.lastChild.click()
-        // }else{
-        //      
-        // }
+      // if(Object.values(tabOne).every((field) => field?.length > 0)){
+      //   tabOneRef.current.lastChild.click()
+      // }else{
+      //      
+      // }
 
-         // if(!Object.values(tabOne).every((field) => field?.length > 0)){
-        //   tabOneRef.current.style.border = "2px solid red"
-        // }else{
-     
-        //   tabTwoRef.current.style.border = "2px solid red"
-        //   tabTwoRef.current.lastChild.click()
-        // }
-        
-        
+      // if(!Object.values(tabOne).every((field) => field?.length > 0)){
+      //   tabOneRef.current.style.border = "2px solid red"
+      // }else{
+
+      //   tabTwoRef.current.style.border = "2px solid red"
+      //   tabTwoRef.current.lastChild.click()
+      // }
+
+
 
       // const requiredFieldsRefs = [firstNameRef,lastNameRef,genderRef,maritalStatusRef,dateOfBirthRef,countryRef,nationalityRef, emailAddressRef,phoneNumberRef]
 
@@ -692,15 +696,15 @@ const tabTwoRef = useRef(null)
     }
 
     if (organizationalForm?.isProbation) {
-      if(organizationalForm?.probationMonth == "0" || organizationalForm?.probationMonth ===""){
-        toast.error(GetLabelByName(`HCM-1EPUF7DUNER-LASN`,lan));
+      if (organizationalForm?.probationMonth == "0" || organizationalForm?.probationMonth === "") {
+        toast.error(GetLabelByName(`HCM-1EPUF7DUNER-LASN`, lan));
         //`Please probation month cannot be empty or 0`
         //
-        
+
         return;
       }
       // toast.error(`Email address is not valid`);
-      
+
     }
 
     let formDto = {
@@ -768,7 +772,7 @@ const tabTwoRef = useRef(null)
       setCanSave(true);
     }
 
-    return () => {};
+    return () => { };
   }, [
     mode,
     personalFormDetails,
@@ -780,37 +784,37 @@ const tabTwoRef = useRef(null)
 
   useEffect(() => {
     if (mode === "Update") {
-      const currentData = {...personalFormDetails,...organizationalForm,...glFormData,...otherInfoFormData,paymentMeans:paymentsInfo}
+      const currentData = { ...personalFormDetails, ...organizationalForm, ...glFormData, ...otherInfoFormData, paymentMeans: paymentsInfo }
       delete currentData["currency"]
       delete currentData["salaryType"]
       const currentArr = Object.values(currentData)
       const OrginArr = Object.values(orignalRecord)
-     const isEqual =  _lodash.isEqual(orignalRecord,currentData)
-     setCanUpdate(isEqual)
+      const isEqual = _lodash.isEqual(orignalRecord, currentData)
+      setCanUpdate(isEqual)
     }
-  
+
     return () => {
-      
+
     }
-  }, [ personalFormDetails,
+  }, [personalFormDetails,
     organizationalForm,
     otherInfoFormData,
     paymentsInfo,
     glFormData])
 
-    useEffect(() => {
-      if (mode === "Update") {
-        if(!showPreview){
-          setCanUpdate(false)
-        }
+  useEffect(() => {
+    if (mode === "Update") {
+      if (!showPreview) {
+        setCanUpdate(false)
       }
-    
-      return () => {
-        
-      }
-    }, [showPreview])
-    
-  
+    }
+
+    return () => {
+
+    }
+  }, [showPreview])
+
+
 
   //
 
@@ -819,9 +823,9 @@ const tabTwoRef = useRef(null)
       <SweetAlert
         warning
         showCancel
-        confirmBtnText={GetLabelByName("HCM-8A8GZ0N4334_LOLN",lan)} //</>"Yes, delete it!"
+        confirmBtnText={GetLabelByName("HCM-8A8GZ0N4334_LOLN", lan)} //</>"Yes, delete it!"
         confirmBtnBsStyle="danger"
-        title={GetLabelByName("HCM-Z3GW6TG207",lan, "Are you sure you want to delete")} //HCM-Z3GW6TG207
+        title={GetLabelByName("HCM-Z3GW6TG207", lan, "Are you sure you want to delete")} //HCM-Z3GW6TG207
         onConfirm={onConfirm}
         onCancel={onCancel}
         focusCancelBtn
@@ -878,7 +882,7 @@ const tabTwoRef = useRef(null)
             >
               {" "}
               <AiOutlinePlus />{" "}
-              {show ? <CSLab lable ="Add" code={"HCM-TAAFD4M071D-HRPR"} /> : null}{" "}
+              {show ? <CSLab lable="Add" code={"HCM-TAAFD4M071D-HRPR"} /> : null}{" "}
             </CButton>
           </CFormGroup>
         </CCol>
@@ -894,10 +898,10 @@ const tabTwoRef = useRef(null)
                     code={
                       !show
                         ? mode === "Add"
-                          ? GetLabelByName("HCM-ORVVKCDAB5_LASN", lan,"Add Employee Details") 
+                          ? GetLabelByName("HCM-ORVVKCDAB5_LASN", lan, "Add Employee Details")
                           : mode === "Update"
-                          ? GetLabelByName("HCM-M7JNZHXNTT-KCMI", lan,"Update Employee Details")
-                          : GetLabelByName("HCM-M7JNZHXNTT-KCMI", lan)
+                            ? GetLabelByName("HCM-M7JNZHXNTT-KCMI", lan, "Update Employee Details")
+                            : GetLabelByName("HCM-M7JNZHXNTT-KCMI", lan)
                         : "null"
                     }
                   />
@@ -911,19 +915,19 @@ const tabTwoRef = useRef(null)
                     <CNav variant="tabs">
                       <CNavItem>
                         <div ref={tabOneRef}>
-                        <CNavLink
-                          href="#"
-                          active={activeKey === 1}
-                          onClick={() => setActiveKey(1)}
-                          
-                        >
-                          <CSLab code="HCM-HZU4WPFB1L9-LASN" />
-                        </CNavLink>
+                          <CNavLink
+                            href="#"
+                            active={activeKey === 1}
+                            onClick={() => setActiveKey(1)}
+
+                          >
+                            <CSLab code="HCM-HZU4WPFB1L9-LASN" />
+                          </CNavLink>
                         </div>
-                        
+
                       </CNavItem>
                       <CNavItem>
-                     
+
                         <CNavLink
                           href="#"
                           active={activeKey === 2}
@@ -943,7 +947,7 @@ const tabTwoRef = useRef(null)
                           <CSLab code="HCM-D9GDJ0ZHB7U_LOLN" />
                         </CNavLink>
                       </CNavItem>
-                      <CNavItem>  
+                      <CNavItem>
                         <CNavLink
                           href="#"
                           active={activeKey === 4}
@@ -1003,7 +1007,7 @@ const tabTwoRef = useRef(null)
                         style={{ marginTop: "10px" }}
                       >
                         <PaymentInfoForm
-                        
+
                           paymentsInfo={paymentsInfo}
                           setPaymentsInfo={setPaymentsInfo}
                         />

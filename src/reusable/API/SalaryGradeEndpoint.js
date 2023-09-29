@@ -9,25 +9,25 @@ import { SalaryGradeBaseAPIURL } from "./base";
 export const GetSalaryGradeDetailsBySalaryGradeId = (salaryGradeId) => `${SalaryGradeBaseAPIURL}SalaryGrades/${salaryGradeId}`;
 
 
- /**
- * Endpoint to get all currencies for a company
- * @param companyId [required]
- * @returns urlpath
- */
-  export const GetAllCurrencies= (companyId) => `${SalaryGradeBaseAPIURL}Currencies?CompanyId=${companyId}`;
+/**
+* Endpoint to get all currencies for a company
+* @param companyId [required]
+* @returns urlpath
+*/
+export const GetAllCurrencies = (companyId) => `${SalaryGradeBaseAPIURL}Currencies?CompanyId=${companyId}`;
 
-  /**
- * Endpoint to get all employee types for a company
- * @param companyId [required]
- * @returns urlpath
- */
-   export const GetAllEmployeeTypes = (companyId) => `${SalaryGradeBaseAPIURL}EmployeeTypes?CompanyId=${companyId}`;
+/**
+* Endpoint to get all employee types for a company
+* @param companyId [required]
+* @returns urlpath
+*/
+export const GetAllEmployeeTypes = (companyId) => `${SalaryGradeBaseAPIURL}EmployeeTypes?CompanyId=${companyId}`;
 
-    /**
- * Endpoint to get all employee types for a company
- * @returns urlpath
- */
-  export const GetNotchSize = () => `${SalaryGradeBaseAPIURL}SalaryGrades/notchSize`;
+/**
+* Endpoint to get all employee types for a company
+* @returns urlpath
+*/
+export const GetNotchSize = (companyId) => `SalaryGrades/${companyId}/notchSize`;
 
 /**
 * Endpoint to search for company Salary Grade by name or code.

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from "react";
 import {
   CBadge,
   CDropdown,
@@ -8,52 +8,110 @@ import {
   CProgress
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
+import useAuth from "src/hooks/useAuth";
+import useFetch from "src/hooks/useFetch";
+import { CompanyReference } from "src/reusable/utils/helper";
+import * as RiIcons from "react-icons/ri";
+import useAppGolbals from "src/hooks/useAppGolbals";
 
 const TheHeaderDropdownTasks = () => {
-  const itemsCount = 5
+  const [companies, setCompanies] = useState([]);
+  const [selectedCompany, setSelectedCompany] = useState("");
+  const { auth } = useAuth();
+  const { setAppGlobals } = useAppGolbals();
+  const itemsCount = 2;
+  const { companyReference, companyId } = auth;
+
+  useFetch("Users/Companies", (response) => {
+    setCompanies(response);
+    setAppGlobals((pre) => ({ ...pre, numOfCompany: response.length }));
+  });
+
+  const handClickEvent = (id) => {
+    setSelectedCompany(id);
+  };
+
+  useEffect(() => {
+    if (selectedCompany.length > 0) {
+      const currentCompany = companies.find((x) => x?.id === selectedCompany);
+
+      sessionStorage.setItem(
+        "companyReference",
+        JSON.stringify(currentCompany)
+      );
+      window.location.reload();
+    }
+    return () => { };
+  }, [selectedCompany]);
+
+  // console.log({ auth });
+  // const itemsCount = 5
+  let compName = JSON.parse(sessionStorage.getItem("companyReference"));
   return (
-    <CDropdown
-      inNav
-      className="c-header-nav-item mx-2"
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+      }}
     >
-      <CDropdownToggle className="c-header-nav-link" caret={false}>
-        <CIcon name="cil-list" />
-        <CBadge shape="pill" color="warning">{itemsCount}</CBadge>
-      </CDropdownToggle>
-      <CDropdownMenu placement="bottom-end" className="pt-0">
-        <CDropdownItem
-          header
-          tag="div"
-          className="text-center"
-          color="light"
-        >
-          <strong>You have {itemsCount} pending tasks</strong>
-        </CDropdownItem>
-        <CDropdownItem className="d-block">
-          <div className="small mb-1">Upgrade NPM &amp; Bower <span
-            className="float-right"><strong>0%</strong></span></div>
-          <CProgress size="xs" color="info" value={0} />
-        </CDropdownItem>
-        <CDropdownItem className="d-block">
-          <div className="small mb-1">ReactJS Version <span className="float-right"><strong>25%</strong></span></div>
-          <CProgress size="xs" color="danger" value={25} />
-        </CDropdownItem>
-        <CDropdownItem className="d-block">
-          <div className="small mb-1">VueJS Version <span className="float-right"><strong>50%</strong></span></div>
-          <CProgress size="xs" color="warning" value={50} />
-        </CDropdownItem>
-        <CDropdownItem className="d-block">
-          <div className="small mb-1">Add new layouts <span className="float-right"><strong>75%</strong></span></div>
-          <CProgress size="xs" color="info" value={75} />
-        </CDropdownItem>
-        <CDropdownItem className="d-block">
-          <div className="small mb-1">Angular 2 Cli Version <span className="float-right"><strong>100%</strong></span></div>
+      <div
+        style={{
+          fontWeight: 700,
+          padding: "4px 20px",
+          background: "#e1e2e3",
+          borderRadius: 10,
+        }}
+      >
+        {auth?.companyName || compName?.name}
+        {/* {compName.name} */}
+      </div>
+      <div>
+        <CDropdown inNav className="c-header-nav-item mx-2">
+          <CDropdownToggle className="c-header-nav-link" caret={false}>
+            <RiIcons.RiBankFill
+              style={{ fontSize: 20 }}
+              title="View Company(s)"
+            />
+            <CBadge shape="pill" color="warning">
+              {companies.length}
+            </CBadge>
+          </CDropdownToggle>
+          <CDropdownMenu placement="bottom-end" className="pt-0">
+            <CDropdownItem
+              header
+              tag="div"
+              className="text-center"
+              color="light"
+            >
+              <strong>You have {companies.length} company(s)</strong>
+            </CDropdownItem>
+            {companies.map((x) => (
+              <CDropdownItem
+                style={{
+                  cursor:
+                    process.env.REACT_APP_ID === x.id
+                      ? "not-allowed"
+                      : "pointer",
+                }}
+                disabled={companyId === x?.id ? true : false}
+                onClick={() => handClickEvent(x?.id)}
+                key={x?.id}
+                className="d-block"
+              >
+                <div className="medium mb-1">{x?.name}</div>{" "}
+              </CDropdownItem>
+            ))}
+
+            {/* <CDropdownItem className="d-block">
+          <div className="medium mb-1">Google</div>
           <CProgress size="xs" color="success" value={100} />
-        </CDropdownItem>
-        <CDropdownItem className="text-center border-top"><strong>View all tasks</strong></CDropdownItem>
-      </CDropdownMenu>
-    </CDropdown>
-  )
+        </CDropdownItem> */}
+          </CDropdownMenu>
+        </CDropdown>
+      </div>
+    </div>
+  );
 }
 
 export default TheHeaderDropdownTasks

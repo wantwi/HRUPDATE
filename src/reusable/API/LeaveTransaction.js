@@ -1,7 +1,7 @@
 
-export const PostLeaveTransaction=()=>`EmployeeLeave/LeaveType`
-export const GetLeaveTransactionById=(id)=>`EmployeeLeave/LeaveType/${id}`
-export const LeaveTypesDrop=(companyReference)=>`EmployeeLeave/LeaveType/dropdown-types?companyReference=${companyReference}`
-export const AvailableDayBasis=(companyReference)=>`EmployeeLeave/AvailableDayBasis/dropdown-types?companyReference=${companyReference}`
-export const AllowedDayBasis=(companyReference)=>`EmployeeLeave/AllowedDayBasis/dropdown-types?companyReference=${companyReference}`
-export const YearEndBasis=(companyReference)=>`EmployeeLeave/YearEndBasis/dropdown-types?companyReference=${companyReference}`
+export const PostLeaveTransaction = () => `EmployeeLeave/LeaveType`
+export const GetLeaveTransactionById = (id) => `EmployeeLeave/LeaveType/${id}`
+export const LeaveTypesDrop = (companyReference) => `EmployeeLeave/LeaveType/all?companyReference=${companyReference}`
+export const AvailableDayBasis = (companyReference) => `EmployeeLeave/LeaveType/AvailableDayBasis?companyReference=${companyReference}`
+export const AllowedDayBasis = (companyReference) => `EmployeeLeave/LeaveType/AllowedDayBasis?companyReference=${companyReference}`
+export const YearEndBasis = (companyReference) => `EmployeeLeave/LeaveType/YearEndBasis?companyReference=${companyReference}`

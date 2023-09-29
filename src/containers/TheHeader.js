@@ -20,7 +20,9 @@ import {
 import {
   TheHeaderDropdown,
   TheHeaderDropdownLanguage,
+  TheHeaderDropdownMssg,
   TheHeaderDropdownNotif,
+  TheHeaderDropdownTasks,
   //TheHeaderDropdownMssg,
   //TheHeaderDropdownTasks
 } from './index'
@@ -42,12 +44,25 @@ const TheHeader = () => {
   return (
     <CHeader withSubheader={false}>
       <CToggler inHeader className="ml-md-3 d-lg-none" onClick={toggleSidebarMobile} />
-      <CToggler inHeader className="ml-3 d-md-down-none"  onClick={toggleSidebar} />
-      
+      <CToggler inHeader className="ml-3 d-md-down-none" onClick={toggleSidebar} />
+
       <CHeaderBrand className="mx-auto d-lg-none" to="/">
         <h3>PersonaX</h3>
         {/* <CIcon name="logo" height="48" alt="Logo"/> */}
       </CHeaderBrand>
+      <CHeaderNav className="d-md-down-none mr-auto">
+        <TheHeaderDropdownMssg />
+
+        {/* <CHeaderNavItem className="px-3" >
+          <CHeaderNavLink to="/dashboard">Dashboard</CHeaderNavLink>
+        </CHeaderNavItem>
+        <CHeaderNavItem className="px-3">
+          <CHeaderNavLink to="/users">Users</CHeaderNavLink>
+        </CHeaderNavItem>
+        <CHeaderNavItem className="px-3">
+          <CHeaderNavLink>Settings</CHeaderNavLink>
+        </CHeaderNavItem> */}
+      </CHeaderNav>
 
       <CHeaderNav className="d-md-down-none mr-auto">
         <CHeaderNavItem className="px-3" >
@@ -57,11 +72,12 @@ const TheHeader = () => {
           {/* <CHeaderNavLink to="/users">Users</CHeaderNavLink> */}
         </CHeaderNavItem>
         <CHeaderNavItem className="px-3">
-          {/* <CHeaderNavLink>Settings</CHeaderNavLink> */}
+          {/* <CHeaderNavLink>Settings</CHeaderNavLink> */}``
         </CHeaderNavItem>
       </CHeaderNav>
 
       <CHeaderNav className="px-3">
+        <TheHeaderDropdownTasks />
         <TheHeaderDropdownNotif />
         {/* <TheHeaderDropdownTasks />
         <TheHeaderDropdownMssg /> */}

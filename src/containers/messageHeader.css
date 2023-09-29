@@ -1,0 +1,10 @@
+.app-menu-wrapp{
+    
+    min-width: 200px;
+    position: absolute;
+    inset: 0px 0px auto 1px;
+    margin: 0px;
+    transform: translate(0px, 35px);
+    left: 1px !important;
+    
+  }
