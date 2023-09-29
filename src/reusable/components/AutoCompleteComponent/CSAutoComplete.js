@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   CInputGroupAppend,
   CInputGroup,
@@ -16,9 +16,11 @@ import {
 import CIcon from "@coreui/icons-react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import useDebounce from "src/hooks/useDebounce";
 import { GetRequest, isObject } from "src/reusable/utils/helper";
 import useFetch from "src/hooks/useFetch";
+import useLoader from "src/hooks/useLoader";
+import { CSLab } from "..";
 
 const styles = {
   position: "absolute",
@@ -62,10 +64,12 @@ const CSAutoComplete = ({
   mode,
   setMode,
   reset,
+  showDash = true,
   handleId,
 }) => {
   //console.log({ filterUrl, uniqueIdKey, displayTextKey, placeholder, handleSelect, input, setInput, searchName, emptySearchFieldMessage, isPaginated, pageNumber, setPageNumber, numberOfItems, setNumberOfItems, orderBy, setOrderBy, sortOrder, setSortOrder, selectNumberOfItems, mode, setMode, reset })
   // Set default values
+  const { debouncedValue: debouncedSearchValue, setDebouncedValue } = useDebounce(input, 300);
   uniqueIdKey = uniqueIdKey || "id";
   displayTextKey = displayTextKey || "name";
   searchName = searchName || "query";
@@ -124,97 +128,172 @@ const CSAutoComplete = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [employeeid, setEmployeeId] = useState("");
   const [name, setName] = useState([]);
-
+  const { isLoading, setIsLoading } = useLoader();
+  const [count, setCount] = useState(0);
+  const searchInputRef = useRef(null);
   //get user input
   const onChange = (e) => {
+    setDebouncedValue("");
+    setCount(0);
     const userInput = e.target.value;
-
-    //
     if (!userInput || !input) {
       setSuggestions([]);
       setShowSuggestions(false);
       if (setOrderBy) setOrderBy("");
       if (setSortOrder) setSortOrder("");
       if (setPageNumber) setPageNumber(1);
-      if (setNumberOfItems) setNumberOfItems(5);
+      if (setNumberOfItems) setNumberOfItems(10);
     }
 
     // Filter our suggestions that don't contain the user's input
     const unLinked = suggestions.filter((suggestion) => {
       return (
-        suggestion?.[displayTextKey]
-          .toLowerCase()
-          .indexOf(userInput?.toLowerCase()) > -1 ||
-        suggestion?.[alternativeTextKey]
-          .toLowerCase()
-          .indexOf(userInput.toLowerCase()) > -1
+        suggestion?.[displayTextKey] > -1 ||
+        suggestion?.[alternativeTextKey] > -1
       );
     });
 
-    //console.log({ unLinked });
-
     setInput(e.target.value);
+
     setFilteredSuggestions(unLinked);
 
     switch (e.key) {
       case "ArrowUp":
-        if (showSuggestions && indexCount > 0) indexCount--;
+        if (showSuggestions) {
+          if (count < 0) {
+            setCount(0);
+          }
+          if (count >= 0) {
+            if (count === filteredSuggestions.length - 1) {
+              setCount(0);
+            } else {
+              setCount((pre) => pre + 1);
+            }
+          }
+        }
         break;
       case "ArrowDown":
-        if (showSuggestions && filteredSuggestions.length - 1 > indexCount)
-          indexCount++;
+        if (showSuggestions) {
+          if (count < 0) {
+            setCount(0);
+          }
+          if (count >= 0) {
+            if (count === filteredSuggestions.length - 1) {
+              setCount(0);
+            } else {
+              setCount((pre) => pre + 1);
+            }
+          }
+        }
         break;
       case "Enter":
         if (showSuggestions) {
           const filteredData = filteredSuggestions.filter(
-            (_, index) => index === indexCount
+            (_, index) => index === count
           );
-          //console.log(showSuggestions);
 
           if (filteredData && filteredData.length > 0) {
             handleSelect(filteredData[0]);
-            setInput(filteredData?.[0]?.[displayTextKey]);
+            setInput("");
+            // //setInput(filteredData?.[0]?.[displayTextKey]);
             setFilteredSuggestions([]);
             setShowSuggestions(false);
           }
         } else {
           handleSearchInput();
           indexCount = 0;
+          setCount(0);
         }
+        // if (showSuggestions) {
+        //     const filteredData = filteredSuggestions.filter((_, index) => index === indexCount);
 
+        //     if (filteredData && filteredData.length > 0) {
+        //         handleSelect(filteredData[0]);
+        //         setInput('');
+        //         // //setInput(filteredData?.[0]?.[displayTextKey]);
+        //         setFilteredSuggestions([]);
+        //         setShowSuggestions(false);
+        //     }
+
+        // } else {
+        //     handleSearchInput();
+        //     indexCount = 0;
+        //     setCount(0)
+        // }
         break;
       default:
         break;
     }
   };
 
+  const onKeyDown = (e) => {
+    if (e.key === "Enter") {
+      if (showSuggestions) {
+        const filteredData = filteredSuggestions.filter(
+          (_, index) => index === count
+        );
+
+        if (filteredData && filteredData.length > 0) {
+          handleSelect(filteredData[0]);
+          setInput("");
+          // //setInput(filteredData?.[0]?.[displayTextKey]);
+          setFilteredSuggestions([]);
+          setShowSuggestions(false);
+        }
+      } else {
+        handleSearchInput();
+        indexCount = 0;
+        setCount(0);
+      }
+    } else if (e.key === "ArrowDown") {
+      if (showSuggestions) {
+        if (count < 0) {
+          setCount(0);
+        }
+        if (count >= 0) {
+          if (count === filteredSuggestions.length - 1) {
+            setCount(0);
+          } else {
+            setCount((pre) => pre + 1);
+          }
+        }
+      }
+    } else if (e.key === "ArrowUp") {
+      if (showSuggestions) {
+        if (filteredSuggestions && count <= 0) {
+          setCount(filteredSuggestions.length - 1);
+        } else {
+          setCount((pre) => pre - 1);
+        }
+
+        // if(count === filteredSuggestions.length -1){
+        //     setCount(0)
+        // }else{
+        //     setCount(pre => pre -1)
+        // }
+      }
+    }
+  };
+
   const onClick = (e) => {
-    //console.log("RESULTS", filterUrl);
+    setInput("");
+    setDebouncedValue("");
 
     if (e?.target?.id) {
       let selectedItem = filteredSuggestions.filter(
         (x) => x?.[uniqueIdKey] === e?.target?.id
       );
-      // console.log(selectedItem[0].id);
-      handleId(selectedItem[0].id);
-      //setEmployeeId(selectedItem[0].id);
-
       if (selectedItem && selectedItem.length === 1)
         handleSelect(selectedItem[0]);
     }
 
     setFilteredSuggestions([]);
-    setInput(e.target.innerText);
+    // setInput(e.target.innerText);
     indexCount = 0;
     setShowSuggestions(false);
   };
 
-
-
-
-
-
-  const {setOptData, setUrl} =  useFetch("", (response,results) => {
+  const { setUrl } = useFetch("", (response, results) => {
     const toastId = toast.loading("Searching ");
     if (response) {
       if (
@@ -252,67 +331,17 @@ const CSAutoComplete = ({
         toaster(toastId, `No records found`, "info", 2000);
       }
     }
-});
+  });
 
   //console.log(handleId);
   //console.log({ employeeid });
   const runSearch = (url) => {
-    //const toastId = toast.loading("Searching ");
- 
-    if (input && input.length > 2) {
-      setUrl(url)
-      // GetRequest(url, {})
-      //   .then((response) => {
-      //     if (response.ok) {
-      //       response.json().then((data) => {
-      //         console.log({ data });
-
-      //         if (
-      //           data.items &&
-      //           Array.isArray(data.items) &&
-      //           data.items.length > 0
-      //         ) {
-      //           toast.dismiss(toastId);
-      //           setSuggestions(data.items);
-      //           setFilteredSuggestions(data.items);
-      //           setShowSuggestions(true);
-      //         }
-      //         console.log({ test: data });
-      //         if (data && isObject(data)) {
-      //           if (data?.hasOwnProperty("empty")) {
-      //             if (!data?.empty) {
-      //               toast.dismiss(toastId);
-      //               let values = data?.items || data?.data;
-      //               setSuggestions(values);
-
-      //               setTotalResults(data?.totalResults);
-      //               setTotalPages(data?.totalPages);
-      //               setCurrentPage(data?.currentPage);
-      //               setFilteredSuggestions(values);
-      //               setShowSuggestions(true);
-      //               _currentPage = data?.currentPage;
-      //             } else {
-      //               toaster(toastId, `No records found`, "info", 3000);
-      //             }
-
-      //             // console.log("Paginated");
-      //           }
-      //         }
-
-      //         if (data && Array.isArray(data) && data.length === 0) {
-      //           toaster(toastId, `No records found`, "info", 2000);
-      //         }
-      //       });
-      //     }
-      //   })
-      //   .catch((err) => {
-      //     toaster(toastId, "There was an error!", "error", 3000);
-      //     console.log(err);
-      //   });
-
+    setIsLoading(true);
+    if (input && input.length > 0) {
+      setUrl(url);
     } else {
-       toast.error(`${emptySearchFieldMessage}`, "info", 2000);
-      //alert('Input to short');
+      setIsLoading(false);
+      toast.info(`${emptySearchFieldMessage}`);
     }
   };
 
@@ -329,6 +358,9 @@ const CSAutoComplete = ({
   };
 
   const handlePagination = (number, type) => {
+    //setCount(0)
+    // console.log("clicked", type, number)
+    // console.log({ totalPages })
     if (number < 1) return;
 
     if ("next" === type && number > totalPages) return;
@@ -375,7 +407,6 @@ const CSAutoComplete = ({
   //     runSearch(two);
   // }
   //console.log({ filteredSuggestions });
-
   const SuggestionsListComponent = () => {
     return filteredSuggestions.length ? (
       <div>
@@ -383,17 +414,15 @@ const CSAutoComplete = ({
           {filteredSuggestions.map((suggestion, index) => {
             return (
               <li
-                key={index}
-                className={`dropdown-item ${
-                  index === indexCount ? "active" : ""
-                }`}
+                className={`dropdown-item ${index === count ? "active" : ""}`}
                 id={suggestion?.[uniqueIdKey]}
-                // key={suggestion?.[uniqueIdKey]}
+                key={suggestion?.[uniqueIdKey]}
                 onClick={onClick}
-                title={`Click to select `}
+                title={`Click to select ${suggestion?.[displayTextKey]}`}
               >
-                {[suggestion?.[displayTextKey], " ", suggestion?.lastName,"  ", "-"," ", suggestion?.staffId]}
-             
+                {suggestion?.name || suggestion?.firstName}{" "}
+                {suggestion?.lastName} {showDash ? "-" : ""}{" "}
+                {suggestion?.staffId || suggestion?.code}
               </li>
             );
           })}
@@ -419,16 +448,9 @@ const CSAutoComplete = ({
                         size={"lg"}
                         className="page-link"
                         onClick={() => {
-                          // console.log({
-                          //   _pageNumber,
-                          //   _currentPage,
-                          //   currentPage,
-                          //   pageNumber,
-                          //   totalPages,
-                          // });
-                          //if ((_currentPage >= _pageNumber)) {
                           handlePagination(pageNumber - 1, "previous");
-                          //}
+                          searchInputRef.current.focus();
+                          setCount(0);
                         }}
                       >
                         <AiFillBackward />
@@ -437,8 +459,8 @@ const CSAutoComplete = ({
 
                     {/* Page Count */}
                     <div style={{ marginTop: "15px" }} className="page-item">
-                      {currentPage === 0 ? currentPage + 1 : currentPage} of{" "}
-                      {totalPages}
+                      {currentPage === 0 ? currentPage + 1 : currentPage}{" "}
+                      <CSLab code="HCM-C35GOK6XT1" /> {totalPages}
                     </div>
 
                     {/* Next Button */}
@@ -450,17 +472,10 @@ const CSAutoComplete = ({
                         size={"lg"}
                         className="page-link"
                         onClick={() => {
-                          // console.log({
-                          //   _pageNumber,
-                          //   _currentPage,
-                          //   currentPage,
-                          //   pageNumber,
-                          //   totalPages,
-                          // });
-
-                          //if ((_pageNumber <= _currentPage)) {
                           handlePagination(pageNumber + 1, "next");
-                          //}
+
+                          searchInputRef.current.focus();
+                          setCount(0);
                         }}
                       >
                         <AiFillForward />
@@ -468,16 +483,9 @@ const CSAutoComplete = ({
                     </div>
                   </div>
                 </CCol>
-
-                {/* <CCol md={3} xs={3}>
-                                        <CSelect value={numberOfItems} onChange={handleNumberOfItemsChange}>
-                                            {selectNumberOfItems.map((x, i) => <option key={i} value={x}>{x}</option>)}
-                                        </CSelect>
-                                    </CCol> */}
-
                 <CCol md={5} xs={6} className="text-right">
                   <li style={{ marginLeft: "5px", marginTop: "15px" }}>
-                    Records:{" "}
+                    <CSLab code="HCM-6I37E6VERLR_KCMI" />{" "}
                     {totalResults === 0 && suggestions.length > 0
                       ? suggestions.length
                       : totalResults}
@@ -489,7 +497,18 @@ const CSAutoComplete = ({
         </ul>
       </div>
     ) : null;
+
+    // /setInput("")
   };
+
+  useEffect(() => {
+    if (debouncedSearchValue.length > 1 && debouncedSearchValue !== "*") {
+      handleSearchInput();
+    }
+    return () => {
+      setDebouncedValue("");
+    };
+  }, [debouncedSearchValue]);
 
   return (
     <>
@@ -499,7 +518,7 @@ const CSAutoComplete = ({
             type="text"
             // disabled={mode === "Update"}
             className={
-                 "border-left-curve"
+              "border-left-curve"
             }
             onChange={onChange}
             onKeyDown={onChange}
@@ -509,16 +528,16 @@ const CSAutoComplete = ({
           <CInputGroupAppend>
             <CButton
               className="border-right-curve"
-              color={ "primary"}
+              color={"primary"}
               onClick={() =>
                 handleSearchInput(
-                  
+
                 )
               }
             >
-             
-                <CIcon name={"cil-magnifying-glass"} />
-              
+
+              <CIcon name={"cil-magnifying-glass"} />
+
             </CButton>
           </CInputGroupAppend>
         </CInputGroup>

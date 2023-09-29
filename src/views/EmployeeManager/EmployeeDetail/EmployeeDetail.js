@@ -320,8 +320,6 @@ function EmployeeDetail() {
     setIsActive(false);
   };
 
-  console.log("In Here")
-
   const dataURLtoFile = (dataurl, filename) => {
     var arr = dataurl.split(","),
       mime = arr[0].match(/:(.*?);/)[1],
