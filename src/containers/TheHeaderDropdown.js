@@ -12,7 +12,7 @@ import Profile from "../assets/profile.png";
 
 import useAuth from "src/hooks/useAuth";
 import * as RiIcons from "react-icons/ri";
-import useAppGolbals from "src/hooks/useAppGolbals";
+import useAppGolbals from "src/hooks/useAppGlobals";
 import useFetch from "src/hooks/useFetch";
 import { userLogout } from "src/auth/config";
 const TheHeaderDropdown = () => {

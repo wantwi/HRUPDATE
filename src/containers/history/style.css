@@ -1,0 +1,51 @@
+.e-calendar .e-content td.e-today.e-selected span.e-day, .e-bigger.e-small .e-calendar .e-content td.e-today.e-selected span.e-day {
+    background-color: #182642 !important;
+    border: 1px solid #182642 !important;
+    box-shadow: inset 0 0 0 2px #fff;
+    color: #fff;
+}
+
+.e-daterangepicker.e-popup .e-calendar .e-start-date.e-selected.e-range-hover.e-today span.e-day, .e-bigger.e-small .e-daterangepicker.e-popup .e-calendar .e-start-date.e-selected.e-range-hover.e-today span.e-day {
+    background-color: #182642 !important;
+    color: #fff;
+}
+
+.e-calendar .e-content td.e-selected span.e-day, .e-bigger.e-small .e-calendar .e-content td.e-selected span.e-day {
+    background-color: #182642 !important;
+    border: none;
+    border-radius: 50%;
+    color: #fff;
+}
+.e-daterangepicker.e-popup .e-calendar .e-end-date.e-selected.e-range-hover span.e-day, .e-daterangepicker.e-popup .e-calendar .e-start-date.e-selected.e-range-hover span.e-day, .e-bigger.e-small .e-daterangepicker.e-popup .e-calendar .e-end-date.e-selected.e-range-hover span.e-day, .e-bigger.e-small .e-daterangepicker.e-popup .e-calendar .e-start-date.e-selected.e-range-hover span.e-day {
+    background-color: #182642 !important;
+    color: #fff;
+}
+
+.e-daterangepicker.e-popup .e-calendar .e-range-hover.e-today:hover span.e-day, .e-daterangepicker.e-popup .e-calendar .e-range-hover.e-focused-date.e-today span.e-day, .e-daterangepicker.e-popup .e-calendar .e-range-hover.e-start-date.e-selected.e-today span.e-day, .e-daterangepicker.e-popup .e-calendar .e-range-hover.e-end-date.e-selected.e-today span.e-day, .e-bigger.e-small .e-daterangepicker.e-popup .e-calendar .e-range-hover.e-today:hover span.e-day, .e-bigger.e-small .e-daterangepicker.e-popup .e-calendar .e-range-hover.e-focused-date.e-today span.e-day, .e-bigger.e-small .e-daterangepicker.e-popup .e-calendar .e-range-hover.e-start-date.e-selected.e-today span.e-day, .e-bigger.e-small .e-daterangepicker.e-popup .e-calendar .e-range-hover.e-end-date.e-selected.e-today span.e-day {
+    border: 1px solid #182642 !important;
+}
+.e-date-range-wrapper.e-input-group:not(.e-disabled) .e-input-group-icon.e-active:active {
+    color: #182642 !important;
+}
+.e-btn.e-flat.e-primary, .e-css.e-btn.e-flat.e-primary {
+    background-color: transparent;
+    border-color: transparent;
+    color: #e3165b;
+}
+
+.e-input-group:not(.e-float-icon-left), .e-input-group.e-success:not(.e-float-icon-left), .e-input-group.e-warning:not(.e-float-icon-left), .e-input-group.e-error:not(.e-float-icon-left), .e-input-group.e-control-wrapper:not(.e-float-icon-left), .e-input-group.e-control-wrapper.e-success:not(.e-float-icon-left), .e-input-group.e-control-wrapper.e-warning:not(.e-float-icon-left), .e-input-group.e-control-wrapper.e-error:not(.e-float-icon-left) {
+    border: 1px solid;
+    border-width: 0 0 1px 0;
+    border-top-width: 0px;
+    border-right-width: 0px;
+    border-bottom-width: 0px !important;
+    border-left-width: 0px;
+}
+.e-daterangepicker{
+    font-size: 15px !important;
+}
+
+.e-pager .e-numericitem.e-spacing, .e-pager .e-mediaback, .e-pager .e-arrowheadleft-2x, .e-pager .e-arrowheadright-2x, .e-pager .e-mediaforward, .e-pager .e-newrecord.e-icon.e-plus {
+    box-sizing: border-box !important;
+}
+

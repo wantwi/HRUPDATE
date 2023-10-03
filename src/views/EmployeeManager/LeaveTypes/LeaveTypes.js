@@ -142,7 +142,7 @@ const LeaveTypes = () => {
   YearEndBasis(COMPREF),
   LeaveTypesDrop(COMPREF)
   ], (results) => {
-    console.log(results);
+    console.log({ results });
     setAvailableDayBasis([
       { id: "-1", name: `Select Available Day Basis` },
       ...results[0].data,

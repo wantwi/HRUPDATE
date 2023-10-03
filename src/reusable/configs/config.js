@@ -31,7 +31,7 @@ export const GetParamData = (genericPage, language) => {
  * @returns translated word
  */
 
-export const GetLabelByName = (name, language) => {
- // console.log(name)
-  return labels?.[name]?.[language] ? labels?.[name]?.[language] : name;
+export const GetLabelByName = (name, language, label = "") => {
+  // console.log(name)
+  return labels?.[name]?.[language] ? labels?.[name]?.[language] : label ? label : name;
 };

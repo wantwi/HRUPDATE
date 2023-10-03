@@ -293,7 +293,8 @@ function EmployeeDetail() {
   const [showPreview, setShowPreview] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
   const [handleId, setHandleId] = useState("");
-
+  const [duplicateFormData, setDuplicateFormData] = useState({});
+  const [initSalRate, setInitSalRate] = useState(0);
   //form data states
   const [organizationalForm, setOrganizationalForm] = useState(init_org);
 
@@ -310,8 +311,9 @@ function EmployeeDetail() {
   const [canUpdate, setCanUpdate] = useState(false)
 
   const [resetFormVal, setResetFormVal] = useState(false);
-
   const [enableScreen, setEnableScreen] = useState(false);
+
+
   const onConfirm = () => {
     handleDeleteItem();
   };
@@ -380,6 +382,7 @@ function EmployeeDetail() {
   const responseFunc = (response) => {
     setMode("Update");
     setShow(false);
+    let duplicate = {};
     const employeeProfile = response[0];
     const employeeAccount = response[1];
     const employeeOrganisation = response[2];
@@ -406,6 +409,10 @@ function EmployeeDetail() {
       obj.probationMonth = `${obj?.probationMonth}` || ""
       setOrganizationalForm(obj);
       setOrignalRecord((prev) => ({ ...prev, ...obj }))
+      setInitSalRate(obj?.salaryRate);
+      duplicate.organizationalForm = obj;
+
+      setDuplicateFormData((prev) => ({ ...prev, organizationalForm: obj }));
     }
 
     if (employeeGL?.status === "fulfilled") {
@@ -812,7 +819,11 @@ function EmployeeDetail() {
     }
   }, [showPreview])
 
-
+  const getFullName = () => {
+    return personalFormDetails?.otherName
+      ? `${personalFormDetails?.firstName} ${personalFormDetails?.otherName} ${personalFormDetails?.lastName}`
+      : `${personalFormDetails?.firstName} ${personalFormDetails?.lastName}`;
+  };
 
   //
 
@@ -894,13 +905,41 @@ function EmployeeDetail() {
                   <CSLab
                     lable=""
                     code={
-                      !show
-                        ? mode === "Add"
-                          ? GetLabelByName("HCM-ORVVKCDAB5_LASN", lan, "Add Employee Details")
-                          : mode === "Update"
-                            ? GetLabelByName("HCM-M7JNZHXNTT-KCMI", lan, "Update Employee Details")
-                            : GetLabelByName("HCM-M7JNZHXNTT-KCMI", lan)
-                        : "null"
+                      !show ? (
+                        mode === "Add" ? (
+                          GetLabelByName(
+                            "HCM-ORVVKCDAB5_LASN",
+                            lan,
+                            "Add Employee Details"
+                          )
+                        ) : mode === "Update" ? (
+                          <>
+                            {GetLabelByName(
+                              "HCM-M7JNZHXNTT-KCMI",
+                              lan,
+                              "Update Employee Details"
+                            )}{" "}
+                            :{" "}
+                            <span
+                              title={getFullName()}
+                              style={{
+                                padding: 5,
+                                borderRadius: 5,
+                                fontWeight: 900,
+                                cursor: "pointer",
+                                background: "#fff",
+                                color: "#315a76",
+                              }}
+                            >
+                              {getFullName()}
+                            </span>
+                          </>
+                        ) : (
+                          GetLabelByName("HCM-M7JNZHXNTT-KCMI", lan)
+                        )
+                      ) : (
+                        "null"
+                      )
                     }
                   />
                 </h5>
@@ -997,6 +1036,9 @@ function EmployeeDetail() {
                           isSubmitBtnClick={isSubmitBtnClick}
                           setResetFormVal={setResetFormVal}
                           resetFormVal={resetFormVal}
+                          mode={mode}
+                          initSalRate={initSalRate}
+                          setInitSalRate={setInitSalRate}
                         />
                       </CTabPane>
 
@@ -1035,7 +1077,7 @@ function EmployeeDetail() {
               </CForm>
             </CCardBody>
             <CCardFooter>
-              {mode === "Update" ? (
+              {/* {mode === "Update" ? (
                 <CButton
                   onClick={handleHistory}
                   style={{ marginRight: 5, color: "white" }}
@@ -1046,7 +1088,7 @@ function EmployeeDetail() {
                   <CIcon name="cil-scrubber" />
                   <CSLab lable="View History" code="HCM-ZIRH5SVBDUF_LANG" />
                 </CButton>
-              ) : null}
+              ) : null} */}
               <CButton
                 style={{
                   marginRight: 5,

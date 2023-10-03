@@ -46,7 +46,7 @@ export const GetAllSectionsByCompanyReference = (companyReference) => `Organisat
  * @returns urlpath
  */
 //  export const GetAllGeneralLedgersBycompanyReference = (companyReference) => `${BaseAPIURL}Organisation/GLAccounts/${companyReference}`
- export const GetAllGeneralLedgersBycompanyReference = (companyReference) => `Organisation/GLAccounts/${companyReference}`
+export const GetAllGeneralLedgersBycompanyReference = (companyReference) => `Organisation/GLAccounts/${companyReference}`
 
 /**
 * Endpoint to get details for salary grade if it exist by salary grade ID.
@@ -81,5 +81,6 @@ export const PutUnit = () => `Organisation/Units`;
  * @param query [required]
  * @returns urlpath
  */
- export const SearchUnitByNameOrCodeUsingType = (companyId, type, query) => `Organisation/${companyId}/${type}/filter?filter=${query}`;
+export const SearchUnitByNameOrCodeUsingType = (companyId, type, query) => `Organisation/${companyId}/${type}/filter?filter=${query}`;
 
+export const GetOrgUrl = (type, companyReference = "_") => `Employees/${companyReference}/orgs/${type}`

@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 //import { toast } from "react-toastify";
 import { toastWarning } from "src/toasters/Toaster";
 import moment from "moment";
-import { validEmail,validPhoneNumber } from "src/reusable/utils/data/regex";
+import { validEmail, validPhoneNumber } from "src/reusable/utils/data/regex";
 
 import CIcon from "@coreui/icons-react";
 import {
@@ -126,38 +126,39 @@ const EmployeeFamily = () => {
   const [handleId, setHandleId] = useState("");
   const [titles, setProfessionalTitle] = useState([]);
   const [accidentTypes, setAccidentTypes] = useState([]);
-  const [getEmployeeAccident, setEmployeeAccident] = useState([]);
-  const [post, setPost]=useState([])
-const [delEmployeeName,setDelEmployeeName]=useState("")
-const[isActive,setIsActive]=useState(false)
-const[delEmployeeID,setDelEmployeeID]=useState("")
-const [EmployeeFamilyChildren,setEmployeeFamilyChildren]=useState([])
-const [phone, setPhone] = useState(null);
-const [canSave, setCanSave] = useState(false);
-const [isSubmitBtnClick, setIsSubmitBtnClick] = useState(false);
-const [empDisplayName, setEmpDisplayName] = useState("");
-const [reference, setReference]= useState([])
+  const [empFamData, setEmployeeFamData] = useState([]);
+  const [post, setPost] = useState([])
+  const [delEmployeeName, setDelEmployeeName] = useState("")
+  const [isActive, setIsActive] = useState(false)
+  const [delEmployeeID, setDelEmployeeID] = useState("")
+  const [EmployeeFamilyChildren, setEmployeeFamilyChildren] = useState([])
+  const [phone, setPhone] = useState(null);
+  const [canSave, setCanSave] = useState(false);
+  const [isSubmitBtnClick, setIsSubmitBtnClick] = useState(false);
+  const [empDisplayName, setEmpDisplayName] = useState("");
+  const [empId, setEmpId] = useState("");
+  const [reference, setReference] = useState([])
 
-  
+
   const searchReset = () => {
     setShow(true);
     setSearchInput("");
-    setEmployeeAccident("")
+    setEmployeeFamData("")
     setPhone(null)
     setSubmitData("")
     dispatch({ type: 'set', data: {} });
     refs.forEach((ref) => {
-  
-        ref.current.style.border = "1px solid #d8dbe0";
-        return
- 
-      
+
+      ref.current.style.border = "1px solid #d8dbe0";
+      return
+
+
     });
-    
+
 
   };
-const initialState= [
-  
+  const initialState = [
+
     {
       "id": null,
       "name": null,
@@ -166,15 +167,15 @@ const initialState= [
       "staffId": null,
       "companyReference": null,
       "employee": {
-          "id": null,
-          "firstName": null,
-          "lastName":null,
-          "staffId": null,
-          "status": false,
-          isDelete : false,
+        "id": null,
+        "firstName": null,
+        "lastName": null,
+        "staffId": null,
+        "status": false,
+        isDelete: false,
       }
-  }
-]
+    }
+  ]
   const nameRef = useRef(null);
   const emailRef = useRef(null);
   const phoneRef = useRef(null)
@@ -183,10 +184,10 @@ const initialState= [
     nameRef,
     emailRef,
     phoneRef
-         
+
   ];
-  const {auth}= useAuth()
-  const {companyReference: CompanyReference } = auth
+  const { auth } = useAuth()
+  const { companyReference: CompanyReference } = auth
 
   // useEffect(() => {
   //   MultipleGetRequests();
@@ -197,91 +198,84 @@ const initialState= [
     }
   };
 
- 
 
-  const {setOptData, setUrl} =  useFetch("", (response,results) => {
+
+  const { setUrl } = useFetch("", (response, results) => {
     if (response) {
-        if (response && Object.keys(response).length > 0) {
-            setSearchResult(results);
-            dispatch({ type: 'set', data: { ...response } });
+      if (response && Object.keys(response).length > 0) {
+        setSearchResult(results);
+        dispatch({ type: 'set', data: { ...response } });
+        let rest = { ...response, }
+        console.log(rest);
 
-           let local = JSON.parse(localStorage.getItem("name")) 
+        setEmployeeFamData(response);
+        setMode('Update');
+        setShow(false);
 
-           let rest = {...response,}
-           console.log(rest);
-
-           setEmployeeAccident(response);
-            setMode('Update');
-            setShow(false);
-
-        } else {
-            setMode('Add');
-            setShow(false);
-            dispatch({ type: 'set', data: { ...response } });
-            setSubmitData({ ...response });
-        }
+      } else {
+        setMode('Add');
+        setShow(false);
+        dispatch({ type: 'set', data: { ...response } });
+        setSubmitData({ ...response });
+      }
     }
-});
-  
+  });
+
   // get employee by id for grid view
-  const getEmployFamily =  (id) => {
+  const getEmployFamily = (id) => {
     setUrl(GetEmployeeFamily(id))
-   
   };
-  const checkRequired=()=>{
+  // const checkRequired = () => {
 
-   refs.forEach((ref) => {
-            if (ref.current.value.length > 2) {
-              ref.current.style.border = "2px solid green";
-            }else if (ref.current.value.length < 2) {
-              ref.current.style.border = "2px solid red";
-            } else if (ref.current.value === "") {
-              ref.current.style.border = "2px solid red";
-            } else {
-              ref.current.style.border = "2px solid red";
-       
-            }
-          });
-          
-    
-  
-  }
-  const checkRequiredToast=()=>{
+  //   refs.forEach((ref) => {
+  //     if (ref.current.value.length > 2) {
+  //       ref.current.style.border = "2px solid green";
+  //     } else if (ref.current.value.length < 2) {
+  //       ref.current.style.border = "2px solid red";
+  //     } else if (ref.current.value === "") {
+  //       ref.current.style.border = "2px solid red";
+  //     } else {
+  //       ref.current.style.border = "2px solid red";
 
-  }
+  //     }
+  //   });
+
+
+
+  // }
+  // const checkRequiredToast = () => {
+
+  // }
   // 
 
   //handles form submit
   const handleOnSubmit = () => {
-  
+
     refs.forEach((ref) => {
       if (ref.current.value.length > 2) {
         ref.current.style.border = "2px solid green";
-      }else if (ref.current.value.length < 2) {
+      } else if (ref.current.value.length < 2) {
         ref.current.style.border = "2px solid red";
       } else if (ref.current.value === "") {
         ref.current.style.border = "2px solid red";
 
       } else {
         ref.current.style.border = "2px solid red";
-       
+
         return
- 
+
       }
     });
-    
-    if (!submitData?.name || submitData?.name === "" && !submitData?.email || submitData?.email === ""  &&  !phone || phone === "") {
+
+    if (!submitData?.name || submitData?.name === "" && !submitData?.email || submitData?.email === "" && !phone || phone === "") {
       toast.error(GetLabelByName("HCM-WQ9J7737WDC_LASN", lan), toastWarning);
       return;
     }
-    
-   
-
     if (!submitData?.name || submitData?.name === "") {
-      toast.error(GetLabelByName("HCM-W4TEXTQO7M9_LOLN", lan), toastWarning); 
+      toast.error(GetLabelByName("HCM-W4TEXTQO7M9_LOLN", lan), toastWarning);
       return;
     }
-    if ( !phone || phone === "" ) {
+    if (!phone || phone === "") {
       toast.error("Please Enter Phone Number!", toastWarning);
       return;
     }
@@ -290,8 +284,8 @@ const initialState= [
       return;
     }
 
-   //submitData?.phone = phone;
-   setVisible(false)
+    //submitData?.phone = phone;
+    setVisible(false)
     let newData = {
       ...submitData,
       phone,
@@ -302,38 +296,36 @@ const initialState= [
       isDelete: true,
     };
 
-    
-    setEmployeeFamilyChildren((prev)=>[...prev,newData])
 
-    
-    setEmployeeAccident((prevState)=>[newData,...prevState])
-  setSubmitData([])
-  dispatch({ type: "set", data: { } });
-  setPhone()
+    setEmployeeFamilyChildren((prev) => [...prev, newData])
+    setEmployeeFamData((prevState) => [newData, ...prevState])
+    setSubmitData([])
+    dispatch({ type: "set", data: {} });
+    setPhone()
   };
 
-const handlePosting=()=>{
-  let postBody={
-    employeeId: handleId,
-    "createEmployeeFamilyChildren": EmployeeFamilyChildren,
-    "companyReference": "00001_a01",
-    "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+  const handlePosting = () => {
+    let postBody = {
+      employeeId: empId,
+      "createEmployeeFamilyChildren": EmployeeFamilyChildren,
+      "companyReference": "00001_a01",
+      "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+    }
+
+    if (EmployeeFamilyChildren.length > 0) {
+      setPostData(postBody)
+      setPostUrl(PostFamily())
+      setEmployeeFamilyChildren([])
+    }
+
   }
 
-  if(EmployeeFamilyChildren.length > 0){
-    setPostData(postBody)
-    setPostUrl(PostFamily())
-    setEmployeeFamilyChildren([])
-  }
-   
-}
 
-
-  const  {setData:setPostData, setUrl:setPostUrl} = usePost('', (response) => {
-    const {data} = response
+  const { setData: setPostData, setUrl: setPostUrl } = usePost('', (response) => {
+    const { data } = response
     if ("" === data) {
       toast.success(`${GetLabelByName("HCM-HAGGXNJQW2B_HRPR", lan)}`);
-    //  showToasts();
+      //  showToasts();
       searchReset(2);
     } else {
       try {
@@ -347,14 +339,12 @@ const handlePosting=()=>{
 
   })
 
-
-
-
   const handleSearchResultSelect = (results) => {
-
     setMode("Add");
     setShow(false);
     dispatch({ type: "set", data: { ...results } });
+
+    console.log({ results })
     // setSubmitData({ ...results });
     setEmpDisplayName(
       (prevState) => `${results.firstName} ${results.lastName}`
@@ -363,7 +353,7 @@ const handlePosting=()=>{
     if (results?.id) {
       setSearchResult(results);
       getEmployFamily(results.id)
-   
+      setEmpId(results.id)
     }
   };
 
@@ -371,7 +361,7 @@ const handlePosting=()=>{
   const TransLabelByCode = (name) => GetLabelByName(name, lan);
 
   const handleOnChange = (evnt) => {
-  
+
     setSubmitData((data) => {
       return { ...data, [evnt?.target?.name]: evnt?.target?.value };
     });
@@ -379,21 +369,13 @@ const handlePosting=()=>{
       type: "set",
       data: { ...data, [evnt?.target?.name]: evnt?.target?.value },
     });
-    if(evnt?.target?.name === "name" && evnt?.target?.value === ""){
+    if (evnt?.target?.name === "name" && evnt?.target?.value === "") {
       toast.error("Enter Name")
     }
   };
 
-
-
-
- 
-
-
   const onConfirm = () => {
-
     handleDeleteItem();
-
   };
 
   const onCancel = () => {
@@ -403,28 +385,26 @@ const handlePosting=()=>{
   };
 
   const onCommandClick = (args) => {
-
-    console.log(args.rowData); 
-
-    if(args.rowData.isDelete === true ){
-     console.log(args.rowData); 
-      setEmployeeAccident((current)=>current.filter((deleteItem) => deleteItem.name !== args.rowData.name));
-      setEmployeeFamilyChildren((current)=>current.filter((deleteItem) =>  deleteItem.name !== args.rowData.name))
+    console.log(args.rowData);
+    if (args.rowData.isDelete === true) {
+      console.log(args.rowData);
+      setEmployeeFamData((current) => current.filter((deleteItem) => deleteItem.name !== args.rowData.name));
+      setEmployeeFamilyChildren((current) => current.filter((deleteItem) => deleteItem.name !== args.rowData.name))
       args.cancel = false;
       return;
     }
-    else{
+    else {
       onCompleteAction(args);
- 
+
     }
 
 
-  
-    
+
+
   };
 
-const rowSelected=(args)=>{
-}
+  const rowSelected = (args) => {
+  }
 
 
   const onCompleteAction = (args) => {
@@ -436,8 +416,8 @@ const rowSelected=(args)=>{
       setIsActive(true)
 
       setDelEmployeeName(`${args?.rowData?.employee?.firstName
-      } ${args?.rowData?.employee?.lastName
-      }`)
+        } ${args?.rowData?.employee?.lastName
+        }`)
 
       setDelEmployeeID(args.rowData.id)
 
@@ -445,84 +425,65 @@ const rowSelected=(args)=>{
 
   };
 
- const  GetPreviousData=(e)=>{
-  console.log(e);
-
-
+  const GetPreviousData = (e) => {
+    console.log(e);
   }
 
-const handleDeleteItem = async () => {
-
+  const handleDeleteItem = async () => {
     let deleteData = {
-
       transactionsId: delEmployeeID || "",
-
       userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-
       accountReference: "string"
-
     }
 
     setDeletUrl(DeleteEmployeeFamily())
-
     setDeleteData({ data: deleteData })
-
-
-
   };
+
   const { setData: setDeleteData, setUrl: setDeletUrl } = useDelete('', (response) => {
-
-
     const { data } = response
-
     if (response.status === 200 || response.status === 204) {
-
       toast.success(`${GetLabelByName("HCM-NUNYCE5Y09A-HRPR", lan)}`);
       setIsActive(false);
-    getEmployeeAccident?.map((x)=> x?.isDelete === true?  localStorage.setItem("name", JSON.stringify(x)) : null);
-      
+      empFamData?.map((x) => x?.isDelete === true ? localStorage.setItem("name", JSON.stringify(x)) : null);
       GetPreviousData(reference);
-      setEmployeeAccident("")
-      getEmployFamily(handleId)
-
-
+      setEmployeeFamData("")
+      getEmployFamily(empId)
     } else {
-
       toast.error('Transaction Failed, Please try agin later!', toastWarning);
-
     }
 
 
 
   })
-  useEffect(()=>{
-    if(validPhoneNumber(data?.phone)){
+  useEffect(() => {
+    if (validPhoneNumber(data?.phone)) {
       console.log("VALID")
     }
 
-  },[data?.phone])
+  }, [data?.phone])
 
-  useEffect(()=>{
-      console.log(reference)
-  },[reference])
+  useEffect(() => {
+    console.log(reference)
+  }, [reference])
 
 
   return (
     <>
-  
-<SweetAlert
- warning
-showCancel
- confirmBtnText="Yes, delete it!"
-confirmBtnBsStyle="danger"
-title={`${GetLabelByName("HCM-Z3GW6TG207", lan)}?`}
- onConfirm={onConfirm}
- onCancel={onCancel}
- focusCancelBtn
-show={isActive}
->
- {/* <CSLab code='HCM-7KY656PSXDB-LASN' /> */}
- </SweetAlert>
+
+      <SweetAlert
+        warning
+        showCancel
+        confirmBtnText="Yes, delete it!"
+        confirmBtnBsStyle="danger"
+        title={`${GetLabelByName("HCM-Z3GW6TG207", lan)}?`}
+        onConfirm={onConfirm}
+        onCancel={onCancel}
+        focusCancelBtn
+        show={isActive}
+      >
+        {/* <CSLab code='HCM-7KY656PSXDB-LASN' /> */}
+      </SweetAlert>
 
 
       <CRow >
@@ -601,9 +562,9 @@ show={isActive}
             {/* style={{ height: CardBodyHeight, overflowY: "auto" }} */}
 
             <GridComponent
-            rowDeselected={rowSelected}
+              rowDeselected={rowSelected}
               height={"350"}
-              dataSource={getEmployeeAccident}
+              dataSource={empFamData}
               allowPaging={true}
               pageSettings={{ pageSize: 10 }}
               editSettings={editOptions}
@@ -653,19 +614,19 @@ show={isActive}
               />
             </GridComponent>
             <CCardFooter>
-            <CButton onClick={()=>handlePosting()} style={{ marginRight: 5, float: "right" }} type="submit" size="sm" color="success" >
+              <CButton onClick={() => handlePosting()} style={{ marginRight: 5, float: "right" }} type="submit" size="sm" color="success" >
                 <CIcon name="cil-scrubber" />   <CSLab code="HCM-4FBXK4LHPN5_KCMI" />
               </CButton>
-            <CButton
-                 style={{ marginRight: 5, float: 'right', color: 'white' }}
-                  onClick={() => searchReset()}
-                  type="button"
-                  size="sm"
-                  color="danger"
-                >
-                  <AiOutlineClose size={20} />
-                  <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
-                </CButton>
+              <CButton
+                style={{ marginRight: 5, float: 'right', color: 'white' }}
+                onClick={() => searchReset()}
+                type="button"
+                size="sm"
+                color="danger"
+              >
+                <AiOutlineClose size={20} />
+                <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
+              </CButton>
             </CCardFooter>
           </CCard>
         </CCol>
@@ -696,10 +657,10 @@ show={isActive}
                   ref={nameRef}
                   className="form-control"
                   value={data?.name || ""}
-                  onChange={(e)=>{handleOnChange(e); checkForValue(nameRef)}}
-                  placeholder={GetLabelByName("HCM-W4TEXTQO7M9_LOLN",lan)}
+                  onChange={(e) => { handleOnChange(e); checkForValue(nameRef) }}
+                  placeholder={GetLabelByName("HCM-W4TEXTQO7M9_LOLN", lan)}
                 />
-                  {/* {accidentTypes.map((x, i) => (
+                {/* {accidentTypes.map((x, i) => (
                     <option key={i} value={x.id}>
                       {x.name}
                     </option>
@@ -707,23 +668,23 @@ show={isActive}
                 </CSelect> */}
               </CCol>
               <CCol md="4" xs="6">
-              <CLabel>
-    <CSLab code="HCM-BOSPUEXHRP_PSLL" />
-    </CLabel><CSRequiredIndicator />
-          <PhoneInput
-                  name ='phone'
+                <CLabel>
+                  <CSLab code="HCM-BOSPUEXHRP_PSLL" />
+                </CLabel><CSRequiredIndicator />
+                <PhoneInput
+                  name='phone'
                   ref={phoneRef}
-              placeholder="Phone"
-             value={data?.phone || phone ||  ''}
-            
-                 onChange={(e)=> {setPhone(e);checkForValue(nameRef)}} 
-        />
+                  placeholder="Phone"
+                  value={data?.phone || phone || ''}
+
+                  onChange={(e) => { setPhone(e); checkForValue(nameRef) }}
+                />
               </CCol>
             </>
           </CRow>
           <CRow className={"bottom-spacing"}>
             <>
-            <CCol md="6">
+              <CCol md="6">
                 <CLabel htmlFor="email">
                   <CSLab code="HCM-CXLK7IYZ9B9-KCMI" />
                   <CSRequiredIndicator />
@@ -735,7 +696,7 @@ show={isActive}
                   ref={emailRef}
                   className="form-control"
                   value={data?.email || ""}
-                  onChange={(e)=>{handleOnChange(e); checkForValue(emailRef)}}
+                  onChange={(e) => { handleOnChange(e); checkForValue(emailRef) }}
                   placeholder={GetLabelByName("HCM-61522DCMNA-LANG", lan)}
                 ></input>
               </CCol>
@@ -772,7 +733,7 @@ show={isActive}
           </CRow> */}
         </CModalBody>
         <CModalFooter>
-        <p style={{ position: "absolute", left: "20px" }}><em style={{ fontSize: "12px" }}><CSLab code="HCM-S6DELVG0IQS-HRPR" /> (<CSRequiredIndicator />)<CSLab code="HCM-H72Q4EB363H_PSLL" /></em></p>
+          <p style={{ position: "absolute", left: "20px" }}><em style={{ fontSize: "12px" }}><CSLab code="HCM-S6DELVG0IQS-HRPR" /> (<CSRequiredIndicator />)<CSLab code="HCM-H72Q4EB363H_PSLL" /></em></p>
           <CButton color="secondary" onClick={() => setVisible(false)}>
             <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
           </CButton>
@@ -780,10 +741,10 @@ show={isActive}
             color="primary"
             onClick={() => {
               setIsSubmitBtnClick(true)
-                handleOnSubmit();
-            
-            
-             
+              handleOnSubmit();
+
+
+
             }}
           >
             <CSLab code="HCM-TAAFD4M071D-HRPR" />

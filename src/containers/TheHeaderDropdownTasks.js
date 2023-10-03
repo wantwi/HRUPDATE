@@ -12,7 +12,7 @@ import useAuth from "src/hooks/useAuth";
 import useFetch from "src/hooks/useFetch";
 import { CompanyReference } from "src/reusable/utils/helper";
 import * as RiIcons from "react-icons/ri";
-import useAppGolbals from "src/hooks/useAppGolbals";
+import useAppGolbals from "src/hooks/useAppGlobals";
 
 const TheHeaderDropdownTasks = () => {
   const [companies, setCompanies] = useState([]);

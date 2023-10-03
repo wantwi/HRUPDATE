@@ -18,6 +18,7 @@ import React, { useState, useEffect } from "react";
 import CurrencyFormat from "react-currency-format";
 import { AiFillSave, AiOutlineClose, AiOutlinePlus } from "react-icons/ai";
 import { useSelector } from "react-redux";
+import useAuth from "src/hooks/useAuth";
 import useFetch from "src/hooks/useFetch";
 import useMultiFetch from "src/hooks/useMultiFetch";
 import {
@@ -33,7 +34,7 @@ import {
 import { GetLabelByName } from "src/reusable/configs/config";
 import { accountType, payBasis } from "src/reusable/utils/data/GenericData";
 import PaymentTable from "../table/PaymentTable";
-const COMPANY_REFRENCE = "00001_A01";
+// const COMPANY_REFRENCE = "00001_A01";
 let countryCode = "GH";
 
 const init = {
@@ -41,33 +42,46 @@ const init = {
   branch: "",
   branchId: "",
   accountNumber: "",
-  paymentBasis: "HCM-75HIH44NO3J_PSLL",
+  paymentBasis: "NA",
   paymentBasisId: "",
   amount: "",
   note: "",
   isDefault: false,
   paymentOpt: "",
-  mobileNetworkId:"",
-  serviceProvider:"",
-  serviceProviderId:"",
-  
+  mobileNetworkId: "",
+  serviceProvider: "",
+  serviceProviderId: "",
+
 
 };
 
-const PaymentInfoForm = ({paymentsInfo, setPaymentsInfo}) => {
+const renderBranchName = (bank, branch) => {
+  console.log({ bank, branch });
+
+  return branch.split("-").pop()
+
+}
+
+const PaymentInfoForm = ({ paymentsInfo, setPaymentsInfo }) => {
+
+  const { auth } = useAuth()
+  const { companyReference: COMPANY_REFRENCE } = auth
   const lan = useSelector((state) => state.language);
   const [showModal, setshowModal] = useState(false);
   const [payOpt, setpayOpt] = useState(0);
   const [paymentInfoFormData, setPaymentInfoFormData] = useState(null);
-  
+
   const [genericData, setGenericData] = useState({});
   const [paymentBasis, setPaymentBasis] = useState(0);
   const [branches, setBranches] = useState([]);
-  const [textLable, setTextLable] = useState("HCM-75HIH44NO3J_PSLL");
+  const [textLable, setTextLable] = useState("NA");
   const [canAdd, setCanAdd] = useState(false)
-  
+  const [bankName, setBankName] = useState("")
+
   const [isDefaultSet, setIsDefaultSet] = useState(false)
-  
+
+
+
 
   const multiFetchResponse = (response) => {
     let resObj = {};
@@ -103,9 +117,9 @@ const PaymentInfoForm = ({paymentsInfo, setPaymentsInfo}) => {
   };
 
   const handleBranchChange = (event) => {
-    const branchName =  branches.find(x => x.id === event.target.value)?.name
+    const branchName = branches.find(x => x.id === event.target.value)?.name
 
-    setPaymentInfoFormData(prev => ({...prev,branchId:event.target.value, branch:branchName}))
+    setPaymentInfoFormData(prev => ({ ...prev, branchId: event.target.value, branch: branchName }))
 
   }
 
@@ -113,27 +127,29 @@ const PaymentInfoForm = ({paymentsInfo, setPaymentsInfo}) => {
     setPaymentInfoFormData((prev) => ({
       ...prev,
       paymentBasisId: e.target.value,
-      paymentBasis: e.target.value === "-1" ? "HCM-75HIH44NO3J_PSLL" : payBasis.find((x) => x.id === +e.target.value)?.name,
+      paymentBasis: e.target.value === "-1" ? "NA" : payBasis.find((x) => x.id === +e.target.value)?.name,
     }));
   };
 
   const handleMobileServiceProviderChnage = (event) => {
-    const serviceName =  networkProviderList.find(x => x.id === event.target.value)?.name
+    const serviceName = networkProviderList.find(x => x.id === event.target.value)?.name
 
-    setPaymentInfoFormData(prev => ({...prev,mobileNetworkId:event.target.value, serviceProviderId:event.target.value, serviceProvider:serviceName}))
+    setPaymentInfoFormData(prev => ({ ...prev, mobileNetworkId: event.target.value, serviceProviderId: event.target.value, serviceProvider: serviceName }))
   }
 
   const getBranchResponse = (response) => {
-   
+
     setBranches(response)
 
   }
 
-  const {setUrl:setGetBranchUrl} = useFetch("",getBranchResponse)
-  const handleBankChange = (event)=>{
-    const bankName =  bankList.find(x => x.id === event.target.value)?.name
+  const { setUrl: setGetBranchUrl } = useFetch("", getBranchResponse)
+  const handleBankChange = (event) => {
+    // const bankName =  bankList.find(x => x.id === event.target.value)?.name
 
-    setPaymentInfoFormData(prev => ({...prev,serviceProviderId:event.target.value, serviceProvider:bankName}))
+    setBankName(bankList.find(x => x.id === event.target.value)?.name)
+
+    setPaymentInfoFormData(prev => ({ ...prev, serviceProviderId: event.target.value, serviceProvider: bankName }))
 
     //serviceProvider
     setGetBranchUrl(GetBankBranchesByBandId(event.target.value))
@@ -147,80 +163,131 @@ const PaymentInfoForm = ({paymentsInfo, setPaymentsInfo}) => {
 
   const addToGridBtn = () => {
 
-    setPaymentsInfo((prev => ([...prev, paymentInfoFormData])))
-    setshowModal(!showModal);
+    if (paymentInfoFormData?.isDefault) {
+      if (payOpt === 1) {
+        const requiredObj = {
+          serviceProviderId: paymentInfoFormData?.serviceProviderId || "",
+          branchId: paymentInfoFormData?.branchId || "",
+          accountNumber: paymentInfoFormData?.accountNumber || "",
+          paymentBasisId: "NA"
+        }
+        if (!Object.values(requiredObj).every((field) => field?.length > 0)) return
+      }
+      if (payOpt === 2) {
+        const requiredObj = {
+          serviceProviderId: paymentInfoFormData?.serviceProviderId || "",
+          accountNumber: paymentInfoFormData?.accountNumber || "",
+
+          paymentBasisId: "NA"
+        }
+
+
+        if (!Object.values(requiredObj).every((field) => field?.length > 0)) return
+      }
+      if (payOpt === 3) {
+        const requiredObj = {
+          paymentBasisId: "NA"
+        }
+        if (!Object.values(requiredObj).every((field) => field?.length > 0)) return
+      }
+    }
+
+
+
+
+
+    const obj = paymentInfoFormData?.isDefault ? { ...paymentInfoFormData, paymentBasis: "NA", amount: 0 } : paymentInfoFormData
+
+
+    console.log({ obj, paymentInfoFormData });
+
+    setPaymentsInfo((prev => ([...prev, obj])))
+    // setshowModal(!showModal);
     setPaymentInfoFormData(null)
+    setpayOpt(0);
 
   }
 
 
   useEffect(() => {
-    if(paymentsInfo.length > 0){
-        const hasDefault =  paymentsInfo.some(x => x?.isDefault === true)
-        setIsDefaultSet(hasDefault)
+    if (paymentsInfo.length > 0) {
+      const hasDefault = paymentsInfo.some(x => x?.isDefault === true)
+      setIsDefaultSet(hasDefault)
     }
     return () => {
-        setIsDefaultSet(false)
+      setIsDefaultSet(false)
     };
   }, [paymentInfoFormData?.paymentMode]);
 
   useEffect(() => {
-    if(payOpt === 1){
-      const requiredObj={
-        serviceProviderId: paymentInfoFormData?.serviceProviderId ||"",
-        branchId:paymentInfoFormData?.branchId ||"",
-        accountNumber:paymentInfoFormData?.accountNumber||"",
-        amount:paymentInfoFormData?.amount ||"",
-        paymentBasisId:paymentInfoFormData?.paymentBasisId ||""
+
+
+    if (payOpt === 1) {
+      const requiredObj = {
+        serviceProviderId: paymentInfoFormData?.serviceProviderId || "",
+        branchId: paymentInfoFormData?.branchId || "",
+        accountNumber: paymentInfoFormData?.accountNumber || "",
+        amount: paymentInfoFormData?.isDefault ? 0 : paymentInfoFormData?.amount || "",
+        paymentBasisId: paymentInfoFormData?.paymentBasisId || ""
       }
 
-      if(Object.values(requiredObj).every((field) => field?.length > 0)){
-          setCanAdd(true)
+
+      console.log({ requiredObj });
+
+      if (Object.values(requiredObj).every((field) => field?.length > 0)) {
+        setCanAdd(true)
       }
-      else{
+      else {
         setCanAdd(false)
       }
     }
-    if(payOpt === 2){
-      const requiredObj={
-        serviceProviderId: paymentInfoFormData?.serviceProviderId ||"",
-        accountNumber:paymentInfoFormData?.accountNumber||"",
-        amount:paymentInfoFormData?.amount ||"",
-        paymentBasisId:paymentInfoFormData?.paymentBasisId ||""
+    if (payOpt === 2) {
+      const requiredObj = {
+        serviceProviderId: paymentInfoFormData?.serviceProviderId || "",
+        accountNumber: paymentInfoFormData?.accountNumber || "",
+        amount: paymentInfoFormData?.isDefault ? 0 : paymentInfoFormData?.amount || "",
+        paymentBasisId: paymentInfoFormData?.paymentBasisId || ""
       }
 
-      if(Object.values(requiredObj).every((field) => field?.length > 0)){
-          setCanAdd(true)
+
+      if (Object.values(requiredObj).every((field) => field?.length > 0)) {
+        setCanAdd(true)
       }
-      else{
+      else {
         setCanAdd(false)
       }
     }
-    if(payOpt === 3){
-      const requiredObj={
-       
-        amount:paymentInfoFormData?.amount ||"",
-        paymentBasisId:paymentInfoFormData?.paymentBasisId ||""
+    if (payOpt === 3) {
+      const requiredObj = {
+
+        amount: paymentInfoFormData?.isDefault ? 0 : paymentInfoFormData?.amount || "",
+        paymentBasisId: paymentInfoFormData?.paymentBasisId || ""
       }
 
-      if(Object.values(requiredObj).every((field) => field?.length > 0)){
-          setCanAdd(true)
+
+
+      if (Object.values(requiredObj).every((field) => field?.length > 0)) {
+        setCanAdd(true)
       }
-      else{
+      else {
         setCanAdd(false)
       }
     }
-    
-  
+
+
+
+
+
+
     return () => {
-      
+
     }
   }, [payOpt, paymentInfoFormData])
-  
 
 
 
- 
+
+
 
   return (
     <>
@@ -245,10 +312,10 @@ const PaymentInfoForm = ({paymentsInfo, setPaymentsInfo}) => {
       <CModal
         size={"lg"}
         show={showModal}
-        onClose={() => setshowModal(!showModal)}
+        onClose={() => { setshowModal(!showModal); setPaymentInfoFormData(null) }}
         closeOnBackdrop={false}
       >
-        <CModalHeader onClose={() => {}}>
+        <CModalHeader onClose={() => { }}>
           <CModalTitle>
             {" "}
             <CSLab code="HCM-WM35S647NT_LOLN" />{" "}
@@ -259,18 +326,18 @@ const PaymentInfoForm = ({paymentsInfo, setPaymentsInfo}) => {
             <CRow>
               <CCol md="8">
                 <CLabel htmlFor="">
-                  <CSLab code="HCM-GKPKF3QGKHJ-LASN" />
+                  <CSLab code=" Payment Option" label="Payment Option" />
                 </CLabel>
                 <CSelect
                   name="paymentOpt"
                   value={paymentInfoFormData?.paymentOpt || ""}
                   onChange={paymentOnChange}
                 >
-                 
+
                   <option value="">{GetLabelByName("HCM-2ZIYZPSE9FU_LANG", lan, "Select Payment Option")}</option>
                   {accountType.map((x, i) => (
                     <option value={x.id} key={x.id}>
-                     
+
                       {GetLabelByName(`${x?.code || x?.name}`, lan, x.name)}
                     </option>
                   ))}
@@ -280,7 +347,7 @@ const PaymentInfoForm = ({paymentsInfo, setPaymentsInfo}) => {
           ) : null}
           {payOpt === 3 ? (
             <div>
-              
+
               <CRow>
                 <CCol md="8">
                   <CLabel htmlFor="">
@@ -291,7 +358,7 @@ const PaymentInfoForm = ({paymentsInfo, setPaymentsInfo}) => {
                     value={paymentInfoFormData?.paymentOpt || ""}
                     onChange={paymentOnChange}
                   >
-                   
+
                     <option value="">{GetLabelByName("HCM-2ZIYZPSE9FU_LANG", lan, "Select Payment Option")}</option>
                     {accountType.map((x, i) => (
                       <option value={x.id} key={i}>
@@ -309,9 +376,9 @@ const PaymentInfoForm = ({paymentsInfo, setPaymentsInfo}) => {
                     label="HCM-BL95JD6K2W9-LOLN"
                     // checked={paymentInfoFormData?.isDefault || false}
                     name="isDefault"
-                    onChange={(e)=>setPaymentInfoFormData(prev=>({...prev, isDefault: e.target.checked}))}
-                     disabled={isDefaultSet}
-                
+                    onChange={(e) => setPaymentInfoFormData(prev => ({ ...prev, isDefault: e.target.checked }))}
+                    disabled={isDefaultSet}
+
                   />
                 </CCol>
                 <CCol md="6">
@@ -323,6 +390,7 @@ const PaymentInfoForm = ({paymentsInfo, setPaymentsInfo}) => {
                     name="paymentBasisId"
                     value={paymentInfoFormData?.paymentBasisId || ""}
                     onChange={handleOnPaymentBasisChnage}
+                    disabled={paymentInfoFormData?.isDefault ? true : false}
                   >
                     {payBasis.map((x, i) => (
                       <option value={x.id} key={i}>
@@ -337,18 +405,18 @@ const PaymentInfoForm = ({paymentsInfo, setPaymentsInfo}) => {
                   </CLabel>
                   <CSRequiredIndicator />
                   {
-                    (paymentInfoFormData?.paymentBasisId ==="-1" || paymentInfoFormData?.paymentBasisId ==="" ) ?<input disabled className="form-control" /> :
-                    <CurrencyFormat
-                    thousandSeparator={true}
-                    style={{ textAlign: "right" }}
-                    name="amount"
-                    value={
-                      paymentInfoFormData?.amount || ""
-                    }
-                    onChange={(e)=> setPaymentInfoFormData((prev) =>({...prev, amount:e.target.value}))}
-                    placeholder={"0.00"}
-                   
-                  />
+                    (paymentInfoFormData?.paymentBasisId === "-1" || paymentInfoFormData?.paymentBasisId === "") ? <input disabled className="form-control" /> :
+                      <CurrencyFormat
+                        thousandSeparator={true}
+                        style={{ textAlign: "right" }}
+                        name="amount"
+                        value={
+                          paymentInfoFormData?.amount || ""
+                        }
+                        onChange={(e) => setPaymentInfoFormData((prev) => ({ ...prev, amount: e.target.value }))}
+                        placeholder={"0.00"}
+                        disabled={paymentInfoFormData?.isDefault ? true : false}
+                      />
                   }
                 </CCol>
 
@@ -395,10 +463,10 @@ const PaymentInfoForm = ({paymentsInfo, setPaymentsInfo}) => {
                   label="HCM-BL95JD6K2W9-LOLN"
                   // checked={paymentInfoFormData?.isDefault || false}
                   name="isDefault"
-                  onChange={(e)=>setPaymentInfoFormData(prev=>({...prev, isDefault: e.target.checked}))}
+                  onChange={(e) => setPaymentInfoFormData(prev => ({ ...prev, isDefault: e.target.checked }))}
                   disabled={isDefaultSet}
-                  //   onChange={handleCheckboxChange1}
-                  //   disabled={checkDefault}
+                //   onChange={handleCheckboxChange1}
+                //   disabled={checkDefault}
                 />
               </CCol>
               <CCol md="4">
@@ -410,9 +478,9 @@ const PaymentInfoForm = ({paymentsInfo, setPaymentsInfo}) => {
                   name="serviceProviderId"
                   value={paymentInfoFormData?.serviceProviderId || ""}
                   onChange={handleMobileServiceProviderChnage}
-                
+
                 >
-                      <option value="">Select service provider</option>
+                  <option value="">Select service provider</option>
                   {networkProviderList.map((x, i) => (
                     <option value={x.id} key={i}>
                       {GetLabelByName(`${x?.code || x?.name}`, lan, x.name)}
@@ -442,6 +510,7 @@ const PaymentInfoForm = ({paymentsInfo, setPaymentsInfo}) => {
                   name="paymentBasisId"
                   value={paymentInfoFormData?.paymentBasisId || ""}
                   onChange={handleOnPaymentBasisChnage}
+                  disabled={paymentInfoFormData?.isDefault ? true : false}
                 >
                   {payBasis.map((x, i) => (
                     <option value={x.id} key={i}>
@@ -450,28 +519,28 @@ const PaymentInfoForm = ({paymentsInfo, setPaymentsInfo}) => {
                   ))}
                 </CSelect>
               </CCol>
-              
-                <CCol md="4" style={{ textAlign: "right" }}>
-                  <CLabel>
-                    <CSLab code={paymentInfoFormData?.paymentBasis} />
-                  </CLabel>
-                  <CSRequiredIndicator />
-                  {
-                    (paymentInfoFormData?.paymentBasisId ==="-1" || paymentInfoFormData?.paymentBasisId ==="" ) ?<input disabled className="form-control" /> :
+
+              <CCol md="4" style={{ textAlign: "right" }}>
+                <CLabel>
+                  <CSLab code={paymentInfoFormData?.paymentBasis} />
+                </CLabel>
+                <CSRequiredIndicator />
+                {
+                  (paymentInfoFormData?.paymentBasisId === "-1" || paymentInfoFormData?.paymentBasisId === "") ? <input disabled className="form-control" /> :
                     <CurrencyFormat
-                    thousandSeparator={true}
-                    style={{ textAlign: "right" }}
-                    name="amount"
-                    value={
-                      paymentInfoFormData?.amount || ""
-                    }
-                    onChange={(e)=> setPaymentInfoFormData((prev) =>({...prev, amount:e.target.value}))}
-                    placeholder={"0.00"}
-                   
-                  />
-                  }
-                 
-                </CCol>
+                      thousandSeparator={true}
+                      style={{ textAlign: "right" }}
+                      name="amount"
+                      value={
+                        paymentInfoFormData?.amount || ""
+                      }
+                      onChange={(e) => setPaymentInfoFormData((prev) => ({ ...prev, amount: e.target.value }))}
+                      placeholder={"0.00"}
+
+                    />
+                }
+
+              </CCol>
 
               {/* {paymentBasis === "2" ? (
                 <CCol md="4">
@@ -532,13 +601,13 @@ const PaymentInfoForm = ({paymentsInfo, setPaymentsInfo}) => {
                 <CSCheckbox
                   label="HCM-BL95JD6K2W9-LOLN"
                   checked={paymentInfoFormData?.isDefault || false}
-                  onChange={(e)=>setPaymentInfoFormData(prev=>({...prev, isDefault: e.target.checked}))}
+                  onChange={(e) => setPaymentInfoFormData(prev => ({ ...prev, isDefault: e.target.checked }))}
                   name="isDefault"
                   disabled={isDefaultSet}
-                  
-                  //onChange={handleCheckboxChange1}
-                  
-                  //disabled={checkDefault}
+
+                //onChange={handleCheckboxChange1}
+
+                //disabled={checkDefault}
                 />
               </CCol>
               <CCol md="4">
@@ -549,10 +618,10 @@ const PaymentInfoForm = ({paymentsInfo, setPaymentsInfo}) => {
                 <CSelect
                   name="serviceProviderId"
                   value={paymentInfoFormData?.serviceProviderId || ""}
-                onChange={handleBankChange}
+                  onChange={handleBankChange}
                 >
-                    
-                     <option value="">{GetLabelByName("HCM-6QJSQF0FSSR_HRPR", lan, "Select bank")}</option>
+
+                  <option value="">{GetLabelByName("HCM-6QJSQF0FSSR_HRPR", lan, "Select bank")}</option>
                   {bankList.map((x, i) => (
                     <option value={x.id} key={i}>
                       {GetLabelByName(`${x?.code || x?.name}`, lan, x.name)}
@@ -568,13 +637,14 @@ const PaymentInfoForm = ({paymentsInfo, setPaymentsInfo}) => {
                 <CSelect
                   name="branchId"
                   value={paymentInfoFormData?.branchId || ""}
-                 onChange={handleBranchChange}
+                  onChange={handleBranchChange}
                 >
-                 
+
                   <option value="">{GetLabelByName("HCM-NETBY4YFSN-LASN", lan, "Select Branch")}</option>
                   {branches.map((x, i) => (
                     <option value={x.id} key={i}>
                       {GetLabelByName(`${x?.code || x?.name}`, lan, x.name)}
+                      {/* {renderBranchName(bankName,x?.name)} */}
                     </option>
                   ))}
                 </CSelect>
@@ -601,6 +671,7 @@ const PaymentInfoForm = ({paymentsInfo, setPaymentsInfo}) => {
                   name="paymentBasisId"
                   value={paymentInfoFormData?.paymentBasisId || ""}
                   onChange={handleOnPaymentBasisChnage}
+                  disabled={paymentInfoFormData?.isDefault ? true : false}
                 //   onChange={(evnt) => {
                 //     //  paymentOnChange(evnt);
                 //     //handleLabelChange(evnt);
@@ -619,19 +690,20 @@ const PaymentInfoForm = ({paymentsInfo, setPaymentsInfo}) => {
                 </CLabel>
                 <CSRequiredIndicator />
                 {
-                    (paymentInfoFormData?.paymentBasisId ==="-1" || paymentInfoFormData?.paymentBasisId ==="" ) ?<input disabled className="form-control" /> :
+                  (paymentInfoFormData?.paymentBasisId === "-1" || paymentInfoFormData?.paymentBasisId === "") ? <input disabled className="form-control" /> :
                     <CurrencyFormat
-                    thousandSeparator={true}
-                    style={{ textAlign: "right" }}
-                    name="amount"
-                    value={
-                      paymentInfoFormData?.amount || ""
-                    }
-                    onChange={(e)=> setPaymentInfoFormData((prev) =>({...prev, amount:e.target.value}))}
-                    placeholder={"0.00"}
-                   
-                  />
-                  }
+                      thousandSeparator={true}
+                      style={{ textAlign: "right" }}
+                      name="amount"
+                      value={
+                        paymentInfoFormData?.amount || ""
+                      }
+                      onChange={(e) => setPaymentInfoFormData((prev) => ({ ...prev, amount: e.target.value }))}
+                      placeholder={"0.00"}
+                      disabled={paymentInfoFormData?.isDefault ? true : false}
+
+                    />
+                }
               </CCol>
               <CCol md="12">
                 <CLabel htmlFor="name">
@@ -650,21 +722,21 @@ const PaymentInfoForm = ({paymentsInfo, setPaymentsInfo}) => {
         </CModalBody>
         <CModalFooter>
           {/*  */}
-          <CButton color="secondary" size="sm" onClick={() => {setshowModal(false)}}>
+          <CButton color="secondary" size="sm" onClick={() => { setshowModal(!showModal); setPaymentInfoFormData(null) }}>
             <AiOutlineClose size={20} />
-           {GetLabelByName("HCM-9E3ZC2E1S0N-LASN", lan, "Close") }
+            {GetLabelByName("HCM-9E3ZC2E1S0N-LASN", lan, "Close")}
           </CButton>
           <CButton
             onClick={addToGridBtn}
-            style={{ marginRight: 5, float: "right", cursor: canAdd ? "pointer" :"not-allowed" }}
+            style={{ marginRight: 5, float: "right", cursor: paymentInfoFormData?.isDefault ? "pointer" : canAdd ? "pointer" : "not-allowed" }}
             type="button"
             size="sm"
             color="success"
-            disabled={canAdd ? false: true}
+            disabled={paymentInfoFormData?.isDefault ? false : canAdd ? false : true}
           >
-            <AiFillSave size={20} /> 
-            
-            {GetLabelByName("HCM-TAAFD4M071D-HRPR", lan, "Add") }
+            <AiFillSave size={20} />
+
+            {GetLabelByName("HCM-TAAFD4M071D-HRPR", lan, "Add")}
           </CButton>
         </CModalFooter>
       </CModal>
