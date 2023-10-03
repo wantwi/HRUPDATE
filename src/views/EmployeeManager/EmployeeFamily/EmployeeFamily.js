@@ -187,7 +187,7 @@ const EmployeeFamily = () => {
 
   ];
   const { auth } = useAuth()
-  const { companyReference: CompanyReference } = auth
+  const { companyReference: CompanyReference, sub: userId } = auth
 
   // useEffect(() => {
   //   MultipleGetRequests();
@@ -289,10 +289,10 @@ const EmployeeFamily = () => {
     let newData = {
       ...submitData,
       phone,
-      userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      userId: userId,
       userName: "string",
-      CompanyReference: "00001_a01",
-      employeeId: handleId,
+      CompanyReference: CompanyReference,
+      employeeId: empId,
       isDelete: true,
     };
 
@@ -308,8 +308,8 @@ const EmployeeFamily = () => {
     let postBody = {
       employeeId: empId,
       "createEmployeeFamilyChildren": EmployeeFamilyChildren,
-      "companyReference": "00001_a01",
-      "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+      "companyReference": CompanyReference,
+      "userId": userId
     }
 
     if (EmployeeFamilyChildren.length > 0) {
@@ -432,7 +432,7 @@ const EmployeeFamily = () => {
   const handleDeleteItem = async () => {
     let deleteData = {
       transactionsId: delEmployeeID || "",
-      userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      userId: userId,
       accountReference: "string"
     }
 
@@ -528,9 +528,14 @@ const EmployeeFamily = () => {
                 <CCol md="4">
                   <b>Employee:</b>{" "}
                   <span
+                    title={empDisplayName}
                     style={{
-                      textDecoration: "underline dotted",
+                      padding: 5,
+                      borderRadius: 5,
+                      fontWeight: 900,
                       cursor: "pointer",
+                      background: "#fff",
+                      color: "#315a76",
                     }}
                     type="button"
                     onClick={() => setLarge(!large)}
@@ -553,8 +558,8 @@ const EmployeeFamily = () => {
                       setVisible(true);
                     }}
                   >
-                    <AiOutlinePlus />
-                    <CSLab code="HCM-Z3BWHGKCFE_PSLL" />{" "}
+                    <AiOutlinePlus /> {" "}
+                    <CSLab code="HCM-BFCF6D9NBVN_LASN" />{" "}
                   </CButton>
                 </CCol>
               </CFormGroup>
