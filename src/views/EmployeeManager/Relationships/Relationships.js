@@ -1,12 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai";
 import { useSelector, useDispatch } from "react-redux";
-import { CustomAxios } from "src/reusable/API/CustomAxios";
-
 import {
-  CInputGroupAppend,
-  CInputGroup,
-  CInput,
   CCard,
   CRow,
   CFormGroup,
@@ -20,11 +15,8 @@ import {
   CTabs,
   CTabPane,
   CCardBody,
-  CLabel,
-  CSelect,
+  CCardHeader,
 } from "@coreui/react";
-import CIcon from "@coreui/icons-react";
-import { CFormSelect } from "@coreui/bootstrap-react";
 //import { genericParamData } from '../../Deductions/DeductionMassUpdate/node_modules/src/reusable/utilities/config';
 import {
   ColumnDirective,
@@ -38,7 +30,6 @@ import {
   Edit,
   CommandColumn,
   Toolbar,
-  calculateAggregate,
 } from "@syncfusion/ej2-react-grids";
 // import { Variable } from "../../../reusable/utils/GenericData";
 // import { RecurringEarningData } from "../../../reusable/utils/EarningsData";
@@ -54,18 +45,12 @@ import "../../../../node_modules/@syncfusion/ej2-navigations/styles/material.css
 import "../../../../node_modules/@syncfusion/ej2-popups/styles/material.css";
 import "../../../../node_modules/@syncfusion/ej2-splitbuttons/styles/material.css";
 import "../../../../node_modules/@syncfusion/ej2-react-grids/styles/material.css";
-import { CardBodyHeight } from "src/reusable/utils/helper";
+
 // import { isEqual, differenceWith } from 'react-lodash'
 import { CSAutoComplete, CSLab } from "src/reusable/components";
 import { toast } from "react-toastify";
 import { toastWarning } from "src/toasters/Toaster";
 import { SearchEmployees } from "src/reusable/API/EmployeeEndpoints";
-
-import {
-  GetRequest,
-  HttpAPIRequest,
-  PostRequest,
-} from "src/reusable/utils/helper";
 import { GetLabelByName } from "src/reusable/configs/config";
 import {
   DeleteBeneficiary,
@@ -87,9 +72,6 @@ import {
   PostEmployeeGuarantor,
   PostEmployeeNextOfKin,
 } from "src/reusable/API/EmployeeRelationshipsEndPoint";
-import axios from "axios";
-import { RelationTypes } from "src/reusable/API/EmployeeFamilyEndPoint";
-import { ConsoleIcon } from "evergreen-ui";
 import { HandleRelationTypes } from "src/reusable/API/RelationshipTypesEndPoint";
 import FormModal from "./modal/FormModal";
 import GuarantorForm from "./forms/GuarantorFor";
@@ -139,7 +121,7 @@ const getAllTypes = () => {
   });
 };
 getAllTypes();
-setTimeout(() => {}, 2000);
+setTimeout(() => { }, 2000);
 
 
 //onClick={handleOnSubmit}
@@ -167,9 +149,9 @@ HandleRelationTypes().then((response) => {
   types = response;
 });
 
-function refreshPage() {
-  window.location.reload(false);
-}
+// function refreshPage() {
+//   window.location.reload(false);
+// }
 
 const editTemplate = (args) => {
   return (
@@ -215,13 +197,8 @@ const EmployeeDetail = (props) => {
   const [lname, setlname] = useState("");
   const [email, setEmail] = useState("");
   const [relation, setRelation] = useState("");
- 
-  const [otherPhone, setOtherPhone] = useState("");
   const [address, setAddress] = useState("");
-
   const lan = useSelector((state) => state.language);
-  const [visible, setVisible] = useState(false);
-  const [skill, setSkill] = useState("");
   const data = useSelector((state) => state.data);
   const dispatch = useDispatch();
   const [searchInput, setSearchInput] = useState("");
@@ -233,7 +210,6 @@ const EmployeeDetail = (props) => {
   const [large, setLarge] = useState(false);
   const [mode, setMode] = useState("");
   const [searchResult, setSearchResult] = useState(null);
-
   const [empDisplayName, setEmpDisplayName] = useState("");
   const [handleId, setHandleId] = useState("");
   const [viewinfo, setViewInfo] = useState([]);
@@ -243,7 +219,6 @@ const EmployeeDetail = (props) => {
   const [benefiaciary, setGetBenefiary] = useState([]);
   const [dependant, setDependant] = useState([]);
   const [relationTypes, setRelationTypes] = useState([]);
-  const [showTypes, setShowTypes] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [nationality, setNationality] = useState([]);
   const canSave = [fname, lname, relation, phone, address].every(Boolean);
@@ -253,36 +228,28 @@ const EmployeeDetail = (props) => {
   const thirdGrid = useRef(null);
   const fourthGrid = useRef(null);
   const fifthGrid = useRef(null);
-  const [formTitle, setFormTitle] = useState("");
   const [currentFormData, setCurrentFormData] = useState({});
   const [checkedTypes, setCheckedTypes] = useState([]);
   const [checkedTypesGuarantor, setCheckedTypesGuarantor] = useState([]);
   const [checkedTypesNextOfKin, setCheckedTypesNextOfKin] = useState([]);
   const [checkedBeneficiaryTypes, setCheckedBeneficiaryTypes] = useState([]);
   const [identityTypes, setIdentityTypes] = useState([]);
-
-const [postbene, setPostBene]=useState([])
-const [postDep, setPostDep]=useState([])
-const [postEmerg,setPostEmerg]=useState([])
-const [postGua,setPostGuar]= useState([])
-const [postNxtofK, setPostNxtofK]=useState([])
   // const submitBtn =  useRef(null)
-  const [delEmployeeName,setDelEmployeeName]=useState("")
-  const[isActive,setIsActive]=useState(false)
-  const[delEmployeeID,setDelEmployeeID]=useState("")
-  const [labels,setLabel]=useState("")
-  const[EmergencyContactName,setEmergencyContactName] =useState([])
+  const [delEmployeeName, setDelEmployeeName] = useState("")
+  const [isActive, setIsActive] = useState(false)
+  const [delEmployeeID, setDelEmployeeID] = useState("")
+  const [labels, setLabel] = useState("")
   const [EmployeeDependantChildrenList, setEmployeeDependantChildrenList] = useState([])
   const [EmployeeBeneficiaryChildrenList, setEmployeeBeneficiaryChildrenList] = useState([])
   const [EmployeeEmerGencyContactChildrenList, setEmployeeEmerGencyContactChildrenList] = useState([])
   const [EmployeerGurrantoContactChildrenList, setEmployeeGurrantoContactChildrenList] = useState([])
   const [EmployeeNextOfKinChildrenList, setEmployeeNextOfKinChildrenList] = useState([])
-  const [checkPercentage,setPercentage]=useState(false)
-  const[percent, setPercent]=useState(0)
+  const [checkPercentage, setPercentage] = useState(false)
+  const [percent, setPercent] = useState(0)
   const [phone, setPhone] = useState(null);
 
 
-//Beneficiary
+  //Beneficiary
   const firstNameRef = useRef(null);
   const LastnameRef = useRef(null);
   const phoneRef = useRef(null);
@@ -298,100 +265,100 @@ const [postNxtofK, setPostNxtofK]=useState([])
     addressRef,
     percentageRef
   ]
-  const refs2 =[
+  const refs2 = [
     relationRef,
   ]
-//Emergency Contact
-const firstNameEmergContactRef = useRef(null);
+  //Emergency Contact
+  const firstNameEmergContactRef = useRef(null);
   const LastnameEmergContactRef = useRef(null);
   const phoneEmergContactRef = useRef(null);
   const addressEmergContactRef = useRef(null);
   const emailEmergContactRef = useRef(null)
 
-  
+
   const EmergContRefs = [
     firstNameEmergContactRef,
     LastnameEmergContactRef,
     addressEmergContactRef,
     phoneEmergContactRef,
     emailEmergContactRef
-   
+
   ]
 
   //Dependent Refs
-   const DependentFirstName= useRef(null);
-   const DependentLastName = useRef(null);
-   const DependentDOB = useRef(null);
-   const DependentAddress = useRef(null);
-   const DependentRelation = useRef(null);
-   const DependentNationality = useRef(null);
-   const DependentIdType = useRef(null);
-   const DependentIdNumber = useRef(null);
-   const DependentDateOfExpiry = useRef(null);
-   const DependentEmail = useRef(null)
-   const DependentPhone = useRef(null)
+  const DependentFirstName = useRef(null);
+  const DependentLastName = useRef(null);
+  const DependentDOB = useRef(null);
+  const DependentAddress = useRef(null);
+  const DependentRelation = useRef(null);
+  const DependentNationality = useRef(null);
+  const DependentIdType = useRef(null);
+  const DependentIdNumber = useRef(null);
+  const DependentDateOfExpiry = useRef(null);
+  const DependentEmail = useRef(null)
+  const DependentPhone = useRef(null)
 
-    const DependentRefs = [
-      DependentFirstName,
-      DependentLastName,
-      DependentDOB,
-      DependentAddress,
-      DependentIdType,
-      DependentIdNumber,
-      DependentDateOfExpiry,
-      
-    ]
+  const DependentRefs = [
+    DependentFirstName,
+    DependentLastName,
+    DependentDOB,
+    DependentAddress,
+    DependentIdType,
+    DependentIdNumber,
+    DependentDateOfExpiry,
 
-    const DependentDropDownRefs=[
-      DependentRelation,
-      DependentNationality,
-    ]
+  ]
 
-   //Guarrantor Ref
-   const GuarrantorfirstNameRef = useRef(null);
-   const GuarrantorLastnameRef = useRef(null);
-   const GuarrantorphoneRef = useRef(null);
-   const GuarrantoraddressRef = useRef(null);
-   const GuarrantorRelationRef = useRef(null);
-   const GuarrantorNationalityRef = useRef(null);
-   const GuarrantorEmailRef = useRef(null)
-   const GuarrantorOccupationRef = useRef(null)
-  
+  const DependentDropDownRefs = [
+    DependentRelation,
+    DependentNationality,
+  ]
 
-const GuarantorRefs=[
-  GuarrantorfirstNameRef,
-  GuarrantorLastnameRef,
-  GuarrantorphoneRef,
-  GuarrantoraddressRef,
-  GuarrantorEmailRef,
-  GuarrantorOccupationRef
- 
-]
-const GuarantorDropDownRefs=[
-  GuarrantorRelationRef,
-  GuarrantorNationalityRef,
-]
+  //Guarrantor Ref
+  const GuarrantorfirstNameRef = useRef(null);
+  const GuarrantorLastnameRef = useRef(null);
+  const GuarrantorphoneRef = useRef(null);
+  const GuarrantoraddressRef = useRef(null);
+  const GuarrantorRelationRef = useRef(null);
+  const GuarrantorNationalityRef = useRef(null);
+  const GuarrantorEmailRef = useRef(null)
+  const GuarrantorOccupationRef = useRef(null)
 
 
+  const GuarantorRefs = [
+    GuarrantorfirstNameRef,
+    GuarrantorLastnameRef,
+    GuarrantorphoneRef,
+    GuarrantoraddressRef,
+    GuarrantorEmailRef,
+    GuarrantorOccupationRef
 
-const NextOfKinFirstNameRef= useRef(null)
-const NextOfKinLastNameRef= useRef(null);
-const NextOfKinPhoneRef= useRef(null)
-const NextOfKinAddress = useRef(null);
-const NextOfKinRelation = useRef(null);
-const NextOfKinNationality = useRef(null)
+  ]
+  const GuarantorDropDownRefs = [
+    GuarrantorRelationRef,
+    GuarrantorNationalityRef,
+  ]
 
-const NextOfKinRefs=[
-  NextOfKinFirstNameRef,
-  NextOfKinLastNameRef,
-  NextOfKinPhoneRef,
-  NextOfKinAddress,
-  
-]
-const NextOfKinDropDownRefs=[
-  NextOfKinRelation,
-  NextOfKinNationality
-]
+
+
+  const NextOfKinFirstNameRef = useRef(null)
+  const NextOfKinLastNameRef = useRef(null);
+  const NextOfKinPhoneRef = useRef(null)
+  const NextOfKinAddress = useRef(null);
+  const NextOfKinRelation = useRef(null);
+  const NextOfKinNationality = useRef(null)
+
+  const NextOfKinRefs = [
+    NextOfKinFirstNameRef,
+    NextOfKinLastNameRef,
+    NextOfKinPhoneRef,
+    NextOfKinAddress,
+
+  ]
+  const NextOfKinDropDownRefs = [
+    NextOfKinRelation,
+    NextOfKinNationality
+  ]
 
   const checkForValue = (ref) => {
     if (ref.current?.value) {
@@ -399,7 +366,7 @@ const NextOfKinDropDownRefs=[
     }
   };
 
-  const actionBegin2 = () => {};
+  const actionBegin2 = () => { };
 
   const toolbarOptions = [
     "Add",
@@ -423,194 +390,194 @@ const NextOfKinDropDownRefs=[
     setShow(true);
     setSearchInput("");
     setCurrentFormData("")
-  setSubmitData("")
-  refs.forEach((ref) => {
-  
-    ref.current.style.border = "1px solid #d8dbe0";
-    return
+    setSubmitData("")
+    refs.forEach((ref) => {
 
-  
-});
-if(activeKey===1){
-  setGetBenefiary([])
-}
-if(activeKey===2){
-  setDependant([])
- 
-}
-if(activeKey===3){
-  setEmergencyContact([])
-}
-if(activeKey===4){
-  setGetGuarantor([])
-}
-if(activeKey===5){
-  setGetNextOfKin([])
-  };
-}
+      ref.current.style.border = "1px solid #d8dbe0";
+      return
 
 
+    });
+    if (activeKey === 1) {
+      setGetBenefiary([])
+    }
+    if (activeKey === 2) {
+      setDependant([])
 
-  const {auth}= useAuth()
-  const {companyReference: CompanyReference } = auth
+    }
+    if (activeKey === 3) {
+      setEmergencyContact([])
+    }
+    if (activeKey === 4) {
+      setGetGuarantor([])
+    }
+    if (activeKey === 5) {
+      setGetNextOfKin([])
+    };
+  }
+
+
+
+  const { auth } = useAuth()
+  const { companyReference: CompanyReference } = auth
   const onCompleteAction = (args) => {
-    if(activeKey=== 1){
+    if (activeKey === 1) {
       if (args.commandColumn.type === 'Delete') {
-  
+
         args.cancel = true;
-    
+
         setIsActive(true)
-    
+
         setDelEmployeeName(`${args?.rowData?.employee?.firstName
-        } ${args?.rowData?.employee?.lastName
-        }`)
-    
+          } ${args?.rowData?.employee?.lastName
+          }`)
+
         setDelEmployeeID(args?.rowData?.id)
-    setLabel("HCM-MS5RN9DANOF-PSLL")
+        setLabel("HCM-MS5RN9DANOF-PSLL")
       }
     }
-    if(activeKey=== 2){
+    if (activeKey === 2) {
       if (args.commandColumn.type === 'Delete') {
-  
+
         args.cancel = true;
-    
+
         setIsActive(true)
-    
+
         setDelEmployeeName(`${args?.rowData?.employee?.firstName
-        } ${args?.rowData?.employee?.lastName
-        }`)
-    
+          } ${args?.rowData?.employee?.lastName
+          }`)
+
         setDelEmployeeID(args.rowData.id)
-    setLabel("HCM-TXJFM19UOAG-LOLN")
+        setLabel("HCM-TXJFM19UOAG-LOLN")
       }
     }
-    if(activeKey=== 3){
+    if (activeKey === 3) {
       if (args.commandColumn.type === 'Delete') {
-  
+
         args.cancel = true;
-    
+
         setIsActive(true)
-    
+
         setDelEmployeeName(`${args?.rowData?.employee?.firstName
-        } ${args?.rowData?.employee?.lastName
-        }`)
-    
+          } ${args?.rowData?.employee?.lastName
+          }`)
+
         setDelEmployeeID(args.rowData.id)
-    setLabel("HCM-C7C1XLFCOS5-LANG")
+        setLabel("HCM-C7C1XLFCOS5-LANG")
       }
     }
-    if(activeKey=== 4){
+    if (activeKey === 4) {
       if (args.commandColumn.type === 'Delete') {
-  
+
         args.cancel = true;
-    
+
         setIsActive(true)
-    
+
         setDelEmployeeName(`${args?.rowData?.employee?.firstName
-        } ${args?.rowData?.employee?.lastName
-        }`)
-    
+          } ${args?.rowData?.employee?.lastName
+          }`)
+
         setDelEmployeeID(args.rowData.id)
-    setLabel("HCM-2VDPTKA7U9T-LOLN")
+        setLabel("HCM-2VDPTKA7U9T-LOLN")
       }
     }
-    if(activeKey=== 5){
+    if (activeKey === 5) {
       if (args.commandColumn.type === 'Delete') {
-  
+
         args.cancel = true;
-    
+
         setIsActive(true)
-    
+
         setDelEmployeeName(`${args?.rowData?.employee?.firstName
-        } ${args?.rowData?.employee?.lastName
-        }`)
-    
+          } ${args?.rowData?.employee?.lastName
+          }`)
+
         setDelEmployeeID(args.rowData.id)
-    setLabel("HCM-EP256EK5BS-LASN")
+        setLabel("HCM-EP256EK5BS-LASN")
       }
     }
 
   };
 
   const submitRequest = (args) => {
-    if ( args.item.id === "saveItems") {
-      if(activeKey === 1){
-     
-        let PostBody={
-          employeeId:handleId,
+    if (args.item.id === "saveItems") {
+      if (activeKey === 1) {
+
+        let PostBody = {
+          employeeId: handleId,
           createEmployeeBeneficiaryChildren: EmployeeBeneficiaryChildrenList,
           userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
           userName: "string",
           CompanyReference: "00001_A01",
         }
-        if(EmployeeBeneficiaryChildrenList.length> 0){
+        if (EmployeeBeneficiaryChildrenList.length > 0) {
           setPostData(PostBody)
           setPostUrl(PostBeneficiary())
           PostBody("")
         }
-        return;  
+        return;
       }
-      if(activeKey === 2){
-       
-       let postBody  ={
-        employeeId: handleId,
-        userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        userName: "string",
-        companyReference: "00001_A01",
-        createEmployeeDependantChildren: EmployeeDependantChildrenList,
-        
-       }
-       if(EmployeeDependantChildrenList.length> 0){
-        setDependentPostUrl(PostDependantDetails())
-        setDependantPostData(postBody)
-        postBody("")
-       }
-       return;
+      if (activeKey === 2) {
+
+        let postBody = {
+          employeeId: handleId,
+          userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          userName: "string",
+          companyReference: "00001_A01",
+          createEmployeeDependantChildren: EmployeeDependantChildrenList,
+
+        }
+        if (EmployeeDependantChildrenList.length > 0) {
+          setDependentPostUrl(PostDependantDetails())
+          setDependantPostData(postBody)
+          postBody("")
+        }
+        return;
       }
-      if(activeKey === 3){
-        let Emergency= {
-          employeeId:handleId,
+      if (activeKey === 3) {
+        let Emergency = {
+          employeeId: handleId,
           createEmployeeEmergencyContactChildren: EmployeeEmerGencyContactChildrenList,
-         userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
           userName: "string",
           companyReference: "00001_A01",
         }
-        if(EmployeeEmerGencyContactChildrenList.length> 0){
+        if (EmployeeEmerGencyContactChildrenList.length > 0) {
           setEmegencyContactPostUrl(PostEmployeeEmergencyContact())
           setEmegencyContactPostData(Emergency)
           Emergency("")
         }
         return;
       }
-      if(activeKey === 4){
-        let postbody=   {
-          employeeId: handleId,
-            "createEmployeeGuarantorChildren": EmployeerGurrantoContactChildrenList,
-            "companyReference": "string",
-            "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-          }
-          if(EmployeerGurrantoContactChildrenList.length > 0){
-            setGuarrantorPostUrl(PostEmployeeGuarantor())
-            setPostGuarrantorData(postbody)
-            postbody("")
-          }
-          return;
-      }
-      if(activeKey === 5 ){
+      if (activeKey === 4) {
         let postbody = {
-          employeeId:handleId,
-          createEmployeeNextofKinChildren:EmployeeNextOfKinChildrenList,
+          employeeId: handleId,
+          "createEmployeeGuarantorChildren": EmployeerGurrantoContactChildrenList,
+          "companyReference": "string",
+          "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        }
+        if (EmployeerGurrantoContactChildrenList.length > 0) {
+          setGuarrantorPostUrl(PostEmployeeGuarantor())
+          setPostGuarrantorData(postbody)
+          postbody("")
+        }
+        return;
+      }
+      if (activeKey === 5) {
+        let postbody = {
+          employeeId: handleId,
+          createEmployeeNextofKinChildren: EmployeeNextOfKinChildrenList,
           companyReference: "string",
           userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
         }
-        if(EmployeeNextOfKinChildrenList.length> 0){
+        if (EmployeeNextOfKinChildrenList.length > 0) {
           setNOKPostUrl(PostEmployeeNextOfKin())
           setPostNOK(postbody)
           postbody("")
         }
         return;
       }
-      
+
     } else {
       console.log("ELSE");
     }
@@ -618,71 +585,71 @@ if(activeKey===5){
   };
 
   const actionComplete = (args) => {
-   if(activeKey == 1){
-    // setPercentage(handlePercentageCalc(BeneficiaryForm))
-   }
-   
+    if (activeKey == 1) {
+      // setPercentage(handlePercentageCalc(BeneficiaryForm))
+    }
+
   };
   var values = ColumnDirective.getValue;
 
   const onCommandClick = (args) => {
-      console.log(args?.rowData);
-    if(args.rowData.isDelete === true){
+    console.log(args?.rowData);
+    if (args.rowData.isDelete === true) {
 
-      if(activeKey===1){
-        setEmployeeBeneficiaryChildrenList((current)=>current.filter((deleteItem) => deleteItem.isDelete !== true));
-
-      }
-      if(activeKey===2){
-        setEmployeeDependantChildrenList((current)=>current.filter((deleteItem) => deleteItem.isDelete !== true));
-
-       
-      }
-      if(activeKey===3){
-        setEmployeeEmerGencyContactChildrenList((current)=>current.filter((deleteItem) => deleteItem.isDelete !== true));
+      if (activeKey === 1) {
+        setEmployeeBeneficiaryChildrenList((current) => current.filter((deleteItem) => deleteItem.isDelete !== true));
 
       }
-      if(activeKey===4){
-        setEmployeeGurrantoContactChildrenList((current)=>current.filter((deleteItem) => deleteItem.isDelete !== true));
+      if (activeKey === 2) {
+        setEmployeeDependantChildrenList((current) => current.filter((deleteItem) => deleteItem.isDelete !== true));
+
 
       }
-      if(activeKey===5){
-        setEmployeeNextOfKinChildrenList((current)=>current.filter((deleteItem) => deleteItem.isDelete !== true));
+      if (activeKey === 3) {
+        setEmployeeEmerGencyContactChildrenList((current) => current.filter((deleteItem) => deleteItem.isDelete !== true));
 
-        };
+      }
+      if (activeKey === 4) {
+        setEmployeeGurrantoContactChildrenList((current) => current.filter((deleteItem) => deleteItem.isDelete !== true));
+
+      }
+      if (activeKey === 5) {
+        setEmployeeNextOfKinChildrenList((current) => current.filter((deleteItem) => deleteItem.isDelete !== true));
+
+      };
       args.cancel = false;
-      return ;
-    }else{
+      return;
+    } else {
       onCompleteAction(args);
     }
-    
+
   };
 
 
 
-const  {data:multicallData, setUrls} =  useMultiFetch([], (results) => {
+  const { data: multicallData, setUrls } = useMultiFetch([], (results) => {
+
+    console.log({ results })
+    setGetBenefiary([...results[0].data]);
+    setDependant([...results[1].data]);
+    setEmergencyContact([...results[2].data]);
+    setGetGuarantor([...results[3].data]);
+    setRelationTypes([...results[4].data]);
+    setGetNextOfKin([...results[5].data])
+
+  })
+
+  useEffect(() => {
+    console.log(handleId);
+    setUrls([GetBeneficiary(handleId),
+    GetEmployeeDependant(handleId), GetEmployeeEmergencyContact(handleId),
+    GetEmployeeGuarantor(handleId), GetRelationTypes(CompanyReference), GetEmployeeNextOfKin(handleId)])
+    console.log(handleId);
+  }, [searchResult, handleId, setUrls, CompanyReference])
 
 
-  setGetBenefiary([...results[0].data]);
-  setDependant([...results[1].data]);
-  setEmergencyContact([...results[2].data]);
-  setGetGuarantor([...results[3].data]);
-  setRelationTypes([...results[4].data]);
-  setGetNextOfKin([...results[5].data])
-  
-})
-
-useEffect(() => {
-console.log(handleId);
-setUrls([GetBeneficiary(handleId), 
-  GetEmployeeDependant(handleId), GetEmployeeEmergencyContact(handleId), 
-  GetEmployeeGuarantor(handleId),GetRelationTypes(CompanyReference),GetEmployeeNextOfKin(handleId)])
-console.log(handleId);
-}, [searchResult,handleId,setUrls,CompanyReference])
-
-
-useEffect(() => {
-}, [EmployeeDependantChildrenList])
+  useEffect(() => {
+  }, [EmployeeDependantChildrenList])
 
 
 
@@ -702,7 +669,7 @@ useEffect(() => {
 
     if (results?.id) {
       setSearchResult(results);
-     
+
     }
   };
 
@@ -716,11 +683,11 @@ useEffect(() => {
   var arr = [];
 
 
-//Beneficiary
-  const  {setData:setPostData, setUrl:setPostUrl} = usePost('', (response) => {
+  //Beneficiary
+  const { setData: setPostData, setUrl: setPostUrl } = usePost('', (response) => {
     // console.log({location:response });
     setShow(false);
-    const {data} = response
+    const { data } = response
     if ("" === data) {
       toast.success(GetLabelByName("HCM-HAGGXNJQW2B_HRPR", lan));
       //showToasts();
@@ -739,9 +706,9 @@ useEffect(() => {
   })
 
   //HANDLE DEPENDANT POST
-  const  {setData:setDependantPostData, setUrl:setDependentPostUrl} = usePost('', (response) => {
+  const { setData: setDependantPostData, setUrl: setDependentPostUrl } = usePost('', (response) => {
     setShow(false);
-    const {data} = response
+    const { data } = response
     if ("" === data) {
       toast.success(GetLabelByName("HCM-HAGGXNJQW2B_HRPR", lan));
       //showToasts();
@@ -759,10 +726,10 @@ useEffect(() => {
   })
 
   //HANDLE EMERGENCY CONTACT 
-  const  {setData:setEmegencyContactPostData, setUrl:setEmegencyContactPostUrl} = usePost('', (response) => {
+  const { setData: setEmegencyContactPostData, setUrl: setEmegencyContactPostUrl } = usePost('', (response) => {
     // console.log({location:response });
     setShow(false);
-    const {data} = response
+    const { data } = response
     if ("" === data) {
       toast.success(GetLabelByName("HCM-HAGGXNJQW2B_HRPR", lan));
       //showToasts();
@@ -780,10 +747,10 @@ useEffect(() => {
   })
 
   //HANDLE GUARANTOR POST
-  const  {setData:setPostGuarrantorData, setUrl:setGuarrantorPostUrl} = usePost('', (response) => {
+  const { setData: setPostGuarrantorData, setUrl: setGuarrantorPostUrl } = usePost('', (response) => {
     // console.log({location:response });
     setShow(false);
-    const {data} = response
+    const { data } = response
     if ("" === data) {
       toast.success(GetLabelByName("HCM-HAGGXNJQW2B_HRPR", lan));
       //showToasts();
@@ -801,10 +768,10 @@ useEffect(() => {
   })
 
   //HANDLE NEXT OF KIN POST
-  const  {setData:setPostNOK, setUrl:setNOKPostUrl} = usePost('', (response) => {
+  const { setData: setPostNOK, setUrl: setNOKPostUrl } = usePost('', (response) => {
     // console.log({location:response });
     setShow(false);
-    const {data} = response
+    const { data } = response
     if ("" === data) {
       toast.success(GetLabelByName("HCM-HAGGXNJQW2B_HRPR", lan));
       //showToasts();
@@ -822,8 +789,8 @@ useEffect(() => {
   })
 
 
-  let getName=(data,id)=>{
-    return data.find(x=>x.id=== id)?.name || "Not Found"
+  let getName = (data, id) => {
+    return data.find(x => x.id === id)?.name || "Not Found"
   }
 
 
@@ -831,40 +798,40 @@ useEffect(() => {
 
   const submitBtn = () => {
     // Beneficiary
-    
+
     if (activeKey === 1) {
       refs.forEach((ref) => {
         if (ref.current.value.length > 2) {
           ref.current.style.border = "2px solid green";
-        }else if (ref.current.value.length < 1) {
+        } else if (ref.current.value.length < 1) {
           ref.current.style.border = "2px solid red";
         } else if (ref.current.value === "") {
           ref.current.style.border = "2px solid red";
-  
+
         } else {
           ref.current.style.border = "2px solid red";
-         
+
           return
-   
+
         }
       });
       refs2.forEach((ref) => {
         if (ref.current.value !== "-1") {
           ref.current.style.border = "2px solid green";
-        }else if (ref.current.value === "-1") {
+        } else if (ref.current.value === "-1") {
           ref.current.style.border = "2px solid red";
         } else if (ref.current.value === "") {
           ref.current.style.border = "2px solid red";
-  
+
         } else {
           ref.current.style.border = "2px solid red";
-         
+
           return
-   
+
         }
       });
-  
-      if (!currentFormData?.firstName || submitData?.firstName === "" &&  !currentFormData?.lastName || submitData?.lastName === "" &&  !phone || phone === "" && !currentFormData?.address || submitData?.address === "" && !currentFormData?.percentage || submitData?.percentage === "") {
+
+      if (!currentFormData?.firstName || submitData?.firstName === "" && !currentFormData?.lastName || submitData?.lastName === "" && !phone || phone === "" && !currentFormData?.address || submitData?.address === "" && !currentFormData?.percentage || submitData?.percentage === "") {
         toast.error(GetLabelByName("HCM-WQ9J7737WDC_LASN", lan), toastWarning);
         return;
       }
@@ -896,32 +863,32 @@ useEffect(() => {
       }
 
 
-      let benefiaciaryGridData={
+      let benefiaciaryGridData = {
         isDelete: true,
         ...currentFormData,
-        relation : {
-          name: getName(relationTypes,currentFormData?.relationId),
-        
+        relation: {
+          name: getName(relationTypes, currentFormData?.relationId),
+
         },
 
-        
+
       }
- 
+
       let data = {
         ...currentFormData,
-        phone:phone,
+        phone: phone,
         isDelete: true
       }
-      
- setGetBenefiary((prevState)=>[...prevState, benefiaciaryGridData])
- benefiaciaryGridData("")
- setEmployeeBeneficiaryChildrenList((prev) => [...prev,data ])
 
-     
-     checkBenefiary();
-   setCurrentFormData("")
-   setPhone("")
-   setShowModal(false)
+      setGetBenefiary((prevState) => [...prevState, benefiaciaryGridData])
+      benefiaciaryGridData("")
+      setEmployeeBeneficiaryChildrenList((prev) => [...prev, data])
+
+
+      checkBenefiary();
+      setCurrentFormData("")
+      setPhone("")
+      setShowModal(false)
 
     }
     //HANDLE DEPENDANT
@@ -930,43 +897,43 @@ useEffect(() => {
       DependentRefs.forEach((ref) => {
         if (ref.current.value.length > 2) {
           ref.current.style.border = "2px solid green";
-        }else if (ref.current.value.length < 1) {
+        } else if (ref.current.value.length < 1) {
           ref.current.style.border = "2px solid red";
         } else if (ref.current.value === "") {
           ref.current.style.border = "2px solid red";
-  
+
         } else {
           ref.current.style.border = "2px solid red";
-         
+
           return
-   
+
         }
       });
       DependentDropDownRefs.forEach((ref) => {
         if (ref.current.value !== "-1") {
           ref.current.style.border = "2px solid green";
-        }else if (ref.current.value === "-1") {
+        } else if (ref.current.value === "-1") {
           ref.current.style.border = "2px solid red";
         } else if (ref.current.value === "") {
           ref.current.style.border = "2px solid red";
-  
+
         } else {
           ref.current.style.border = "2px solid red";
-         
+
           return
-   
+
         }
       });
-  
-      if (!currentFormData?.firstName || submitData?.firstName === "" && 
-       !currentFormData?.lastName || submitData?.lastName === "" && 
-        !currentFormData?.dateOfBirth || submitData?.dateOfBirth === "" && 
-        !currentFormData?.address || submitData?.address === "" && 
-         !currentFormData?.relationTypeId ||
-      submitData?.relationTypeId === "-1" && !currentFormData?.nationalityId || submitData?.nationalityId === "-1" 
-      && !currentFormData?.identityTypeId ||
-      submitData?.identityTypeId === "-1" && !currentFormData?.identityNumber ||
-      submitData?.identityNumber === "" && !currentFormData?.dateOfExpiry || submitData?.dateOfExpiry === "" ) {
+
+      if (!currentFormData?.firstName || submitData?.firstName === "" &&
+        !currentFormData?.lastName || submitData?.lastName === "" &&
+        !currentFormData?.dateOfBirth || submitData?.dateOfBirth === "" &&
+        !currentFormData?.address || submitData?.address === "" &&
+        !currentFormData?.relationTypeId ||
+        submitData?.relationTypeId === "-1" && !currentFormData?.nationalityId || submitData?.nationalityId === "-1"
+        && !currentFormData?.identityTypeId ||
+        submitData?.identityTypeId === "-1" && !currentFormData?.identityNumber ||
+        submitData?.identityNumber === "" && !currentFormData?.dateOfExpiry || submitData?.dateOfExpiry === "") {
         toast.error(GetLabelByName("HCM-WQ9J7737WDC_LASN", lan), toastWarning);
         return;
       }
@@ -1016,85 +983,85 @@ useEffect(() => {
         toast.error("Please Enter Expiry Date!", toastWarning);
         return;
       }
-   
-      
 
-      let formaData ={
+
+
+      let formaData = {
         isDelete: true,
-        address : currentFormData?.address,
+        address: currentFormData?.address,
 
-dateOfBirth: currentFormData?.dateOfBirth,
+        dateOfBirth: currentFormData?.dateOfBirth,
 
-dateOfExpiry: currentFormData?.dateOfExpiry ,
+        dateOfExpiry: currentFormData?.dateOfExpiry,
 
-firstName: currentFormData?.firstName,
+        firstName: currentFormData?.firstName,
 
-identityNumber: currentFormData?.identityNumber,
+        identityNumber: currentFormData?.identityNumber,
 
-identityTypeId: currentFormData?.identityTypeId,
+        identityTypeId: currentFormData?.identityTypeId,
 
-lastName: currentFormData?.lastName,
+        lastName: currentFormData?.lastName,
 
-nationalityId: currentFormData?.nationalityId,
+        nationalityId: currentFormData?.nationalityId,
 
-relationTypeId : currentFormData?.relationTypeId,
+        relationTypeId: currentFormData?.relationTypeId,
       }
 
-       setEmployeeDependantChildrenList((prev) => [...prev,formaData])
- 
+      setEmployeeDependantChildrenList((prev) => [...prev, formaData])
+
       //console.log({Trial: currentFormData,Dep });
-      let posting= {
+      let posting = {
         isDelete: true,
-       ...currentFormData,
-         firstName: currentFormData?.firstName,
-         lastName: currentFormData?.lastName,
-         dateOfBirth:  currentFormData?.dateOfBirth,
-         address: currentFormData?.address,
-       dateOfExpiry:  currentFormData?.dateOfExpiry,
-         identityType: {
-            
-             name: getName(identityTypes,currentFormData?.identityTypeId)
-         },
-         relation: {
-           
-          id:currentFormData?.relationTypeId,
-             name: getName(checkedTypes,currentFormData?.relationTypeId)
-         },
-         "nationality": {
-            
-          
-             "name": getName(nationality,currentFormData?.nationalityId)
-         },
-        
-    }
-  
- setDependant((prevState)=>[posting,...prevState])
-   //setPostDep((prevState)=>[Dep,...prevState])
-   setCurrentFormData("")
-   setShowModal(false)
+        ...currentFormData,
+        firstName: currentFormData?.firstName,
+        lastName: currentFormData?.lastName,
+        dateOfBirth: currentFormData?.dateOfBirth,
+        address: currentFormData?.address,
+        dateOfExpiry: currentFormData?.dateOfExpiry,
+        identityType: {
+
+          name: getName(identityTypes, currentFormData?.identityTypeId)
+        },
+        relation: {
+
+          id: currentFormData?.relationTypeId,
+          name: getName(checkedTypes, currentFormData?.relationTypeId)
+        },
+        "nationality": {
+
+
+          "name": getName(nationality, currentFormData?.nationalityId)
+        },
+
+      }
+
+      setDependant((prevState) => [posting, ...prevState])
+      //setPostDep((prevState)=>[Dep,...prevState])
+      setCurrentFormData("")
+      setShowModal(false)
     }
     //handle Emegency Contact
     if (activeKey === 3) {
-    
-        EmergContRefs.forEach((ref) => {
-          if (ref.current.value.length > 2) {
-            ref.current.style.border = "2px solid green";
-          }else if (ref.current.value.length < 1) {
-            ref.current.style.border = "2px solid red";
-          } else if (ref.current.value === "") {
-            ref.current.style.border = "2px solid red";
-    
-          } else {
-            ref.current.style.border = "2px solid red";
-           
-            return
-     
-          }
-        });
-        if (!currentFormData?.firstName || submitData?.firstName === "" &&  !currentFormData?.lastName || submitData?.lastName === "" &&  !phone || phone === "" && !currentFormData?.address || submitData?.address === "" && !currentFormData?.email || submitData?.email === -1) {
-          toast.error(GetLabelByName("HCM-WQ9J7737WDC_LASN", lan), toastWarning);
-          return;
+
+      EmergContRefs.forEach((ref) => {
+        if (ref.current.value.length > 2) {
+          ref.current.style.border = "2px solid green";
+        } else if (ref.current.value.length < 1) {
+          ref.current.style.border = "2px solid red";
+        } else if (ref.current.value === "") {
+          ref.current.style.border = "2px solid red";
+
+        } else {
+          ref.current.style.border = "2px solid red";
+
+          return
+
         }
+      });
+      if (!currentFormData?.firstName || submitData?.firstName === "" && !currentFormData?.lastName || submitData?.lastName === "" && !phone || phone === "" && !currentFormData?.address || submitData?.address === "" && !currentFormData?.email || submitData?.email === -1) {
+        toast.error(GetLabelByName("HCM-WQ9J7737WDC_LASN", lan), toastWarning);
+        return;
+      }
 
       if (!currentFormData?.firstName || submitData?.firstName === "") {
         toast.error("Please Enter First Name!", toastWarning);
@@ -1120,36 +1087,36 @@ relationTypeId : currentFormData?.relationTypeId,
       // console.log(submitData)
       let employeeId = handleId;
       //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
-      
-      
-      let posting=  {
-        isDelete : true,
-        employee:{
-         
+
+
+      let posting = {
+        isDelete: true,
+        employee: {
+
           firstName: `${currentFormData?.firstName} `,
           lastName: `${currentFormData?.lastName}`
         }
         ,
-        email : currentFormData?.email,
-        phone : phone,
-        address : currentFormData?.address,
-      
+        email: currentFormData?.email,
+        phone: phone,
+        address: currentFormData?.address,
+
       }
 
 
 
-      
+
 
 
       // postEmergencyContact(newData);
       let data = {
-        isDelete : true,
+        isDelete: true,
         ...currentFormData,
         phone: phone,
       }
- setEmployeeEmerGencyContactChildrenList((prev)=>[...prev,data])
+      setEmployeeEmerGencyContactChildrenList((prev) => [...prev, data])
 
-      setEmergencyContact((prevState)=>[posting, ...prevState])
+      setEmergencyContact((prevState) => [posting, ...prevState])
       setCurrentFormData("")
       setPhone("")
       setShowModal(false)
@@ -1160,39 +1127,39 @@ relationTypeId : currentFormData?.relationTypeId,
       GuarantorRefs.forEach((ref) => {
         if (ref.current.value.length > 2) {
           ref.current.style.border = "2px solid green";
-        }else if (ref.current.value.length < 1) {
+        } else if (ref.current.value.length < 1) {
           ref.current.style.border = "2px solid red";
         } else if (ref.current.value === "") {
           ref.current.style.border = "2px solid red";
-  
+
         } else {
           ref.current.style.border = "2px solid red";
-         
+
           return
-   
+
         }
       });
       GuarantorDropDownRefs.forEach((ref) => {
         if (ref.current.value !== "-1") {
           ref.current.style.border = "2px solid green";
-        }else if (ref.current.value === "-1") {
+        } else if (ref.current.value === "-1") {
           ref.current.style.border = "2px solid red";
         } else if (ref.current.value === "") {
           ref.current.style.border = "2px solid red";
-  
+
         } else {
           ref.current.style.border = "2px solid red";
-         
+
           return
-   
+
         }
       });
-  
-      if (!currentFormData?.firstName || submitData?.firstName === "" && 
-       !currentFormData?.lastName || submitData?.lastName === "" &&  !phone || phone === "" && !currentFormData?.address || submitData?.address === "" 
-       && !currentFormData?.relationId || submitData?.relationId === "-1" && 
-       !currentFormData?.email || submitData?.email === -1 && !currentFormData?.nationalityId ||
-      submitData?.nationalityId === "-1" && !currentFormData?.occupation || submitData?.occupation === "-1") {
+
+      if (!currentFormData?.firstName || submitData?.firstName === "" &&
+        !currentFormData?.lastName || submitData?.lastName === "" && !phone || phone === "" && !currentFormData?.address || submitData?.address === ""
+        && !currentFormData?.relationId || submitData?.relationId === "-1" &&
+        !currentFormData?.email || submitData?.email === -1 && !currentFormData?.nationalityId ||
+        submitData?.nationalityId === "-1" && !currentFormData?.occupation || submitData?.occupation === "-1") {
         toast.error(GetLabelByName("HCM-WQ9J7737WDC_LASN", lan), toastWarning);
         return;
       }
@@ -1233,38 +1200,38 @@ relationTypeId : currentFormData?.relationTypeId,
         toast.error("Please Enter Occupation", toastWarning);
         return;
       }
-      
-      
+
+
       // console.log(submitData)
       let employeeId = handleId;
       //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
-     
-      
-      let gridView=  {
-        isDelete : true,
+
+
+      let gridView = {
+        isDelete: true,
         name: `${currentFormData?.firstName} ${currentFormData?.lastName}`,
         phone: phone,
         occupation: currentFormData?.occupation,
         address: currentFormData?.address,
-       
+
         nationality: {
-          
-          name: getName(nationality,currentFormData?.nationalityId )
+
+          name: getName(nationality, currentFormData?.nationalityId)
         },
         relation: {
-         
-          name: getName(checkedTypesGuarantor,currentFormData?.relationId)
+
+          name: getName(checkedTypesGuarantor, currentFormData?.relationId)
         }
       }
       let data = {
         ...currentFormData,
         phone: phone,
-        isDelete : true,
+        isDelete: true,
       }
-      setEmployeeGurrantoContactChildrenList((prev)=>[...prev,data])
-     
-     
-      setGetGuarantor((prevState)=>[gridView,...prevState])
+      setEmployeeGurrantoContactChildrenList((prev) => [...prev, data])
+
+
+      setGetGuarantor((prevState) => [gridView, ...prevState])
       checkRelationGuarantor();
       setCurrentFormData("")
       setPhone("")
@@ -1275,39 +1242,39 @@ relationTypeId : currentFormData?.relationTypeId,
       NextOfKinRefs.forEach((ref) => {
         if (ref.current.value.length > 2) {
           ref.current.style.border = "2px solid green";
-        }else if (ref.current.value.length < 1) {
+        } else if (ref.current.value.length < 1) {
           ref.current.style.border = "2px solid red";
         } else if (ref.current.value === "") {
           ref.current.style.border = "2px solid red";
-  
+
         } else {
           ref.current.style.border = "2px solid red";
-         
+
           return
-   
+
         }
       });
       NextOfKinDropDownRefs.forEach((ref) => {
         if (ref.current.value !== "-1") {
           ref.current.style.border = "2px solid green";
-        }else if (ref.current.value === "-1") {
+        } else if (ref.current.value === "-1") {
           ref.current.style.border = "2px solid red";
         } else if (ref.current.value === "") {
           ref.current.style.border = "2px solid red";
-  
+
         } else {
           ref.current.style.border = "2px solid red";
-         
+
           return
-   
+
         }
       });
-  
-      if (!currentFormData?.firstName || submitData?.firstName === "" && 
-       !currentFormData?.lastName || submitData?.lastName === "" &&  !phone || phone === "" && !currentFormData?.address || submitData?.address === "" 
-       && !currentFormData?.relationId || submitData?.relationId === "-1" && 
-       !currentFormData?.email || submitData?.email === -1 && !currentFormData?.nationalityId ||
-      submitData?.nationalityId === "-1") {
+
+      if (!currentFormData?.firstName || submitData?.firstName === "" &&
+        !currentFormData?.lastName || submitData?.lastName === "" && !phone || phone === "" && !currentFormData?.address || submitData?.address === ""
+        && !currentFormData?.relationId || submitData?.relationId === "-1" &&
+        !currentFormData?.email || submitData?.email === -1 && !currentFormData?.nationalityId ||
+        submitData?.nationalityId === "-1") {
         toast.error(GetLabelByName("HCM-WQ9J7737WDC_LASN", lan), toastWarning);
         return;
       }
@@ -1352,36 +1319,36 @@ relationTypeId : currentFormData?.relationTypeId,
         employeeId,
         name: `${currentFormData?.firstName} ${currentFormData?.lastName}`,
       };
-      
+
       // postNextOfKin(newData);
 
-let handleGrid=  {
-  isDelete : true,
-  "name": `${currentFormData?.firstName} ${currentFormData?.lastName}`,
-  "email": currentFormData?.email,
-  "relationId": currentFormData?.relationId ,
-  "phone": phone,
+      let handleGrid = {
+        isDelete: true,
+        "name": `${currentFormData?.firstName} ${currentFormData?.lastName}`,
+        "email": currentFormData?.email,
+        "relationId": currentFormData?.relationId,
+        "phone": phone,
 
-  "address": currentFormData?.address,
- 
-  "relation": {
-    "id": currentFormData?.relationId ,
-   
-    "name": getName(relationTypes,currentFormData?.relationId)
-  },
-  "nationality": {
-    "id": currentFormData?.nationalityId ,
-    "name": getName(nationality,currentFormData?.nationalityId)
-  }
-}
+        "address": currentFormData?.address,
 
-let data = {
-  ...currentFormData,
-  phone: phone,
-  isDelete : true,
-}
-setEmployeeNextOfKinChildrenList((prev)=>[...prev,data])
-      setGetNextOfKin((prevState)=>[handleGrid,...prevState])
+        "relation": {
+          "id": currentFormData?.relationId,
+
+          "name": getName(relationTypes, currentFormData?.relationId)
+        },
+        "nationality": {
+          "id": currentFormData?.nationalityId,
+          "name": getName(nationality, currentFormData?.nationalityId)
+        }
+      }
+
+      let data = {
+        ...currentFormData,
+        phone: phone,
+        isDelete: true,
+      }
+      setEmployeeNextOfKinChildrenList((prev) => [...prev, data])
+      setGetNextOfKin((prevState) => [handleGrid, ...prevState])
       // setPostNxtofK(newData)
       checkRelationNextOfKin();
       setCurrentFormData("")
@@ -1401,14 +1368,14 @@ setEmployeeNextOfKinChildrenList((prev)=>[...prev,data])
     setSubmitData((data) => {
       return { ...data, [e?.target?.name]: e?.target?.value };
     });
-    if(e?.target?.name === "percentage"){
-    setPercent(e?.target?.value)
+    if (e?.target?.name === "percentage") {
+      setPercent(e?.target?.value)
     }
   };
 
 
-  const  {data:multical} =  useMultiFetch([ 
-    GetNationality(CompanyReference ),GetIdTypes(CompanyReference )], (results) => {
+  const { data: multical } = useMultiFetch([
+    GetNationality(CompanyReference), GetIdTypes(CompanyReference)], (results) => {
 
 
 
@@ -1423,9 +1390,9 @@ setEmployeeNextOfKinChildrenList((prev)=>[...prev,data])
       ]);
 
 
-        
-  
-  })
+
+
+    })
 
   const ben_actionBegin = (args) => {
     checkRelationDependant();
@@ -1442,36 +1409,36 @@ setEmployeeNextOfKinChildrenList((prev)=>[...prev,data])
   if (activeKey === 1) {
     content = (
       <BeneficiaryForm
-      setPhone= {setPhone}
-      firstNameref = {firstNameRef}
-      lastNameref={LastnameRef}
-      phonref={phoneRef}
-      addressref={addressRef}
-      relationref={relationRef}
-      percentageref={percentageRef}
-      checkValue={checkForValue}
-      phone={phone}
+        setPhone={setPhone}
+        firstNameref={firstNameRef}
+        lastNameref={LastnameRef}
+        phonref={phoneRef}
+        addressref={addressRef}
+        relationref={relationRef}
+        percentageref={percentageRef}
+        checkValue={checkForValue}
+        phone={phone}
         currentFormData={currentFormData}
         handleFormChange={handleFormChange}
         setCurrentFormData={setCurrentFormData}
         view={checkedBeneficiaryTypes}
-        
+
       />
     );
   }
   if (activeKey === 2) {
     content = (
       <DependantForm
-      firstNameref = {DependentFirstName}
-      lastNameref={DependentLastName}
-      addressref={DependentAddress}
-      relationRef={DependentRelation}
-      nationalityRef = {DependentNationality}
-      dateOfBirthRef = {DependentDOB}
-      IdTypeRef ={DependentIdType}
-      IdNumerRef={DependentIdNumber}
-      dateOfExpiry ={DependentDateOfExpiry}
-      checkValue={checkForValue}
+        firstNameref={DependentFirstName}
+        lastNameref={DependentLastName}
+        addressref={DependentAddress}
+        relationRef={DependentRelation}
+        nationalityRef={DependentNationality}
+        dateOfBirthRef={DependentDOB}
+        IdTypeRef={DependentIdType}
+        IdNumerRef={DependentIdNumber}
+        dateOfExpiry={DependentDateOfExpiry}
+        checkValue={checkForValue}
         currentFormData={currentFormData}
         handleFormChange={handleFormChange}
         setCurrentFormData={setCurrentFormData}
@@ -1486,34 +1453,34 @@ setEmployeeNextOfKinChildrenList((prev)=>[...prev,data])
   if (activeKey === 3) {
     content = (
       <EmergencyContactForm
-      firstNameref = {firstNameEmergContactRef}
-      lastNameref={LastnameEmergContactRef}
-      phonref={phoneEmergContactRef}
-      addressref={addressEmergContactRef}
-      emailRef={emailEmergContactRef}
-      checkValue={checkForValue}
-      setPhone= {setPhone}
-      phone={phone}
+        firstNameref={firstNameEmergContactRef}
+        lastNameref={LastnameEmergContactRef}
+        phonref={phoneEmergContactRef}
+        addressref={addressEmergContactRef}
+        emailRef={emailEmergContactRef}
+        checkValue={checkForValue}
+        setPhone={setPhone}
+        phone={phone}
         currentFormData={currentFormData}
         handleFormChange={handleFormChange}
         setCurrentFormData={setCurrentFormData}
       />
     );
-  }  
+  }
   if (activeKey === 4) {
     content = (
       <GuarantorForm
-      firstName={GuarrantorfirstNameRef}
-      lastName={GuarrantorLastnameRef}
-      phoneRef={GuarrantorphoneRef}
-      address={GuarrantoraddressRef}
-      email={GuarrantorEmailRef}
-      occupation={GuarrantorOccupationRef}
-      relation={GuarrantorRelationRef}
-nationalityRef={GuarrantorNationalityRef}
-checkValue={checkForValue}
-      setPhone= {setPhone}
-      phone={phone}
+        firstName={GuarrantorfirstNameRef}
+        lastName={GuarrantorLastnameRef}
+        phoneRef={GuarrantorphoneRef}
+        address={GuarrantoraddressRef}
+        email={GuarrantorEmailRef}
+        occupation={GuarrantorOccupationRef}
+        relation={GuarrantorRelationRef}
+        nationalityRef={GuarrantorNationalityRef}
+        checkValue={checkForValue}
+        setPhone={setPhone}
+        phone={phone}
         currentFormData={currentFormData}
         handleFormChange={handleFormChange}
         setCurrentFormData={setCurrentFormData}
@@ -1526,15 +1493,15 @@ checkValue={checkForValue}
   if (activeKey === 5) {
     content = (
       <NextOfKinForm
-      firstNameRef={NextOfKinFirstNameRef}
-      lastNameRef={NextOfKinLastNameRef}
-      phoneRef={NextOfKinPhoneRef}
-      AddressRef={NextOfKinAddress}
-relationRef={NextOfKinRelation}
-nationalityRef={NextOfKinNationality}
-checkValue={checkForValue}
-      setPhone= {setPhone}
-      phone={phone}
+        firstNameRef={NextOfKinFirstNameRef}
+        lastNameRef={NextOfKinLastNameRef}
+        phoneRef={NextOfKinPhoneRef}
+        AddressRef={NextOfKinAddress}
+        relationRef={NextOfKinRelation}
+        nationalityRef={NextOfKinNationality}
+        checkValue={checkForValue}
+        setPhone={setPhone}
+        phone={phone}
         currentFormData={currentFormData}
         handleFormChange={handleFormChange}
         setCurrentFormData={setCurrentFormData}
@@ -1543,15 +1510,15 @@ checkValue={checkForValue}
       />
     );
   }
-// useEffect(()=>{
-//   if(benefiaciary){
- 
- console.log({data: currentFormData});
-//   // setPercentage(result)
-   
-//   }
-  
-// },[benefiaciary])
+  // useEffect(()=>{
+  //   if(benefiaciary){
+
+  console.log({ data: currentFormData });
+  //   // setPercentage(result)
+
+  //   }
+
+  // },[benefiaciary])
   var arr = [];
 
   // checkRelation
@@ -1656,153 +1623,153 @@ checkValue={checkForValue}
 
 
   //Fetch used for calling data after deleting
-  const {setOptData, setUrl} =  useFetch("", (response,results) => {
+  const { setOptData, setUrl } = useFetch("", (response, results) => {
     if (response) {
-        if (response && Object.keys(response).length > 0) {
-            // setSearchResult(results);
-            dispatch({ type: 'set', data: { ...response } });
-            setSubmitData(response);
-            //setDupData({...response})
-            setViewInfo(response)
-            setMode('Update');
-            setShow(false);
-            if(activeKey === 1){
-              setGetBenefiary(response)
-              }
-            if(activeKey === 2){
-              setDependant(response)
-             }
-            if(activeKey === 3){
-              setEmergencyContact(response)
-            }
-            if(activeKey === 4){
-              setGetGuarantor(response)
-            }
-            if(activeKey === 5 ){
-            setGetNextOfKin(response)
-            }
-        } else {
-            setMode('Add');
-            setShow(false);
-            dispatch({ type: 'set', data: { ...response } });
-            setSubmitData({ ...response });
+      if (response && Object.keys(response).length > 0) {
+        // setSearchResult(results);
+        dispatch({ type: 'set', data: { ...response } });
+        setSubmitData(response);
+        //setDupData({...response})
+        setViewInfo(response)
+        setMode('Update');
+        setShow(false);
+        if (activeKey === 1) {
+          setGetBenefiary(response)
         }
+        if (activeKey === 2) {
+          setDependant(response)
+        }
+        if (activeKey === 3) {
+          setEmergencyContact(response)
+        }
+        if (activeKey === 4) {
+          setGetGuarantor(response)
+        }
+        if (activeKey === 5) {
+          setGetNextOfKin(response)
+        }
+      } else {
+        setMode('Add');
+        setShow(false);
+        dispatch({ type: 'set', data: { ...response } });
+        setSubmitData({ ...response });
+      }
     }
-});
-//FUNCTION USED TO CHECK ACTIVE TAB AND SET URL FOR FETCH
-  const showNewData=()=>{
-if(activeKey===1){
-  setGetBenefiary([])
-  setUrl(GetBeneficiary(handleId))
-}
-if(activeKey===2){
-  setDependant([])
-  setUrl(GetEmployeeDependant(handleId))
-}
-if(activeKey===3){
-  setUrl(GetEmployeeEmergencyContact(handleId))
-}
-if(activeKey===4){
-  setUrl(GetEmployeeGuarantor(handleId))
-}
-if(activeKey===5){
-  setUrl(GetEmployeeNextOfKin(handleId))
-}
+  });
+  //FUNCTION USED TO CHECK ACTIVE TAB AND SET URL FOR FETCH
+  const showNewData = () => {
+    if (activeKey === 1) {
+      setGetBenefiary([])
+      setUrl(GetBeneficiary(handleId))
+    }
+    if (activeKey === 2) {
+      setDependant([])
+      setUrl(GetEmployeeDependant(handleId))
+    }
+    if (activeKey === 3) {
+      setUrl(GetEmployeeEmergencyContact(handleId))
+    }
+    if (activeKey === 4) {
+      setUrl(GetEmployeeGuarantor(handleId))
+    }
+    if (activeKey === 5) {
+      setUrl(GetEmployeeNextOfKin(handleId))
+    }
 
   }
   const handleDeleteItem = async () => {
-  
-    if(activeKey===1){
+
+    if (activeKey === 1) {
       let deleteData = {
- 
+
         earningId: "",
         transactionsId: delEmployeeID,
-      
-    
+
+
         userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    
+
         accountReference: "string"
-    
+
       }
-    
+
       setDeletUrl(DeleteBeneficiary())
-    
+
       setDeleteData({ data: deleteData })
     }
-    if(activeKey===2){
+    if (activeKey === 2) {
       let deleteData = {
- 
+
         earningId: "",
         transactionsId: delEmployeeID,
-    
-    
+
+
         userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    
+
         accountReference: "string"
-    
+
       }
-    
+
       setDeletUrl(DeleteDependantDetails())
-    
+
       setDeleteData({ data: deleteData })
     }
-    if(activeKey===3){
+    if (activeKey === 3) {
       let deleteData = {
- 
+
         earningId: "",
         transactionsId: delEmployeeID,
-    
-       
-    
+
+
+
         userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    
+
         accountReference: "string"
-    
+
       }
-    
+
       setDeletUrl(DeleteEmployeeEmergencyContact())
-    
+
       setDeleteData({ data: deleteData })
     }
-    if(activeKey===4){
+    if (activeKey === 4) {
       let deleteData = {
- 
+
         earningId: "",
         transactionsId: delEmployeeID,
-    
-     
-    
+
+
+
         userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    
+
         accountReference: "string"
-    
+
       }
-    
+
       setDeletUrl(DeleteEmployeeGuarantor())
-    
+
       setDeleteData({ data: deleteData })
     }
-    if(activeKey===5){
+    if (activeKey === 5) {
       let deleteData = {
- 
+
         earningId: "",
         transactionsId: delEmployeeID,
-    
-    
-    
+
+
+
         userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    
+
         accountReference: "string"
-    
+
       }
-    
+
       setDeletUrl(DeleteEmployeeNextOfKin())
-    
+
       setDeleteData({ data: deleteData })
     }
-  
-  
-  
+
+
+
   };
   const onConfirm = () => {
 
@@ -1813,125 +1780,127 @@ if(activeKey===5){
   const onCancel = () => {
 
     setIsActive(false);
-  
+
   };
-  
-// AXIOS FUNCTION FOR DELETE
+
+  // AXIOS FUNCTION FOR DELETE
   const { setData: setDeleteData, setUrl: setDeletUrl } = useDelete('', (response) => {
-  
-  
+
+
     const { data } = response
-  
+
     if (response.status === 200 || response.status === 204) {
-  
+
       toast.success(`${GetLabelByName("HCM-9VWW2UPSTXS-PSLL", lan)}`);
       setIsActive(false);
-       
+
       // GetPreviousData(nonCashId);
-      if(activeKey === 1){
+      if (activeKey === 1) {
         setGetBenefiary([])
         showNewData()
-        }
-           
-     
-      if(activeKey === 2){
+      }
+
+
+      if (activeKey === 2) {
         setDependant([])
         showNewData()
-        
-       }
-        
-     
-      if(activeKey === 3){
+
+      }
+
+
+      if (activeKey === 3) {
         setEmergencyContact([])
         showNewData()
       }
-      if(activeKey === 4){
+      if (activeKey === 4) {
         setGetGuarantor([])
         showNewData()
-       
+
       }
-      if(activeKey === 5 ){
-      setGetNextOfKin([])
-      showNewData()
-       
+      if (activeKey === 5) {
+        setGetNextOfKin([])
+        showNewData()
+
       }
-  
+
     } else {
-  
+
       toast.error('Transaction Failed, Please try agin later!', toastWarning);
-  
+
     }
-  
-  
-  
+
+
+
   })
-  const handlePercentageCalc=(data)=>{
+  const handlePercentageCalc = (data) => {
     let results = 0;
     let convert = 0;
-    if (benefiaciary){
-      for(let i=0;i < data.length;i++){
-    convert  = parseInt(data[i]?.percentage)  ;
-    results =  convert + results
-  console.log(results);}}
- console.log( results > 100);
+    if (benefiaciary) {
+      for (let i = 0; i < data.length; i++) {
+        convert = parseInt(data[i]?.percentage);
+        results = convert + results
+        console.log(results);
+      }
+    }
+    console.log(results > 100);
 
   }
 
-  const han=(data,newData)=>{
+  const han = (data, newData) => {
     let rest = 0
     let results = 0;
-    if(data){
-     
-      data?.map((x)=> {rest = rest + parseInt(x.percentage)})
+    if (data) {
+
+      data?.map((x) => { rest = rest + parseInt(x.percentage) })
     }
-   results = rest + parseInt(newData)
-   
- return results > 100
+    results = rest + parseInt(newData)
+
+    return results > 100
 
   }
-  useEffect(()=>{
-    if(activeKey=== 1){
-      setPercentage(han(benefiaciary,currentFormData?.percentage))
-      if(han(benefiaciary,currentFormData?.percentage)){
+  useEffect(() => {
+    if (activeKey === 1) {
+      setPercentage(han(benefiaciary, currentFormData?.percentage))
+      if (han(benefiaciary, currentFormData?.percentage)) {
         toast.error("Percentage total must be 100% or less")
       }
     }
-   
-    
-  },[percent])
 
 
-// useEffect(() => {
-  
-//   const percentages = benefiaciary.map(x =>(x?.percentage))
+  }, [percent])
 
-//   const res = percentages.reduce(
-//     (previousValue, currentValue) =>parseInt(previousValue)  + parseInt(percent) ,
-//     0
-//   );
 
-  console.log({benefiaciary: benefiaciary});
+  // useEffect(() => {
 
-//   return () => {
-    
-//   }
-// }, [currentFormData?.percentage])
-console.log(EmployeeDependantChildrenList);
+  //   const percentages = benefiaciary.map(x =>(x?.percentage))
+
+  //   const res = percentages.reduce(
+  //     (previousValue, currentValue) =>parseInt(previousValue)  + parseInt(percent) ,
+  //     0
+  //   );
+
+  console.log({ benefiaciary: benefiaciary });
+
+  //   return () => {
+
+  //   }
+  // }, [currentFormData?.percentage])
+  console.log(EmployeeDependantChildrenList);
 
 
   return (
     <>
-     <SweetAlert
- warning
-showCancel
- confirmBtnText="Yes, delete it!"
-confirmBtnBsStyle="danger"
-title={`${GetLabelByName("HCM-Z3GW6TG207", lan)} ?`}
- onConfirm={onConfirm}
- onCancel={onCancel}
- focusCancelBtn
-show={isActive}
-></SweetAlert>
+      <SweetAlert
+        warning
+        showCancel
+        confirmBtnText="Yes, delete it!"
+        confirmBtnBsStyle="danger"
+        title={`${GetLabelByName("HCM-Z3GW6TG207", lan)} ?`}
+        onConfirm={onConfirm}
+        onCancel={onCancel}
+        focusCancelBtn
+        show={isActive}
+      ></SweetAlert>
       <CRow >
         <CCol xs="12">
           <h5>
@@ -1953,7 +1922,7 @@ show={isActive}
               input={searchInput}
               emptySearchFieldMessage={`Please input 3 or more characters to search`}
               searchName={"Employee"}
-              isPaginated={false}
+              isPaginated={true}
               pageNumber={pageNumber}
               setPageNumber={setPageNumber}
               numberOfItems={numberOfItems}
@@ -1965,7 +1934,7 @@ show={isActive}
               mode={mode}
               setMode={setMode}
               handleId={setHandleId}
-              // reset={handleReset}
+            // reset={handleReset}
             />
           </CFormGroup>
         </CCol>
@@ -1973,25 +1942,19 @@ show={isActive}
       <CRow>
         <CCol xs="12" hidden={show}>
           <CCard>
-            {/* <CCardHeader hidden={show} className={""}>
-              <b>Employee:</b>{" "}
-              <span style={{textDecoration: "underline dotted", cursor: "pointer", }} type="button" onClick={() => setLarge(!large)} size="md" color="primary" >
-               Michael Nartey
-              </span>
-              {
-              Number(activeKey) !== 5 ?
-                <CButton color="primary" style={{ float: "right" }} onClick={() => setshowEmpModal(!showEmpModal)}>{"Add " + btnVals[activeKey]}</CButton> :
-                <CButton color="primary" style={{ float: "right" }} onClick={() => setshowEmpModal1(!showEmpModal1)}>{"Add " + btnVals[activeKey]}</CButton>
-              }
-            </CCardHeader> */}
-            <CCardBody>
+            <CCardHeader hidden={show} className={""}>
               <CFormGroup row>
                 <CCol md="4">
                   <b>Employee:</b>{" "}
                   <span
+                    title={empDisplayName}
                     style={{
-                      textDecoration: "underline dotted",
+                      padding: 5,
+                      borderRadius: 5,
+                      fontWeight: 900,
                       cursor: "pointer",
+                      background: "#fff",
+                      color: "#315a76",
                     }}
                     type="button"
                     onClick={() => setLarge(!large)}
@@ -2008,6 +1971,9 @@ show={isActive}
                 </CCol>
                 <CCol md="4"></CCol>
               </CFormGroup>
+            </CCardHeader>
+            <CCardBody>
+
               <CTabs>
                 <CNav variant="tabs">
                   <CNavItem>
@@ -2052,83 +2018,83 @@ show={isActive}
                       active={activeKey === 5}
                       onClick={() => setActiveKey(5)}
                     >
-                    <CSLab code="HCM-EP256EK5BS-LASN" />
+                      <CSLab code="HCM-EP256EK5BS-LASN" />
                     </CNavLink>
                   </CNavItem>
                 </CNav>
                 <CTabContent>
-                  
-                    
+
+
                   <CTabPane visible={activeKey === 1 ? "true" : "false"}>
-               
-                   <GridComponent
-                     height={300}
-                     actionComplete={actionComplete}
-                     dataSource={ benefiaciary}
-                     allowPaging={true}
-                     pageSettings={{ pageSize: 8 }}
-                     editSettings={editOptions}
-                     ref={firstGrid}
-                     toolbar={toolbarOptions}
-                     toolbarClick={submitRequest}
-                     actionBegin={ben_actionBegin}
-                     commandClick={onCommandClick}
-                   >
-                     
-                     <ColumnsDirective>
-                    
-                       <ColumnDirective
-                         field="id"
-                         headerText="ID"
-                         width="100"
-                         visible={false}
-                         isPrimaryKey={true}
-                       />
-                       <ColumnDirective
-                         field="firstName"
-                         editType="text"
-                         headerText={GetLabelByName("HCM-KPH53NF08RG", lan)}
-                         width="80"
 
-                         //onChange={(e) => setfname(e.target.value)}
-                       />
-                       <ColumnDirective
-                         field="lastName"
-                         headerText={GetLabelByName("HCM-ZYCFSGCKMC", lan)}
-                         editType="text"
-                         width="80"
-                         textAlign="Center"
-                         // name="lname"
-                         // value={lname}
-                         // onChange={(e) => setlname(e.target.value)}
-                       />
-                       <ColumnDirective
-                         field="relation.name"
-                         //   edit={relationTypes}
-                         headerText={GetLabelByName(
-                           "HCM-RWMIP9K3NEH_HRPR",
-                           lan
-                         )}
-                         editType="dropdownedit"
-                         width="100"
-                         textAlign="Center"
-                         // template={tem}
-                       />
+                    <GridComponent
+                      height={300}
+                      actionComplete={actionComplete}
+                      dataSource={benefiaciary}
+                      allowPaging={true}
+                      pageSettings={{ pageSize: 8 }}
+                      editSettings={editOptions}
+                      ref={firstGrid}
+                      toolbar={toolbarOptions}
+                      toolbarClick={submitRequest}
+                      actionBegin={ben_actionBegin}
+                      commandClick={onCommandClick}
+                    >
 
-                       <ColumnDirective
-                         field="address"
-                         headerText={GetLabelByName(
-                           "HCM-7WIK8PDIQOV-LOLN",
-                           lan
-                         )}
-                         editType="text"
-                         width="100"
-                         textAlign="Center"
-                         name="address"
-                         // value={address}
-                         // onChange={(e) => setAddress(e.target.value)}
-                       />
-                       {/* <ColumnDirective
+                      <ColumnsDirective>
+
+                        <ColumnDirective
+                          field="id"
+                          headerText="ID"
+                          width="100"
+                          visible={false}
+                          isPrimaryKey={true}
+                        />
+                        <ColumnDirective
+                          field="firstName"
+                          editType="text"
+                          headerText={GetLabelByName("HCM-KPH53NF08RG", lan)}
+                          width="80"
+
+                        //onChange={(e) => setfname(e.target.value)}
+                        />
+                        <ColumnDirective
+                          field="lastName"
+                          headerText={GetLabelByName("HCM-ZYCFSGCKMC", lan)}
+                          editType="text"
+                          width="80"
+                          textAlign="Center"
+                        // name="lname"
+                        // value={lname}
+                        // onChange={(e) => setlname(e.target.value)}
+                        />
+                        <ColumnDirective
+                          field="relation.name"
+                          //   edit={relationTypes}
+                          headerText={GetLabelByName(
+                            "HCM-RWMIP9K3NEH_HRPR",
+                            lan
+                          )}
+                          editType="dropdownedit"
+                          width="100"
+                          textAlign="Center"
+                        // template={tem}
+                        />
+
+                        <ColumnDirective
+                          field="address"
+                          headerText={GetLabelByName(
+                            "HCM-7WIK8PDIQOV-LOLN",
+                            lan
+                          )}
+                          editType="text"
+                          width="100"
+                          textAlign="Center"
+                          name="address"
+                        // value={address}
+                        // onChange={(e) => setAddress(e.target.value)}
+                        />
+                        {/* <ColumnDirective
                          field="relation"
                          headerText={GetLabelByName(
                            "HCM-RWMIP9K3NEH_HRPR",
@@ -2141,41 +2107,41 @@ show={isActive}
                          // value={relation}
                          // onChange ={(e)=>setRelation(e.target.value)}
                        /> */}
-                       <ColumnDirective
-                         field="percentage"
-                         headerText={GetLabelByName(
-                           "HCM-HB5MNHJGQE5-HRPR",
-                           lan
-                         )}
-                         editType="numericedit"
-                         edit={integerParams}
-                         width="100"
-                         textAlign="Center"
-                       />
-                       
+                        <ColumnDirective
+                          field="percentage"
+                          headerText={GetLabelByName(
+                            "HCM-HB5MNHJGQE5-HRPR",
+                            lan
+                          )}
+                          editType="numericedit"
+                          edit={integerParams}
+                          width="100"
+                          textAlign="Center"
+                        />
+
                         <ColumnDirective
                           commands={commandOptions}
                           headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
                           width="100"
                           textAlign="Center"
                         />
-                     </ColumnsDirective>
-                     <Inject
-                       services={[
-                         Page,
-                         Sort,
-                         Filter,
-                         Group,
-                         Edit,
-                         CommandColumn,
-                         Toolbar,
-                       ]}
-                     />
-                   </GridComponent>
-                 </CTabPane>
-                  
-              
-                  
+                      </ColumnsDirective>
+                      <Inject
+                        services={[
+                          Page,
+                          Sort,
+                          Filter,
+                          Group,
+                          Edit,
+                          CommandColumn,
+                          Toolbar,
+                        ]}
+                      />
+                    </GridComponent>
+                  </CTabPane>
+
+
+
                   <CTabPane visible={activeKey === 2 ? "true" : "false"}>
                     <GridComponent
                       dataSource={dependant}
@@ -2205,7 +2171,7 @@ show={isActive}
                             lan
                           )}
                           width="70"
-                          //edit={earnings}
+                        //edit={earnings}
                         />
                         <ColumnDirective
                           field="lastName"
@@ -2330,9 +2296,9 @@ show={isActive}
                             lan
                           )}
                           width="70"
-                          //edit={earnings}
+                        //edit={earnings}
                         />
-                          <ColumnDirective
+                        <ColumnDirective
                           field="employee.lastName"
                           editType="text"
                           headerText={GetLabelByName(
@@ -2340,7 +2306,7 @@ show={isActive}
                             lan
                           )}
                           width="70"
-                          //edit={earnings}
+                        //edit={earnings}
                         />
                         <ColumnDirective
                           field="email"
@@ -2373,7 +2339,7 @@ show={isActive}
                           width="100"
                           textAlign="Center"
                         />
-                           <ColumnDirective
+                        <ColumnDirective
                           commands={commandOptions}
                           headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
                           width="100"
@@ -2405,10 +2371,10 @@ show={isActive}
                       toolbar={toolbarOptions}
                       toolbarClick={submitRequest}
                       actionBegin={ben_actionBegin}
-                      // actionBegin={actionBegin}
-                      // toolbarClick={submitRequest}
+                    // actionBegin={actionBegin}
+                    // toolbarClick={submitRequest}
                     >
-                        
+
                       <ColumnsDirective>
                         <ColumnDirective
                           field="id"
@@ -2425,7 +2391,7 @@ show={isActive}
                             lan
                           )}
                           width="70"
-                          // edit={earnings}
+                        // edit={earnings}
                         />
                         <ColumnDirective
                           field="relation.name"
@@ -2487,7 +2453,7 @@ show={isActive}
                           width="100"
                           textAlign="Center"
                         />
-                           <ColumnDirective
+                        <ColumnDirective
                           commands={commandOptions}
                           headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
                           width="100"
@@ -2526,7 +2492,7 @@ show={isActive}
                           headerText="ID"
                           width="100"
                           visible={false}
-                          // isPrimaryKey={true}
+                        // isPrimaryKey={true}
                         />
                         <ColumnDirective
                           field="name"
@@ -2585,8 +2551,8 @@ show={isActive}
                           editType="text"
                           width="100"
                           textAlign="Center"
-                        /> 
-                           <ColumnDirective
+                        />
+                        <ColumnDirective
                           commands={commandOptions}
                           headerText={GetLabelByName("HCM-F4IUJ9QVOM6", lan)}
                           width="100"
@@ -2610,29 +2576,29 @@ show={isActive}
               </CTabs>
             </CCardBody>
             <CCardFooter>
-                <CButton
-                 style={{ marginRight: 9, float: "right", color: "white" }}
-                  onClick={() => searchReset()}
-                  type="button"
-                  size="sm"
-                  color="danger"
-                >
-                  <AiOutlineClose size={20} />
-                  <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
-                </CButton>
-              
+              <CButton
+                style={{ marginRight: 9, float: "right", color: "white" }}
+                onClick={() => searchReset()}
+                type="button"
+                size="sm"
+                color="danger"
+              >
+                <AiOutlineClose size={20} />
+                <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
+              </CButton>
+
             </CCardFooter>
           </CCard>
         </CCol>
       </CRow>
       <FormModal
-      
+
         show={showModal}
         activeKey={activeKey}
         setShow={setShowModal}
         submitBtn={submitBtn}
         setCurrentFormData={setCurrentFormData}
-        disableBtn = {checkPercentage}
+        disableBtn={checkPercentage}
       >
         {content}
       </FormModal>

@@ -134,27 +134,27 @@ const EmployeeLanguage = () => {
   const [handleId, setHandleId] = useState("");
   const [titles, setProfessionalTitle] = useState([]);
   const [accidentTypes, setAccidentTypes] = useState([]);
-
+  const [empID, setEmpID] = useState("");
   const [employeeLanguage, setEmployeelanguage] = useState([]);
   const [employeeLanguageType, setEmployeelanguageType] = useState([]);
   const [employeeName, setEmpDisplayName] = useState("");
   const [checkedTypes, setCheckedTypes] = useState([]);
   const [selectedName, setSelectedName] = useState("");
   const [postEmployee, setPostEmployee] = useState([]);
-  const [post , setPost] =useState([])
-  const [delEmployeeName,setDelEmployeeName]=useState("")
-const[isActive,setIsActive]=useState(false)
-const[delEmployeeID,setDelEmployeeID]=useState("")
-const [EmployeeLanguageChildrenList, setEmployeeLanguageChildrenList]= useState([])
+  const [post, setPost] = useState([])
+  const [delEmployeeName, setDelEmployeeName] = useState("")
+  const [isActive, setIsActive] = useState(false)
+  const [delEmployeeID, setDelEmployeeID] = useState("")
+  const [EmployeeLanguageChildrenList, setEmployeeLanguageChildrenList] = useState([])
 
   //const [newGridDta, setNewGridData] = useState([]);
   const firstGrid = useRef();
-  const languageRef =useRef(null);
-  const readRef =useRef(null);
-  const speakRef =useRef(null);
-  const writeRef =useRef(null);
+  const languageRef = useRef(null);
+  const readRef = useRef(null);
+  const speakRef = useRef(null);
+  const writeRef = useRef(null);
 
-  const refs=[
+  const refs = [
     languageRef,
     readRef,
     speakRef,
@@ -240,7 +240,7 @@ const [EmployeeLanguageChildrenList, setEmployeeLanguageChildrenList]= useState(
   ];
 
 
-  const {setOptData, setUrl} =  useFetch("", (response,results) => {
+  const { setUrl } = useFetch("", (response, results) => {
     if (response) {
       const request = response;
       const res = request.map((x) => ({
@@ -252,48 +252,38 @@ const [EmployeeLanguageChildrenList, setEmployeeLanguageChildrenList]= useState(
 
       //console.log({ res });
 
-       
+
       dispatch({ type: "set", data: { ...response } });
       setViewInfo(renderViewInfor(request));
 
     }
-});
+  });
 
 
 
 
   const handleSearchResultSelect = (results) => {
-
-
-    //setting employee display name on select of suggested item
-    setEmpDisplayName(
-      (prevState) => `${results.firstName} ${results.lastName}`
-    );
-  
+    setEmpDisplayName(`${results.firstName} ${results.lastName}`);
     setMode("Add");
     setShow(false);
     dispatch({ type: "set", data: { ...results } });
-  
-     if (results?.id) {
-       setSearchResult(results);
-      //  getEmployeelanguage(results.id)
-       setUrl(GetEmployeeByID(results?.id))
-   
+    setEmpID(results?.id)
+    if (results?.id) {
+      setSearchResult(results);
+      setUrl(GetEmployeeByID(results?.id))
     }
   };
+
   const searchReset = () => {
     setShow(true);
     setSearchInput("");
     setVisible(false)
     setEmployeeLanguageChildrenList("")
     refs.forEach((ref) => {
-  
       ref.current.style.border = "1px solid #d8dbe0";
       return
+    });
 
-    
-  });
-   
   };
 
   const renderViewInfor = (data) => {
@@ -308,13 +298,11 @@ const [EmployeeLanguageChildrenList, setEmployeeLanguageChildrenList]= useState(
 
   //Get employee skill details
   const getEmployeelanguage = (ID) => {
-
-
     setUrl(GetEmployeeByID(ID))
-   
+
   };
-  const {auth}= useAuth()
-  const {companyReference: CompanyReference } = auth
+  const { auth } = useAuth()
+  const { companyReference: CompanyReference } = auth
 
 
   const submitRequest = (args) => {
@@ -325,44 +313,37 @@ const [EmployeeLanguageChildrenList, setEmployeeLanguageChildrenList]= useState(
   };
 
 
-//DROP DOWN FOR EMPLOYEE LANGUAGE
-  const  {data:multicallData} =  useMultiFetch([ GetEmployeeLanguagesType(CompanyReference)], (results) => {
+  //DROP DOWN FOR EMPLOYEE LANGUAGE
+  const { data: multicallData } = useMultiFetch([GetEmployeeLanguagesType(CompanyReference)], (results) => {
     setEmployeelanguageType([...results[0].data]);
-  
+
   })
 
 
   const GetColumnNames = () => {
-   
     const name = employeeLanguageType?.find(
       (x) => x?.id === submitData?.languageId
     );
     setSelectedName(name?.name);
   };
-  const GridAddDelay=()=>{
-    setTimeout(()=>{
-      handleOnSubmit()
-    },500)
-  }
-
   //Handles Submit
   const handleOnSubmit = () => {
-               DropDown()
-              GetColumnNames();
- 
+    DropDown()
+    GetColumnNames();
+
     refs.forEach((ref) => {
       if (ref.current.value > 0) {
         ref.current.style.border = "2px solid green";
-      }else if (ref.current.value.length === -1) {
+      } else if (ref.current.value.length === -1) {
         ref.current.style.border = "2px solid red";
       } else if (ref.current.value === "") {
         ref.current.style.border = "2px solid red";
 
       } else {
         ref.current.style.border = "2px solid red";
-       
+
         return
- 
+
       }
     });
     if (!submitData?.languageId || submitData?.languageId === -1 && !submitData?.read || submitData?.read === -1 && !submitData?.write || submitData?.write === -1 && !submitData?.speak || submitData?.speak === -1) {
@@ -387,103 +368,93 @@ const [EmployeeLanguageChildrenList, setEmployeeLanguageChildrenList]= useState(
       toast.error("Please Select Ability(Speaking)!", toastWarning);
       return;
     }
-   //  console.log(submitData)
-     setVisible(false)
-    let employeeId = searchResult?.id;
+    //  console.log(submitData)
+    // setVisible(false)
+    let employeeId = empID;
     //  let newData = { ...submitData, option: options, companyId: TestCompanyId };
 
     let newData = {
-      firstName : submitData?.firstName,
-      
-     id : submitData?.id,
-     
-     languageId : submitData?.languageId,
-     
-     lastName : submitData?.lastName ,
-     
-     read :submitData?.read , 
-     
-     speak :submitData?.speak ,
-     
-     staffId : submitData?.staffId,
-     
-     write : submitData?.write,
-     isDelete : true,
-     
+
+      firstName: submitData?.firstName,
+
+      id: submitData?.id,
+
+      languageId: submitData?.languageId,
+
+      lastName: submitData?.lastName,
+
+      read: submitData?.read,
+
+      speak: submitData?.speak,
+
+      staffId: submitData?.staffId,
+
+      write: submitData?.write,
+      isDelete: true,
+
     }
 
 
 
-   setEmployeeLanguageChildrenList((prev)=>[...prev, newData])
-console.log({submitData : submitData});
-let newGridData ={
-  isDelete: true,
-  employee: {
-    id: handleId,
-  },
-  language: {
-    id: submitData?.languageId,
-    name: selectedName,
-  },
-  read: getName(submitData?.read),
-  write: getName(submitData?.write),
-  speak: getName(submitData?.speak),
-}
-// setPost(newData)
-  
-    setViewInfo((prevState) => [newGridData,...prevState]);
-   
-  
+    setEmployeeLanguageChildrenList((prev) => [...prev, newData])
+    console.log({ submitData: submitData });
+    let newGridData = {
+      isDelete: true,
+      employee: {
+        id: empID,
+      },
+      language: {
+        id: submitData?.languageId,
+        name: selectedName,
+      },
+      read: getName(submitData?.read),
+      write: getName(submitData?.write),
+      speak: getName(submitData?.speak),
+    }
+    // setPost(newData)
 
-   // setPostEmployee([newData]);
+    setViewInfo((prevState) => [newGridData, ...prevState]);
+    resetForms()
+
+
+    // setPostEmployee([newData]);
 
   };
+
+  const resetForms = () => {
+    setSubmitData({})
+    dispatch({ type: "set", data: {} });
+  }
 
 
   const getName = (id) => {
     return reading.find((x) => x.id == id)?.name || "Not found";
   };
-  
- 
-  const handlePost=()=>{
-    let postBody=    {
-      employeeId: handleId,
-      "createEmployeeLanguageChildren":EmployeeLanguageChildrenList ,
+
+
+  const handlePost = () => {
+    let postBody = {
+      employeeId: empID,
+      "createEmployeeLanguageChildren": EmployeeLanguageChildrenList,
       "companyReference": "00001_a01",
       "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
 
     }
-if(EmployeeLanguageChildrenList.length > 0){
-  setPostData(postBody)
-  setPostUrl(PostEmployeeLanguage())
-  postBody("")
-}
-    return;
+    if (EmployeeLanguageChildrenList.length > 0) {
+      setPostData(postBody)
+      setPostUrl(PostEmployeeLanguage())
+      postBody("")
     }
+    return;
+  }
 
-
-
-const trials=()=>{
-alert("Clicked")
-}
-
-
-
-
-
-
-  // console.log(viewinfo);
-  // const SetViewGrid=(data)=>{
-  //   setViewInfo((prevState) => [...prevState,data]);
-  // }
-
-  const  {setData:setPostData, setUrl:setPostUrl} = usePost('', (response) => {
+  const { setData: setPostData, setUrl: setPostUrl } = usePost('', (response) => {
     // console.log({location:response });
-    const {data} = response
+    const { data } = response
     if ("" === data) {
       toast.success(GetLabelByName("HCM-HAGGXNJQW2B_HRPR", lan));
       //showToasts();
-      searchReset();
+      // searchReset();
     } else {
       try {
         data = JSON.parse(response);
@@ -497,7 +468,7 @@ alert("Clicked")
   })
 
 
-  
+
   const handleOnChange = (evnt) => {
     //console.log(evnt)
     setSubmitData((data) => {
@@ -540,13 +511,13 @@ alert("Clicked")
     }
   }, [viewinfo]);
 
-  
+
   useEffect(() => {
     if (submitData.languageId) {
       GetColumnNames();
     }
   }, [submitData?.languageId]);
-  
+
   const onConfirm = () => {
 
     handleDeleteItem();
@@ -556,96 +527,96 @@ alert("Clicked")
   const onCancel = () => {
 
     setIsActive(false);
-  
+
   };
-  
+
   const onCommandClick = (args) => {
     console.log(args.rowData);
     console.log(EmployeeLanguageChildrenList);
-    if(args.rowData.isDelete === true){
+    if (args.rowData.isDelete === true) {
       args.cancel = false;
-      setViewInfo((current)=>current.filter((deleteItem) => deleteItem.isDelete !== true ))
+      setViewInfo((current) => current.filter((deleteItem) => deleteItem.isDelete !== true))
 
-      setEmployeeLanguageChildrenList((current)=>current.filter((deleteItem) => deleteItem.isDelete !== true ))
+      setEmployeeLanguageChildrenList((current) => current.filter((deleteItem) => deleteItem.isDelete !== true))
       return;
     }
-    else{
+    else {
       onCompleteAction(args);
- 
+
     }
- 
-  
+
+
   };
-  
-  
-  
-  
+
+
+
+
   const onCompleteAction = (args) => {
-  
+
     if (args.commandColumn.type === 'Delete') {
-  
+
       args.cancel = true;
-  
+
       setIsActive(true)
-  
+
       setDelEmployeeName(`${args?.rowData?.employee?.firstName
-      } ${args?.rowData?.employee?.lastName
-      }`)
-  
+        } ${args?.rowData?.employee?.lastName
+        }`)
+
       setDelEmployeeID(args.rowData.id)
-  
+
     }
-  
+
   };
-  
+
   const handleDeleteItem = async () => {
-  
+
     let deleteData = {
-  
+
       earningId: "",
-  
+
       transactionId: delEmployeeID,
-  
+
       userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  
+
       accountReference: "string"
-  
+
     }
-  
+
     setDeletUrl(DeleteEmployeeLanguage())
-  
+
     setDeleteData({ data: deleteData })
-  
-  
-  
+
+
+
   };
   const { setData: setDeleteData, setUrl: setDeletUrl } = useDelete('', (response) => {
-  
+
     // console.log({location:response });
-  
+
     const { data } = response
-  
+
     if (response.status === 200 || response.status === 204) {
-  
+
       toast.success(`${GetLabelByName("HCM-NUNYCE5Y09A-HRPR", lan)}`);
-  
+
       setIsActive(false);
       setViewInfo("")
-      getEmployeelanguage(handleId)
+      getEmployeelanguage(empID)
       // GetPreviousData(nonCashId);
-  
+
     } else {
-  
+
       toast.error('Transaction Failed, Please try agin later!', toastWarning);
-  
+
     }
-  
-  
-  
+
+
+
   })
-  
+
   const checkForValue = (ref) => {
-    console.log({checkForValue: ref});
+    console.log({ checkForValue: ref });
     if (ref.current?.value) {
       ref.current.style.border = "1px solid green";
     }
@@ -681,23 +652,23 @@ alert("Clicked")
   // };
   //console.log({ viewinfo });
   //console.log({ arr });
-  
-  console.log({view: viewinfo});
+
+  console.log({ view: viewinfo });
   //console.log({ postEmployee });
 
   return (
     <>
-     <SweetAlert
- warning
-showCancel
- confirmBtnText="Yes, delete it!"
-confirmBtnBsStyle="danger"
-title={`${GetLabelByName("HCM-KFXT3UX564C-LASN", lan)} ?`}
- onConfirm={onConfirm}
- onCancel={onCancel}
- focusCancelBtn
-show={isActive}
-></SweetAlert>
+      <SweetAlert
+        warning
+        showCancel
+        confirmBtnText="Yes, delete it!"
+        confirmBtnBsStyle="danger"
+        title={`${GetLabelByName("HCM-KFXT3UX564C-LASN", lan)} ?`}
+        onConfirm={onConfirm}
+        onCancel={onCancel}
+        focusCancelBtn
+        show={isActive}
+      ></SweetAlert>
       <CRow >
         <CCol xs="12">
           <h5>
@@ -741,14 +712,17 @@ show={isActive}
                 <CCol md="4">
                   <b>Employee:</b>{" "}
                   <span
+                    title={employeeName}
                     style={{
-                      textDecoration: "underline dotted",
+                      padding: 5,
+                      borderRadius: 5,
+                      fontWeight: 900,
                       cursor: "pointer",
+                      background: "#fff",
+                      color: "#315a76",
                     }}
                     type="button"
-                    onClick={() => {
-                      setLarge(!large);
-                    }}
+                    onClick={() => setLarge(!large)}
                     size="md"
                     color="primary"
                   >
@@ -787,8 +761,8 @@ show={isActive}
               allowPaging={true}
               pageSettings={{ pageSize: 10 }}
               commandClick={onCommandClick}
-              // editSettings={editOptions}
-              // toolbar={toolbarOptions}
+            // editSettings={editOptions}
+            // toolbar={toolbarOptions}
             >
               <ColumnsDirective>
                 <ColumnDirective
@@ -837,7 +811,7 @@ show={isActive}
                 size="sm"
                 color="success"
                 // onClick={() => postEmployeeLanguage(postEmployee)}
-                onClick={()=>handlePost()}
+                onClick={() => handlePost()}
               >
                 <AiFillSave size={20} /> <CSLab code="HCM-HGUHIR0OK6T" />{" "}
               </CButton>
@@ -880,7 +854,7 @@ show={isActive}
                   ref={languageRef}
                   className="form-control"
                   value={data?.languageId || -1}
-                  onChange={(e)=>{handleOnChange(e); checkForValue(languageRef)}}
+                  onChange={(e) => { handleOnChange(e); checkForValue(languageRef) }}
                 >
                   {" "}
                   <option value={-1}>Select Language</option>
@@ -907,7 +881,7 @@ show={isActive}
                   className="form-control"
                   ref={readRef}
                   value={data?.read || -1}
-                  onChange={(e)=>{handleOnChange(e); checkForValue(readRef)}}
+                  onChange={(e) => { handleOnChange(e); checkForValue(readRef) }}
 
                 >
                   <option value={-1} selected>
@@ -935,7 +909,7 @@ show={isActive}
                   ref={writeRef}
                   className="form-control"
                   value={data?.write || -1}
-                  onChange={(e)=>{handleOnChange(e); checkForValue(writeRef)}}
+                  onChange={(e) => { handleOnChange(e); checkForValue(writeRef) }}
                 >
                   <option value={-1} selected>
                     Select Option
@@ -962,7 +936,7 @@ show={isActive}
                   className="form-control"
                   ref={speakRef}
                   value={data?.speak || -1}
-                  onChange={(e)=>{handleOnChange(e);checkForValue(speakRef)}}
+                  onChange={(e) => { handleOnChange(e); checkForValue(speakRef) }}
                 >
                   <option value={-1} selected>
                     Select Option
@@ -984,7 +958,7 @@ show={isActive}
           </CRow>
         </CModalBody>
         <CModalFooter>
-        <p style={{ position: "absolute", left: "20px" }}><em style={{ fontSize: "12px" }}><CSLab code="HCM-S6DELVG0IQS-HRPR" /> (<CSRequiredIndicator />)<CSLab code="HCM-H72Q4EB363H_PSLL" /></em></p>
+          <p style={{ position: "absolute", left: "20px" }}><em style={{ fontSize: "12px" }}><CSLab code="HCM-S6DELVG0IQS-HRPR" /> (<CSRequiredIndicator />)<CSLab code="HCM-H72Q4EB363H_PSLL" /></em></p>
 
           <CButton
             color="secondary"
@@ -1005,7 +979,7 @@ show={isActive}
           >
             {/* <CSLab code="HCM-TAAFD4M071D-HRPR" /> */}
             <CSLab code="HCM-TAAFD4M071D-HRPR" />
-           
+
           </CButton>
         </CModalFooter>
       </CModal>

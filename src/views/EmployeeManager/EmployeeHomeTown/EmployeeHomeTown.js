@@ -170,7 +170,7 @@ const EmployeeHomeTown = (props) => {
     }
   };
   const HandleGet = (id) => {
-
+    console.log({ id })
     setUrl(GetEmployeeHometownId(id))
   }
   const searchReset = () => {
@@ -179,7 +179,7 @@ const EmployeeHomeTown = (props) => {
     dispatch({ type: "set", data: {} });
     setSubmitData("")
     setEmployeeHomeTownChildrenList("")
-
+    setViewInfo([])
     refs.forEach((ref) => {
 
       ref.current.style.border = "1px solid #d8dbe0";
@@ -189,11 +189,6 @@ const EmployeeHomeTown = (props) => {
     });
 
   };
-
-
-  // useEffect(() => {
-  //   console.log("check view info ", viewinfo);
-  // });
 
   //Handles Submit
   const handleOnSubmit = () => {
@@ -308,10 +303,6 @@ const EmployeeHomeTown = (props) => {
     });
   };
 
-  // console.log(" skiltype", skillType);
-  const canSave = [skill].every(Boolean);
-
-  const TransLabelByCode = (name) => GetLabelByName(name, lan);
   console.log(viewinfo)
   var skillDropDownArr = [];
   const checkBenefiary = () => {
@@ -322,7 +313,6 @@ const EmployeeHomeTown = (props) => {
 
         var obj = {};
 
-        // console.log(viewinfo[i]?.skillType)
         obj = viewinfo[i]?.skillType;
         skillDropDownArr.push(obj);
         console.log(obj);
@@ -355,14 +345,11 @@ const EmployeeHomeTown = (props) => {
   }, []);
 
   const handleClose = () => {
+    setVisible(false)
     handleReset()
     dispatch({ type: "set", data: {} });
 
   }
-
-
-
-  let forview = viewinfo[0]
 
   const onConfirm = () => {
 
@@ -391,10 +378,8 @@ const EmployeeHomeTown = (props) => {
   };
 
   const handleReset = () => {
-    setViewInfo([])
+    setViewInfo()
   }
-
-
 
   const onCompleteAction = (args) => {
     if (args.commandColumn.type === 'Delete') {
@@ -422,7 +407,7 @@ const EmployeeHomeTown = (props) => {
     if (response.status === 200 || response.status === 204) {
       toast.success(`${GetLabelByName("HCM-NUNYCE5Y09A-HRPR", lan)}`);
       setIsActive(false);
-      setViewInfo("")
+      setViewInfo([])
       HandleGet(handleId)
     } else {
       toast.error('Transaction Failed, Please try agin later!', toastWarning);
@@ -744,7 +729,7 @@ const EmployeeHomeTown = (props) => {
               <CSLab code="HCM-LVXUVAB9G_KCMI" />( <CSRequiredIndicator />)
             </em>
           </p>
-          <CButton color="secondary" onClick={() => { handleClose(); setVisible(false) }}>
+          <CButton color="secondary" onClick={() => { handleClose(); }}>
             <CSLab code="HCM-V3SL5X7PJ9C-LANG" />
           </CButton>
           <CButton
