@@ -627,7 +627,9 @@ const EmployeeDetail = (props) => {
 
 
 
-  const { data: multicallData, setUrls } = useMultiFetch([], (results) => {
+  const { data: multicallData } = useMultiFetch([[GetBeneficiary(handleId),
+  GetEmployeeDependant(handleId), GetEmployeeEmergencyContact(handleId),
+  GetEmployeeGuarantor(handleId), GetRelationTypes(CompanyReference), GetEmployeeNextOfKin(handleId)]], (results) => {
 
     console.log({ results })
     setGetBenefiary([...results[0].data]);
@@ -639,13 +641,13 @@ const EmployeeDetail = (props) => {
 
   })
 
-  useEffect(() => {
-    console.log(handleId);
-    setUrls([GetBeneficiary(handleId),
-    GetEmployeeDependant(handleId), GetEmployeeEmergencyContact(handleId),
-    GetEmployeeGuarantor(handleId), GetRelationTypes(CompanyReference), GetEmployeeNextOfKin(handleId)])
-    console.log(handleId);
-  }, [searchResult, handleId, setUrls, CompanyReference])
+  // useEffect(() => {
+  //   console.log(handleId);
+  //   setUrls([GetBeneficiary(handleId),
+  //   GetEmployeeDependant(handleId), GetEmployeeEmergencyContact(handleId),
+  //   GetEmployeeGuarantor(handleId), GetRelationTypes(CompanyReference), GetEmployeeNextOfKin(handleId)])
+  //   console.log(handleId);
+  // }, [searchResult, handleId, setUrls, CompanyReference])
 
 
   useEffect(() => {

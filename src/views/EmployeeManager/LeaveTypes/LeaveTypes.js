@@ -407,8 +407,8 @@ const LeaveTypes = () => {
             <CCardHeader>
               <CFormGroup row>
                 <CCol md="4">
-                  <b>Employee:</b>{" "}
-                  <span
+                  <b>Add Leave Type</b>{" "}
+                  {/* <span
                     style={{
                       textDecoration: "underline dotted",
                       cursor: "pointer",
@@ -419,7 +419,7 @@ const LeaveTypes = () => {
                     color="primary"
                   >
                     {empDisplayName}
-                  </span>
+                  </span> */}
                 </CCol>
 
               </CFormGroup>
