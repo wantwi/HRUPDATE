@@ -8,9 +8,186 @@
     },
     {
       "_tag": "CSidebarNavDropdown",
+      "name": "Master View",
+      "route": "/icons",
+      "icon": "cil-speedometer",
+      "_children": [
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Departments",
+          "to": "/masterview/organization/department"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Division",
+          "to": "/masterview/organization/division"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Type",
+          "to": "/masterview/organization/employeetype"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Location",
+          "to": "/masterview/organization/location"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Postion",
+          "to": "/masterview/organization/position"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Section",
+          "to": "/masterview/organization/section"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Unit",
+          "to": "/masterview/organization/unit"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Details",
+          "to": "/masterview/organization/employee"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Activity",
+          "to": "/masterview/organization/activity"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Fund",
+          "to": "/masterview/organization/fund"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Salary Grade",
+          "to": "/masterview/salarygrade"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Status",
+          "to": "/masterview/employeestatus"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Currency & Exchange-Rate",
+          "to": "/masterview/currency"
+        }
+      ]
+    },
+    {
+      "_tag": "CSidebarNavDropdown",
+      "name": "Leave Management",
+      "route": "/base",
+      "icon": "cil-speedometer",
+      "_children": [
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Time Off",
+          "to": "/employeemanager/leavetransaction"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Leave Recall",
+          "to": "/leavemanager/leaverecall"
+        }
+        ,
+     
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Leave Schedule",
+          "to": "/leavemanager/leaveschedule"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Apply Allowable Days",
+          "to": "/leavemanager/allowabledays"
+        }
+       
+      ]
+    },
+    {
+      "_tag": "CSidebarNavDropdown",
+      "name": "Position Management",
+      "route": "/base",
+      "icon": "cil-speedometer",
+      "_children": [
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Exits",
+          "to": "/positionmanager/employeeterminationinformation"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Promotion & Demotion",
+          "to": "/positionmanager/employeepromotion"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Transfer",
+          "to": "/positionmanager/employeemovement"
+        }
+      ]
+    },
+    {
+      "_tag": "CSidebarNavDropdown",
+      "name": "Salary Management",
+      "route": "/base",
+      "icon": "cil-speedometer",
+      "_children": [
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Salary Grade",
+          "to": "/salarymanager/salarygrade"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Notches",
+          "to": "/salarymanager/notches"
+        }
+        ,
+     
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Salary Grade Update",
+          "to": "/salarymanager/sakarygradeupdate"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Salary Rate / Notch Update",
+          "to": "/salarymanager/notchupdate"
+        }
+       
+      ]
+    },
+    {
+      "_tag": "CSidebarNavDropdown",
+      "name": "Employee Performance Approvals",
+      "route": "/base",
+      "icon": "cil-speedometer",
+      "_children": [
+        
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee Appraisals",
+          "to": "/perfomancemanager/appraisals"
+        },
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Employee 360 Appraisals",
+          "to": "/perfomancemanager/employeeappraisals"
+        }
+      ]
+    },
+    {
+      "_tag": "CSidebarNavDropdown",
       "name": "Employee Manager",
       "route": "/base",
-      "icon": "cil-cursor",
+      "icon": "cil-speedometer",
       "_children": [
         {
           "_tag": "CSidebarNavItem",
@@ -138,40 +315,11 @@
         }
       ]
     },
-
-    {
-      "_tag": "CSidebarNavDropdown",
-      "name": "Position Manager",
-      "route": "/base",
-      "icon": "cil-cursor",
-      "_children": [
-        {
-          "_tag": "CSidebarNavItem",
-          "name": "Employee Termination Information",
-          "to": "/positionmanager/employeeterminationinformation"
-        },
-        {
-          "_tag": "CSidebarNavItem",
-          "name": "Employee Retirement Information",
-          "to": "/positionmanager/employeeretirementinformation"
-        },
-        {
-          "_tag": "CSidebarNavItem",
-          "name": "Employee Movement",
-          "to": "/positionmanager/employeemovement"
-        },
-        {
-          "_tag": "CSidebarNavItem",
-          "name": "Position Budgeting",
-          "to": "/positionmanager/positionbudgeting"
-        }
-      ]
-    },
     {
       "_tag": "CSidebarNavItem",
       "name": "Reports",
       "to": "/report",
-      "icon": "cil-notes"
+      "icon": "cil-speedometer"
     }
   ],
   "fr":  [
