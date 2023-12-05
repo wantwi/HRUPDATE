@@ -52,6 +52,13 @@ import {
   CommandColumn,
   Toolbar,
 } from "@syncfusion/ej2-react-grids";
+import DatePicker from "react-datepicker";
+import { TimePickerComponent } from '@syncfusion/ej2-react-calendars';
+import "../../../../node_modules/@syncfusion/ej2-base/styles/bootstrap5.css";
+import "../../../../node_modules/@syncfusion/ej2-inputs/styles/bootstrap5.css";
+import "../../../../node_modules/@syncfusion/ej2-popups/styles/bootstrap5.css";
+import "../../../../node_modules/@syncfusion/ej2-lists/styles/bootstrap5.css";
+import "../../../../node_modules/@syncfusion/ej2-react-calendars/styles/bootstrap5.css";
 
 const EmployeeMovement = (props) => {
   const lan = useSelector((state) => state.language);
@@ -72,6 +79,11 @@ const EmployeeMovement = (props) => {
   const [handleId, setHandleId] = useState("");
   const data = useSelector((state) => state.data);
   const [activeKey, setActiveKey] = useState(1);
+  const time = (new Date());
+  const minTime = (new Date('8/3/2017 8:00 AM'));
+  const maxTime = (new Date('8/3/2017 5:00 PM'));
+  const [showModal, setShowModal] = useState(false);
+  const [frequency, setfrequency] = useState("");
   // const OnSaveContinueClick = () => {
   //     console.log(grid);
   // }
@@ -81,7 +93,7 @@ const EmployeeMovement = (props) => {
     allowDeleting: true,
     allowEditOnDblClick: false,
   });
-
+  const [startDate, setStartDate] = useState(new Date());
   const commandOptions = [
     // {
     //   type: "Edit",
@@ -233,12 +245,12 @@ const EmployeeMovement = (props) => {
     });
   };
   useEffect(() => {
-    console.log(submitData.isProbation)
+
     setIsProbation(submitData.isProbation)
   }, [submitData?.isProbation])
 
   useEffect(() => {
-    console.log(submitData.isRecurring)
+
     setIsRecurring(submitData.isRecurring)
   }, [submitData?.isRecurring])
 
@@ -257,6 +269,29 @@ const EmployeeMovement = (props) => {
     },
   ];
 
+  useEffect(() => {
+    console.log(submitData?.recurringCycle)
+    if (submitData?.recurringCycle === "Daily") {
+      setfrequency('daily')
+    } else if (submitData?.recurringCycle === "Weekly") {
+      setfrequency('weekly')
+    } else if (submitData?.recurringCycle === "Bi-Weekly") {
+      setfrequency('bi-Weekly')
+    } else if (submitData?.recurringCycle === "Monthly") {
+      setfrequency('monthly')
+    } else if (submitData?.recurringCycle === "Quarterly") {
+      setfrequency('quarterly')
+    } else if (submitData?.recurringCycle === "Semi-Annually") {
+      setfrequency('semi-Annually')
+    } else if (submitData?.recurringCycle === "Annually") {
+      setfrequency('annually')
+    } else {
+      setfrequency('')
+    }
+
+  }, [submitData?.recurringCycle])
+
+
   const submitRequest = (args) => {
     if (args.item.id === "saveItems") {
 
@@ -265,13 +300,13 @@ const EmployeeMovement = (props) => {
     }
 
   };
-  const [showModal, setShowModal] = useState(false);
+
 
   const ben_actionBegin = (args) => {
 
     if (args.requestType === "add") {
       args.cancel = true;
-      setShowModal(true);
+      setShowModal(!showModal);
     }
   };
 
@@ -1030,8 +1065,8 @@ const EmployeeMovement = (props) => {
                       {" "}
                       <CSLab code="Recurring Cycle" />{" "}
                     </CLabel>
-                    <CSelect >
-                      {["Select Recurring Cycle", "Daily", "Weekly", "Monthly", "Quarterly", "Semi-Annnually", "Annually"].map(
+                    <CSelect name="recurringCycle" value={submitData.recurringCycle} onChange={handleOnChange}>
+                      {["Select Recurring Cycle", "Daily", "Weekly", "Bi-Weekly", "Monthly", "Quarterly", "Semi-Annually", "Annually"].map(
                         (x, i) => (
                           <option key={i} value={x}>
                             {x}
@@ -1040,6 +1075,191 @@ const EmployeeMovement = (props) => {
                       )}
                     </CSelect>
                   </CCol> : null}
+                </CRow>
+                <CRow>
+                  {
+                    frequency === 'daily' ? <CCol md='6'>
+                      <CLabel>
+                        {" "}
+                        <CSLab code="Frequency" />{" "}
+                      </CLabel>
+                      <TimePickerComponent id="time" placeholder="Select a Time" value={time} min={minTime} max={maxTime} />
+                    </CCol> : frequency === 'weekly' ? <>
+                      <CCol md='6'>
+                        <CLabel>
+                          {" "}
+                          <CSLab code="Frequency (Weekly)" />{" "}
+                        </CLabel>
+                        <CSelect name="weeklyCycle" value={submitData.recurringCycle} onChange={handleOnChange}>
+                          {["Select Weekly Cycle", "Every Monday", "Every Tuesday", "Every Wednesday", "Every Thursday", "Every Friday"].map(
+                            (x, i) => (
+                              <option key={i} value={x}>
+                                {x}
+                              </option>
+                            )
+                          )}
+                        </CSelect></CCol>
+                      <CCol md='6'>
+                        <CLabel>
+                          {" "}
+                          <CSLab code="Time" />{" "}
+                        </CLabel>
+                        <TimePickerComponent id="time" placeholder="Select a Time" value={time} min={minTime} max={maxTime} />
+                      </CCol>
+                    </> : frequency === 'bi-Weekly' ? <>
+                      <CCol md='4'>
+                        <CLabel>
+                          {" "}
+                          <CSLab code="Frequency" />{" "}
+                        </CLabel>
+                        <CSelect name="weeklyCycle" value={submitData.recurringCycle} onChange={handleOnChange}>
+                          {["Select Bi-Weekly Sequence", "Every First", "Every Second"].map(
+                            (x, i) => (
+                              <option key={i} value={x}>
+                                {x}
+                              </option>
+                            )
+                          )}
+                        </CSelect>
+                      </CCol>
+                      <CCol md='4'>
+                        <CLabel>
+                          {" "}
+                          <CSLab code="Cycle (Bi-Weekly)" />{" "}
+                        </CLabel>
+                        <CSelect name="weeklyCycle" value={submitData.recurringCycle} onChange={handleOnChange}>
+                          {["Select Weekly Cycle", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].map(
+                            (x, i) => (
+                              <option key={i} value={x}>
+                                {x}
+                              </option>
+                            )
+                          )}
+                        </CSelect>
+                      </CCol>
+                      <CCol md='4'>
+                        <CLabel>
+                          {" "}
+                          <CSLab code="Time" />{" "}
+                        </CLabel>
+                        <TimePickerComponent id="time" placeholder="Select a Time" value={time} min={minTime} max={maxTime} />
+                      </CCol>
+                    </> : frequency === 'monthly' || frequency === 'quarterly' ? <>
+                      <CCol md='4'>
+                        <CLabel>
+                          {" "}
+                          <CSLab code="Frequency" />{" "}
+                        </CLabel>
+                        <CSelect name="monthlyCycle" value={submitData.monthlyCycle} onChange={handleOnChange}>
+                          {["Select Monthly Sequence", "Every First", "Every Second", "Every Third", "Every Fourth", "Every Last"].map(
+                            (x, i) => (
+                              <option key={i} value={x}>
+                                {x}
+                              </option>
+                            )
+                          )}
+                        </CSelect>
+                      </CCol>
+                      <CCol md='4'>
+                        <CLabel>
+                          {" "}
+                          <CSLab code="Cycle (Monthly)" />{" "}
+                        </CLabel>
+                        <CSelect name="weeklyCycle" value={submitData.recurringCycle} onChange={handleOnChange}>
+                          {["Select Monthly Cycle", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].map(
+                            (x, i) => (
+                              <option key={i} value={x}>
+                                {x}
+                              </option>
+                            )
+                          )}
+                        </CSelect>
+                      </CCol>
+                      <CCol md='4'>
+                        <CLabel>
+                          {" "}
+                          <CSLab code="Time" />{" "}
+                        </CLabel>
+                        <TimePickerComponent id="time" placeholder="Select a Time" value={time} min={minTime} max={maxTime} />
+                      </CCol>
+                    </> : frequency === 'semi-Annually' ? <>
+                      <CCol md='4'>
+                        <CLabel>
+                          {" "}
+                          <CSLab code="Frequency" />{" "}
+                        </CLabel>
+                        <CSelect name="monthlyCycle" value={submitData.monthlyCycle} onChange={handleOnChange}>
+                          {["Select Sequence", "Every First", "Every Second", "Every Third", "Every Fourth", "Every Last"].map(
+                            (x, i) => (
+                              <option key={i} value={x}>
+                                {x}
+                              </option>
+                            )
+                          )}
+                        </CSelect>
+                      </CCol>
+                      <CCol md='4'>
+                        <CLabel>
+                          {" "}
+                          <CSLab code="Cycle (Semi-Annually)" />{" "}
+                        </CLabel>
+                        <CSelect name="weeklyCycle" value={submitData.recurringCycle} onChange={handleOnChange}>
+                          {["Select Cycle", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].map(
+                            (x, i) => (
+                              <option key={i} value={x}>
+                                {x}
+                              </option>
+                            )
+                          )}
+                        </CSelect>
+                      </CCol>
+                      <CCol md='4'>
+                        <CLabel>
+                          {" "}
+                          <CSLab code="Time" />{" "}
+                        </CLabel>
+                        <TimePickerComponent id="time" placeholder="Select a Time" value={time} min={minTime} max={maxTime} />
+                      </CCol>
+                    </> : frequency === 'annually' ? <>
+                      <CCol md='4'>
+                        <CLabel>
+                          {" "}
+                          <CSLab code="Frequency" />{" "}
+                        </CLabel>
+                        <CSelect name="monthlyCycle" value={submitData.monthlyCycle} onChange={handleOnChange}>
+                          {["Select Sequence", "Every First", "Every Second", "Every Third", "Every Fourth", "Every Last"].map(
+                            (x, i) => (
+                              <option key={i} value={x}>
+                                {x}
+                              </option>
+                            )
+                          )}
+                        </CSelect>
+                      </CCol>
+                      <CCol md='4'>
+                        <CLabel>
+                          {" "}
+                          <CSLab code="Cycle (Annually)" />{" "}
+                        </CLabel>
+                        <CSelect name="weeklyCycle" value={submitData.recurringCycle} onChange={handleOnChange}>
+                          {["Select Cycle", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].map(
+                            (x, i) => (
+                              <option key={i} value={x}>
+                                {x}
+                              </option>
+                            )
+                          )}
+                        </CSelect>
+                      </CCol>
+                      <CCol md='4'>
+                        <CLabel>
+                          {" "}
+                          <CSLab code="Time" />{" "}
+                        </CLabel>
+                        <TimePickerComponent id="time" placeholder="Select a Time" value={time} min={minTime} max={maxTime} />
+                      </CCol>
+                    </> : null
+                  }
 
                 </CRow>
               </>
