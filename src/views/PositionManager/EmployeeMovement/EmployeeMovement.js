@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import CIcon from "@coreui/icons-react";
 import {
   CInputGroupAppend,
@@ -33,7 +32,7 @@ import { CardBodyHeight } from "src/reusable/utils/helper";
 import { GetLabelByName } from "src/reusable/configs/config";
 import { CSAutoComplete, CSCheckbox, CSDivider, CSLab, CSLineLabel, CSRequiredIndicator } from "../../../reusable/components";
 import "../../../scss/_custom_table.scss";
-import { GetEmployeeByID, SearchEmployees } from "src/reusable/API/EmployeeEndpoints";
+import { GetEmployeeByID, SearchEmployees, GetEmployeeOrgDetails } from "src/reusable/API/EmployeeEndpoints";
 import useFetch from "src/hooks/useFetch";
 import useMultiFetch from "src/hooks/useMultiFetch";
 import usePost from "src/hooks/usePost";
@@ -59,6 +58,9 @@ import "../../../../node_modules/@syncfusion/ej2-inputs/styles/bootstrap5.css";
 import "../../../../node_modules/@syncfusion/ej2-popups/styles/bootstrap5.css";
 import "../../../../node_modules/@syncfusion/ej2-lists/styles/bootstrap5.css";
 import "../../../../node_modules/@syncfusion/ej2-react-calendars/styles/bootstrap5.css";
+import { GetAllDepartsments, GetAllDivisions, GetAllLocations, GetAllPositions, GetAllSalaryGrades, GetAllSections, GetAllUnits, GetEmployeeTypes } from "src/reusable/API/OrganizationalEndPoints";
+import { GetAllEmployees } from "src/reusable/API/EarningEndpoints";
+import useLoader from "src/hooks/useLoader";
 
 const EmployeeMovement = (props) => {
   const lan = useSelector((state) => state.language);
@@ -84,6 +86,20 @@ const EmployeeMovement = (props) => {
   const maxTime = (new Date('8/3/2017 5:00 PM'));
   const [showModal, setShowModal] = useState(false);
   const [frequency, setfrequency] = useState("");
+  const { setIsLoading } = useLoader();
+  const [empTyp, setEmployeeType] = useState([]);
+  const [div, setDivision] = useState([]);
+  const [cmdDep, setDepartment] = useState([]);
+  const [cmdSec, setSection] = useState([]);
+  const [cmdLoc, setLocation] = useState([]);
+  const [cmbUnit, setUnit] = useState([]);
+  const [cmbEmployees, setEmployees] = useState([]);
+  const [cmbSalaryGrades, setSalaryGrades] = useState([]);
+  const [cmbPos, setPosition] = useState([]);
+  const [isProbation, setIsProbation] = useState(false)
+  const [isRecurring, setIsRecurring] = useState(false)
+  const [itemsError, SetItemError] = useState([])
+  const [descData, setDescData] = useState([])
   // const OnSaveContinueClick = () => {
   //     console.log(grid);
   // }
@@ -95,10 +111,6 @@ const EmployeeMovement = (props) => {
   });
   const [startDate, setStartDate] = useState(new Date());
   const commandOptions = [
-    // {
-    //   type: "Edit",
-    //   buttonOption: { iconCss: " e-icons e-edit", cssClass: "e-flat" },
-    // },
     {
       type: "Delete",
       buttonOption: { iconCss: "e-icons e-delete", cssClass: "e-flat" },
@@ -113,25 +125,92 @@ const EmployeeMovement = (props) => {
     },
   ];
 
-  const { setOptData, setUrl } = useFetch("", (response, results) => {
+  useMultiFetch(
+    [
+      GetEmployeeTypes(),
+      GetAllDivisions(),
+      GetAllDepartsments(),
+      GetAllSections(),
+      GetAllLocations(),
+      GetAllUnits(),
+      GetAllEmployees(),
+      // GetAllPositions(),
+      GetAllSalaryGrades(),
+      // GetNotchSettings(),
+    ],
+    (results) => {
+      console.log({ results })
+      setIsLoading(true);
+      setEmployeeType([
+        {
+          id: "00000000-0000-0000-0000-000000000000",
+          name: `Select Employee Type`,
+        },
+        ...results[0].data,
+      ]);
+      setDivision([
+        {
+          id: "00000000-0000-0000-0000-000000000000",
+          name: `Select Division Type`,
+        },
+        ...results[1].data,
+      ]);
+      setDepartment([
+        {
+          id: "00000000-0000-0000-0000-000000000000",
+          name: `Select Department`,
+        },
+        ...results[2].data,
+      ]);
+      setSection([
+        {
+          id: "00000000-0000-0000-0000-000000000000",
+          name: `Select Section`,
+        },
+        ...results[3].data,
+      ]);
+      setLocation([
+        {
+          id: "00000000-0000-0000-0000-000000000000",
+          name: `Select Location`,
+        },
+        ...results[4].data,
+      ]);
+      setUnit([
+        {
+          id: "00000000-0000-0000-0000-000000000000",
+          name: `Select Unit`,
+        },
+        ...results[5].data,
+      ]);
+      setIsLoading(false);
+      // setPosition([
+      //   { id: "00000000-0000-0000-0000-000000000000", name: `Select Position` },
+      //   ...results[7].data,
+      // ]);
+      setSalaryGrades([
+        {
+          id: "00000000-0000-0000-0000-000000000000",
+          name: `Select Salary Grade`,
+        },
+        ...results[7].data.items,
+      ]);
+
+    }
+  );
+
+  const { setUrl } = useFetch("", (response, results) => {
     if (response) {
       if (response && Object.keys(response).length > 0) {
         dispatch({ type: "set", data: { ...response } });
-        setSubmitData({ ...response });
+        // setSubmitData({ ...response });
         setViewInfo(response);
-        // setDuplicateData({ ...response })
-        console.log({ response });
-
-        //let rates = response?.rates;
-
-        // setExchangeRate(rates);
         setShow(false);
 
       } else {
         setMode("Add");
         setShow(false);
-        // dispatch({ type: 'set', data: { ...results, isHomeCurrency } });
-        // setSubmitData({ ...results, isHomeCurrency });
+
       }
     }
   });
@@ -140,18 +219,11 @@ const EmployeeMovement = (props) => {
     setSearchInput("");
 
   };
-  const { data: multicallData } = useMultiFetch([], (results) => {
-    console.log(results[0].data);
-    // setSkillType([...results[0].data]);
 
-
-  })
   const { setData: setPostData, setUrl: setPostUrl } = usePost('', (response) => {
-    // console.log({location:response });
     const { data } = response
     if ("" === data) {
       toast.success(GetLabelByName("HCM-HAGGXNJQW2B_HRPR", lan));
-      //  showToasts();
       searchReset(2);
     } else {
       try {
@@ -162,30 +234,21 @@ const EmployeeMovement = (props) => {
         console.log(error);
       }
     }
-
   })
-  const handleSearchResultSelect = (results) => {
-    console.log("show results", results);
 
-    //setting employee display name on select of suggested item
-    setEmpDisplayName(
-      (prevState) => `${results.firstName} ${results.lastName}`
-    );
-    // testApi();
-    // return;
+  const handleSearchResultSelect = (results) => {
+    setEmpDisplayName(`${results.firstName} ${results.lastName}`);
+
     setMode("Add");
     setShow(false);
-    //  dispatch({ type: "set", data: { ...results } });
     setSubmitData({ ...results });
-
     if (results?.id) {
       setSearchResult(results);
-      setUrl(GetEmployeeByID(results.id))
+      setUrl(GetEmployeeOrgDetails(results.id))
     }
   };
+
   const handleOnChange = (evnt) => {
-    //console.log(evnt)
-    console.log(evnt?.target?.value)
     setSubmitData((data) => {
       return { ...data, [evnt?.target?.name]: evnt?.target?.value };
     });
@@ -194,11 +257,18 @@ const EmployeeMovement = (props) => {
       data: { ...data, [evnt?.target?.name]: evnt?.target?.value },
     });
   };
+
+  const handleSave = () => {
+    console.log({ submitData })
+    setDescData((prev) => [submitData, ...prev]);
+  }
+
   const handlePost = () => {
 
     setPostUrl()
     setPostData()
   }
+
   const handleProbation = (evnt) => {
     let isProbation =
       evnt?.target?.name === "isProbation"
@@ -220,8 +290,6 @@ const EmployeeMovement = (props) => {
       },
     });
   };
-  const [isProbation, setIsProbation] = useState(false)
-  const [isRecurring, setIsRecurring] = useState(false)
 
   const handleRecurring = (evnt) => {
     let isRecurring =
@@ -260,30 +328,24 @@ const EmployeeMovement = (props) => {
 
   const toolbarOptions = [
     "Add",
-    {
-      text: "Save",
-      tooltipText: "Save",
-      prefixIcon: "e-save",
-      id: "saveItems",
-      align: "Right",
-    },
+
   ];
 
   useEffect(() => {
     console.log(submitData?.recurringCycle)
-    if (submitData?.recurringCycle === "Daily") {
+    if (submitData?.recurringCycle === 1) {
       setfrequency('daily')
-    } else if (submitData?.recurringCycle === "Weekly") {
+    } else if (submitData?.recurringCycle === 2) {
       setfrequency('weekly')
-    } else if (submitData?.recurringCycle === "Bi-Weekly") {
+    } else if (submitData?.recurringCycle === 3) {
       setfrequency('bi-Weekly')
-    } else if (submitData?.recurringCycle === "Monthly") {
+    } else if (submitData?.recurringCycle === 4) {
       setfrequency('monthly')
-    } else if (submitData?.recurringCycle === "Quarterly") {
+    } else if (submitData?.recurringCycle === 5) {
       setfrequency('quarterly')
-    } else if (submitData?.recurringCycle === "Semi-Annually") {
+    } else if (submitData?.recurringCycle === 6) {
       setfrequency('semi-Annually')
-    } else if (submitData?.recurringCycle === "Annually") {
+    } else if (submitData?.recurringCycle === 7) {
       setfrequency('annually')
     } else {
       setfrequency('')
@@ -319,15 +381,13 @@ const EmployeeMovement = (props) => {
           </h5>
         </CCol>
       </CRow>
-      <CRow>
-        <CCol md="4">
+      <CRow >
+        <CCol md="4" hidden={!show}>
           <CFormGroup>
             <CSAutoComplete
               filterUrl={SearchEmployees(searchInput)}
-              //filterUrl=''            //filterUrl={SearchInternalCurrencies(searchInput)}
               placeholder={GetLabelByName("HCM-6FKJ6FEGW7A-HRPR", lan)}
               handleSelect={handleSearchResultSelect}
-              //onChange={()=>handleSearchResultSelect}
               displayTextKey={"firstName"}
               setInput={setSearchInput}
               input={searchInput}
@@ -419,15 +479,10 @@ const EmployeeMovement = (props) => {
                                 {" "}
                                 <CSLab code="HCM-HMLNLPOEIXG" />{" "}
                               </CLabel>
-                              <CSelect disabled>
-                                {[
-                                  "Select Employee Type",
-                                  "Type 1",
-                                  "Type 2",
-                                  "Type 3",
-                                ].map((x, i) => (
-                                  <option key={i} value={x}>
-                                    {x}
+                              <CSelect value={viewinfo.employeeTypeId} disabled>
+                                {empTyp.map((x, y) => (
+                                  <option key={y} value={x.id}>
+                                    {x.name}
                                   </option>
                                 ))}
                               </CSelect>
@@ -437,15 +492,10 @@ const EmployeeMovement = (props) => {
                                 {" "}
                                 <CSLab code="HCM-N6I0LSIYJF" />{" "}
                               </CLabel>
-                              <CSelect disabled>
-                                {[
-                                  "Select Department",
-                                  "Department 1",
-                                  "Department 2",
-                                  "Department 3",
-                                ].map((x, i) => (
-                                  <option key={i} value={x}>
-                                    {x}
+                              <CSelect value={viewinfo.departmentId} disabled>
+                                {cmdDep.map((x, y) => (
+                                  <option key={y} value={x.id}>
+                                    {x.name}
                                   </option>
                                 ))}
                               </CSelect>
@@ -459,15 +509,10 @@ const EmployeeMovement = (props) => {
                                 {" "}
                                 <CSLab code="HCM-4D1SZ24U9UO" />{" "}
                               </CLabel>
-                              <CSelect disabled>
-                                {[
-                                  "Select Section",
-                                  "Section 1",
-                                  "Section 2",
-                                  "Section 3",
-                                ].map((x, i) => (
-                                  <option key={i} value={x}>
-                                    {x}
+                              <CSelect value={viewinfo.sectionId} disabled>
+                                {cmdSec.map((x, y) => (
+                                  <option key={y} value={x.id}>
+                                    {x.name}
                                   </option>
                                 ))}
                               </CSelect>
@@ -477,15 +522,10 @@ const EmployeeMovement = (props) => {
                                 {" "}
                                 <CSLab code="HCM-LAFPT6FJ57N" />{" "}
                               </CLabel>
-                              <CSelect disabled>
-                                {[
-                                  "Select Division",
-                                  "Division 1",
-                                  "Division 2",
-                                  "Division 3",
-                                ].map((x, i) => (
-                                  <option key={i} value={x}>
-                                    {x}
+                              <CSelect value={viewinfo.divisionId} disabled>
+                                {div.map((x, y) => (
+                                  <option key={y} value={x.id}>
+                                    {x.name}
                                   </option>
                                 ))}
                               </CSelect>
@@ -497,15 +537,10 @@ const EmployeeMovement = (props) => {
                                 {" "}
                                 <CSLab code="HCM-ATGLL367GOQ" />{" "}
                               </CLabel>
-                              <CSelect disabled>
-                                {[
-                                  "Select Position",
-                                  "Position 1",
-                                  "Position 2",
-                                  "Position 3",
-                                ].map((x, i) => (
-                                  <option key={i} value={x}>
-                                    {x}
+                              <CSelect value={viewinfo.employeeTypeId} disabled>
+                                {empTyp.map((x, y) => (
+                                  <option key={y} value={x.id}>
+                                    {x.name}
                                   </option>
                                 ))}
                               </CSelect>
@@ -515,14 +550,12 @@ const EmployeeMovement = (props) => {
                                 {" "}
                                 <CSLab code="HCM-DHV9W3RF11D" />{" "}
                               </CLabel>
-                              <CSelect disabled>
-                                {["Select Unit", "Unit 1", "Unit 2", "Unit 3"].map(
-                                  (x, i) => (
-                                    <option key={i} value={x}>
-                                      {x}
-                                    </option>
-                                  )
-                                )}
+                              <CSelect value={viewinfo.unitId} disabled>
+                                {cmbUnit.map((x, y) => (
+                                  <option key={y} value={x.id}>
+                                    {x.name}
+                                  </option>
+                                ))}
                               </CSelect>
                             </CCol>
                           </CRow>
@@ -534,15 +567,10 @@ const EmployeeMovement = (props) => {
                                 {" "}
                                 <CSLab code="HCM-6XXECXM4Q5S" />{" "}
                               </CLabel>
-                              <CSelect disabled>
-                                {[
-                                  "Select Location",
-                                  "Location 1",
-                                  "Location 2",
-                                  "Location 3",
-                                ].map((x, i) => (
-                                  <option key={i} value={x}>
-                                    {x}
+                              <CSelect value={viewinfo.locationId} disabled>
+                                {cmdLoc.map((x, y) => (
+                                  <option key={y} value={x.id}>
+                                    {x.name}
                                   </option>
                                 ))}
                               </CSelect>
@@ -552,15 +580,10 @@ const EmployeeMovement = (props) => {
                                 {" "}
                                 <CSLab code="Salary Grade" />{" "}
                               </CLabel>
-                              <CSelect disabled>
-                                {[
-                                  "Select Salary Grade",
-                                  "Salary Grade 1",
-                                  "Salary Grade 2",
-                                  "Salary Grade 3",
-                                ].map((x, i) => (
-                                  <option key={i} value={x}>
-                                    {x}
+                              <CSelect value={viewinfo.salaryGradeId} disabled>
+                                {cmbSalaryGrades.map((x, y) => (
+                                  <option key={y} value={x.id}>
+                                    {x.name}
                                   </option>
                                 ))}
                               </CSelect>
@@ -588,9 +611,7 @@ const EmployeeMovement = (props) => {
                           </CRow>
                         </>
                       </CCol>
-
                       <CSDivider md="1" />
-
                       <CCol md="5">
                         <CRow>
                           <CCol md="12">
@@ -603,15 +624,10 @@ const EmployeeMovement = (props) => {
                               {" "}
                               <CSLab code="HCM-HMLNLPOEIXG" />{" "}
                             </CLabel>
-                            <CSelect>
-                              {[
-                                "Select Employee Type",
-                                "Type 1",
-                                "Type 2",
-                                "Type 3",
-                              ].map((x, i) => (
-                                <option key={i} value={x}>
-                                  {x}
+                            <CSelect name="employeeType" value={submitData.employeeType || -1} onChange={handleOnChange}>
+                              {empTyp.map((x, y) => (
+                                <option key={y} value={x.id}>
+                                  {x.name}
                                 </option>
                               ))}
                             </CSelect>
@@ -621,15 +637,10 @@ const EmployeeMovement = (props) => {
                               {" "}
                               <CSLab code="HCM-N6I0LSIYJF" />{" "}
                             </CLabel>
-                            <CSelect>
-                              {[
-                                "Select Department",
-                                "Department 1",
-                                "Department 2",
-                                "Department 3",
-                              ].map((x, i) => (
-                                <option key={i} value={x}>
-                                  {x}
+                            <CSelect name="department" value={submitData.department || -1} onChange={handleOnChange}>
+                              {cmdDep.map((x, y) => (
+                                <option key={y} value={x.id}>
+                                  {x.name}
                                 </option>
                               ))}
                             </CSelect>
@@ -641,15 +652,10 @@ const EmployeeMovement = (props) => {
                               {" "}
                               <CSLab code="HCM-4D1SZ24U9UO" />{" "}
                             </CLabel>
-                            <CSelect>
-                              {[
-                                "Select Section",
-                                "Section 1",
-                                "Section 2",
-                                "Section 3",
-                              ].map((x, i) => (
-                                <option key={i} value={x}>
-                                  {x}
+                            <CSelect name="section" value={submitData.section || -1} onChange={handleOnChange}>
+                              {cmdSec.map((x, y) => (
+                                <option key={y} value={x.id}>
+                                  {x.name}
                                 </option>
                               ))}
                             </CSelect>
@@ -659,15 +665,10 @@ const EmployeeMovement = (props) => {
                               {" "}
                               <CSLab code="HCM-LAFPT6FJ57N" />{" "}
                             </CLabel>
-                            <CSelect>
-                              {[
-                                "Select Division",
-                                "Division 1",
-                                "Division 2",
-                                "Division 3",
-                              ].map((x, i) => (
-                                <option key={i} value={x}>
-                                  {x}
+                            <CSelect name="division" value={submitData.division || -1} onChange={handleOnChange}>
+                              {div.map((x, y) => (
+                                <option key={y} value={x.id}>
+                                  {x.name}
                                 </option>
                               ))}
                             </CSelect>
@@ -697,14 +698,12 @@ const EmployeeMovement = (props) => {
                               {" "}
                               <CSLab code="HCM-DHV9W3RF11D" />{" "}
                             </CLabel>
-                            <CSelect>
-                              {["Select Unit", "Unit 1", "Unit 2", "Unit 3"].map(
-                                (x, i) => (
-                                  <option key={i} value={x}>
-                                    {x}
-                                  </option>
-                                )
-                              )}
+                            <CSelect name="unit" value={submitData.unit || -1} onChange={handleOnChange}>
+                              {cmbUnit.map((x, y) => (
+                                <option key={y} value={x.id}>
+                                  {x.name}
+                                </option>
+                              ))}
                             </CSelect>
                           </CCol>
                         </CRow>
@@ -714,15 +713,10 @@ const EmployeeMovement = (props) => {
                               {" "}
                               <CSLab code="HCM-6XXECXM4Q5S" />{" "}
                             </CLabel>
-                            <CSelect>
-                              {[
-                                "Select Location",
-                                "Location 1",
-                                "Location 2",
-                                "Location 3",
-                              ].map((x, i) => (
-                                <option key={i} value={x}>
-                                  {x}
+                            <CSelect name="location" value={submitData.location || -1} onChange={handleOnChange}>
+                              {cmdLoc.map((x, y) => (
+                                <option key={y} value={x.id}>
+                                  {x.name}
                                 </option>
                               ))}
                             </CSelect>
@@ -732,15 +726,10 @@ const EmployeeMovement = (props) => {
                               {" "}
                               <CSLab code="Salary Grade" />{" "}
                             </CLabel>
-                            <CSelect>
-                              {[
-                                "Select Salary Grade",
-                                "Notch 1",
-                                "Salary Grade 2",
-                                "Salary Grade 3",
-                              ].map((x, i) => (
-                                <option key={i} value={x}>
-                                  {x}
+                            <CSelect name="salaryGrade" value={submitData.salaryGrade || -1} onChange={handleOnChange}>
+                              {cmbSalaryGrades.map((x, y) => (
+                                <option key={y} value={x.id}>
+                                  {x.name}
                                 </option>
                               ))}
                             </CSelect>
@@ -753,7 +742,7 @@ const EmployeeMovement = (props) => {
                               {" "}
                               <CSLab code="Salary Notch" />{" "}
                             </CLabel>
-                            <CSelect>
+                            <CSelect name="notch" value={submitData.notch || -1} onChange={handleOnChange}>
                               {[
                                 "Select Notch",
                                 "Notch 1",
@@ -771,7 +760,7 @@ const EmployeeMovement = (props) => {
                               {" "}
                               <CSLab code="Supervisor" />{" "}
                             </CLabel>
-                            <CSelect>
+                            <CSelect name="supervisior" value={submitData.supervisior || -1} onChange={handleOnChange}>
                               {[
                                 "Select Supervisor",
                                 "Supervisor 1",
@@ -831,35 +820,31 @@ const EmployeeMovement = (props) => {
                               </CLabel>
                               <CInput
                                 type="date"
-                                name="probationDate"
-                                value={submitData?.probationDate || ""}
+                                name="probationReviewDate"
+                                value={submitData?.probationReviewDate || ""}
                                 onChange={handleOnChange}
                                 autoComplete="off"
+
                               />
                             </CCol></> : null}
                         </CRow>
-                        {/* {isProbation ? <CRow>
-                          
-                        </CRow> : null} */}
-
                         <CRow>
                           <CCol md="12">
                             <CLabel>
                               {" "}
                               <CSLab code="HCM-1NNHRS3H3JT_LANG" />{" "}
                             </CLabel>
-                            <CTextarea
+                            <CTextarea name="reason" value={submitData.reason}
                               style={{ height: "80px", resize: "none" }}
                             ></CTextarea>
                           </CCol>
                         </CRow>
-
                       </CCol>
                     </CRow>
                   </CTabPane>
                   <CTabPane visible={activeKey === 2 ? "true" : "false"}>
                     <GridComponent
-
+                      dataSource={descData}
                       height={380}
                       allowPaging={true}
                       pageSettings={{ pageSize: 8 }}
@@ -879,57 +864,57 @@ const EmployeeMovement = (props) => {
                           isPrimaryKey={true}
                         />
                         <ColumnDirective
-                          field="employee.firstName"
+                          field="activityName"
                           editType="text"
                           headerText={"Activity Name"}
                           width="100"
                         //edit={earnings}
                         />
                         <ColumnDirective
-                          field="employee.lastName"
+                          field="activityDescription"
                           editType="text"
                           headerText={"Activity Description"}
                           width="70"
                         //edit={earnings}
                         />
                         <ColumnDirective
-                          field="email"
+                          field="targetType"
                           headerText={"Target Type"}
                           editType="text"
                           width="100"
                           textAlign="Center"
                         />
                         <ColumnDirective
-                          field="phone"
+                          field="targetValue"
                           headerText={"Target Value"}
                           editType="text"
                           width="100"
                           textAlign="Center"
                         />
                         <ColumnDirective
-                          field="phone"
+                          field="isRecurring"
                           headerText={"Recurring"}
                           editType="text"
                           width="100"
                           textAlign="Center"
                         />
                         <ColumnDirective
-                          field="phone"
+                          field="recurringCycle"
                           headerText={"Recurring Cycle"}
                           editType="numericedit"
                           width="100"
                           textAlign="Center"
                         />
                         <ColumnDirective
-                          field="address"
+                          field="dueDate"
                           headerText={"Date"}
-                          editType="text"
+                          editType="date"
                           // editTemplate={editTemplate}
                           width="100"
                           textAlign="Center"
                         />
                         <ColumnDirective
-                          field="address"
+                          field="scoreWeight"
                           headerText={"Score Weight"}
                           editType="text"
                           // editTemplate={editTemplate}
@@ -984,14 +969,11 @@ const EmployeeMovement = (props) => {
         </CCol>
       </CRow>
 
-      <CModal show={showModal}>
+      <CModal show={showModal} closeOnBackdrop={false} >
         <CModalHeader>Add Job Decription</CModalHeader>
         <CModalBody>
           <CRow className={"bottom-spacing"}>
             <CCol md="12">
-              {/* <CCol md="12">
-                          <CSLineLabel name="HCM-I2TGMIC1TS-HRPR" />{" "}
-                        </CCol> */}
               <>
                 <CRow>
                   <CCol md="6">
@@ -999,20 +981,22 @@ const EmployeeMovement = (props) => {
                       {" "}
                       <CSLab code="Activity Name" />{" "}
                     </CLabel>
-                    <CInput name="name"
+                    <CInput name="activityName"
                       className="form-control"
-                      value={data?.name || ""}
-                      placeholder={GetLabelByName("HCM-W4TEXTQO7M9_LOLN", lan)} />
+                      value={submitData?.activityName || ""}
+                      placeholder={GetLabelByName("HCM-W4TEXTQO7M9_LOLN", lan)} onChange={handleOnChange} />
                   </CCol>
                   <CCol md="6">
                     <CLabel>
                       {" "}
                       <CSLab code="Activity Description" />{" "}
                     </CLabel>
-                    <CInput name="name"
+                    <CInput name="activityDescription"
                       className="form-control"
-                      value={data?.name || ""}
-                      placeholder="Enter Description" />
+                      value={submitData?.activityDescription || ""}
+                      placeholder="Enter Description"
+                      onChange={handleOnChange}
+                    />
                   </CCol>
                 </CRow>
               </>
@@ -1023,7 +1007,7 @@ const EmployeeMovement = (props) => {
                       {" "}
                       <CSLab code="Target Type" />{" "}
                     </CLabel>
-                    <CSelect>
+                    <CSelect name="targetType" value={submitData.targetType || -1} onChange={handleOnChange}>
                       {[
                         "Select Target Type",
                         "Number",
@@ -1031,7 +1015,7 @@ const EmployeeMovement = (props) => {
                         "Percentage",
                         "Boolean",
                       ].map((x, i) => (
-                        <option key={i} value={x}>
+                        <option key={i} value={i}>
                           {x}
                         </option>
                       ))}
@@ -1042,10 +1026,10 @@ const EmployeeMovement = (props) => {
                       {" "}
                       <CSLab code="Target Value" />{" "}
                     </CLabel>
-                    <CInput name="name"
+                    <CInput name="targetValue"
                       className="form-control"
-                      value={data?.name || ""}
-                      placeholder="Enter Target Value" />
+                      value={submitData?.targetValue || ""}
+                      placeholder="Enter Target Value" onChange={handleOnChange} />
                   </CCol>
                 </CRow>
                 <CRow>
@@ -1068,7 +1052,7 @@ const EmployeeMovement = (props) => {
                     <CSelect name="recurringCycle" value={submitData.recurringCycle} onChange={handleOnChange}>
                       {["Select Recurring Cycle", "Daily", "Weekly", "Bi-Weekly", "Monthly", "Quarterly", "Semi-Annually", "Annually"].map(
                         (x, i) => (
-                          <option key={i} value={x}>
+                          <option key={i} value={i}>
                             {x}
                           </option>
                         )
@@ -1270,10 +1254,11 @@ const EmployeeMovement = (props) => {
                       {" "}
                       <CSLab code="Due Date" />{" "}
                     </CLabel>
-                    <CInput name="name"
+                    <CInput name="dueDate"
                       type="date"
                       className="form-control"
-                      value={data?.name || ""}
+                      value={submitData?.dueDate || ""}
+                      onChange={handleOnChange}
                     />
                   </CCol>
                   <CCol md="6">
@@ -1281,9 +1266,10 @@ const EmployeeMovement = (props) => {
                       {" "}
                       <CSLab code="Score weight" />{" "}
                     </CLabel>
-                    <CInput name="name"
+                    <CInput name="scoreWeight"
                       className="form-control"
-                      value={data?.name || ""}
+                      value={submitData?.scoreWeight || ""}
+                      onChange={handleOnChange}
                     />
                   </CCol>
                 </CRow>
@@ -1293,10 +1279,10 @@ const EmployeeMovement = (props) => {
                       {" "}
                       <CSLab code="Status" />{" "}
                     </CLabel>
-                    <CSelect >
+                    <CSelect name="status" value={submitData.status || -1} onChange={handleOnChange}>
                       {["Select Status", "Active", "Inactive"].map(
                         (x, i) => (
-                          <option key={i} value={x}>
+                          <option key={i} value={i}>
                             {x}
                           </option>
                         )
@@ -1319,7 +1305,7 @@ const EmployeeMovement = (props) => {
           >
             <CSLab code={"HCM-9E3ZC2E1S0N-LASN"} />
           </CButton>
-          <CButton color="primary" >
+          <CButton color="primary" onClick={handleSave}>
             <CSLab code={"HCM-TAAFD4M071D-HRPR"} />
           </CButton>
         </CModalFooter>

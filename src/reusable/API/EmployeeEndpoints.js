@@ -1,4 +1,3 @@
-import { BaseURL } from "./base";
 
 /**
  * Get Employee Types.
@@ -6,12 +5,15 @@ import { BaseURL } from "./base";
  */
 //export const SearchEmployees = (filter) = `${BaseURL}EmployeeBio?filter=${filter}`;
 
-  export const SearchEmployees = (filter) =>`EmployeeBio?filter=${filter}`;
-  
-export const SearchEmployeesByNameAndProgram = (filter) =>
-  `${BaseURL}EmployeeTraining/Program?filter=${filter}`;
+export const SearchEmployees = (filter) => `Employees?filter=${filter}`;
 
-export const GetEmployee = (handleId) =>
-  `${BaseURL}Employees/${handleId}/profile`;
-   
-  export const GetEmployeeByID=(handleId)=>`EmployeeLanguage/${handleId}`
+export const SearchEmployeesByNameAndProgram = (filter) =>
+  `EmployeeTraining/Program?filter=${filter}`;
+
+export const GetEmployee = (empID) =>
+  `Employees/${empID}/profile`;
+
+export const GetEmployeeByID = (empID) => `EmployeeLanguage/${empID}`
+
+
+export const GetEmployeeOrgDetails = (empID) => `Employees/${empID}/organisation`
