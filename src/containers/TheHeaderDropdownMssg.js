@@ -50,11 +50,11 @@ const TheHeaderDropdownMssg = () => {
 
   return (
     <CDropdown inNav className="c-header-nav-item mx-2" direction="down">
-      <CDropdownToggle className="c-header-nav-link" caret={false}>
+      <CDropdownToggle className="c-header-nav-link " caret={false}>
         {/* <CIcon name="cil-envelope-open" /><CBadge shape="pill" color="info">{itemsCount}</CBadge> */}
         <h5
           className="badge badge-info"
-          style={{ fontWeight: "bold", padding: 10, fontSize: 15 }}
+          style={{ fontWeight: "bold", padding: 10, fontSize: 15, minWidth: 150 }}
         >
           HR  <RiIcons.RiArrowDownSFill /> {" "}
         </h5>

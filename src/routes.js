@@ -1,11 +1,11 @@
 /* eslint-disable no-sparse-arrays */
 import React from "react";
-import Login from './templates/pages/login/Login';
+// import Login from './templates/pages/login/Login';
 
 //import Dependant from "./views/EmployeeManager/Dependant/Dependant";
 import AccidentTransaction from "./views/EmployeeManager/AccidentTransaction/AccidentTransaction";
 //import MedicalTransaction from "./views/EmployeeManager/MedicalTransaction/MedicalTransaction";
-import Beneficiaries from "./views/EmployeeManager/Beneficiary/Beneficiary";
+// import Beneficiaries from "./views/EmployeeManager/Beneficiary/Beneficiary";
 //import EmergencyContact from "./views/EmployeeRelationships/EmergencyContact/EmergencyContact";
 //import NextofKin from "./views/EmployeeManager/NextofKin/NextofKin";
 //import {LeaveTransaction} from "./views/EmployeeManager/LeaveTransaction/LeaveTransaction";
@@ -92,11 +92,14 @@ const LeaveTransaction = React.lazy(() =>
   import("./views/EmployeeManager/LeaveTransaction/LeaveTransaction")
 );
 const EmployeeLanguage = React.lazy(() => import("./views/EmployeeManager/EmployeeLanguage/EmployeeLanguage"));
-const EmployeeHomeTown = React.lazy(()=>import("./views/EmployeeManager/EmployeeHomeTown/EmployeeHomeTown"))
-const EmployeeFamily = React.lazy(()=>import ("./views/EmployeeManager/EmployeeFamily/EmployeeFamily"))
+const EmployeeHomeTown = React.lazy(() => import("./views/EmployeeManager/EmployeeHomeTown/EmployeeHomeTown"))
+const EmployeeFamily = React.lazy(() => import("./views/EmployeeManager/EmployeeFamily/EmployeeFamily"))
 
 
 // Position Manager
+const PositionSetup = React.lazy(() =>
+  import("./views/PositionManager/Position/Position")
+);
 const EmployeeMovement = React.lazy(() =>
   import("./views/PositionManager/EmployeeMovement/EmployeeMovement")
 );
@@ -190,9 +193,9 @@ const TaxRelief = React.lazy(() =>
 const MedicalTransactions = React.lazy(() =>
   import("./views/EmployeeManager/MedicalTransaction/MedicalTransaction")
 );
-const AccidentTransactions = React.lazy(() =>
-  import("./views/EmployeeManager/AccidentTransaction/AccidentTransaction")
-);
+// const AccidentTransactions = React.lazy(() =>
+//   import("./views/EmployeeManager/AccidentTransaction/AccidentTransaction")
+// );
 
 //Employee Relationships
 const Beneficiary = React.lazy(() =>
@@ -204,9 +207,9 @@ const Dependant = React.lazy(() =>
 const EmergencyContact = React.lazy(() =>
   import("./views/EmployeeRelationships/EmergencyContact/EmergencyContact")
 );
-const EmergencyContacts = React.lazy(() =>
-  import("./views/EmployeeRelationships/EmergencyContact/EmergencyContact")
-);
+// const EmergencyContacts = React.lazy(() =>
+//   import("./views/EmployeeRelationships/EmergencyContact/EmergencyContact")
+// );
 const Guarantor = React.lazy(() =>
   import("./views/EmployeeRelationships/Guarantor/Guarantor")
 );
@@ -219,7 +222,7 @@ const Relationships = React.lazy(() =>
 
 const routes = [
 
-  
+
   { path: "/", exact: true, name: "Home" },
   { path: "/dashboard", name: "Dashboard", component: Dashboard },
 
@@ -395,8 +398,8 @@ const routes = [
     path: "/employeemanager/employeehometown",
     name: "Employee Hometown",
     component: EmployeeHomeTown,
-  }, 
-   {
+  },
+  {
     path: "/employeemanager/employeefamily",
     name: "Employee Family",
     component: EmployeeFamily,
@@ -415,7 +418,12 @@ const routes = [
   },
   { path: "/bankinformation/branch", name: "Branch", component: Branch },
 
-  //Position Manager
+  //Position Manager 
+  {
+    path: "/positionmanager/setup",
+    name: "Setup",
+    component: PositionSetup,
+  },
   {
     path: "/positionmanager/employeemovement",
     name: "Employee Movement",

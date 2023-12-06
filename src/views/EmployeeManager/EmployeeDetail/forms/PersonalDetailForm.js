@@ -35,7 +35,7 @@ const PersonalDetailForm = ({
   setIsSubmitBtnClick,
   isSubmitBtnClick,
   resetFormVal,
-  
+
 }) => {
   const lan = useSelector((state) => state.language);
   const [genericPersonalData, setGenericPersonalData] = useState({});
@@ -58,8 +58,8 @@ const PersonalDetailForm = ({
   const nationalityRef = useRef(null);
 
 
-  const {auth}= useAuth()
-  const {companyReference: CompanyReference } = auth
+  const { auth } = useAuth()
+  const { companyReference: CompanyReference } = auth
 
   const refs = [
     firstNameRef,
@@ -143,7 +143,7 @@ const PersonalDetailForm = ({
   useEffect(() => {
     if (isSubmitBtnClick) {
       refs.forEach((ref) => {
-       
+
         if (ref.current.value.length > 0) {
           ref.current.style.border = "1px solid green";
         } else {
@@ -154,27 +154,27 @@ const PersonalDetailForm = ({
       setIsSubmitBtnClick(false);
     }
 
-    return () => {};
+    return () => { };
   }, [isSubmitBtnClick]);
 
   const checkForValue = (ref) => {
-    if(ref.current.name ==="emailAddress"){
-      if (personalFormDetails.emailAddress.length > 0 && validateEmail(personalFormDetails.emailAddress) ){
+    if (ref.current.name === "emailAddress") {
+      if (personalFormDetails.emailAddress.length > 0 && validateEmail(personalFormDetails.emailAddress)) {
         ref.current.style.border = "1px solid green";
       }
-      else if(ref.current.value.length === 0 && !validateEmail(personalFormDetails.emailAddress)){
+      else if (ref.current.value.length === 0 && !validateEmail(personalFormDetails.emailAddress)) {
         ref.current.style.border = "2px solid red";
       }
-      else{
+      else {
         ref.current.style.border = "2px solid red";
       }
 
-    }else{
+    } else {
       if (ref.current.value.length > 0) {
         ref.current.style.border = "1px solid green";
       }
     }
-   
+
   };
 
   // useEffect(() => {
@@ -207,7 +207,7 @@ const PersonalDetailForm = ({
             {
               GetLabelByName("HCM-IIQS2WWFTPP_KCMI", lan, "Delete")
             }
-           
+
           </button>
         </div>
       </>
@@ -219,7 +219,7 @@ const PersonalDetailForm = ({
       ref.current.style.border = "1px solid #e1e2e3";
     });
 
-    return () => {};
+    return () => { };
   }, [resetFormVal]);
 
   return (
@@ -238,9 +238,9 @@ const PersonalDetailForm = ({
                 value={personalFormDetails?.titleId || ""}
                 onChange={handleOnChange}
               >
-              
+
                 <option value="">{GetLabelByName("HCM-EOH7D1YOS2G_LOLN", lan, "Select title")}</option>
-                
+
                 {titleList.map((x) => (
                   <option key={x.id} value={x.id}>
                     {GetLabelByName(`${x?.code || x?.name}`, lan, x.name)}
@@ -315,7 +315,7 @@ const PersonalDetailForm = ({
                 }}
                 ref={genderRef}
               >
-                
+
                 <option value="">{GetLabelByName("HCM-MM55OQ4NDNP_PSLL", lan, "Select gender")}</option>
                 {genderList.map((x, i) => (
                   <option key={x.id} value={x.id}>
@@ -359,12 +359,12 @@ const PersonalDetailForm = ({
                 }}
                 ref={maritalStatusRef}
               >
-                
+
                 <option value="">{GetLabelByName("HCM-24XO0WBOU79-HRPR", lan, "Select marital status")}</option>
                 {maritalStatusList.map((x, i) => (
                   <option value={x.id} key={i}>
                     {capitalizeWord(GetLabelByName(`${x?.code || x?.name}`, lan, x.name))}
-                    
+
                   </option>
                 ))}
               </select>
@@ -461,7 +461,7 @@ const PersonalDetailForm = ({
                 }}
                 ref={countryRef}
               >
-               
+
                 <option value="">{GetLabelByName("HCM-SU6R69R7V1B-HRPR", lan, "Select country")}</option>
                 {countryList.map((x, i) => (
                   <option key={i} value={x.id}>
@@ -485,7 +485,7 @@ const PersonalDetailForm = ({
                 }}
                 ref={nationalityRef}
               >
-               
+
                 <option value="">{GetLabelByName("HCM-QBIJLIRXEVB-LASN", lan, "Select nationality")}</option>
                 {nationalityList.map((x, i) => (
                   <option key={i} value={x.id}>
