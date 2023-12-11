@@ -333,8 +333,8 @@ const EmployeeMovement = (props) => {
   }, [submitData?.isProbation])
 
   useEffect(() => {
-    setIsRecurring(submitData.isRecurring)
-  }, [submitData?.isRecurring])
+    setIsRecurring(submitJobData.isRecurring)
+  }, [submitJobData?.isRecurring])
 
   const onCommandClick = (args) => {
     console.log(args?.rowData);
@@ -351,24 +351,24 @@ const EmployeeMovement = (props) => {
   }
 
   useEffect(() => {
-    if (submitData?.recurringCycle === "1") {
+    if (submitJobData?.recurringCycle === "1") {
       setfrequency('daily')
-    } else if (submitData?.recurringCycle === "2") {
+    } else if (submitJobData?.recurringCycle === "2") {
       setfrequency('weekly')
-    } else if (submitData?.recurringCycle === "3") {
+    } else if (submitJobData?.recurringCycle === "3") {
       setfrequency('bi-Weekly')
-    } else if (submitData?.recurringCycle === "4") {
+    } else if (submitJobData?.recurringCycle === "4") {
       setfrequency('monthly')
-    } else if (submitData?.recurringCycle === "5") {
+    } else if (submitJobData?.recurringCycle === "5") {
       setfrequency('quarterly')
-    } else if (submitData?.recurringCycle === "6") {
+    } else if (submitJobData?.recurringCycle === "6") {
       setfrequency('semi-Annually')
-    } else if (submitData?.recurringCycle === "7") {
+    } else if (submitJobData?.recurringCycle === "7") {
       setfrequency('annually')
     } else {
       setfrequency('')
     }
-  }, [submitData?.recurringCycle])
+  }, [submitJobData?.recurringCycle])
 
 
   const submitRequest = (args) => {
@@ -991,7 +991,7 @@ const EmployeeMovement = (props) => {
                   <CCol md="6">
                     <CLabel>
                       {" "}
-                      <CSLab code="Activity Name" /><CIcon name="cil-asterisk" />{" "}
+                      <CSLab code="Activity Name" /><CIcon name="cil-asterisk" style={{ color: "red" }} />{" "}
                     </CLabel>
                     <CInput name="activityName"
                       className="form-control"
@@ -1001,7 +1001,7 @@ const EmployeeMovement = (props) => {
                   <CCol md="6">
                     <CLabel>
                       {" "}
-                      <CSLab code="Activity Description" />{" "}
+                      <CSLab code="Activity Description" /><CIcon name="cil-asterisk" style={{ color: "red" }} />{" "}
                     </CLabel>
                     <CInput name="activityDescription"
                       className="form-control"
@@ -1017,7 +1017,7 @@ const EmployeeMovement = (props) => {
                   <CCol md="6">
                     <CLabel>
                       {" "}
-                      <CSLab code="Target Type" />{" "}
+                      <CSLab code="Target Type" /><CIcon name="cil-asterisk" style={{ color: "red" }} />{" "}
                     </CLabel>
                     <CSelect name="targetType" value={submitJobData.targetType || -1} onChange={handleJobChange}>
                       {[
@@ -1036,7 +1036,7 @@ const EmployeeMovement = (props) => {
                   <CCol md="6">
                     <CLabel>
                       {" "}
-                      <CSLab code="Target Value" />{" "}
+                      <CSLab code="Target Value" /><CIcon name="cil-asterisk" style={{ color: "red" }} />{" "}
                     </CLabel>
                     <CInput name="targetValue"
                       className="form-control"
@@ -1140,14 +1140,14 @@ const EmployeeMovement = (props) => {
                         </CLabel>
                         <TimePickerComponent id="time" placeholder="Select a Time" value={time} min={minTime} max={maxTime} />
                       </CCol>
-                    </> : frequency === 'monthly' || frequency === 'quarterly' ? <>
+                    </> : frequency === 'monthly' || frequency === 'quarterly' || frequency === 'annually' || frequency === 'semi-Annually' ? <>
                       <CCol md='4'>
                         <CLabel>
                           {" "}
                           <CSLab code="Frequency" />{" "}
                         </CLabel>
                         <CSelect name="monthlyCycle" value={submitJobData.monthlyCycle} onChange={handleJobChange}>
-                          {["Select Monthly Sequence", "Every First", "Every Second", "Every Third", "Every Fourth", "Every Last"].map(
+                          {["Select Sequence", "Every First", "Every Second", "Every Third", "Every Fourth", "Every Last"].map(
                             (x, i) => (
                               <option key={i} value={x}>
                                 {x}
@@ -1160,82 +1160,6 @@ const EmployeeMovement = (props) => {
                         <CLabel>
                           {" "}
                           <CSLab code="Cycle (Monthly)" />{" "}
-                        </CLabel>
-                        <CSelect name="weeklyCycle" value={submitJobData.recurringCycle} onChange={handleJobChange}>
-                          {["Select Monthly Cycle", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].map(
-                            (x, i) => (
-                              <option key={i} value={x}>
-                                {x}
-                              </option>
-                            )
-                          )}
-                        </CSelect>
-                      </CCol>
-                      <CCol md='4'>
-                        <CLabel>
-                          {" "}
-                          <CSLab code="Time" />{" "}
-                        </CLabel>
-                        <TimePickerComponent id="time" placeholder="Select a Time" value={time} min={minTime} max={maxTime} />
-                      </CCol>
-                    </> : frequency === 'semi-Annually' ? <>
-                      <CCol md='4'>
-                        <CLabel>
-                          {" "}
-                          <CSLab code="Frequency" />{" "}
-                        </CLabel>
-                        <CSelect name="monthlyCycle" value={submitJobData.monthlyCycle} onChange={handleJobChange}>
-                          {["Select Sequence", "Every First", "Every Second", "Every Third", "Every Fourth", "Every Last"].map(
-                            (x, i) => (
-                              <option key={i} value={x}>
-                                {x}
-                              </option>
-                            )
-                          )}
-                        </CSelect>
-                      </CCol>
-                      <CCol md='4'>
-                        <CLabel>
-                          {" "}
-                          <CSLab code="Cycle (Semi-Annually)" />{" "}
-                        </CLabel>
-                        <CSelect name="weeklyCycle" value={submitJobData.recurringCycle} onChange={handleJobChange}>
-                          {["Select Cycle", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].map(
-                            (x, i) => (
-                              <option key={i} value={x}>
-                                {x}
-                              </option>
-                            )
-                          )}
-                        </CSelect>
-                      </CCol>
-                      <CCol md='4'>
-                        <CLabel>
-                          {" "}
-                          <CSLab code="Time" />{" "}
-                        </CLabel>
-                        <TimePickerComponent id="time" placeholder="Select a Time" value={time} min={minTime} max={maxTime} />
-                      </CCol>
-                    </> : frequency === 'annually' ? <>
-                      <CCol md='4'>
-                        <CLabel>
-                          {" "}
-                          <CSLab code="Frequency" />{" "}
-                        </CLabel>
-                        <CSelect name="monthlyCycle" value={submitJobData.monthlyCycle} onChange={handleJobChange}>
-                          {["Select Sequence", "Every First", "Every Second", "Every Third", "Every Fourth", "Every Last"].map(
-                            (x, i) => (
-                              <option key={i} value={x}>
-                                {x}
-                              </option>
-                            )
-                          )}
-                        </CSelect>
-                      </CCol>
-                      <CCol md='4'>
-                        <CLabel>
-                          {" "}
-                          <CSLab code="Cycle (Annually)" />{" "}
                         </CLabel>
                         <CSelect name="weeklyCycle" value={submitJobData.recurringCycle} onChange={handleJobChange}>
                           {["Select Cycle", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].map(

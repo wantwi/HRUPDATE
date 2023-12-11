@@ -1,20 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { SearchEmployees } from "src/reusable/API/EmployeeEndpoints";
-import { CustomAxios } from "src/reusable/API/CustomAxios";
 import { toast } from "react-toastify";
 import { toastWarning } from "src/toasters/Toaster";
 
-import {
-  GetRequest,
-  HttpAPIRequest,
-  PostRequest,
-} from "src/reusable/utils/helper";
-
 import CIcon from "@coreui/icons-react";
 import {
-  CInputGroupAppend,
-  CInputGroup,
+
   CInput,
   CCard,
   CCardBody,
@@ -24,16 +16,9 @@ import {
   CButton,
   CCardFooter,
   CSelect,
-  CForm,
-  CTabs,
-  CNav,
-  CNavItem,
-  CNavLink,
-  CTabContent,
-  CTabPane,
+
   CLabel,
   CTextarea,
-  CInputRadio,
   CCardHeader,
 } from "@coreui/react";
 import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai";
@@ -48,21 +33,9 @@ import {
   CSCheckbox,
   CSLab,
   CSLineLabel,
-  SingleSelectComponent,
   CSAutoComplete,
   CSRequiredIndicator,
 } from "../../../reusable/components";
-import { Checkbox } from "evergreen-ui";
-import CheckBoxComponent from "src/reusable/components/CheckBoxComponent/CheckBoxComponent";
-import { setChecked } from "@syncfusion/ej2-react-grids";
-import { CFormCheck, CFormInput } from "@coreui/bootstrap-react";
-import {
-  GetYearBasis,
-  GetAvailableDayBasis,
-  GetAllowedDayBasis,
-  PostEmployeeLeave,
-  SearchLeaveTypes,
-} from "src/reusable/API/EmployeeLeaveTypes";
 import useMultiFetch from "src/hooks/useMultiFetch";
 import { AllowedDayBasis, AvailableDayBasis, GetLeaveTransactionById, LeaveTypesDrop, YearEndBasis } from "src/reusable/API/LeaveTransaction";
 import useFetch from "src/hooks/useFetch";
@@ -142,7 +115,7 @@ const LeaveTypes = () => {
   YearEndBasis(COMPREF),
   LeaveTypesDrop(COMPREF)
   ], (results) => {
-    console.log({ results });
+    // console.log({ results });
     setAvailableDayBasis([
       { id: "-1", name: `Select Available Day Basis` },
       ...results[0].data,
