@@ -33,8 +33,8 @@ import {
 import usePost from "src/hooks/usePost";
 import useMultiFetch from "src/hooks/useMultiFetch";
 import useFetch from "src/hooks/useFetch";
-import { AllowedDayBasis, AvailableDayBasis, GetLeaveTransactionById, PostLeaveTransaction, YearEndBasis } from "src/reusable/API/LeaveTransaction";
-import LeaveTypes from "../LeaveTypes/LeaveTypes";
+import { getLeaveTypes, AllowedDayBasis, AvailableDayBasis, GetLeaveTransactionById, PostLeaveTransaction, YearEndBasis } from "src/reusable/API/LeaveTransaction";
+import LeaveTypes from "../../EmployeeManager/LeaveTypes/LeaveTypes";
 import useAuth from "src/hooks/useAuth";
 
 
@@ -58,31 +58,18 @@ const LeaveTransaction = (props) => {
   const [empDisplayName, setEmpDisplayName] = useState("");
   const [handleId, setHandleId] = useState("");
   const [viewinfo, setViewInfo] = useState([]);
-  const [availableDayBasis, setAvailableDayBasis] = useState([]);
-  const [allowedDayBasis, setAllowedDayBasis] = useState([]);
-  const [yearBasis, setYearBasis] = useState([]);
   const [employeeName, setEmployeeName] = useState("")
-  const [leaveType, setLeaveType] = useState([])
+  const [leaveTypes, setLeaveTypes] = useState([])
   const { auth } = useAuth()
   const { companyReference: CompanyReference } = auth
-  useMultiFetch([AvailableDayBasis(CompanyReference),
-  AllowedDayBasis(CompanyReference), YearEndBasis(CompanyReference), LeaveTypes(CompanyReference)], (results) => {
-    setAvailableDayBasis([
-      { id: "-1", name: `Select Available Day Basis` },
-      ...results[0].value,
+
+  useMultiFetch([getLeaveTypes()], (results) => {
+    console.log({ results })
+    setLeaveTypes([
+      { id: "-1", name: `Select Leave Type` },
+      ...results[0].data,
     ]);
-    setAllowedDayBasis([
-      { id: "-1", name: `Select Allowed Day Basis ` },
-      ...results[1].value,
-    ]);
-    setYearBasis([
-      { id: "-1", name: `Select Year Basis` },
-      ...results[2].value,
-    ]);
-    setLeaveType([
-      { id: "-1", name: `Select Leave Types` },
-      ...results[3].value,
-    ]);
+
   })
 
   const { setUrl } = useFetch("", (response, results) => {
@@ -125,14 +112,10 @@ const LeaveTransaction = (props) => {
   })
 
   const handleSearchResultSelect = (results) => {
-    console.log("show results", results);
-
-    //setting employee display name on select of suggested item
     setEmpDisplayName(
       (prevState) => `${results.firstName} ${results.lastName}`
     );
-    // testApi();
-    // return;
+
     setMode("Add");
     setShow(false);
     dispatch({ type: "set", data: { ...results } });
@@ -207,6 +190,7 @@ const LeaveTransaction = (props) => {
   }, [submitData?.leaveStartDate, submitData?.leaveEndDate])
 
   useEffect(() => {
+    console.log(submitData?.leaveType)
     if (submitData?.leaveType === "1") {
       setSubmitData((prev) => ({
         ...prev,
@@ -388,13 +372,18 @@ const LeaveTransaction = (props) => {
                   <CRow >
                     <CCol md="6"><CLabel> <CSLab code="HCM-5S2JSN34J47_LANG" />{" "}</CLabel> <CSRequiredIndicator />
                       <CSelect name="leaveType" value={submitData.leaveType || -1} onChange={handleOnChange}>
+                        {/* {leaveTypes.map((x, y) => (
+                          <option key={y} value={x.id}>
+                            {x.name}
+                          </option>
+                        ))} */}
                         <option value={-1}>
                           Select Leave Type
                         </option>
                         {[
                           "Paternity Leave",
-                          "Annual Leave",
-                          "Sick Leave",
+                          "Study2 Leave",
+
                         ].map((x, i) => (
                           <option key={i} value={i + 1}>
                             {x}

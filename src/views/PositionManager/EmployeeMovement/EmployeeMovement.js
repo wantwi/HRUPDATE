@@ -61,6 +61,7 @@ import "../../../../node_modules/@syncfusion/ej2-react-calendars/styles/bootstra
 import { GetAllDepartsments, GetAllDivisions, GetAllLocations, GetAllPositions, GetAllSalaryGrades, GetAllSections, GetAllUnits, GetEmployeeTypes } from "src/reusable/API/OrganizationalEndPoints";
 import { GetAllEmployees } from "src/reusable/API/EarningEndpoints";
 import useLoader from "src/hooks/useLoader";
+import { useRef } from "react";
 
 const EmployeeMovement = (props) => {
   const lan = useSelector((state) => state.language);
@@ -101,6 +102,7 @@ const EmployeeMovement = (props) => {
   const [isRecurring, setIsRecurring] = useState(false)
   const [itemsError, SetItemError] = useState([])
   const [descData, setDescData] = useState([])
+  const jobGrid = useRef(null)
   // const OnSaveContinueClick = () => {
   //     console.log(grid);
   // }
@@ -279,9 +281,17 @@ const EmployeeMovement = (props) => {
   }
 
   const handlePost = () => {
+    let dataToSend = jobGrid?.current?.dataSource
 
+    let postData = {
+      ...submitData,
+      dataToSend
+    }
     setPostUrl()
     setPostData()
+    toast.success(GetLabelByName("HCM-HAGGXNJQW2B_HRPR", lan));
+    console.log({ postData })
+    handleReset()
   }
 
   const handleProbation = (evnt) => {
@@ -346,7 +356,10 @@ const EmployeeMovement = (props) => {
 
   const handleReset = (type) => {
     if (type === 1) {
-      setSubmitJobData([])
+      setSubmitJobData({})
+    } else {
+      setDescData([])
+      setSubmitData({})
     }
   }
 
@@ -382,7 +395,6 @@ const EmployeeMovement = (props) => {
 
 
   const ben_actionBegin = (args) => {
-
     if (args.requestType === "add") {
       args.cancel = true;
       setShowModal(!showModal);
@@ -789,7 +801,7 @@ const EmployeeMovement = (props) => {
                         </CRow>
 
                         <CRow>
-                          <CCol md="2" style={{ marginTop: "15px" }}>
+                          <CCol md="3" style={{ marginTop: "15px" }}>
                             <CSCheckbox
                               // label={GetLabelByName("HCM-Y59W3YEAPKB-PSLL", lan)}
                               label={GetLabelByName("Probation", lan)}
@@ -825,7 +837,7 @@ const EmployeeMovement = (props) => {
                                 autoComplete="off"
                               />
                             </CCol>
-                            <CCol md="4" style={{ float: "right" }}>
+                            <CCol md="3" style={{ float: "right" }}>
                               <CLabel>
                                 {" "}
                                 <CSLab code="Probation Review Date" />{" "}
@@ -861,7 +873,7 @@ const EmployeeMovement = (props) => {
                       allowPaging={true}
                       pageSettings={{ pageSize: 8 }}
                       editSettings={editOptions}
-                      // ref={thirdGrid}
+                      ref={jobGrid}
                       commandClick={onCommandClick}
                       toolbar={toolbarOptions}
                       toolbarClick={submitRequest}
@@ -970,6 +982,15 @@ const EmployeeMovement = (props) => {
                 style={{ marginRight: 5, float: "right" }}
                 type="button"
                 size="sm"
+                color="warning"
+                onClick={handleReset}
+              >
+                <AiOutlineRedo size={20} /> <CSLab code="HCM-MELULU9B6R_KCMI" />{" "}
+              </CButton>
+              <CButton
+                style={{ marginRight: 5, float: "right" }}
+                type="button"
+                size="sm"
                 color="danger"
                 onClick={() => searchReset()}
               >
@@ -991,7 +1012,7 @@ const EmployeeMovement = (props) => {
                   <CCol md="6">
                     <CLabel>
                       {" "}
-                      <CSLab code="Activity Name" /><CIcon name="cil-asterisk" style={{ color: "red" }} />{" "}
+                      <CSLab code="Activity Name" /><CSRequiredIndicator />{" "}
                     </CLabel>
                     <CInput name="activityName"
                       className="form-control"
@@ -1001,7 +1022,7 @@ const EmployeeMovement = (props) => {
                   <CCol md="6">
                     <CLabel>
                       {" "}
-                      <CSLab code="Activity Description" /><CIcon name="cil-asterisk" style={{ color: "red" }} />{" "}
+                      <CSLab code="Activity Description" /><CSRequiredIndicator />{" "}
                     </CLabel>
                     <CInput name="activityDescription"
                       className="form-control"
@@ -1017,7 +1038,7 @@ const EmployeeMovement = (props) => {
                   <CCol md="6">
                     <CLabel>
                       {" "}
-                      <CSLab code="Target Type" /><CIcon name="cil-asterisk" style={{ color: "red" }} />{" "}
+                      <CSLab code="Target Type" /><CSRequiredIndicator />{" "}
                     </CLabel>
                     <CSelect name="targetType" value={submitJobData.targetType || -1} onChange={handleJobChange}>
                       {[
@@ -1036,7 +1057,7 @@ const EmployeeMovement = (props) => {
                   <CCol md="6">
                     <CLabel>
                       {" "}
-                      <CSLab code="Target Value" /><CIcon name="cil-asterisk" style={{ color: "red" }} />{" "}
+                      <CSLab code="Target Value" /><CSRequiredIndicator />{" "}
                     </CLabel>
                     <CInput name="targetValue"
                       className="form-control"
@@ -1188,7 +1209,7 @@ const EmployeeMovement = (props) => {
                   <CCol md="6">
                     <CLabel>
                       {" "}
-                      <CSLab code="Due Date" />{" "}
+                      <CSLab code="Due Date" /><CSRequiredIndicator />{" "}
                     </CLabel>
                     <CInput name="dueDate"
                       type="date"
@@ -1200,7 +1221,7 @@ const EmployeeMovement = (props) => {
                   <CCol md="6">
                     <CLabel>
                       {" "}
-                      <CSLab code="Score weight" />{" "}
+                      <CSLab code="Score weight" /><CSRequiredIndicator />{" "}
                     </CLabel>
                     <CInput name="scoreWeight"
                       className="form-control"

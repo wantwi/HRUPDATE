@@ -89,16 +89,22 @@ const EmployeeSkill = React.lazy(() =>
   import("./views/EmployeeManager/EmployeeSkill/EmployeeSkill")
 );
 const LeaveTransaction = React.lazy(() =>
-  import("./views/EmployeeManager/LeaveTransaction/LeaveTransaction")
+  import("./views/LeaveManager/LeaveTransaction/LeaveTransaction")
+);
+const ScheduleLeave = React.lazy(() =>
+  import("./views/LeaveManager/ScheduleLeave/ScheduleLeave")
 );
 const EmployeeLanguage = React.lazy(() => import("./views/EmployeeManager/EmployeeLanguage/EmployeeLanguage"));
-const EmployeeHomeTown = React.lazy(()=>import("./views/EmployeeManager/EmployeeHomeTown/EmployeeHomeTown"))
-const EmployeeFamily = React.lazy(()=>import ("./views/EmployeeManager/EmployeeFamily/EmployeeFamily"))
+const EmployeeHomeTown = React.lazy(() => import("./views/EmployeeManager/EmployeeHomeTown/EmployeeHomeTown"))
+const EmployeeFamily = React.lazy(() => import("./views/EmployeeManager/EmployeeFamily/EmployeeFamily"))
 
 
 // Position Manager
 const EmployeeMovement = React.lazy(() =>
   import("./views/PositionManager/EmployeeMovement/EmployeeMovement")
+);
+const EmployeePromotion = React.lazy(() =>
+  import("./views/PositionManager/EmployeePromotion/EmployeePromotion")
 );
 const EmployeeRetirementInformation = React.lazy(() =>
   import(
@@ -190,9 +196,7 @@ const TaxRelief = React.lazy(() =>
 const MedicalTransactions = React.lazy(() =>
   import("./views/EmployeeManager/MedicalTransaction/MedicalTransaction")
 );
-const AccidentTransactions = React.lazy(() =>
-  import("./views/EmployeeManager/AccidentTransaction/AccidentTransaction")
-);
+
 
 //Employee Relationships
 const Beneficiary = React.lazy(() =>
@@ -204,9 +208,7 @@ const Dependant = React.lazy(() =>
 const EmergencyContact = React.lazy(() =>
   import("./views/EmployeeRelationships/EmergencyContact/EmergencyContact")
 );
-const EmergencyContacts = React.lazy(() =>
-  import("./views/EmployeeRelationships/EmergencyContact/EmergencyContact")
-);
+
 const Guarantor = React.lazy(() =>
   import("./views/EmployeeRelationships/Guarantor/Guarantor")
 );
@@ -219,7 +221,7 @@ const Relationships = React.lazy(() =>
 
 const routes = [
 
-  
+
   { path: "/", exact: true, name: "Home" },
   { path: "/dashboard", name: "Dashboard", component: Dashboard },
 
@@ -382,9 +384,14 @@ const routes = [
     component: EmployeeSkill,
   },
   {
-    path: "/employeemanager/leavetransaction",
+    path: "/leavemanager/leavetransaction",
     name: "Employee Transaction",
     component: LeaveTransaction,
+  },
+  {
+    path: "/leavemanager/sheduleLeave",
+    name: "Employee Schedule Leave Transaction",
+    component: ScheduleLeave,
   },
   {
     path: "/employeemanager/employeelanguage",
@@ -395,8 +402,8 @@ const routes = [
     path: "/employeemanager/employeehometown",
     name: "Employee Hometown",
     component: EmployeeHomeTown,
-  }, 
-   {
+  },
+  {
     path: "/employeemanager/employeefamily",
     name: "Employee Family",
     component: EmployeeFamily,
@@ -420,6 +427,11 @@ const routes = [
     path: "/positionmanager/employeemovement",
     name: "Employee Movement",
     component: EmployeeMovement,
+  },
+  {
+    path: "/positionmanager/employeepromotion",
+    name: "Employee Promotion",
+    component: EmployeePromotion,
   },
   {
     path: "/positionmanager/employeeretirementinformation",

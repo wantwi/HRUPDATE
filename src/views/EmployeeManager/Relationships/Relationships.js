@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai";
+import { AiOutlineClose } from "react-icons/ai";
 import { useSelector, useDispatch } from "react-redux";
 import {
   CCard,
@@ -59,6 +59,7 @@ import {
   DeleteEmployeeGuarantor,
   DeleteEmployeeNextOfKin,
   GetBeneficiary,
+  GetEmployeeBeneficiariesByID,
   GetEmployeeDependant,
   GetEmployeeEmergencyContact,
   GetEmployeeGuarantor,
@@ -123,35 +124,10 @@ const getAllTypes = () => {
 getAllTypes();
 setTimeout(() => { }, 2000);
 
-
-//onClick={handleOnSubmit}
-
-// const saveButton = () => {
-//   return (
-//     <CButton style={{ marginRight: 5, float: 'right' }} type="button" size="sm" color="success"><AiFillSave size={20} />
-//       <CSLab code="Update" />
-//     </CButton>
-//   )
-//}
-
-// const earnings = {
-//   params: {
-//     actionComplete: () => false,
-//     allowFiltering: true,
-
-//     fields: { text: "name", value: "name" },
-//     query: new Query(),
-//   },
-// };
-//HandleRelationTypes();
 let types;
 HandleRelationTypes().then((response) => {
   types = response;
 });
-
-// function refreshPage() {
-//   window.location.reload(false);
-// }
 
 const editTemplate = (args) => {
   return (
@@ -181,11 +157,8 @@ const toolbarOptions = [
 
 
 const EmployeeDetail = (props) => {
-  // const [showEmpModal, setshowEmpModal] = useState(false);
-  // const [showEmpModal1, setshowEmpModal1] = useState(false);
   const [show, setShow] = useState(true);
   const [grid, setGrid] = useState(null);
-  // const [recEarnings, setRecEarnings] = useState(sampleData);
   const trans = useRef(null);
   const [editOptions] = useState({
     allowEditing: false,
@@ -195,7 +168,6 @@ const EmployeeDetail = (props) => {
   });
   const [fname, setfname] = useState("");
   const [lname, setlname] = useState("");
-  const [email, setEmail] = useState("");
   const [relation, setRelation] = useState("");
   const [address, setAddress] = useState("");
   const lan = useSelector((state) => state.language);
@@ -211,6 +183,7 @@ const EmployeeDetail = (props) => {
   const [mode, setMode] = useState("");
   const [searchResult, setSearchResult] = useState(null);
   const [empDisplayName, setEmpDisplayName] = useState("");
+  const [empId, setEmpId] = useState("");
   const [handleId, setHandleId] = useState("");
   const [viewinfo, setViewInfo] = useState([]);
   const [emergencyContact, setEmergencyContact] = useState([]);
@@ -386,7 +359,6 @@ const EmployeeDetail = (props) => {
   //relationTs();
 
   const searchReset = () => {
-    console.log("called");
     setShow(true);
     setSearchInput("");
     setCurrentFormData("")
@@ -502,9 +474,9 @@ const EmployeeDetail = (props) => {
   const submitRequest = (args) => {
     if (args.item.id === "saveItems") {
       if (activeKey === 1) {
-
+        // let beneficiaryData = firstGrid.current.dataSource
         let PostBody = {
-          employeeId: handleId,
+          employeeId: empId,
           createEmployeeBeneficiaryChildren: EmployeeBeneficiaryChildrenList,
           userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
           userName: "string",
@@ -520,7 +492,7 @@ const EmployeeDetail = (props) => {
       if (activeKey === 2) {
 
         let postBody = {
-          employeeId: handleId,
+          employeeId: empId,
           userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
           userName: "string",
           companyReference: "00001_A01",
@@ -536,7 +508,7 @@ const EmployeeDetail = (props) => {
       }
       if (activeKey === 3) {
         let Emergency = {
-          employeeId: handleId,
+          employeeId: empId,
           createEmployeeEmergencyContactChildren: EmployeeEmerGencyContactChildrenList,
           userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
           userName: "string",
@@ -551,7 +523,7 @@ const EmployeeDetail = (props) => {
       }
       if (activeKey === 4) {
         let postbody = {
-          employeeId: handleId,
+          employeeId: empId,
           "createEmployeeGuarantorChildren": EmployeerGurrantoContactChildrenList,
           "companyReference": "string",
           "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
@@ -565,7 +537,7 @@ const EmployeeDetail = (props) => {
       }
       if (activeKey === 5) {
         let postbody = {
-          employeeId: handleId,
+          employeeId: empId,
           createEmployeeNextofKinChildren: EmployeeNextOfKinChildrenList,
           companyReference: "string",
           userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
@@ -579,7 +551,7 @@ const EmployeeDetail = (props) => {
       }
 
     } else {
-      console.log("ELSE");
+      // console.log("ELSE");
     }
 
   };
@@ -593,7 +565,7 @@ const EmployeeDetail = (props) => {
   var values = ColumnDirective.getValue;
 
   const onCommandClick = (args) => {
-    console.log(args?.rowData);
+    // console.log(args?.rowData);
     if (args.rowData.isDelete === true) {
 
       if (activeKey === 1) {
@@ -625,45 +597,35 @@ const EmployeeDetail = (props) => {
 
   };
 
+  // useMultiFetch([[GetBeneficiary(handleId),
+  // GetEmployeeDependant(handleId), GetEmployeeEmergencyContact(handleId),
+  // GetEmployeeGuarantor(handleId), GetRelationTypes(), GetEmployeeNextOfKin(handleId)]], (results) => {
+  //   console.log({ results })
+  //   // console.log(results[4].data.items)
+  //   setGetBenefiary([...results[0].data]);
+  //   setDependant([...results[1].data]);
+  //   setEmergencyContact([...results[2].data]);
+  //   setGetGuarantor([...results[3].data]);
+  //   setRelationTypes([...results[4].data.items]);
+  //   setGetNextOfKin([...results[5].data])
 
+  // })
 
-  const { data: multicallData } = useMultiFetch([[GetBeneficiary(handleId),
-  GetEmployeeDependant(handleId), GetEmployeeEmergencyContact(handleId),
-  GetEmployeeGuarantor(handleId), GetRelationTypes(CompanyReference), GetEmployeeNextOfKin(handleId)]], (results) => {
-
-    console.log({ results })
-    setGetBenefiary([...results[0].data]);
-    setDependant([...results[1].data]);
-    setEmergencyContact([...results[2].data]);
-    setGetGuarantor([...results[3].data]);
-    setRelationTypes([...results[4].data]);
-    setGetNextOfKin([...results[5].data])
-
+  useMultiFetch([GetRelationTypes()], (results) => {
+    // console.log(results[0].data.items)
+    setRelationTypes([...results[0].data.items]);
   })
-
-  // useEffect(() => {
-  //   console.log(handleId);
-  //   setUrls([GetBeneficiary(handleId),
-  //   GetEmployeeDependant(handleId), GetEmployeeEmergencyContact(handleId),
-  //   GetEmployeeGuarantor(handleId), GetRelationTypes(CompanyReference), GetEmployeeNextOfKin(handleId)])
-  //   console.log(handleId);
-  // }, [searchResult, handleId, setUrls, CompanyReference])
-
 
   useEffect(() => {
   }, [EmployeeDependantChildrenList])
 
-
-
-
   const handleSearchResultSelect = (results) => {
 
-    //setting employee display name on select of suggested item
     setEmpDisplayName(
       (prevState) => `${results.firstName} ${results.lastName}`
     );
-    // testApi();
-    // return;
+    setEmpId(results.id)
+
     setMode("Add");
     setShow(false);
     dispatch({ type: "set", data: { ...results } });
@@ -671,9 +633,16 @@ const EmployeeDetail = (props) => {
 
     if (results?.id) {
       setSearchResult(results);
-
+      GetBeneficiariesByID(GetEmployeeBeneficiariesByID(results?.id))
     }
   };
+
+  const { setUrl: GetBeneficiariesByID } = useFetch("", (response) => {
+    if (response[0]) {
+      // console.log(response[0])
+      setGetBenefiary((prevState) => [...prevState, response[0]])
+    }
+  });
 
   const integerParams = {
     params: {
@@ -701,7 +670,7 @@ const EmployeeDetail = (props) => {
         let mdata = data.errors[0].message;
         toast.error(`${mdata}`, toastWarning);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     }
 
@@ -721,7 +690,7 @@ const EmployeeDetail = (props) => {
         let mdata = data.errors[0].message;
         toast.error(`${mdata}`, toastWarning);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     }
 
@@ -742,7 +711,7 @@ const EmployeeDetail = (props) => {
         let mdata = data.errors[0].message;
         toast.error(`${mdata}`, toastWarning);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     }
 
@@ -784,7 +753,7 @@ const EmployeeDetail = (props) => {
         let mdata = data.errors[0].message;
         toast.error(`${mdata}`, toastWarning);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     }
 
@@ -795,12 +764,8 @@ const EmployeeDetail = (props) => {
     return data.find(x => x.id === id)?.name || "Not Found"
   }
 
-
-
-
   const submitBtn = () => {
     // Beneficiary
-
     if (activeKey === 1) {
       refs.forEach((ref) => {
         if (ref.current.value.length > 2) {
@@ -868,6 +833,7 @@ const EmployeeDetail = (props) => {
       let benefiaciaryGridData = {
         isDelete: true,
         ...currentFormData,
+        // relationId: "43fc7e19-832a-4c22-8fe5-048ab9a96995",
         relation: {
           name: getName(relationTypes, currentFormData?.relationId),
 
@@ -883,7 +849,7 @@ const EmployeeDetail = (props) => {
       }
 
       setGetBenefiary((prevState) => [...prevState, benefiaciaryGridData])
-      benefiaciaryGridData("")
+      // benefiaciaryGridData("")
       setEmployeeBeneficiaryChildrenList((prev) => [...prev, data])
 
 
@@ -1005,8 +971,9 @@ const EmployeeDetail = (props) => {
         lastName: currentFormData?.lastName,
 
         nationalityId: currentFormData?.nationalityId,
-
-        relationTypeId: currentFormData?.relationTypeId,
+        //43fc7e19-832a-4c22-8fe5-048ab9a96995
+        relationTypeId: "43fc7e19-832a-4c22-8fe5-048ab9a96995",
+        // relationTypeId:  currentFormData?.relationTypeId,
       }
 
       setEmployeeDependantChildrenList((prev) => [...prev, formaData])
@@ -1378,9 +1345,6 @@ const EmployeeDetail = (props) => {
 
   const { data: multical } = useMultiFetch([
     GetNationality(CompanyReference), GetIdTypes(CompanyReference)], (results) => {
-
-
-
       // setRelationTypes([...results[0].data]);
       setNationality([
         { id: "-1", name: `Select Nationality` },
@@ -1397,6 +1361,7 @@ const EmployeeDetail = (props) => {
     })
 
   const ben_actionBegin = (args) => {
+    setShowModal(false);
     checkRelationDependant();
     checkRelationGuarantor();
     checkRelationNextOfKin();
@@ -1515,7 +1480,7 @@ const EmployeeDetail = (props) => {
   // useEffect(()=>{
   //   if(benefiaciary){
 
-  console.log({ data: currentFormData });
+  // console.log({ data: currentFormData });
   //   // setPercentage(result)
 
   //   }
@@ -1595,16 +1560,11 @@ const EmployeeDetail = (props) => {
   const checkBenefiary = () => {
     if (benefiaciary.length > 0) {
       for (let i = 0; i < benefiaciary.length; i++) {
-        var obj = {};
-        obj = benefiaciary[i].relation;
-        beneficiaryArr.push(obj);
+        beneficiaryArr.push({ name: benefiaciary[i]?.relation?.name });
       }
       const newdata = relationTypes.filter((val) => {
-        return !beneficiaryArr.find((arr) => {
-          return (
-            (val.name === "Mother" && arr.name === "Mother") ||
-            (val.name === "Father" && arr.name === "Father")
-          );
+        return !beneficiaryArr.find((beneficiaryArr) => {
+          return val.name === beneficiaryArr.name;
         });
       });
       setCheckedBeneficiaryTypes(newdata);
@@ -1841,10 +1801,10 @@ const EmployeeDetail = (props) => {
       for (let i = 0; i < data.length; i++) {
         convert = parseInt(data[i]?.percentage);
         results = convert + results
-        console.log(results);
+        // console.log(results);
       }
     }
-    console.log(results > 100);
+    // console.log(results > 100);
 
   }
 
@@ -1871,23 +1831,6 @@ const EmployeeDetail = (props) => {
 
   }, [percent])
 
-
-  // useEffect(() => {
-
-  //   const percentages = benefiaciary.map(x =>(x?.percentage))
-
-  //   const res = percentages.reduce(
-  //     (previousValue, currentValue) =>parseInt(previousValue)  + parseInt(percent) ,
-  //     0
-  //   );
-
-  console.log({ benefiaciary: benefiaciary });
-
-  //   return () => {
-
-  //   }
-  // }, [currentFormData?.percentage])
-  console.log(EmployeeDependantChildrenList);
 
 
   return (

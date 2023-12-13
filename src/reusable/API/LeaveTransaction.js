@@ -5,3 +5,10 @@ export const LeaveTypesDrop = (companyReference) => `EmployeeLeave/LeaveType/all
 export const AvailableDayBasis = (companyReference) => `EmployeeLeave/LeaveType/AvailableDayBasis?companyReference=${companyReference}`
 export const AllowedDayBasis = (companyReference) => `EmployeeLeave/LeaveType/AllowedDayBasis?companyReference=${companyReference}`
 export const YearEndBasis = (companyReference) => `EmployeeLeave/LeaveType/YearEndBasis?companyReference=${companyReference}`
+
+
+/**
+ * Get Leave Types.
+ * @returns {string} urlpath
+ */
+export const getLeaveTypes = () => `EmployeeLeave/LeaveType/all`;
