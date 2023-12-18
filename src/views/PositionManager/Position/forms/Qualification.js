@@ -29,7 +29,28 @@ import useMultiFetch from "src/hooks/useMultiFetch";
 import useFetch from "src/hooks/useFetch";
 // const COMPANY_REFRENCE = "00001_A01";
 
+// 12</option>
+//                 <option value={24}>24</option>
+//                 <option value={36}>36</option>
+//                 <option value={48}>48</option>
+//                 <option value={60}>60</option>
+//                 <option value={72}>60+</option>
 
+
+const getMonthRangeText = (month) => {
+  switch (month) {
+    case '12':
+      return '12'
+    case '24':
+      return '24'
+    case '48':
+      return '48'
+    case '60':
+      return '60'
+    case '72':
+      return '60+'
+  }
+}
 
 const Qualification = ({ qualifications: gridData, setQualifications: setGridData }) => {
 
@@ -43,6 +64,7 @@ const Qualification = ({ qualifications: gridData, setQualifications: setGridDat
   const [coreAreaName, setCoreAreaName] = useState("")
 
   const { setUrl } = useFetch('', (response) => setCoreAreaName(response?.name))
+
 
 
   const multiFetchResponse = (response) => {
@@ -79,6 +101,7 @@ const Qualification = ({ qualifications: gridData, setQualifications: setGridDat
     obj.coreArea = coreAreaName
     obj.id = formData?.qualificationId
     obj.name = quali?.name
+    obj.expMonthText = getMonthRangeText(formData?.expMonth)
     obj.count = gridData.length + 1
     setGridData(prev => ([
       ...prev,
@@ -197,10 +220,12 @@ const Qualification = ({ qualifications: gridData, setQualifications: setGridDat
 
               <select className="form-control" value={formData?.expMonth || ""} name="expMonth" onChange={handleChamgeEvent}>
                 <option selected value={""}>Select Months</option>
-                <option value={12}>0 - 12</option>
-                <option value={24}>13 - 24</option>
-                <option value={36}>25 - 36</option>
-                <option value={37}> 37 +</option>
+                <option value={12}>12</option>
+                <option value={24}>24</option>
+                <option value={36}>36</option>
+                <option value={48}>48</option>
+                <option value={60}>60</option>
+                <option value={72}>60+</option>
               </select>
             </CCol>
 

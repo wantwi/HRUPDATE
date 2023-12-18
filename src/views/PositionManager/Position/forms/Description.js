@@ -30,7 +30,7 @@ import DescriptionTable from "../table/DescriptionTable";
 const init = {
   name: "",
   description: "",
-  reportingCycle: 0
+  reportingCycle: -1
 }
 const rpClcle = ['Daily', 'Weekly', 'Monthly', 'Bi-Monthly', 'Quarterly']
 
@@ -132,7 +132,7 @@ const Description = ({ descriptions: gridData, setDescriptions: setGridData }) =
             <CCol md={12}>
               <CLabel>
                 {/* <CSLab code="HCM-W7SKIIIFCKE_PSLL" /> */}
-                Task Name
+                Activity
               </CLabel>
               <CInput
                 placeholder="Enter Task Name"
@@ -161,7 +161,7 @@ const Description = ({ descriptions: gridData, setDescriptions: setGridData }) =
                 Reporting cycle
               </CLabel>
               <select className="form-control" name="reportingCycle" value={formData?.reportingCycle} onChange={handleChamgeEvent}>
-                <option selected value={''}>Select cycle </option>
+                <option value={-1}>Select cycle </option>
                 <option value={0}>Daily</option>
                 <option value={1}>Weekly</option>
                 <option value={2}>Monthly</option>

@@ -24,7 +24,7 @@ import {
   CSRequiredIndicator,
 } from "src/reusable/components";
 import { GetLabelByName } from "src/reusable/configs/config";
-import BenefitTable from "../table/BenefitTable";
+import DeductionTable from "../table/DeductionTable";
 import useFetch from "src/hooks/useFetch";
 import { moneyInTxt } from "src/reusable/utils/helper";
 // const COMPANY_REFRENCE = "00001_A01";
@@ -148,13 +148,13 @@ const BenefitForm = ({ benefits: gridData, setBenefits: setGridData }) => {
               color="primary"
             >
               {" "}
-              <AiOutlinePlus /> Add Benefit
+              <AiOutlinePlus /> Add Deduction
               {/* <CSLab code={"HCM-5W6FDEX4795-LASN"} />{" "} */}
             </CButton>
           </CFormGroup>
         </CCol>
         <CCol md="12">
-          <BenefitTable setGridData={setGridData} data={gridData} lan={lan} />
+          <DeductionTable setGridData={setGridData} data={gridData} lan={lan} />
         </CCol>
       </CRow>
       <CModal
@@ -167,7 +167,7 @@ const BenefitForm = ({ benefits: gridData, setBenefits: setGridData }) => {
           <CModalTitle>
             {" "}
             {/* <CSLab code="HCM-WM35S647NT_LOLN" />{" "} */}
-            Add Benefit
+            Add Deduction
           </CModalTitle>
         </CModalHeader>
         <CModalBody>
@@ -176,10 +176,10 @@ const BenefitForm = ({ benefits: gridData, setBenefits: setGridData }) => {
             <CCol md={12}>
               <CLabel>
                 {/* <CSLab code="HCM-W7SKIIIFCKE_PSLL" /> */}
-                Benefit
+                Deduction
               </CLabel>
               <select className="form-control" value={formData?.benefitId} name="benefitId" onChange={handleChangeEvent}>
-                <option>Select Benefit</option>
+                <option>Select Deduction</option>
                 {
                   data[0]?.items.map(x => <option key={x?.id} value={x?.id}>{x?.name}</option>)
                 }

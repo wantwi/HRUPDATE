@@ -66,13 +66,15 @@ import JobDetailForm from "./forms/JobDetailForm";
 import QualificationForm from "./forms/Qualification";
 import ExperienceForm from "./forms/Experience";
 import DescriptionForm from "./forms/Description";
-import GLForm from "./forms/GLForm";
+import DeductionForm from "./forms/DeductionForm";
 import useMultiFetchAllSettled from "src/hooks/useMultiFetchAllSettled";
 import usePrompt from "src/hooks/usePrompt";
 import useCustomApi from "src/hooks/useCustomApi";
 import BenefitForm from "./forms/BenefitForm";
+import { SearchPositionByNameOrCode } from "src/reusable/API/PositionEndpoints";
+import { result } from "lodash";
 
-let companyReference = "00000002_01";
+let companyReference = "00000012_01";
 const COMPANY_REFRENCE = "00001_A01";
 const DEFAULT_GUID = "00000000-0000-0000-0000-000000000000";
 
@@ -305,6 +307,7 @@ function EmployeeDetail() {
   const [experiences, setExperiences] = useState([]);
   const [descriptions, setDescriptions] = useState([]);
   const [benefits, setBenefits] = useState([]);
+  const [deductions, setDeductions] = useState([]);
 
   const [positionDetail, setPositionDetail] = useState(null);
   const [otherInfoFormData, setOtherInfoFormData] = useState(init_salIno);
@@ -320,6 +323,12 @@ function EmployeeDetail() {
 
   const [resetFormVal, setResetFormVal] = useState(false);
   const [enableScreen, setEnableScreen] = useState(false);
+  const [probationSG, setProbationSG] = useState(null)
+  const [salaryGrade, setSalaryGrade] = useState(null)
+
+  const { data } = useFetch('/Organisation/Positions?results=1000')
+  const { data: roleLevels } = useFetch('/Employees/CustomTypes/all?type=RLT')
+
 
 
   const onConfirm = () => {
@@ -349,23 +358,35 @@ function EmployeeDetail() {
     setFile(file);
   };
 
-  const { setData, setUrl: setDeletUrl } = useDelete("", (response) => {
-    if (response) {
-      searchReset();
-      // toast.success("Division Deleted Successfully!");
-      // toaster('', 'Enter code', 'success', 3000)
-    }
-    setIsActive(false);
-  });
+  const {
+    setData,
+    setUrl: setDeletUrl,
+    isError,
+  } = useDelete(
+    "",
+    (response) => {
+      if (response) {
+        searchReset();
+
+        toast.success(
+          GetLabelByName("HCM-NUNYCE5Y09A-HRPR", lan, "Record deleted")
+        );
+      } else {
+        setIsActive(false);
+      }
+      setIsActive(false);
+    },
+    { setIsActive }
+  );
 
   const handleDelete = () => {
-    // setIsActive(true)
+    setIsActive(true)
   };
 
   const handleDeleteItem = async () => {
     const { id } = searchResult;
-    setData({ data: { employeeId: id } });
-    setDeletUrl(`/Employees`);
+    setData({ data: { positionId: id } });
+    setDeletUrl(`/Organisation/Positions`);
   };
 
   const handleHistory = async () => {
@@ -387,92 +408,152 @@ function EmployeeDetail() {
     // }
   };
 
-  const responseFunc = (response) => {
+  // const responseFunc = (response) => {
+  //   setMode("Update");
+  //   setShow(false);
+  //   let duplicate = {};
+  //   const employeeProfile = response[0];
+  //   const employeeAccount = response[1];
+  //   const employeeOrganisation = response[2];
+  //   const employeeGL = response[3];
+  //   const employeeSalryInfo = response[4];
+
+  //   if (employeeProfile?.status === "fulfilled") {
+  //     const obj = employeeProfile?.value?.data;
+  //     obj.salaryGradeId = obj.salaryGradeId.split("T")[0];
+  //     obj.probationSalaryGradeEnd = obj?.probationSalaryGradeEnd || ""
+  //     obj.probationSalaryGradeStart = obj?.probationSalaryGradeEnd || ""
+  //     obj.gender = `${obj?.gender}`
+  //     obj.probationSalaryGradeId = `${obj?.probationSalaryGradeId}`
+
+
+  //     setOrignalRecord((prev) => ({ ...prev, ...obj }))
+  //   }
+  //   if (employeeOrganisation?.status === "fulfilled") {
+  //     const obj = employeeOrganisation?.value?.data;
+  //     obj.hireDate = obj.hireDate.split("T")[0];
+  //     obj.id = employeeProfile?.value?.data?.id;
+  //     obj.probationMonth = `${obj?.probationMonth}` || ""
+
+  //     setOrignalRecord((prev) => ({ ...prev, ...obj }))
+  //     setInitSalRate(obj?.salaryRate);
+  //     // duplicate.organizationalForm = obj;
+
+  //     setDuplicateFormData((prev) => ({ ...prev }));
+  //   }
+
+  //   if (employeeGL?.status === "fulfilled") {
+  //     const obj = employeeGL?.value?.data;
+
+  //     setGlFormData(obj);
+  //     setOrignalRecord((prev) => ({ ...prev, ...obj }))
+
+  //   }
+  //   if (employeeSalryInfo?.status === "fulfilled") {
+  //     const obj = employeeSalryInfo?.value?.data;
+
+  //     setOtherInfoFormData(obj);
+  //     setOrignalRecord((prev) => ({ ...prev, ...obj }))
+
+  //   }
+
+  //   if (employeeAccount?.status === "fulfilled") {
+  //     const accountData = employeeAccount?.value?.data;
+  //     const formattedPaymentInfo = reFormatePaymentMode(accountData);
+  //     setOrignalRecord((prev) => ({ ...prev, paymentMeans: formattedPaymentInfo }))
+  //     setPaymentsInfo(formattedPaymentInfo);
+  //   }
+  // };
+
+
+
+
+  const getMonthRangeText = (month) => {
+    switch (month) {
+      case '12':
+        return '12'
+      case '24':
+        return '24'
+      case '48':
+        return '48'
+      case '60':
+        return '60'
+      case '72':
+        return '60+'
+    }
+  }
+  const handleSearchResultSelect = (result) => {
+    setSearchResult(result);
+    console.log({ result, roleLevels });
+
+    const rptCy = ['Daily', 'Weekly', 'Monthly', 'Bi-Monthly', 'Quarterly']
+    setPositionDetail({
+      code: result?.code,
+      name: result?.name,
+      salaryGradeId: result?.salaryGradeId,
+      code: result?.code,
+      description: result?.note,
+      status: result?.status === true ? '1' : '0',
+      parentPositionId: result?.parentPositionId
+    })
+    setDescriptions(result?.positionJobDescriptions.map((x, i) => ({ ...x, reportingCycleText: rptCy[x?.reportingCycle], count: i + 1 })) || [])
+    setQualifications(result?.positionQualifications.map((x, i) => ({ ...x, id: x?.qualificationId, expMonthText: getMonthRangeText(`${x?.month}`), expMonth: x?.month, count: i + 1 })))
+    setExperiences(result?.positionJobExpirences.map((x, i) =>
+    ({
+      ...x,
+      expMonth: x?.month,
+      count: i + 1,
+      roleLevelName: roleLevels[0]?.items.find(y => y?.id === x?.roleLevelId)?.name,
+      name: data[0]?.items.find(y => y?.id === x?.prevPositionId)?.name,
+      expMonthText: getMonthRangeText(`${x?.month}`)
+    })))
+    setBenefits(result?.positionEarnings.map((x, i) => ({
+      ...x,
+      benefitId: x?.earningId,
+      name: x?.name,
+      valueAmt: x?.value,
+      maximumAmount: x?.amount?.value,
+      cycle: x?.cycle,
+      isprobationElegible: x?.isprobationElegible,
+      probationEligible: x?.isProbation ? 'Yes' : 'No',
+      count: i + 1
+
+    })))
+
+    setDeductions(result?.positionEarnings.map((x, i) => ({
+      ...x,
+      benefitId: x?.earningId,
+      name: x?.name,
+      valueAmt: x?.value,
+      maximumAmount: x?.amount?.value,
+      cycle: x?.cycle,
+      isprobationElegible: x?.isprobationElegible,
+      probationEligible: x?.isProbation ? 'Yes' : 'No',
+      count: i + 1
+
+    })))
     setMode("Update");
     setShow(false);
-    let duplicate = {};
-    const employeeProfile = response[0];
-    const employeeAccount = response[1];
-    const employeeOrganisation = response[2];
-    const employeeGL = response[3];
-    const employeeSalryInfo = response[4];
 
-    if (employeeProfile?.status === "fulfilled") {
-      const obj = employeeProfile?.value?.data;
-      obj.salaryGradeId = obj.salaryGradeId.split("T")[0];
-      obj.probationSalaryGradeEnd = obj?.probationSalaryGradeEnd || ""
-      obj.probationSalaryGradeStart = obj?.probationSalaryGradeEnd || ""
-      obj.gender = `${obj?.gender}`
-      obj.probationSalaryGradeId = `${obj?.probationSalaryGradeId}`
+    // const requiredObj = {
+    //   code: positionDetail?.code,
+    //   name: positionDetail?.name,
+    //   salaryGradeId: positionDetail?.salaryGradeId,
+    //   probationSalaryGradeId: positionDetail?.probationSalaryGradeId,
+    //   parentPositionId: positionDetail?.parentPositionId
+    // };
 
+    // if (results?.id) {
+    //   const { id } = results;
 
-      setOrignalRecord((prev) => ({ ...prev, ...obj }))
-    }
-    if (employeeOrganisation?.status === "fulfilled") {
-      const obj = employeeOrganisation?.value?.data;
-      obj.hireDate = obj.hireDate.split("T")[0];
-      obj.id = employeeProfile?.value?.data?.id;
-      obj.probationMonth = `${obj?.probationMonth}` || ""
-
-      setOrignalRecord((prev) => ({ ...prev, ...obj }))
-      setInitSalRate(obj?.salaryRate);
-      // duplicate.organizationalForm = obj;
-
-      setDuplicateFormData((prev) => ({ ...prev }));
-    }
-
-    if (employeeGL?.status === "fulfilled") {
-      const obj = employeeGL?.value?.data;
-
-      setGlFormData(obj);
-      setOrignalRecord((prev) => ({ ...prev, ...obj }))
-
-    }
-    if (employeeSalryInfo?.status === "fulfilled") {
-      const obj = employeeSalryInfo?.value?.data;
-
-      setOtherInfoFormData(obj);
-      setOrignalRecord((prev) => ({ ...prev, ...obj }))
-
-    }
-
-    if (employeeAccount?.status === "fulfilled") {
-      const accountData = employeeAccount?.value?.data;
-      const formattedPaymentInfo = reFormatePaymentMode(accountData);
-      setOrignalRecord((prev) => ({ ...prev, paymentMeans: formattedPaymentInfo }))
-      setPaymentsInfo(formattedPaymentInfo);
-    }
-  };
-
-
-
-  const { setUrl: setGetUserImageUrl } = useFetch("", (res) => {
-    if (res?.base6) {
-
-    }
-
-    setShowPreview(true);
-  });
-
-  const { setUrls: setUserInfoUrls } = useMultiFetchAllSettled(
-    [],
-    responseFunc
-  );
-
-  const handleSearchResultSelect = (results) => {
-    setSearchResult(results);
-
-    if (results?.id) {
-      const { id } = results;
-      setGetUserImageUrl(`download/${id}`);
-      setUserInfoUrls([
-        GetEmployeeDetailsByEmployeeID(results?.id),
-        GetEmployeeAccounts(id),
-        GetEmployeeOrganisation(id),
-        GetEmployeeGeneralLedger(id),
-        GetEmployeeSalaryInfoByEmployeeID(id),
-      ]);
-    }
+    //   setUserInfoUrls([
+    //     GetEmployeeDetailsByEmployeeID(results?.id),
+    //     GetEmployeeAccounts(id),
+    //     GetEmployeeOrganisation(id),
+    //     GetEmployeeGeneralLedger(id),
+    //     GetEmployeeSalaryInfoByEmployeeID(id),
+    //   ]);
+    // }
   };
 
   const searchReset = () => {
@@ -487,6 +568,8 @@ function EmployeeDetail() {
     }
 
     if (mode === "Update" && searchResult?.id && type === 1) {
+      setSearchResult("");
+      handleReset(2);
     }
 
     if (type === 2) {
@@ -494,30 +577,41 @@ function EmployeeDetail() {
     }
   };
 
-  // useEffect(() => {
-  //   const requiredObj = {
-  //     code: jobFormDetails?.code,
-  //     name: jobFormDetails?.name,
-  //     gender: jobFormDetails?.gender,
-  //     salaryGradeId: jobFormDetails?.salaryGradeId,
-  //     probationSalaryGradeId: jobFormDetails?.probationSalaryGradeId,
-  //     salaryGradeStart: jobFormDetails?.salaryGradeStart,
-  //     salaryGradeEnd: jobFormDetails?.salaryGradeEnd,
-  //     status: jobFormDetails?.status,
-  //   };
+  useEffect(() => {
+    const requiredObj = {
+      code: positionDetail?.code,
+      name: positionDetail?.name,
+      salaryGradeId: positionDetail?.salaryGradeId
+    };
 
-  //   setCanSave(Object.values(requiredObj).every((field) => field?.length > 0));
-  // }, [jobFormDetails]);
+    setCanSave(Object.values(requiredObj).every((field) => field?.length > 0));
+  }, [positionDetail]);
 
   const postReponse = (response) => {
     if (response?.status === 204) {
-      alert("Post Done!!")
-      // const userId = response?.headers["resource-id"];
+      resetForm();
+      if (mode === "Add") {
+        setShow(true);
+        toast.success(
+          GetLabelByName("HCM-HAGGXNJQW2B_HRPR", lan, "Record Added")
+        );
+        setTimeout(() => {
+          setIsOpen(true);
+        }, 1000);
+      } else {
+        toast.success(
+          GetLabelByName("HCM-1N2S9Z1T3VU_LANG", lan, "Record Updated")
+        );
+
+        // window.location.reload()
+        setShow(true);
+      }
+
+
     }
   };
 
   const resetForm = () => {
-
     setSearchInput("");
     setPositionDetail(null)
     setDescriptions([])
@@ -525,22 +619,21 @@ function EmployeeDetail() {
     setQualifications([])
     setExperiences([])
     setResetFormVal(!resetFormVal);
-
+    setSalaryGrade(null)
+    setProbationSG(null)
     tabOneRef.current.lastChild.click()
-
-
-
     //form data states
   };
   const resetPage = () => {
     resetForm();
     setShow(true);
-
     setIsOpen(false);
     setHasAccept(null);
+    setActiveKey(1);
   };
 
   useEffect(() => {
+
     if (isOpen) {
       if (hasAccept === false) {
         resetPage();
@@ -563,6 +656,9 @@ function EmployeeDetail() {
   const handleOnSubmit = () => {
     setIsSubmitBtnClick(true);
 
+    // setIsOpen(true)
+    // return
+
     const requiredObj = {
       code: positionDetail?.code,
       name: positionDetail?.name,
@@ -573,9 +669,9 @@ function EmployeeDetail() {
 
 
     const glAccounts = null
-    const earnings = benefits.map(x => ({ earningId: x?.benefitId, unit: x?.unit }))
+    const earnings = benefits.map(x => ({ earningId: x?.benefitId, unit: x?.unit, isProbation: x?.isprobationElegible, cycle: +x?.cycle }))
     const deductions = []
-    const qualificationIds = qualifications.map(x => x?.id)
+    const qualificationIds = qualifications.map(x => ({ qualificationId: x?.id, month: +x?.expMonth }))
     const locationIds = []
     const jobDescriptions = descriptions.map(x => ({ name: x?.name, description: x?.description, reportingCycle: x?.reportingCycle, status: 1 }))
     const jobExpirences = experiences.map(x => ({ prevPositionId: x?.id, month: x?.expMonth, roleLevelId: x?.roleLevelId, status: 1 }))
@@ -597,24 +693,23 @@ function EmployeeDetail() {
       jobExpirences
     }
 
-    console.log({ postObj });
-
-    setPostData(postObj)
-    setPostUrl('/Organisation/Positions')
-    return
-
     if (!canSave) {
-      // toast.error(`${GetLabelByName(requireObjLable[missing[0]],lan)} is required`);
+      //toast.error(`${GetLabelByName(requireObjLable[missing[0]],lan)} is required`);
       //toast.error(`Please provide data for all required fields.`);
       toast.error(GetLabelByName(`HCM-WQ9J7737WDC_LASN`, lan));
-      //
-
-
       return;
     }
 
-  };
 
+    if (mode === 'Update') {
+      setPutData({ positionId: searchResult?.id, ...postObj })
+      setPutUrl(`/Organisation/Positions`)
+    } else {
+      setPostData(postObj)
+      setPostUrl('/Organisation/Positions')
+    }
+    return
+  };
 
 
   const handleAddNewRecord = () => {
@@ -629,11 +724,7 @@ function EmployeeDetail() {
 
     return () => { };
   }, [
-    mode,
-    otherInfoFormData,
-    paymentsInfo,
-    glFormData,
-  ]);
+    mode, positionDetail]);
 
   // useEffect(() => {
   //   if (mode === "Update") {
@@ -670,7 +761,21 @@ function EmployeeDetail() {
   //     : `${jobFormDetails?.code} ${jobFormDetails?.name}`;
   // };
 
-  //
+  useEffect(() => {
+    if (mode === "Update") {
+      setSearchResult(prev => ({
+        ...prev,
+        name: positionDetail?.name
+      }))
+
+    }
+
+
+    return () => {
+
+    }
+  }, [positionDetail])
+
 
   return (
     <>
@@ -697,13 +802,14 @@ function EmployeeDetail() {
         </CCol>
         <CCol md="4" xs="7">
           <CSAutoComplete
-            filterUrl={SearchEmployeeByNameOrCode(
+            filterUrl={SearchPositionByNameOrCode(
               companyReference,
               searchInput,
               pageNumber,
               numberOfItems,
               orderBy,
-              sortOrder
+              sortOrder,
+
             )}
             // placeholder={GetLabelByName("HCM-4NCKCPUZGF7_LASN", lan)}
             placeholder={"Search position"}
@@ -716,7 +822,7 @@ function EmployeeDetail() {
               lan
             )}
             input={searchInput}
-            isPaginated={false}
+            isPaginated={true}
             pageNumber={pageNumber}
             setPageNumber={setPageNumber}
             numberOfItems={numberOfItems}
@@ -778,7 +884,7 @@ function EmployeeDetail() {
                                 color: "#315a76",
                               }}
                             >
-                              {""}
+                              {searchResult?.name}
                             </span>
                           </>
                         ) : (
@@ -820,7 +926,7 @@ function EmployeeDetail() {
                           ref={tabTwoRef}
                         >
                           {/* <CSLab code="HCM-GQR50DATROE_PSLL" /> */}
-                          Qualification
+                          Job Qualification
                         </CNavLink>
                       </CNavItem>
 
@@ -831,7 +937,7 @@ function EmployeeDetail() {
                           onClick={() => setActiveKey(3)}
                         >
                           {/* <CSLab code="HCM-D9GDJ0ZHB7U_LOLN" /> */}
-                          Experience
+                          Job Experience
                         </CNavLink>
                       </CNavItem>
                       <CNavItem>
@@ -841,7 +947,7 @@ function EmployeeDetail() {
                           onClick={() => setActiveKey(4)}
                         >
                           {/* <CSLab code="HCM-TNH48GNHQW-LANG" /> */}
-                          Description
+                          Job Description
                         </CNavLink>
                       </CNavItem>
                       <CNavItem>
@@ -854,6 +960,16 @@ function EmployeeDetail() {
                           Benefit
                         </CNavLink>
                       </CNavItem>
+                      <CNavItem>
+                        <CNavLink
+                          href="#"
+                          active={activeKey === 6}
+                          onClick={() => setActiveKey(6)}
+                        >
+                          {/* <CSLab code="HCM-CB7ODJKF2IN-KCMI" /> */}
+                          Deduction
+                        </CNavLink>
+                      </CNavItem>
                     </CNav>
 
                     <CTabContent>
@@ -864,6 +980,12 @@ function EmployeeDetail() {
                         <JobDetailForm
                           positionDetail={positionDetail}
                           setPositionDetail={setPositionDetail}
+                          probationSG={probationSG}
+                          setProbationSG={setProbationSG}
+                          setSalaryGrade={setSalaryGrade}
+                          salaryGrade={salaryGrade}
+                          isSubmitBtnClick={isSubmitBtnClick}
+                          setIsSubmitBtnClick={setIsSubmitBtnClick}
                         />
                       </CTabPane>
                       <CTabPane
@@ -883,6 +1005,8 @@ function EmployeeDetail() {
                         <ExperienceForm
                           experiences={experiences}
                           setExperiences={setExperiences}
+                          data={data}
+                          roleLevels={roleLevels}
                         />
                       </CTabPane>
 
@@ -904,6 +1028,14 @@ function EmployeeDetail() {
                           setBenefits={setBenefits} />
 
                       </CTabPane>
+                      <CTabPane
+                        visible={activeKey === 5 ? true : false}
+                        style={{ marginTop: "10px" }}
+                      >
+                        <DeductionForm deductions={deductions} setDeductions={setDeductions} />
+
+
+                      </CTabPane>
                     </CTabContent>
                   </CTabs>
                 </fieldset>
@@ -915,11 +1047,11 @@ function EmployeeDetail() {
                 style={{
                   marginRight: 5,
                   float: "right",
-                  // cursor: canSave ? "pointer" : "not-allowed",
+                  //cursor: canSave ? "pointer" : "not-allowed",
                 }}
                 type="button"
                 size="sm"
-                color="success"
+                color="primary"
                 onClick={handleOnSubmit}
                 disabled={mode === "Update" ? !canUpdate ? false : true : false}
               >
@@ -935,7 +1067,7 @@ function EmployeeDetail() {
                 onClick={resetForm}
                 type="button"
                 size="sm"
-                color={mode === "Add" ? "warning" : "warning"}
+                color={"warning"}
               >
                 <AiOutlineRedo size={20} />{" "}
                 {mode === "Add" ? (

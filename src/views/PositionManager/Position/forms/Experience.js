@@ -31,7 +31,7 @@ import useFetch from "src/hooks/useFetch";
 const init = { prevPositionId: "", roleLevelId: "", expMonth: "" }
 
 
-const Experience = ({ setExperiences: setGridData, experiences: gridData }) => {
+const Experience = ({ setExperiences: setGridData, experiences: gridData, data = [], roleLevels = [] }) => {
 
   const { auth } = useAuth()
   const { companyReference: COMPANY_REFRENCE } = auth
@@ -42,9 +42,7 @@ const Experience = ({ setExperiences: setGridData, experiences: gridData }) => {
   const [canAdd, setCanAdd] = useState(false)
   // const [gridData, setGridData] = useState([]);
 
-  const { data } = useFetch('/Organisation/Positions?results=1000')
-  const { data: roleLevels } = useFetch('/Employees/CustomTypes/all?type=RLT')
-  console.log({ roleLevels });
+
 
   const handleAddNewAccount = () => {
     setshowModal(true)
@@ -103,8 +101,6 @@ const Experience = ({ setExperiences: setGridData, experiences: gridData }) => {
 
     }
   }, [formData])
-
-  console.log({ canAdd });
 
 
   return (

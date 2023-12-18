@@ -13,7 +13,7 @@ import { BaseAPIURL } from "./base";
 * @returns urlpath
 */
 // export const SearchPositionByNameOrCode = (companyReference, query, pageNumber, numberOfItems, orderBy, sortOrder) => `${BaseAPIURL}Position?companyReference=${companyReference}&Filter=${query==="*"? "" : query}&Page=${pageNumber}&Results=${numberOfItems}&OrderBy=${orderBy}&SortOrder=${sortOrder}`;
-export const SearchPositionByNameOrCode = (companyReference, query, pageNumber, numberOfItems, orderBy, sortOrder) => `Position?companyReference=${companyReference}&Filter=${query==="*"? "" : query}&Page=${pageNumber}&Results=${numberOfItems}&OrderBy=${orderBy}&SortOrder=${sortOrder}`;
+export const SearchPositionByNameOrCode = (companyReference, query, pageNumber, numberOfItems, orderBy, sortOrder) => `Organisation/Positions?companyReference=${companyReference}&Filter=${query === "*" ? "" : query}&Page=${pageNumber}&Results=${numberOfItems}&OrderBy=${orderBy}&SortOrder=${sortOrder}`;
 
 /**
 * Endpoint to get details for salary grade if it exist by salary grade ID.
@@ -44,7 +44,7 @@ export const GetLocationDetailsByOrgId = (orgId) => `Organisation/${orgId}/locat
  * @param companyReference [required]
  * @returns urlpath
  */
- export const GetAllGeneralLedgersBycompanyReference = (companyReference) => `Organisation/GLAccounts/${companyReference}`
+export const GetAllGeneralLedgersBycompanyReference = (companyReference) => `Organisation/GLAccounts/${companyReference}`
 //  export const GetAllGeneralLedgersBycompanyReference = (companyReference) => `${BaseAPIURL}Organisation/GLAccounts/${companyReference}`
 
 /**
@@ -72,10 +72,10 @@ export const PutPosition = () => `Organisation/Positions`;
  * @param query [required]
  * @returns urlpath
  *///http://192.168.0.48:5100/Organisation/Positions?companyReference=00001_A01&filter=pos&page=1&results=5&orderBy=1&sortOrder=1
- export const SearchPositionByNameOrCodeUsingType = (companyReference, query, pageNumber, numberOfItems, orderBy, sortOrder) => `Organisation/Positions?companyReference=${companyReference}&Filter=${query==="*"? "" : query}&Page=${pageNumber}&Results=${numberOfItems}&OrderBy=${orderBy}&SortOrder=${sortOrder}`;
+export const SearchPositionByNameOrCodeUsingType = (companyReference, query, pageNumber, numberOfItems, orderBy, sortOrder) => `Organisation/Positions?companyReference=${companyReference}&Filter=${query === "*" ? "" : query}&Page=${pageNumber}&Results=${numberOfItems}&OrderBy=${orderBy}&SortOrder=${sortOrder}`;
 //  export const SearchPositionByNameOrCodeUsingType = (companyReference, query, pageNumber, numberOfItems, orderBy, sortOrder) => `${BaseAPIURL}Organisation/Positions?companyReference=${companyReference}&Filter=${query==="*"? "" : query}&Page=${pageNumber}&Results=${numberOfItems}&OrderBy=${orderBy}&SortOrder=${sortOrder}`;
 
- /**
+/**
 * Endpoint to get details for salary grade if it exist by salary grade ID.
 * @param companyReference [required]
 * @returns urlpath
@@ -89,7 +89,7 @@ export const GetAllLocationsByCompanyReference = (companyReference) => `Organisa
 
 //http://192.168.0.48:5100/Organisation/Currencies/00001_A01
 
- /**
+/**
 * Endpoint to get details for salary grade if it exist by salary grade ID.
 * @param companyReference [required]
 * @returns urlpath
@@ -102,7 +102,7 @@ export const GetCurrencyByCompanyReference = (companyReference) => `Organisation
 
 //http://192.168.0.48:5100/Organisation/Earnings/00001_A01
 
- /**
+/**
 * Endpoint to get details for salary grade if it exist by salary grade ID.
 * @param companyReference [required]
 * @returns urlpath

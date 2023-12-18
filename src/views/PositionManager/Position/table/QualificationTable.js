@@ -66,7 +66,7 @@ const QualificationTable = ({ data = [], setGridData, lan }) => {
 
           />
           <ColumnDirective
-            field="expMonth"
+            field="expMonthText"
             headerText={"Experience(Month)"}
 
           />
