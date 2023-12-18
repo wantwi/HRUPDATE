@@ -50,7 +50,7 @@ export const GetAllUnits = () => `Organisation/Units/all?companyReference=${comp
 * Get All Units.
 * @returns {string} urlpath
 */
-export const GetAllPositions = () => `${BaseAPIURL}Organisation/Positions/all?companyReference=${companyRef}`;
+export const GetAllPositions = () => `Organisation/Positions/all?companyReference=${companyRef}`;
 
 
 /**

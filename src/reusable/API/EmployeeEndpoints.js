@@ -5,7 +5,7 @@
  */
 //export const SearchEmployees = (filter) = `${BaseURL}EmployeeBio?filter=${filter}`;
 
-export const SearchEmployees = (filter) => `Employees?filter=${filter}`;
+export const SearchEmployees = (filter) => `Employees?filter=${filter === "*" ? "" : filter}`;
 
 export const SearchEmployeesByNameAndProgram = (filter) =>
   `EmployeeTraining/Program?filter=${filter}`;

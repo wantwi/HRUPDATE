@@ -89,7 +89,10 @@ const EmployeeSkill = React.lazy(() =>
   import("./views/EmployeeManager/EmployeeSkill/EmployeeSkill")
 );
 const LeaveTransaction = React.lazy(() =>
-  import("./views/EmployeeManager/LeaveTransaction/LeaveTransaction")
+  import("./views/LeaveManager/LeaveTransaction/LeaveTransaction")
+);
+const ScheduleLeave = React.lazy(() =>
+  import("./views/LeaveManager/ScheduleLeave/ScheduleLeave")
 );
 const EmployeeLanguage = React.lazy(() => import("./views/EmployeeManager/EmployeeLanguage/EmployeeLanguage"));
 const EmployeeHomeTown = React.lazy(() => import("./views/EmployeeManager/EmployeeHomeTown/EmployeeHomeTown"))
@@ -102,6 +105,9 @@ const PositionSetup = React.lazy(() =>
 );
 const EmployeeMovement = React.lazy(() =>
   import("./views/PositionManager/EmployeeMovement/EmployeeMovement")
+);
+const EmployeePromotion = React.lazy(() =>
+  import("./views/PositionManager/EmployeePromotion/EmployeePromotion")
 );
 const EmployeeRetirementInformation = React.lazy(() =>
   import(
@@ -197,6 +203,7 @@ const MedicalTransactions = React.lazy(() =>
 //   import("./views/EmployeeManager/AccidentTransaction/AccidentTransaction")
 // );
 
+
 //Employee Relationships
 const Beneficiary = React.lazy(() =>
   import("./views/EmployeeRelationships/Beneficiary/Beneficiary")
@@ -210,6 +217,7 @@ const EmergencyContact = React.lazy(() =>
 // const EmergencyContacts = React.lazy(() =>
 //   import("./views/EmployeeRelationships/EmergencyContact/EmergencyContact")
 // );
+
 const Guarantor = React.lazy(() =>
   import("./views/EmployeeRelationships/Guarantor/Guarantor")
 );
@@ -385,9 +393,14 @@ const routes = [
     component: EmployeeSkill,
   },
   {
-    path: "/employeemanager/leavetransaction",
+    path: "/leavemanager/leavetransaction",
     name: "Employee Transaction",
     component: LeaveTransaction,
+  },
+  {
+    path: "/leavemanager/sheduleLeave",
+    name: "Employee Schedule Leave Transaction",
+    component: ScheduleLeave,
   },
   {
     path: "/employeemanager/employeelanguage",
@@ -428,6 +441,11 @@ const routes = [
     path: "/positionmanager/employeemovement",
     name: "Employee Movement",
     component: EmployeeMovement,
+  },
+  {
+    path: "/positionmanager/employeepromotion",
+    name: "Employee Promotion",
+    component: EmployeePromotion,
   },
   {
     path: "/positionmanager/employeeretirementinformation",
