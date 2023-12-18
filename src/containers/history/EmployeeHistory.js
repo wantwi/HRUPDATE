@@ -17,12 +17,12 @@ import {
 } from "@syncfusion/ej2-react-calendars";
 import { CCol, CRow } from "@coreui/bootstrap-react";
 import "./style.css";
-import ViewDetails from "./ViewDetails";
+// import ViewDetails from "./ViewDetails";
 import { toast } from "react-toastify";
 // import { GetHistoryInfo } from 'src/api/actions';
 import useFetch from "src/hooks/useFetch";
 import { GetHistoryInfo } from "src/api/actions";
-import { type } from "src/reusable/utils/data/GenericData";
+// import { type } from "src/reusable/utils/data/GenericData";
 import useAuth from "src/hooks/useAuth";
 import ViewEmployeeDetails from "./ViewEmployeeDetails";
 
@@ -81,7 +81,7 @@ const EmployeeHistory = ({
   show,
   id,
   setShowHistory,
-  type, 
+  type,
   titleObj,
   initTitle
 
@@ -90,12 +90,12 @@ const EmployeeHistory = ({
   const [historyDetails, setHistoryDetails] = useState([]);
   const [historyData, setHistoryData] = useState([]);
   const [dateValue, setDateValue] = useState(null);
-  const [dateRange, setDateRange] = useState({startDate:"", endDate:""})
+  const [dateRange, setDateRange] = useState({ startDate: "", endDate: "" })
   const { auth } = useAuth();
   const [selectedRowID, setSelectedRowID] = useState("")
 
 
-  
+
 
   const { data, error, setUrl, isLoading } = useFetch("", (response) => {
     // console.log({historyRes:response});
@@ -119,10 +119,10 @@ const EmployeeHistory = ({
 
   //  console.log({useFetch1:error, data, isLoading})
 
-  const {setUrl:getDetailsUrl} = useFetch("", data => {
+  const { setUrl: getDetailsUrl } = useFetch("", data => {
     // console.log({getDetailsUrl: response});
-let arr =[]
-     for (let a in data) {
+    let arr = []
+    for (let a in data) {
       console.log({ rowSelected: a });
 
       let newObj = {};
@@ -159,19 +159,19 @@ let arr =[]
 
   const rowSelected = (args) => {
     let arr = [];
-    
-   setSelectedRowID(args.data?.traceId)
-   
+
+    setSelectedRowID(args.data?.traceId)
+
     getDetailsUrl(`Logs/histories/${args.data?.traceId}/${type}`)
 
-   
+
   };
 
   const handleHistory = async (startDate, endDate) => {
-   // const { id } = searchResult;
+    // const { id } = searchResult;
 
-   // alert(JSON.stringify(searchResult))
-   
+    // alert(JSON.stringify(searchResult))
+
     let response = await GetHistoryInfo(
       `${`/Logs/histories/metadata?itemId=${id}`}&companyReference=${auth?.companyReference}&startDate=${startDate}&endDate=${endDate}`
     );
@@ -182,14 +182,14 @@ let arr =[]
     } else {
       toast.info(`No history found`);
       setHistoryData([]);
-       
+
     }
   };
 
   const onChange = (args) => {
     setDateValue(args.value);
     if (args?.value) {
-        setDateRange({startDate:renderDate(args?.value[0]), endDate:renderDate(args?.value[1])})
+      setDateRange({ startDate: renderDate(args?.value[0]), endDate: renderDate(args?.value[1]) })
       handleHistory(renderDate(args?.value[0]), renderDate(args?.value[1]));
     } else {
       setHistoryData([]);
@@ -203,8 +203,8 @@ let arr =[]
   };
 
 
- 
-  
+
+
 
   useEffect(() => {
     setHistoryData([]);
@@ -298,14 +298,14 @@ let arr =[]
 
       <ViewEmployeeDetails
         isGL={isGL}
-        searchResult={searchResult=[]}
+        searchResult={searchResult = []}
         showDetails={showDetails}
         setShowDetails={setShowDetails}
         data={historyDetails}
         dateRange={dateRange}
         id={selectedRowID}
         initTitle={initTitle}
-        titleObj ={titleObj}
+        titleObj={titleObj}
       />
     </>
   );

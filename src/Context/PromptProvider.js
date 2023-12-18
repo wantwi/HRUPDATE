@@ -6,10 +6,10 @@ const PromptContext = createContext({});
 export const PromptProvider = ({ children }) => {
     const [hasAccept, setHasAccept] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
-    const isAcceptted =() => {
+    const isAcceptted = () => {
         setHasAccept(true)
     }
-    const isNotAcceptted =() => {
+    const isNotAcceptted = () => {
         setHasAccept(false)
     }
 

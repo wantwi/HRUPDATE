@@ -94,9 +94,7 @@
           "_tag": "CSidebarNavItem",
           "name": "Leave Recall",
           "to": "/leavemanager/leaverecall"
-        }
-        ,
-     
+        },
         {
           "_tag": "CSidebarNavItem",
           "name": "Leave Schedule",
@@ -107,7 +105,6 @@
           "name": "Apply Allowable Days",
           "to": "/leavemanager/allowabledays"
         }
-       
       ]
     },
     {
@@ -116,6 +113,11 @@
       "route": "/base",
       "icon": "cil-speedometer",
       "_children": [
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Setup",
+          "to": "/positionmanager/setup"
+        },
         {
           "_tag": "CSidebarNavItem",
           "name": "Employee Exits",
@@ -148,9 +150,7 @@
           "_tag": "CSidebarNavItem",
           "name": "Notches",
           "to": "/salarymanager/notches"
-        }
-        ,
-     
+        },
         {
           "_tag": "CSidebarNavItem",
           "name": "Salary Grade Update",
@@ -161,7 +161,6 @@
           "name": "Employee Salary Rate / Notch Update",
           "to": "/salarymanager/notchupdate"
         }
-       
       ]
     },
     {
@@ -170,7 +169,6 @@
       "route": "/base",
       "icon": "cil-speedometer",
       "_children": [
-        
         {
           "_tag": "CSidebarNavItem",
           "name": "Employee Appraisals",
@@ -198,9 +196,7 @@
           "_tag": "CSidebarNavItem",
           "name": "Employee Request",
           "to": "/employeemanager/employeerequest"
-        }
-        ,
-     
+        },
         {
           "_tag": "CSidebarNavItem",
           "name": "Employee Job History",
@@ -276,7 +272,6 @@
           "name": "Accident Transaction",
           "to": "/employeemanager/accidenttransaction"
         },
-
         {
           "_tag": "CSidebarNavItem",
           "name": "Employee Hobby",
@@ -306,8 +301,7 @@
           "_tag": "CSidebarNavItem",
           "name": "Employee Hometown",
           "to": "/employeemanager/employeehometown"
-        }
-        ,
+        },
         {
           "_tag": "CSidebarNavItem",
           "name": "Employee Family",
@@ -322,7 +316,7 @@
       "icon": "cil-speedometer"
     }
   ],
-  "fr":  [
+  "fr": [
     {
       "_tag": "CSidebarNavItem",
       "name": "Tableau de bord",
@@ -430,7 +424,6 @@
           "name": "Opération accidentelle",
           "to": "/employeemanager/accidenttransaction"
         },
-
         {
           "_tag": "CSidebarNavItem",
           "name": "Passe-temps des employés",
@@ -458,13 +451,17 @@
         }
       ]
     },
-
     {
       "_tag": "CSidebarNavDropdown",
       "name": "Position Manager",
       "route": "/base",
       "icon": "cil-cursor",
       "_children": [
+        {
+          "_tag": "CSidebarNavItem",
+          "name": "Setup",
+          "to": "/positionmanager/setup"
+        },
         {
           "_tag": "CSidebarNavItem",
           "name": "Employee Termination Information",

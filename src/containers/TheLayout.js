@@ -1,5 +1,6 @@
 import React from 'react';
 import LoaderComponent from 'src/reusable/components/LoaderComponent/LoaderComponent';
+import PromptOverlay from "src/reusable/components/promptOverlay/PromptOverlay";
 
 import { TheContent, TheSidebar, TheFooter, TheHeader } from './index';
 import PersistLogin from 'src/PersistLogin'
@@ -20,6 +21,7 @@ const TheLayout = () => {
           </div>
         </div>
       </LoaderComponent>
+      <PromptOverlay open={true}></PromptOverlay>
       <IdleTimerComponet></IdleTimerComponet>
     </PersistLogin>
 
