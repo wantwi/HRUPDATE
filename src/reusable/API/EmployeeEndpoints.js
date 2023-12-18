@@ -17,3 +17,11 @@ export const GetEmployeeByID = (empID) => `EmployeeLanguage/${empID}`
 
 
 export const GetEmployeeOrgDetails = (empID) => `Employees/${empID}/organisation`
+
+/**
+ * POST Employee Transfer.
+ * @returns {string} urlpath
+ */
+//export const SearchEmployees = (filter) = `${BaseURL}EmployeeBio?filter=${filter}`;
+
+export const PostEmployeeTransfer = () => `Employees/Transfer`;

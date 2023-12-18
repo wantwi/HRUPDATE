@@ -72,3 +72,10 @@ export const GetAllSegments = () => `Pays/GenericTypes/ORG`;
 * @returns {string} urlpath
 */
 export const CreateGLMassUpdate = () => `Employees/GeneralLedgers`;
+
+
+/**
+* Get All Status.
+* @returns {string} urlpath
+*/
+export const GetAllStatus = () => `http://psl-linux:5100/Employees/${companyRef}/EmployeeStatus`;
