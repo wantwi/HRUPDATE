@@ -104,6 +104,7 @@ const EmployeeMovement = (props) => {
   const [itemsError, SetItemError] = useState([])
   const [descData, setDescData] = useState([])
   const jobGrid = useRef(null)
+  const [empID, setEmployeeID] = useState("");
   // const OnSaveContinueClick = () => {
   //     console.log(grid);
   // }
@@ -256,7 +257,7 @@ const EmployeeMovement = (props) => {
 
   const handleSearchResultSelect = (results) => {
     setEmpDisplayName(`${results.firstName} ${results.lastName}`);
-
+    setEmployeeID(results?.id)
     setMode("Add");
     setShow(false);
     setSubmitData({ ...results });
@@ -316,7 +317,7 @@ const EmployeeMovement = (props) => {
       })
     }
     let postData = {
-      "employeeId": submitData.employeeTypeId,
+      "employeeId": empID,
       "sectionId": submitData.sectionId,
       "departmentId": submitData.departmentId,
       "divisionId": submitData.divisionId,
@@ -359,7 +360,7 @@ const EmployeeMovement = (props) => {
 
   const handleProbation = (evnt) => {
     let hasProbation =
-      evnt?.target?.name === "isProbation"
+      evnt?.target?.name === "hasProbation"
         ? evnt?.target?.checked
         : data?.hasProbation;
     setSubmitData((data) => {
