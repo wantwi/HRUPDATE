@@ -1,0 +1,16 @@
+.e-dropdownbase,
+.e-delim-values,
+.e-remain {
+    font-size: 11px !important;
+}
+
+.e-input-group-icon {
+    margin-top: 7px !important;
+}
+
+.e-multiselect {
+    height: 28px !important;
+    border-radius: 6px !important;
+}
+
+/* e-input-group e-control-wrapper */

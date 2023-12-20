@@ -98,6 +98,8 @@ const EmployeeLanguage = React.lazy(() => import("./views/EmployeeManager/Employ
 const EmployeeHomeTown = React.lazy(() => import("./views/EmployeeManager/EmployeeHomeTown/EmployeeHomeTown"))
 const EmployeeFamily = React.lazy(() => import("./views/EmployeeManager/EmployeeFamily/EmployeeFamily"))
 
+const SalaryStructureReview = React.lazy(() => import("./views/SalaryManagement/SalaryStructureReview/SalaryStructureReview"))
+
 
 // Position Manager
 const PositionSetup = React.lazy(() =>
@@ -554,6 +556,13 @@ const routes = [
     path: "/employeemanager/relationships",
     name: "Relationships",
     component: Relationships,
+  },
+
+  //Salary Management
+  {
+    path: "/salarymanager/structure-review",//salarymanager/structure-review
+    name: "Salary Structure Review",
+    component: SalaryStructureReview,
   },
 
   //Tax Manager

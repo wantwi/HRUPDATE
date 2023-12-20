@@ -2,15 +2,15 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { ColumnDirective, ColumnsDirective, Filter, GridComponent, Group, Inject, Page, Sort, Edit, CommandColumn } from '@syncfusion/ej2-react-grids';
 
-import '../../../../node_modules/@syncfusion/ej2-base/styles/material.css';
-import '../../../../node_modules/@syncfusion/ej2-buttons/styles/material.css';
-import '../../../../node_modules/@syncfusion/ej2-calendars/styles/material.css';
-import '../../../../node_modules/@syncfusion/ej2-dropdowns/styles/material.css';
-import '../../../../node_modules/@syncfusion/ej2-inputs/styles/material.css';
-import '../../../../node_modules/@syncfusion/ej2-navigations/styles/material.css';
-import '../../../../node_modules/@syncfusion/ej2-popups/styles/material.css';
-import '../../../../node_modules/@syncfusion/ej2-splitbuttons/styles/material.css';
-import "../../../../node_modules/@syncfusion/ej2-react-grids/styles/material.css";
+// import '../../../../node_modules/@syncfusion/ej2-base/styles/material.css';
+// import '../../../../node_modules/@syncfusion/ej2-buttons/styles/material.css';
+// import '../../../../node_modules/@syncfusion/ej2-calendars/styles/material.css';
+// import '../../../../node_modules/@syncfusion/ej2-dropdowns/styles/material.css';
+// import '../../../../node_modules/@syncfusion/ej2-inputs/styles/material.css';
+// import '../../../../node_modules/@syncfusion/ej2-navigations/styles/material.css';
+// import '../../../../node_modules/@syncfusion/ej2-popups/styles/material.css';
+// import '../../../../node_modules/@syncfusion/ej2-splitbuttons/styles/material.css';
+// import "../../../../node_modules/@syncfusion/ej2-react-grids/styles/material.css";
 
 import { GetLabelByName } from 'src/reusable/configs/config';
 
@@ -23,7 +23,7 @@ const commandOptions = [
 
 const editOptions = { allowEditing: false, allowAdding: false, allowDeleting: false, allowEditOnDblClick: false };
 
-const TableComponent = ({ dataSource, OnCommandClick, setGrid, fields,  onChange, actionBegin}) => {
+const TableComponent = ({ dataSource, OnCommandClick, setGrid, fields, onChange, actionBegin }) => {
     const lan = useSelector(state => state.language);
 
     return (

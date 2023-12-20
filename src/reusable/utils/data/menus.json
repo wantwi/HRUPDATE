@@ -143,8 +143,8 @@
       "_children": [
         {
           "_tag": "CSidebarNavItem",
-          "name": "Salary Grade",
-          "to": "/salarymanager/salarygrade"
+          "name": "Salary Structure Review",
+          "to": "/salarymanager/structure-review"
         },
         {
           "_tag": "CSidebarNavItem",
